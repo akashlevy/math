@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.HorizontalIntegral
-
 namespace OAI
 
 noncomputable section

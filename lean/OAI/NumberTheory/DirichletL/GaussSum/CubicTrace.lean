@@ -1,67 +1,22 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.ActiveGaussFactorization
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
+open scoped ContDiff
 
 namespace ActualEisensteinCubic
 
@@ -294,28 +249,7 @@ theorem cubic_reciprocity_distinct_residue_char
     exact zero_ne_one hA
   exact mul_right_cancel₀ hUV (hA.trans hB.symm)
 
-theorem canonicalSextic_sq_reciprocity_distinct_residue_char
-    (P Q : Ideal O) [P.IsMaximal] [Q.IsMaximal]
-    (hPgood : lambda ∉ P) (hQgood : lambda ∉ Q)
-    (hchar : ringChar (O ⧸ Q) ≠ ringChar (O ⧸ P))
-    (p q : O) (hP : P = Ideal.span {p}) (hQ : Q = Ideal.span {q})
-    (hpprimary : lambda ^ 2 ∣ p - 1) (hqprimary : lambda ^ 2 ∣ q - 1) :
-    (canonicalSextic P hPgood (Ideal.Quotient.mk P q)) ^ 2 =
-      (canonicalSextic Q hQgood (Ideal.Quotient.mk Q p)) ^ 2 := by
-  have hP2 : (canonicalSextic P hPgood (Ideal.Quotient.mk P q)) ^ 2 =
-      ConcreteTraceCRT.eisEmbedding (cubicChar P hPgood (Ideal.Quotient.mk P q)) := by
-    rw [← MulChar.pow_apply' _ (by decide : (2 : ℕ) ≠ 0), canonicalSextic_pow_two]
-    rfl
-  have hQ2 : (canonicalSextic Q hQgood (Ideal.Quotient.mk Q p)) ^ 2 =
-      ConcreteTraceCRT.eisEmbedding (cubicChar Q hQgood (Ideal.Quotient.mk Q p)) := by
-    rw [← MulChar.pow_apply' _ (by decide : (2 : ℕ) ≠ 0), canonicalSextic_pow_two]
-    rfl
-  rw [hP2, hQ2, cubic_reciprocity_distinct_residue_char P Q hPgood hQgood hchar
-    p q hP hQ hpprimary hqprimary]
-
 end ActualEisensteinCubic
-
-open scoped BigOperators Classical SchwartzMap ContDiff
 
 namespace GaussGeneratorTransport
 
@@ -522,157 +456,6 @@ theorem finitePrimeModulus_norm_eq_product {ι : Type*} [Fintype ι] (p : ι →
     ‖eisEmbedding (finitePrimeModulus (fun i => Ideal.span {p i}))‖ =
       ‖eisEmbedding (∏ i, p i)‖ := by
   rw [modulusUnit_spec p, norm_eisEmbedding_unit_mul]
-
-theorem canonical_radial_poisson_product {ι : Type*} [Fintype ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hgood : ∀ i, lambda ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (j : ι → ℕ) (hj0 : ∀ i, j i ≠ 0) (hj6 : ∀ i, j i < 6)
-    (W : 𝓢(ℝ, ℂ)) (scale : ℝ) (hscale : 0 < scale) :
-    (∑' z : O, finiteSexticRow (fun i => Ideal.span {p i}) hgood j z *
-      W (‖eisEmbedding z‖ ^ 2 / scale)) =
-      ((scale : ℂ) * canonicalProductGauss p hp hcop hgood j /
-        (‖eisEmbedding (∏ i, p i)‖ : ℂ)) *
-        ∑' h : O, star (finiteSexticRow (fun i => Ideal.span {p i}) hgood j h) *
-          paperRadialFourier W
-            (scale * ‖eisEmbedding h‖ ^ 2 / ‖eisEmbedding (∏ i, p i)‖ ^ 2) := by
-  have h := canonical_radial_poisson_normalized (fun i => Ideal.span {p i})
-    hcop hgood hchar j hj0 hj6 W scale hscale
-  dsimp only at h
-  rw [finitePrimeModulus_norm_eq_product p] at h
-  rw [h]
-  have ht := gauss_weighted_radial_sum_transport p hp hcop hgood j
-    (fun t => paperRadialFourier W (scale * t / ‖eisEmbedding (∏ i, p i)‖ ^ 2))
-  calc
-    _ = ((scale : ℂ) / (‖eisEmbedding (∏ i, p i)‖ : ℂ)) *
-        (canonicalNormalizedGauss (fun i => Ideal.span {p i}) hcop hgood j *
-          ∑' h : O, star (finiteSexticRow (fun i => Ideal.span {p i}) hgood j h) *
-            paperRadialFourier W
-              (scale * ‖eisEmbedding h‖ ^ 2 / ‖eisEmbedding (∏ i, p i)‖ ^ 2)) := by ring
-    _ = _ := by rw [ht]; ring
-
-theorem moebius_star_canonicalNormalizedGauss {ι : Type*} [Fintype ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hgood : ∀ i, lambda ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hprimary : ∀ i, lambda ^ 2 ∣ p i - 1) :
-    (UniqueFactorizationMonoid.moebius (Ideal.span {∏ i, p i}) : ℂ) *
-      star (canonicalNormalizedGauss (fun i => Ideal.span {p i}) hcop hgood (fun _ => 1)) =
-      star (finiteSexticRow (fun i => Ideal.span {p i}) hgood (fun _ => 1) (modulusUnit p : O)) *
-        ((canonicalProductG p hp hcop hgood)⁻¹ * canonicalProductCoefficient p hp hcop hgood) := by
-  rw [canonicalNormalizedGauss_eq_product p hp hcop hgood (fun _ => 1), star_mul]
-  calc
-    _ = star (finiteSexticRow (fun i => Ideal.span {p i}) hgood (fun _ => 1) (modulusUnit p : O)) *
-        ((UniqueFactorizationMonoid.moebius (Ideal.span {∏ i, p i}) : ℂ) *
-          star (canonicalProductGauss p hp hcop hgood (fun _ => 1))) := by ring
-    _ = _ := by rw [moebius_star_gauss_one_eq_coefficient p hp hcop hgood hchar hprimary]
-
-theorem moebius_gauss_frequency_conversion {ι : Type*} [Fintype ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hgood : ∀ i, lambda ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hprimary : ∀ i, lambda ^ 2 ∣ p i - 1) (h : O) :
-    (UniqueFactorizationMonoid.moebius (Ideal.span {∏ i, p i}) : ℂ) *
-      (canonicalNormalizedGauss (fun i => Ideal.span {p i}) hcop hgood (fun _ => 1) *
-        star (finiteSexticRow (fun i => Ideal.span {p i}) hgood (fun _ => 1)
-          ((modulusUnit p : O) * h))) =
-      (star (canonicalProductG p hp hcop hgood))⁻¹ *
-        star (canonicalProductCoefficient p hp hcop hgood) *
-          star (finiteSexticRow (fun i => Ideal.span {p i}) hgood (fun _ => 1) h) := by
-  rw [canonicalNormalizedGauss_frequency_transport p hp hcop hgood (fun _ => 1)]
-  have hc := congrArg (fun z : ℂ => star z)
-    (moebius_star_gauss_one_eq_coefficient p hp hcop hgood hchar hprimary)
-  simp only [star_mul, star_star, star_inv₀, star_intCast] at hc
-  calc
-    _ = (canonicalProductGauss p hp hcop hgood (fun _ => 1) *
-        (UniqueFactorizationMonoid.moebius (Ideal.span {∏ i, p i}) : ℂ)) *
-        star (finiteSexticRow (fun i => Ideal.span {p i}) hgood (fun _ => 1) h) := by ring
-    _ = _ := by rw [hc]; ring
-
-open ActualEisensteinCubic ConcreteTraceCRT EisensteinSchwartzPoisson FiniteGaussPhase
-
-def squarefreePairProductPoissonKernel
-    {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hgood : ∀ i, lambda ∉ Ideal.span {p i})
-    (S T : Finset ι) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) : ℂ :=
-  let q : activeSupport S T → O := fun i => p i.val
-  let Q := activePrimes (fun i => Ideal.span {p i}) S T
-  let hQ := activePrimes_pairwise_isCoprime (fun i => Ideal.span {p i}) hinj S T
-  let row := finiteSexticRow Q (fun i => hgood i.val) (activeExponent S T)
-  let n := ∏ i, q i
-  ((scale : ℂ) * canonicalProductGauss q (fun i => hp i.val) hQ
-      (fun i => hgood i.val) (activeExponent S T) / (‖eisEmbedding n‖ : ℂ)) *
-    ∑ E ∈ (S ∩ T).powerset,
-      let d := primeSubsetGenerator (fun i => Ideal.span {p i}) E
-      ((UniqueFactorizationMonoid.moebius (∏ i ∈ E, Ideal.span {p i}) : ℂ) * row d /
-        (‖eisEmbedding d‖ ^ 2 : ℝ)) *
-        ∑' h : O, star (row h) * paperRadialFourier W
-          (scale * ‖eisEmbedding h‖ ^ 2 /
-            (‖eisEmbedding d‖ ^ 2 * ‖eisEmbedding n‖ ^ 2))
-
-theorem squarefreePairPoissonKernel_eq_product
-    {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hgood : ∀ i, lambda ∉ Ideal.span {p i})
-    (S T : Finset ι) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) :
-    squarefreePairPoissonKernel (fun i => Ideal.span {p i}) hinj hgood S T W scale =
-      squarefreePairProductPoissonKernel p hp hinj hgood S T W scale := by
-  let q : activeSupport S T → O := fun i => p i.val
-  let Q := activePrimes (fun i => Ideal.span {p i}) S T
-  let hQ := activePrimes_pairwise_isCoprime (fun i => Ideal.span {p i}) hinj S T
-  let hg : ∀ i : activeSupport S T, lambda ∉ Q i := fun i => hgood i.val
-  let j := activeExponent S T
-  let row := finiteSexticRow Q hg j
-  let n := ∏ i, q i
-  let a : Finset ι → ℂ := fun E =>
-    let d := primeSubsetGenerator (fun i => Ideal.span {p i}) E
-    (UniqueFactorizationMonoid.moebius (∏ i ∈ E, Ideal.span {p i}) : ℂ) * row d /
-      (‖eisEmbedding d‖ ^ 2 : ℝ)
-  let F : Finset ι → ℝ → ℂ := fun E t =>
-    let d := primeSubsetGenerator (fun i => Ideal.span {p i}) E
-    paperRadialFourier W (scale * t / (‖eisEmbedding d‖ ^ 2 * ‖eisEmbedding n‖ ^ 2))
-  have hc : ‖eisEmbedding (finitePrimeModulus Q)‖ = ‖eisEmbedding n‖ :=
-    finitePrimeModulus_norm_eq_product q
-  unfold squarefreePairPoissonKernel squarefreePairProductPoissonKernel
-  dsimp only
-  change ((scale : ℂ) * canonicalNormalizedGauss Q hQ hg j /
-      (‖eisEmbedding (finitePrimeModulus Q)‖ : ℂ)) * _ = _
-  rw [hc]
-  change ((scale : ℂ) * canonicalNormalizedGauss Q hQ hg j / (‖eisEmbedding n‖ : ℂ)) *
-      (∑ E ∈ (S ∩ T).powerset, a E * ∑' h : O, star (row h) * F E (‖eisEmbedding h‖ ^ 2)) =
-    ((scale : ℂ) * canonicalProductGauss q (fun i => hp i.val) hQ hg j /
-      (‖eisEmbedding n‖ : ℂ)) *
-      (∑ E ∈ (S ∩ T).powerset, a E * ∑' h : O, star (row h) * F E (‖eisEmbedding h‖ ^ 2))
-  have ht := gauss_weighted_finite_radial_sum_transport q (fun i => hp i.val)
-    hQ hg j (S ∩ T).powerset a F
-  calc
-    _ = ((scale : ℂ) / (‖eisEmbedding n‖ : ℂ)) *
-        (canonicalNormalizedGauss Q hQ hg j *
-          (∑ E ∈ (S ∩ T).powerset, a E * ∑' h : O, star (row h) * F E (‖eisEmbedding h‖ ^ 2))) := by ring
-    _ = _ := by rw [ht]; ring
-
-theorem finiteSquarefreeRow_pair_radial_poisson_product
-    {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hgood : ∀ i, lambda ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (S T : Finset ι) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) (hscale : 0 < scale) :
-    (∑' z : O, (star (finiteSquarefreeRow (fun i => Ideal.span {p i}) hgood S z) *
-      finiteSquarefreeRow (fun i => Ideal.span {p i}) hgood T z) *
-      W (‖eisEmbedding z‖ ^ 2 / scale)) =
-      squarefreePairProductPoissonKernel p hp hinj hgood S T W scale := by
-  rw [finiteSquarefreeRow_pair_radial_poisson (fun i => Ideal.span {p i}) hinj hgood hchar
-    S T W scale hscale, squarefreePairPoissonKernel_eq_product p hp hinj hgood]
 
 end GaussGeneratorTransport
 

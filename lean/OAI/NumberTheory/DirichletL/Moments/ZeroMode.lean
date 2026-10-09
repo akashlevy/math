@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.RowNorm
 import OAI.NumberTheory.DirichletL.CenteredExceptionalProfile
-
 namespace OAI
 
 noncomputable section
@@ -231,34 +230,6 @@ theorem first_zero_sum_bound (ε : ℝ) (hε : 0 < ε) :
       mul_le_mul_of_nonneg_right (hc S a b ha hb Y hY hinj hN) (mul_nonneg hB hK)
     _ = C * K * B * Y ^ (1 / 2 + ε) := by ring
 
-theorem productColumnCoefficient_sextic_row_sum (S T : Finset (Ideal O))
-    (β : Ideal O → Ideal O → ℂ) (z : O) :
-    (∑ I ∈ S, ∑ J ∈ T, β I J * idealRowHom z (I * J)) =
-      ∑ K ∈ (S ×ˢ T).image (fun p : Ideal O × Ideal O => p.1 * p.2),
-        productColumnCoefficient S T β K * idealRowHom z K := by
-  rw [← Finset.sum_product (f := fun p : Ideal O × Ideal O =>
-    β p.1 p.2 * idealRowHom z (p.1 * p.2))]
-  rw [← Finset.sum_fiberwise_of_maps_to
-    (fun p (hp : p ∈ S ×ˢ T) => Finset.mem_image_of_mem (fun p : Ideal O × Ideal O => p.1 * p.2) hp)]
-  apply Finset.sum_congr rfl
-  intro K hK
-  rw [productColumnCoefficient, Finset.sum_mul]
-  apply Finset.sum_congr rfl
-  intro p hp
-  rw [(Finset.mem_filter.mp hp).2]
-
-theorem productColumnCoefficient_small_power (ε : ℝ) (hε : 0 < ε) :
-    ∃ D : ℝ, 0 < D ∧ ∀ (S T : Finset (Ideal O)) (β : Ideal O → Ideal O → ℂ),
-      (∀ I ∈ S, ∀ J ∈ T, ‖β I J‖ ≤ 1) →
-      ∀ (I : Ideal O) (X : ℝ), I ≠ 0 → (Ideal.absNorm I : ℝ) ≤ X →
-        ‖productColumnCoefficient S T β I‖ ≤ D * X ^ ε := by
-  obtain ⟨D, hD, hd⟩ := IdealDivisorBound.ideal_divisor_small_power ε hε
-  refine ⟨D, hD, ?_⟩
-  intro S T β hβ I X hI hX
-  exact (productColumnCoefficient_norm S T β hβ I hI).trans
-    ((hd I hI).trans (mul_le_mul_of_nonneg_left
-      (Real.rpow_le_rpow (Nat.cast_nonneg _) hX hε.le) hD.le))
-
 def idealColumn (S : Finset (Ideal O)) (I : S) : O :=
   ConcretePrimeRowBridge.idealGenerator I.val
 
@@ -312,148 +283,6 @@ theorem ideal_zero_energy_bound (ε : ℝ) (hε : 0 < ε) :
     congr 1
     ring
   simpa only [idealZeroEnergy, Fintype.sum_prod_type, hp] using hh
-
-theorem productColumnCoefficient_norm_le (S T : Finset (Ideal O))
-    (β : Ideal O → Ideal O → ℂ) (B : ℝ) (hB : 0 ≤ B)
-    (hβ : ∀ I ∈ S, ∀ J ∈ T, ‖β I J‖ ≤ B) (I : Ideal O) (hI : I ≠ 0) :
-    ‖productColumnCoefficient S T β I‖ ≤ B * (IdealMobiusDivisorSum.idealDivisors I).card := by
-  unfold productColumnCoefficient
-  calc
-    _ ≤ ∑ p ∈ (S ×ˢ T).filter (fun p : Ideal O × Ideal O => p.1 * p.2 = I), ‖β p.1 p.2‖ := norm_sum_le _ _
-    _ ≤ ∑ _p ∈ (S ×ˢ T).filter (fun p : Ideal O × Ideal O => p.1 * p.2 = I), B := by
-      apply Finset.sum_le_sum
-      intro p hp
-      have hh := Finset.mem_product.mp (Finset.mem_filter.mp hp).1
-      exact hβ p.1 hh.1 p.2 hh.2
-    _ = B * ((S ×ˢ T).filter (fun p : Ideal O × Ideal O => p.1 * p.2 = I)).card := by simp [mul_comm]
-    _ ≤ _ := mul_le_mul_of_nonneg_left (by exact_mod_cast product_fiber_card (S ×ˢ T) I hI) hB
-
-theorem productColumns_supported (S T : Finset (Ideal O))
-    (hS : ∀ I ∈ S, Supported I) (hT : ∀ J ∈ T, Supported J) :
-    ∀ I ∈ (S ×ˢ T).image (fun p : Ideal O × Ideal O => p.1 * p.2), Supported I := by
-  intro I hI
-  obtain ⟨⟨J, K⟩, hp, rfl⟩ := Finset.mem_image.mp hI
-  have hh := Finset.mem_product.mp hp
-  exact (supported_mul_iff J K).mpr ⟨hS J hh.1, hT K hh.2⟩
-
-def productZeroEnergy (S T : Finset (Ideal O))
-    (hS : ∀ I ∈ S, Supported I) (hT : ∀ J ∈ T, Supported J)
-    (β : Ideal O → Ideal O → ℂ) (K : ℝ) : ℂ :=
-  idealZeroEnergy ((S ×ˢ T).image (fun p : Ideal O × Ideal O => p.1 * p.2))
-    (productColumns_supported S T hS hT) (productColumnCoefficient S T β) K
-
-theorem product_zero_energy_bound (ε : ℝ) (hε : 0 < ε) :
-    ∃ C : ℝ, 0 < C ∧ ∀ (S T : Finset (Ideal O))
-      (hS : ∀ I ∈ S, Supported I) (hT : ∀ J ∈ T, Supported J)
-      (β : Ideal O → Ideal O → ℂ) (X K B : ℝ),
-      1 ≤ X → 0 ≤ K → 0 ≤ B →
-      (∀ I ∈ S, ∀ J ∈ T, (Ideal.absNorm (I * J) : ℝ) ≤ X) →
-      (∀ I ∈ S, ∀ J ∈ T, ‖β I J‖ ≤ B) →
-      ‖productZeroEnergy S T hS hT β K‖ ≤ C * K * B ^ 2 * X ^ (1 + ε) := by
-  obtain ⟨C, hC, hc⟩ := ideal_zero_energy_bound (ε / 2) (by positivity)
-  obtain ⟨D, hD, hd⟩ := IdealDivisorBound.ideal_divisor_small_power (ε / 4) (by positivity)
-  refine ⟨C * D ^ 2, by positivity, ?_⟩
-  intro S T hS hT β X K B hX hK hB hN hβ
-  let P := (S ×ˢ T).image (fun p : Ideal O × Ideal O => p.1 * p.2)
-  have hs := productColumns_supported S T hS hT
-  have hn (I : Ideal O) (hI : I ∈ P) : (Ideal.absNorm I : ℝ) ≤ X := by
-    obtain ⟨⟨J, L⟩, hp, rfl⟩ := Finset.mem_image.mp hI
-    have hh := Finset.mem_product.mp hp
-    exact hN J hh.1 L hh.2
-  have hb (I : Ideal O) (hI : I ∈ P) :
-      ‖productColumnCoefficient S T β I‖ ≤ B * (D * X ^ (ε / 4)) := by
-    apply (productColumnCoefficient_norm_le S T β B hB hβ I (hs I hI).1).trans
-    apply mul_le_mul_of_nonneg_left _ hB
-    exact (hd I (hs I hI).1).trans (mul_le_mul_of_nonneg_left
-      (Real.rpow_le_rpow (Nat.cast_nonneg _) (hn I hI) (by positivity)) hD.le)
-  have hh := hc P hs (productColumnCoefficient S T β) X K (B * (D * X ^ (ε / 4)))
-    hX hK (by positivity) hn hb
-  change ‖productZeroEnergy S T hS hT β K‖ ≤ _ at hh
-  apply hh.trans_eq
-  have hx0 : 0 < X := by linarith
-  have hp : (X ^ (ε / 4)) ^ 2 * X ^ (1 + ε / 2) = X ^ (1 + ε) := by
-    rw [← Real.rpow_natCast, ← Real.rpow_mul hx0.le, ← Real.rpow_add hx0]
-    congr 1
-    ring
-  calc
-    C * K * (B * (D * X ^ (ε / 4))) ^ 2 * X ^ (1 + ε / 2) =
-        (C * D ^ 2) * K * B ^ 2 * ((X ^ (ε / 4)) ^ 2 * X ^ (1 + ε / 2)) := by ring
-    _ = _ := by rw [hp]
-
-theorem normalized_product_zero_energy_bound (ε : ℝ) (hε : 0 < ε) :
-    ∃ C : ℝ, 0 < C ∧ ∀ (S T : Finset (Ideal O))
-      (hS : ∀ I ∈ S, Supported I) (hT : ∀ J ∈ T, Supported J)
-      (β : Ideal O → Ideal O → ℂ) (X K B : ℝ),
-      1 ≤ X → 0 ≤ K → 0 ≤ B →
-      (∀ I ∈ S, ∀ J ∈ T, (Ideal.absNorm (I * J) : ℝ) ≤ X) →
-      (∀ I ∈ S, ∀ J ∈ T, ‖β I J‖ ≤ B) →
-      ‖((X⁻¹ : ℝ) : ℂ) * productZeroEnergy S T hS hT β K‖ ≤
-        C * K * B ^ 2 * X ^ ε := by
-  obtain ⟨C, hC, hc⟩ := product_zero_energy_bound ε hε
-  refine ⟨C, hC, ?_⟩
-  intro S T hS hT β X K B hX hK hB hN hβ
-  have hx0 : 0 < X := by linarith
-  rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (inv_pos.mpr hx0)]
-  calc
-    _ ≤ X⁻¹ * (C * K * B ^ 2 * X ^ (1 + ε)) :=
-      mul_le_mul_of_nonneg_left (hc S T hS hT β X K B hX hK hB hN hβ) (by positivity)
-    _ = C * K * B ^ 2 * X ^ ε := by
-      rw [Real.rpow_add hx0, Real.rpow_one]
-      field_simp
-
-theorem aggregated_rowPolynomial (S T : Finset (Ideal O))
-    (β : Ideal O → Ideal O → ℂ) (z : O) :
-    let P := (S ×ˢ T).image (fun p : Ideal O × Ideal O => p.1 * p.2)
-    rowPolynomial Finset.univ (idealColumn P)
-      (fun I : P => productColumnCoefficient S T β I.val) z =
-      ∑ I ∈ S, ∑ J ∈ T, β I J * idealRowHom z (I * J) := by
-  dsimp only
-  rw [rowPolynomial]
-  simp only [idealColumn_span]
-  rw [Finset.sum_coe_sort ((S ×ˢ T).image (fun p : Ideal O × Ideal O => p.1 * p.2))
-    (fun I : Ideal O => productColumnCoefficient S T β I * idealRowHom z I)]
-  exact (productColumnCoefficient_sextic_row_sum S T β z).symm
-
-theorem aggregated_rowEnergy (S T : Finset (Ideal O))
-    (β : Ideal O → Ideal O → ℂ) (W : SchwartzMap ℝ ℂ) (K : ℝ) :
-    let P := (S ×ˢ T).image (fun p : Ideal O × Ideal O => p.1 * p.2)
-    rowEnergy Finset.univ (idealColumn P)
-      (fun I : P => productColumnCoefficient S T β I.val) W K =
-      ∑' z : O, ((‖∑ I ∈ S, ∑ J ∈ T, β I J * idealRowHom z (I * J)‖ ^ 2 : ℝ) : ℂ) *
-        W (‖eisEmbedding z‖ ^ 2 / K) := by
-  simp only [CenteredMomentRowNorm.rowEnergy, aggregated_rowPolynomial]
-
-theorem idealZeroEnergy_first_frequency (S : Finset (Ideal O))
-    (hS : ∀ I ∈ S, Supported I) (c : Ideal O → ℂ)
-    (W : SchwartzMap ℝ ℂ) (K : ℝ) :
-    (∑ I : S, ∑ J : S, (c I.val * star (c J.val)) *
-      (((K / ‖eisEmbedding (idealColumn S I * idealColumn S J)‖ ^ 2 : ℝ) : ℂ) *
-        (pairFourier (idealColumn S I) (idealColumn S J)
-          (idealColumn_supported S hS I) (idealColumn_supported S hS J) 0 *
-          EisensteinSchwartzPoisson.paperRadialFourier W
-            (K * ‖eisEmbedding (0 : O)‖ ^ 2 /
-              ‖eisEmbedding (idealColumn S I * idealColumn S J)‖ ^ 2)))) =
-      idealZeroEnergy S hS c K * EisensteinSchwartzPoisson.paperRadialFourier W 0 := by
-  simp [idealZeroEnergy, Finset.sum_mul, mul_assoc]
-
-theorem normalized_product_zero_mode_bound (ε : ℝ) (hε : 0 < ε) :
-    ∃ C : ℝ, 0 < C ∧ ∀ (S T : Finset (Ideal O))
-      (hS : ∀ I ∈ S, Supported I) (hT : ∀ J ∈ T, Supported J)
-      (β : Ideal O → Ideal O → ℂ) (W : SchwartzMap ℝ ℂ) (X K B : ℝ),
-      1 ≤ X → 0 ≤ K → 0 ≤ B →
-      (∀ I ∈ S, ∀ J ∈ T, (Ideal.absNorm (I * J) : ℝ) ≤ X) →
-      (∀ I ∈ S, ∀ J ∈ T, ‖β I J‖ ≤ B) →
-      ‖((X⁻¹ : ℝ) : ℂ) *
-        (productZeroEnergy S T hS hT β K * EisensteinSchwartzPoisson.paperRadialFourier W 0)‖ ≤
-        C * K * B ^ 2 * ‖EisensteinSchwartzPoisson.paperRadialFourier W 0‖ * X ^ ε := by
-  obtain ⟨C, hC, hc⟩ := normalized_product_zero_energy_bound ε hε
-  refine ⟨C, hC, ?_⟩
-  intro S T hS hT β W X K B hX hK hB hN hβ
-  rw [← mul_assoc, norm_mul]
-  calc
-    _ ≤ (C * K * B ^ 2 * X ^ ε) * ‖EisensteinSchwartzPoisson.paperRadialFourier W 0‖ :=
-      mul_le_mul_of_nonneg_right (hc S T hS hT β X K B hX hK hB hN hβ) (norm_nonneg _)
-    _ = _ := by ring
 
 end SevenEighths.CenteredMomentZeroMode
 

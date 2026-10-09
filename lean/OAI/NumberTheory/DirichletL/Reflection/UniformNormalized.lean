@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.UniformPhysical
-import OAI.NumberTheory.DirichletL.Reflection.NormalizedPhysical
-
+import OAI.NumberTheory.DirichletL.Reflection.UpperThreshold
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

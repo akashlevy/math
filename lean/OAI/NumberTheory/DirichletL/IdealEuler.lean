@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Foundation
 import OAI.NumberTheory.DirichletL.IdealCharacter
-
 namespace OAI
 
 namespace SevenEighths.IdealEuler
@@ -45,10 +44,6 @@ theorem weighted_summable_norm (a : Ideal O →*₀ ℂ) (ha : ∀ I, ‖a I‖ 
   rw [norm_mul]
   exact mul_le_of_le_one_left (norm_nonneg _) (ha I)
 
-theorem weighted_summable (a : Ideal O →*₀ ℂ) (ha : ∀ I, ‖a I‖ ≤ 1)
-    (s : ℂ) (hs : 1 < s.re) : Summable (fun I : Ideal O => weighted a s I) :=
-  (weighted_summable_norm a ha s hs).of_norm
-
 theorem inverse_summable_norm (a : Ideal O →*₀ ℂ) (ha : ∀ I, ‖a I‖ ≤ 1)
     (s : ℂ) (hs : 1 < s.re) :
     Summable (fun I : Ideal O => ‖(moebius I : ℂ) * weighted a s I‖) := by
@@ -56,11 +51,6 @@ theorem inverse_summable_norm (a : Ideal O →*₀ ℂ) (ha : ∀ I, ‖a I‖ �
   intro I
   rw [norm_mul]
   exact mul_le_of_le_one_left (norm_nonneg _) (CubicEisenstein.norm_ideal_moebius_le_one I)
-
-theorem series_eq_LSeries (a : Ideal O →*₀ ℂ) (ha : ∀ I, ‖a I‖ ≤ 1)
-    (s : ℂ) (hs : 1 < s.re) :
-    series a s = LSeries (ShortDraftHeckeBridge.normFiberCoeff a) s :=
-  SmoothMobiusCorrection.idealDirichlet_eq_LSeries a ha s hs
 
 theorem inverseSeries_mul_series (a : Ideal O →*₀ ℂ) (ha : ∀ I, ‖a I‖ ≤ 1)
     (s : ℂ) (hs : 1 < s.re) : inverseSeries a s * series a s = 1 := by
@@ -285,36 +275,6 @@ theorem series_of_coprime_mask (M : Ideal O) (hM : M ≠ 0)
     rw [deletePrimes_primeSet_apply M hM, hmask]
   rw [heq]
   exact series_deletePrimes _ b hb s hs
-
-theorem series_ofResidue_source_mask (M K : Ideal O) (hM : M ≠ 0)
-    [Finite (O ⧸ K)] (χ : MulChar (O ⧸ M) ℂ) (φ : MulChar (O ⧸ K) ℂ)
-    (hχ : IdealCharacter.UnitInvariant M χ) (hφ : IdealCharacter.UnitInvariant K φ)
-    (hmask : ∀ x : O, χ (Ideal.Quotient.mk M x) =
-      if IsUnit (Ideal.Quotient.mk M x) then φ (Ideal.Quotient.mk K x) else 0)
-    (s : ℂ) (hs : 1 < s.re) :
-    series (IdealCharacter.ofResidue M χ hχ) s =
-      series (IdealCharacter.ofResidue K φ hφ) s *
-        ∏ P ∈ SmoothMobiusCorrection.primeSet M,
-          (1 - weighted (IdealCharacter.ofResidue K φ hφ) s P.val) :=
-  series_of_coprime_mask M hM _ _ (IdealCharacter.norm_ofResidue_le_one K φ hφ)
-    (IdealCharacter.ofResidue_source_mask M K χ φ hχ hφ hmask) s hs
-
-theorem exists_primitive_series_associate (M : Ideal O) (hM : M ≠ 0)
-    [Finite (O ⧸ M)] (χ : MulChar (O ⧸ M) ℂ) (hχ : IdealCharacter.UnitInvariant M χ) :
-    ∃ (K : Ideal O) (φ : MulChar (O ⧸ K) ℂ) (hφ : IdealCharacter.UnitInvariant K φ),
-      M ≤ K ∧ K ≠ ⊥ ∧ FiniteFourier.IsPrimitiveOnIdeals φ ∧ K.absNorm ≤ M.absNorm ∧
-      ∀ (s : ℂ), 1 < s.re →
-        series (IdealCharacter.ofResidue M χ hχ) s =
-          series (IdealCharacter.ofResidue K φ hφ) s *
-            ∏ P ∈ SmoothMobiusCorrection.primeSet M,
-              (1 - weighted (IdealCharacter.ofResidue K φ hφ) s P.val) := by
-  obtain ⟨K, φ, hφ, hMK, hK, hp, hn, hmask, _⟩ :=
-    IdealCharacter.exists_primitive_associate M χ hχ
-  let : Finite (O ⧸ K) := Finite.of_surjective _ (Ideal.Quotient.factor_surjective hMK)
-  refine ⟨K, φ, hφ, hMK, hK, hp, hn, ?_⟩
-  intro s hs
-  exact series_of_coprime_mask M hM _ _
-    (IdealCharacter.norm_ofResidue_le_one K φ hφ) hmask s hs
 
 end
 

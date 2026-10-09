@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.ComparisonReflection
 import OAI.NumberTheory.DirichletL.Moments.HeckeWindowEnergy
 import OAI.NumberTheory.DirichletL.Hecke.DetectorDyadicBridge
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationScaleSup
-
 namespace OAI
 
 noncomputable section
@@ -11,40 +10,6 @@ open MeasureTheory
 namespace SevenEighths.CenteredMomentReflectedProfileMeasure
 open HeckeFamily FourierBridge EisensteinSchwartzPoisson
 local notation "O" => HeckeFamily.O
-
-theorem actual_profile_separation (V : ℝ→ℂ) (M a b : ℝ) (hM : 0≤M)
-    (hV : ∀y,V y≠0 → |y|≤M) (ha : 0<a) (A J : ℕ) :
-    ∃n : ℕ,∀(W : ℝ→ℂ),∀hs : Function.support W⊆Set.Icc a b,
-      ∀hW : ContDiff ℝ ∞ W,∃C : ℝ,0<C ∧ ∀t s : ℝ,0<s →
-      ∃density : 𝓢(ℝ,ℂ),
-        (∀y : ℝ,V y*paperRadialFourier (CompletedHeight.normTwistedSource W t)
-          (s*Real.exp y)=∫v : ℝ,(V y*logPhase v y)*density v) ∧
-        Integrable (fun v : ℝ=>(1+‖v‖)^J*‖density v‖) ∧
-        (1+s)^A*(∫v : ℝ,(1+‖v‖)^J*‖density v‖)≤C*(1+‖t‖)^n ∧
-        (∀v : ℝ,(1+s)^A*(1+‖v‖)^J*‖density v‖≤C*(1+‖t‖)^n) := by
-  obtain ⟨C,hC,hsep⟩ := LocalLogFourier.coupled_positive_log_separation_linear_constant
-    (fun _ : Unit=>V) (fun _=>1) (fun _=>M) (fun _=>hM) (fun _=>hV) A J
-  obtain ⟨n,hn⟩ := CenteredMomentComparisonReflection.reflected_profile_height_control
-    a b ha A (J+(volume : Measure ℝ).integrablePower)
-  refine ⟨n,?_⟩
-  intro W hs hW
-  obtain ⟨D,hD,hDb⟩ := hn W hs hW
-  refine ⟨(C+1)*D,by positivity,?_⟩
-  intro t s hs0
-  have he : (CompletedHeight.uniformTwistedSchwartz W a b ha hs hW t : ℝ→ℂ)=
-      CompletedHeight.normTwistedSource W t := by
-    funext x
-    exact CompletedHeight.uniformTwistedSchwartz_apply W a b ha hs hW t x
-  have hF : ContDiffOn ℝ ∞ (paperRadialFourier (CompletedHeight.normTwistedSource W t)) (Set.Ioi 0) := by
-    rw [←he]
-    exact paperRadialFourier_contDiffOn _
-  obtain ⟨density,hid,hi,hm,hp⟩ := hsep _ hF (D*(1+‖t‖)^n) (by positivity)
-    (fun j hj x hx=>hDb t j hj x hx.le) s hs0
-  refine ⟨density,?_,hi,hm.trans ?_,fun v=>(hp v).trans ?_⟩
-  · intro y
-    simpa using hid (fun _ : Unit=>y)
-  · nlinarith [pow_nonneg (show 0≤1+‖t‖ by positivity) n]
-  · nlinarith [pow_nonneg (show 0≤1+‖t‖ by positivity) n]
 
 theorem row_density_energy {ι : Type*} [Fintype ι]
     (density φ : ι→ℝ→ℂ) (rho : ℝ→ℝ) (w : ℝ→ℝ)
@@ -79,27 +44,6 @@ theorem row_density_energy {ι : Type*} [Fintype ι]
   have hh := CompletedGauss.finite_integral_energy_bound B F E hE
     (by simpa only [hBn] using hmeasure) (fun i=>by simpa only [he] using hint i) hb
   simpa only [he,hBn] using hh
-
-theorem row_density_energy_two {ι : Type*} [Fintype ι]
-    (b₁ b₂ : ι→ℝ→ℂ) (φ : ι→ℝ→ℝ→ℂ) (rho₁ rho₂ w₁ w₂ : ℝ→ℝ)
-    (hr₁ : ∀v,0<rho₁ v) (hr₂ : ∀v,0<rho₂ v)
-    (hw₁ : ∀v,0<w₁ v) (hw₂ : ∀v,0<w₂ v)
-    (hp₁ : ∀i v,‖b₁ i v‖≤rho₁ v) (hp₂ : ∀i v,‖b₂ i v‖≤rho₂ v)
-    (hi₁ : ∀i,Integrable (fun x=>b₁ i x*(∫y : ℝ,b₂ i y*φ i x y)))
-    (hi₂ : ∀i x,Integrable (fun y=>b₂ i y*φ i x y))
-    (hm₁ : Integrable (fun x=>rho₁ x*w₁ x))
-    (hm₂ : Integrable (fun y=>rho₂ y*w₂ y))
-    (E : ℝ) (hE : 0≤E)
-    (hb : ∀x y,(∑i,‖φ i x y‖^2)≤E*(w₁ x)^2*(w₂ y)^2) :
-    (∑i,‖∫x : ℝ,b₁ i x*(∫y : ℝ,b₂ i y*φ i x y)‖^2)≤
-      E*(∫x : ℝ,rho₁ x*w₁ x)^2*(∫y : ℝ,rho₂ y*w₂ y)^2 := by
-  have hh := row_density_energy b₁ (fun i x=>∫y : ℝ,b₂ i y*φ i x y)
-    rho₁ w₁ hr₁ hw₁ hp₁ hi₁ hm₁ (E*(∫y : ℝ,rho₂ y*w₂ y)^2) (by positivity) (by
-      intro x
-      have ht := row_density_energy b₂ (fun i y=>φ i x y) rho₂ w₂ hr₂ hw₂
-        hp₂ (fun i=>hi₂ i x) hm₂ (E*(w₁ x)^2) (by positivity) (hb x)
-      exact ht.trans_eq (by ring))
-  exact hh.trans_eq (by ring)
 
 def logWindow (V : ℝ→ℂ) (x : ℝ) : ℂ := if 0<x then V (Real.log x) else 0
 
@@ -193,27 +137,6 @@ theorem plain_annular_separation (V F : ℝ→ℂ) (M s X : ℝ) (hX : 0<X)
       (logWindow_support V M hV) le_rfl
     simpa only [Real.exp_log hX] using hh
   exact finite_annular_separation V F s X hX density hsep η S hs hc
-
-theorem actual_plain_profile_measure (V : ℝ→ℂ) (M a b : ℝ) (hM : 0≤M)
-    (hV : ∀y,V y≠0 → |y|≤M) (ha : 0<a) (A J : ℕ) :
-    ∃n : ℕ,∀(W : ℝ→ℂ),∀hs : Function.support W⊆Set.Icc a b,
-      ∀hW : ContDiff ℝ ∞ W,∃C : ℝ,0<C ∧ ∀t s : ℝ,0<s →
-      ∃density : 𝓢(ℝ,ℂ),
-        (∀(η : Character)(X : ℝ),0<X →
-          HeckeDyadic.polynomial η false (fun x=>logWindow V x*
-            paperRadialFourier (CompletedHeight.normTwistedSource W t) (s*x)) X 0 0 =
-          ∫v : ℝ,density v*HeckeDyadic.polynomial η false (logWindow V) X 0 (2*Real.pi*v)) ∧
-        Integrable (fun v : ℝ=>(1+‖v‖)^J*‖density v‖) ∧
-        (1+s)^A*(∫v : ℝ,(1+‖v‖)^J*‖density v‖)≤C*(1+‖t‖)^n ∧
-        (∀v : ℝ,(1+s)^A*(1+‖v‖)^J*‖density v‖≤C*(1+‖t‖)^n) := by
-  obtain ⟨n,hn⟩ := actual_profile_separation V M a b hM hV ha A J
-  refine ⟨n,?_⟩
-  intro W hs hW
-  obtain ⟨C,hC,hb⟩ := hn W hs hW
-  refine ⟨C,hC,?_⟩
-  intro t s hs0
-  obtain ⟨density,hsep,hi,hm,hp⟩ := hb t s hs0
-  exact ⟨density,(fun η X hX=>plain_annular_separation V _ M s X hX hV density hsep η),hi,hm,hp⟩
 
 end SevenEighths.CenteredMomentReflectedProfileMeasure
 

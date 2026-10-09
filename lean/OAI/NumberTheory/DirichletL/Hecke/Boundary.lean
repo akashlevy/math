@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.IdealEuler
 import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicative
-
 namespace OAI
 
 namespace SevenEighths.HeckeBoundary
@@ -145,17 +144,6 @@ theorem ofResidue_primeTriple (M : Ideal O) [Finite (O ⧸ M)]
     simpa only [MulChar.coe_equivToUnitHom] using hn
   · left
     exact ⟨MulChar.map_nonunit _ hq, MulChar.map_nonunit _ hq, MulChar.map_nonunit _ hq⟩
-
-theorem norm_residue_series_product_ge_one (M : Ideal O) [Finite (O ⧸ M)]
-    (χ : MulChar (O ⧸ M) ℂ) (hχ : UnitInvariant M χ) {x : ℝ} (hx : 1 < x) (y : ℝ) :
-    1 ≤ ‖series (ofResidue M 1 (one_unitInvariant M)) (x : ℂ) ^ 3 *
-      series (ofResidue M χ hχ) (x + I * y) ^ 4 *
-      series (ofResidue M (χ ^ 2) (square_unitInvariant M χ hχ)) (x + 2 * I * y)‖ :=
-  norm_series_product_ge_one _ _ _
-    (norm_ofResidue_le_one M 1 (one_unitInvariant M))
-    (norm_ofResidue_le_one M χ hχ)
-    (norm_ofResidue_le_one M (χ ^ 2) (square_unitInvariant M χ hχ))
-    (ofResidue_primeTriple M χ hχ) hx y
 
 theorem horizontal_isBigO_of_zero (F : ℂ → ℂ) (t : ℝ)
     (hF : DifferentiableAt ℂ F (1 + I * t)) (hz : F (1 + I * t) = 0) :

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRowCount
 import Mathlib.Analysis.InnerProductSpace.Calculus
-
 namespace OAI
 
 noncomputable section
@@ -86,10 +85,6 @@ theorem rowwise_energy_two {ι : Type*} (rows : Finset ι)
     (fun i hi => cx 0 0 i hi (py i)) (fun i hi => cx 1 0 i hi (py i))
     (fun i hi x => hdx 0 i hi x (py i)) a b ((1+2*(d-c))*E) hab px hpx
     (he 0) (he 1)
-
-theorem source_height_cost {T E : ℝ} (_hT : 0≤T) (hE : 0≤E) :
-    (1+2*((1:ℝ)-0))*((1+2*(T-(-T)))*E)≤12*(1+T)*E := by
-  nlinarith
 
 end SevenEighths.HeckeDetectorRowwise
 

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.AnnularExponent
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

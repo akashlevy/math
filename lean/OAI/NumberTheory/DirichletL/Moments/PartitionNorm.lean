@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.Partition
 import Mathlib.Analysis.SpecialFunctions.Log.Base
-
 namespace OAI
 
 noncomputable section
@@ -54,18 +53,6 @@ theorem partitionNormalizer_eq_norm_ratio (p : ι → O)
       (Ideal.absNorm (commonIdeal p c d) : ℝ) / Ideal.absNorm (unitIdeal p U) := by
   apply (eq_div_iff (unitIdeal_norm_pos p hp U).ne').mpr
   exact partitionNormalizer_mul_unit_norm p c d hc hd U
-
-theorem partitionNormalizer_eq_log_scale (p : ι → O)
-    (hp : ∀ i, Supported (Ideal.span {p i})) (c d : ι → ℕ)
-    (hc : ∀ i, 1 ≤ c i) (hd : ∀ i, 1 ≤ d i) (U : Finset ι)
-    (Z : ℝ) (hZ : 1 < Z) :
-    partitionNormalizer p c d U =
-      Z ^ (Real.logb Z (Ideal.absNorm (commonIdeal p c d)) -
-        Real.logb Z (Ideal.absNorm (unitIdeal p U))) := by
-  rw [Real.rpow_sub (zero_lt_one.trans hZ),
-    Real.rpow_logb (zero_lt_one.trans hZ) (ne_of_gt hZ) (commonIdeal_norm_pos p hp c d),
-    Real.rpow_logb (zero_lt_one.trans hZ) (ne_of_gt hZ) (unitIdeal_norm_pos p hp U)]
-  exact partitionNormalizer_eq_norm_ratio p hp c d hc hd U
 
 end SevenEighths.CenteredMomentPartitionNorm
 

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.CanonicalShortAttachment
 import OAI.NumberTheory.DirichletL.Inversion.ReflectedShortNormalizedUniformDegree
-
 namespace OAI
 
 noncomputable section

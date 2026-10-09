@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.DetectorBins
-
 namespace OAI
 
 noncomputable section

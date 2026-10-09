@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.PlainWindowEnergy
 import OAI.NumberTheory.DirichletL.Moments.RestrictedEnergy
-
 namespace OAI
 
 noncomputable section

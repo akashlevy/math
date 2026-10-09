@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorDyadicSupport
-
 namespace OAI
 
 noncomputable section

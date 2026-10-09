@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.PrimeRows.CentralProduct
 import OAI.NumberTheory.DirichletL.PrimeRows.BufferedBin
 import OAI.NumberTheory.DirichletL.PrimeRows.DiskControl
 import OAI.NumberTheory.DirichletL.PrimeRows.FirstContinuation
-
 namespace OAI
 
 noncomputable section

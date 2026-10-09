@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstCommonMeasure
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -60,53 +59,6 @@ theorem first_common_source_mode (A₁ A₂ C R : ℝ) (d h : Eis) (s : Fin 9 �
     funext i
     fin_cases i <;> rfl
   rw [hy,first_mode_split]
-
-def firstCommonSeparatedRow (F : Finset ι) (C₁ C₂ : Finset ι → ℂ)
-    (ω₁ ω₂ : ℝ → ℂ) (A₁ A₂ C R : ℝ) (d h : Eis) (s : Fin 9 → ℝ)
-    (z : Frequency × (Fin 9 → ℝ)) : ℂ :=
-  let H := profileHeight firstLeftSlope firstRightSlope firstKernelSlope z.1 z.2
-  ∑ r : RayCharacter × RayCharacter, crossCoeff r.1 r.2 *
-    ∑ D ∈ F.powerset, supportMobius (fun i => Ideal.span {p i}) D * rowCoprimeMask (fun i => Ideal.span {p i}) D h *
-      firstOuterPhase H (firstCommonOuterLog p A₁ A₂ C R d h D s) *
-      star (firstCommonColumn p hg F D C₁ true r.1 ω₁ (s 7) (H 7) h) *
-      firstCommonColumn p hg F D C₂ false r.2 ω₂ (s 8) (H 8) h
-
-theorem first_common_modes_eq_columns (F : Finset ι) (C₁ C₂ : Finset ι → ℂ)
-    (ω₁ ω₂ : ℝ → ℂ) (A₁ A₂ C R : ℝ) (d h : Eis) (s : Fin 9 → ℝ)
-    (z : Frequency × (Fin 9 → ℝ)) :
-    (∑ j ∈ firstCommonIndices F,firstCommonWeight p hg C₁ C₂ h j *
-      (ω₁ (primeProductNorm p j.2.2.1/s 7)*ω₂ (primeProductNorm p j.2.2.2/s 8)) *
-      pureProfileMode firstLeftSlope firstRightSlope firstKernelSlope
-        (firstRelativeLog (firstCommonNorms p A₁ A₂ C R d h j) s) z.1 z.2) =
-    firstCommonSeparatedRow p hg F C₁ C₂ ω₁ ω₂ A₁ A₂ C R d h s z := by
-  simp only [firstCommonIndices,Finset.sum_product,Finset.sum_sigma,
-    firstCommonWeight,firstCommonSeparatedRow,Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro r hr
-  apply Finset.sum_congr rfl
-  intro D hD
-  let H := profileHeight firstLeftSlope firstRightSlope firstKernelSlope z.1 z.2
-  calc
-    _ = crossCoeff r.1 r.2 *
-        (supportMobius (fun i => Ideal.span {p i}) D * rowCoprimeMask (fun i => Ideal.span {p i}) D h *
-          firstOuterPhase H (firstCommonOuterLog p A₁ A₂ C R d h D s)) *
-        (∑ U ∈ (F\D).powerset, ∑ V ∈ (F\D).powerset,
-          firstCommonCoefficient p hg C₁ C₂ r D U V h *
-            (ω₁ (primeProductNorm p U/s 7)*ω₂ (primeProductNorm p V/s 8)) *
-            logPhase (H 7) (Real.log (primeProductNorm p U/s 7)) *
-            logPhase (H 8) (Real.log (primeProductNorm p V/s 8))) := by
-      simp only [Finset.mul_sum]
-      apply Finset.sum_congr rfl
-      intro U hU
-      apply Finset.sum_congr rfl
-      intro V hV
-      rw [first_common_source_mode]
-      dsimp only [H]
-      ring
-    _ = _ := by
-      rw [firstCommonColumn_pair]
-      dsimp only [H]
-      ring
 
 end
 end SevenEighths.InverseMoment

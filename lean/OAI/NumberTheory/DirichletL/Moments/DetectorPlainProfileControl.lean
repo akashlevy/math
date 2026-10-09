@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.DetectorEnergyInitialState
-
 namespace OAI
 
 noncomputable section

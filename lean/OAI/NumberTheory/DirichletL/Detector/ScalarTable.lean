@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.ScalarVanishing
-
 namespace OAI
 
 noncomputable section

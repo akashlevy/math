@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.ContinuationContour
 import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
-
 namespace OAI
 
 noncomputable section

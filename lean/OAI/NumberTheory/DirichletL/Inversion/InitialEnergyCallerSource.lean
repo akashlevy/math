@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerModes
-
 namespace OAI
 
 noncomputable section

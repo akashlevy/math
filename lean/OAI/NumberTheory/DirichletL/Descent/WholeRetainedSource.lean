@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.WholePriorityPhysical
 import OAI.NumberTheory.DirichletL.Descent.SecondDeletedModeEnergy
-
 namespace OAI
 
 noncomputable section
@@ -17,21 +16,6 @@ def deleted (extra : CubeCoordinates ι→Finset ι) (negative : Bool)
     (x : MarkedSecondSource ι Jo 0) : Finset ι :=
   extra x.cube∪(((if negative then x.cube.rightDivisor else x.cube.leftDivisor)∪x.firstCommon)∪
     quotientSupport p (secondParentOf x))
-
-theorem retained_conditions (hp : ∀ i,p i≠0)
-    (extra : CubeCoordinates ι→Finset ι)
-    (source : Finset (Source ι Jo)) (hs : ∀ x∈source,SourceValid p x)
-    (hextra : ∀ x∈source,extra x.cube⊆x.cube.support)
-    (negative : Bool) (J : Finset σ) (lists : σ→Finset ι) (pool : Finset ι)
-    (R : SecondParentSource ι (Jo+(J.card+J.card))→Finset ι→Finset ι→ℝ)
-    (label : SecondParentSource ι (Jo+(J.card+J.card))→Finset ι→SecondExpansionData ι→κ)
-    (residual : Finset ι) (j : κ) :
-    ActualSecondSourceConditions p
-      (retainedPool p pool (wholeAssignedParents p (fun x=>extra x.cube) source negative J lists)
-        R label residual j) := by
-  apply whole_assigned_family_conditions p hp (fun x=>extra x.cube) source hs hextra negative J lists
-  intro y hy x hx
-  exact (second_variable_original_support p y pool residual (R y) (label y) j x hx).2.1
 
 theorem retained_deleted_support
     (hinj : Function.Injective (fun i=>Ideal.span {p i}))

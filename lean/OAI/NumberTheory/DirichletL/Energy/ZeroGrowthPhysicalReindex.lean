@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.ZeroBalancedAdmission
 import OAI.NumberTheory.DirichletL.Energy.SourceInputReindexGates
-
 namespace OAI
 
 noncomputable section

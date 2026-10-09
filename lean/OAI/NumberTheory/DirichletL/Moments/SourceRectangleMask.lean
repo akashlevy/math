@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SourceRectangle
 import OAI.NumberTheory.DirichletL.Moments.DivisorRetained
-
 namespace OAI
 
 noncomputable section
@@ -27,9 +26,6 @@ theorem rowWeight_ideal_mask (η : Character) (m A z : O) (t : ℝ)
   · rw [rowWeight_zero_of_not_supported η m A z t hmLam hm2 I hI,
       rowWeight_zero_of_not_supported η (m*idealGenerator R) A z t
         (hmLam.trans (dvd_mul_right _ _)) (hm2.trans (dvd_mul_right _ _)) I hI,mul_zero]
-
-theorem ideal_mask_nonzero (m : O) (hm : m≠0) (R : Ideal O) (hR : R≠0) :
-    m*idealGenerator R≠0 := mul_ne_zero hm (idealGenerator_ne_zero R hR)
 
 theorem fullMaskedRectangle_eq_maskedRectangle {ι : Type*} [Fintype ι] [DecidableEq ι]
     (η : Character) (m A z : O) (t : ℝ)

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.ZeroReferenceBounded
 import OAI.NumberTheory.DirichletL.Energy.LiveClippingDefect
-
 namespace OAI
 
 noncomputable section

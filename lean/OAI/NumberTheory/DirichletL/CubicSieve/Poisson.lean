@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Foundation
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve
@@ -327,32 +326,6 @@ theorem cubicExponent_nonprincipal (P : Ideal O) [P.IsMaximal]
       have he : actualSextic P hg ^ 4 = χ ^ 2 := by
         rw [show (4 : ℕ) = 2 * 2 by decide, pow_mul]
       simpa only [cubicExponent, ite_true, he] using h2
-
-theorem cubic_radial_poisson {ι : Type*} [Fintype ι]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime P))
-    (hg : ∀ i, goodLambda ∉ P i) (negative : ι → Bool)
-    (W : 𝓢(ℝ, ℂ)) (scale : ℝ) (hscale : 0 < scale) :
-    (∑' z : O, finiteSexticRow P hg (fun i => cubicExponent (negative i)) z *
-      W (‖eisEmbedding z‖ ^ 2 / scale)) =
-      ((scale : ℂ) * canonicalNormalizedGauss P hcop hg
-        (fun i => cubicExponent (negative i)) / (‖eisEmbedding (finitePrimeModulus P)‖ : ℂ)) *
-      ∑' h : O, star (finiteSexticRow P hg (fun i => cubicExponent (negative i)) h) *
-        paperRadialFourier W
-          (scale * ‖eisEmbedding h‖ ^ 2 / ‖eisEmbedding (finitePrimeModulus P)‖ ^ 2) :=
-  canonical_radial_poisson_normalized_of_nontrivial P hcop hg _
-    (fun i => cubicExponent_nonprincipal (P i) (hg i) (negative i)) W scale hscale
-
-theorem cubic_polya_vinogradov {ι : Type*} [Fintype ι] [Nonempty ι]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime P))
-    (hg : ∀ i, goodLambda ∉ P i) (negative : ι → Bool)
-    (W : 𝓢(ℝ, ℂ)) (scale : ℝ) (hscale : 0 < scale) :
-    ‖∑' z : O, finiteSexticRow P hg (fun i => cubicExponent (negative i)) z *
-      W (‖eisEmbedding z‖ ^ 2 / scale)‖ ≤
-        pvControl W * ‖eisEmbedding (finitePrimeModulus P)‖ :=
-  canonical_polya_vinogradov_of_nontrivial P hcop hg _
-    (fun i => cubicExponent_nonprincipal (P i) (hg i) (negative i)) W scale hscale
 
 end
 end SevenEighths.CubicSieve

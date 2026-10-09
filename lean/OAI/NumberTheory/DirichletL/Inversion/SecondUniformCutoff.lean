@@ -1,8 +1,7 @@
-import OAI.NumberTheory.DirichletL.Descent.SecondCutoffScale
 import OAI.NumberTheory.DirichletL.Descent.SecondCorrelatedCutoff
+import OAI.NumberTheory.DirichletL.Descent.PhysicalExponents
 import OAI.NumberTheory.DirichletL.Descent.ActualChildStateRadius
 import OAI.NumberTheory.DirichletL.Inversion.SecondSourceBlocks
-
 namespace OAI
 
 noncomputable section
@@ -98,63 +97,6 @@ theorem actual_cell_uniform_source_gates {ι : Type*} [DecidableEq ι]
     (zero_lt_one.trans hZ) hL0 (by simpa [outerNorms] using hE) (by simpa [outerNorms] using hG) hL
   have hb:=(mem_nonzeroChildFrequencyBall _ (actualSecondMultiplier_ne_zero p x) _ _).mp (hgate x hxs)
   exact (mem_nonzeroChildFrequencyBall _ (actualSecondMultiplier_ne_zero p x) _ _).mpr ⟨hb.1,hb.2.trans hr⟩
-
-theorem actual_cell_uniform_child_rows {ι : Type*} [DecidableEq ι]
-    (p : ι→O) (hp : ∀i,p i≠0) [∀i,(Ideal.span {p i}).IsMaximal]
-    (hpr : ∀i,ConcretePrimeRowBridge.goodLambda^2∣p i-1)
-    {Jo Jn : ℕ} (source : Finset (MarkedSecondSource ι Jo Jn))
-    (Z M r ell V delta A B j t eta tau L : ℝ) (hZ : 1<Z)
-    (heta : 0≤eta) (hbin : 2≤Z^eta) (hL0 : 0≤L)
-    (hL : L≤Z^(r-A-B-t+4*eta))
-    (hgate : ∀x∈source,x.second.frequency∈nonzeroChildFrequencyBall (actualSecondMultiplier p x)
-      (uniformSecondRadius p Z delta eta x.second.sourceCommon x.second.divisor L
-        (Z^(firstPhysicalHeight M r ell V delta B j+12*eta+tau)) (Z^tau))) :
-    ∀d,∀x∈cell p source d,∀u v:Oˣ,(actualSecondChild p u v x).2.2∈nonzeroChildFrequencyBall 1
-      (actualCellRowRadius Z M ell A t V j eta d) := by
-  intro d x hx u v
-  exact (actual_second_row_ball p hp hpr x u v _).mp
-    (actual_cell_uniform_source_gates p hp source Z M r ell V delta A B j t eta tau L
-      hZ heta hbin hL0 hL hgate d x hx)
-
-theorem actual_cell_uniform_radius_nonnegative {ι : Type*} [DecidableEq ι]
-    (p : ι→O) (hp : ∀i,p i≠0) [∀i,(Ideal.span {p i}).IsMaximal]
-    {Jo Jn : ℕ} (source : Finset (MarkedSecondSource ι Jo Jn))
-    (Z M r ell V delta A B j t eta tau L : ℝ) (hZ : 1<Z)
-    (heta : 0≤eta) (hbin : 2≤Z^eta) (hL0 : 0≤L)
-    (hL : L≤Z^(r-A-B-t+4*eta))
-    (hgate : ∀x∈source,x.second.frequency∈nonzeroChildFrequencyBall (actualSecondMultiplier p x)
-      (uniformSecondRadius p Z delta eta x.second.sourceCommon x.second.divisor L
-        (Z^(firstPhysicalHeight M r ell V delta B j+12*eta+tau)) (Z^tau))) :
-    ∀d∈keys p source,0≤actualCellRowExponent Z M ell A t V j eta d :=
-  actual_cell_radius_nonnegative_on_keys p source Z M ell A t V j eta hZ
-    (actual_cell_uniform_source_gates p hp source Z M r ell V delta A B j t eta tau L
-      hZ heta hbin hL0 hL hgate)
-
-theorem full_second_uniform_tail (order : ℕ) :
-    ∃ (s : Finset (ℕ×ℕ)) (Ct : ℝ),0<Ct ∧
-    ∀ {ι : Type*} [DecidableEq ι]
-      (p : ι→O) (hp : ∀i,p i≠0) [∀i,(Ideal.span {p i}).IsMaximal]
-      (hg : ∀i,ConcretePrimeRowBridge.goodLambda∉Ideal.span {p i})
-      (hinj : Function.Injective (fun i=>Ideal.span {p i}))
-      (_hc : ∀i,ringChar (O⧸Ideal.span {p i})≠2)
-      (F : Finset ι) (Ψ : O→*ℂ) (_hΨ : ∀a,‖Ψ a‖≤1)
-      (Z delta eta : ℝ) (m c d : O) (_hd : d≠0)
-      (_hdyad : ‖eisEmbedding d‖^2≤Z^(delta+eta))
-      (Hcol : Finset ι→ℂ) (W : 𝓢(ℝ,ℂ)) (B Y H L : ℝ),
-      0≤B → 0<Y → 0≤H → 1≤L →
-      (∀U,‖Hcol U‖≤B) → (∀U,Hcol U≠0→primeProductNorm p U≤L) →
-      ‖secondSourceTail p hp hg hinj F Ψ m c d Hcol W Y
-        (fun G E=>childFrequencyBall
-          (d*primeSubsetGenerator (fun i=>Ideal.span {p i}) E)
-          (uniformSecondRadius p Z delta eta G E L Y H))‖≤
-        (128*L)^4*(B^2*(Y*(Ct*s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W)*
-          (1+L^3/Y)^2/(1+H)^order)) := by
-  obtain ⟨s,Ct,hCt,he⟩:=full_second_correlated_tail order
-  refine ⟨s,Ct,hCt,?_⟩
-  intro ι _ p hp _ hg hinj hc F Ψ hΨ Z delta eta m c d hd hdyad Hcol W B Y H L hB hY hH hL hcol hsupp
-  exact he p hp hg hinj hc F Ψ hΨ m c d hd Hcol W B Y H L
-    (fun G E=>uniformSecondRadius p Z delta eta G E L Y H) hB hY hH hL hcol hsupp
-    (fun G _ E=>correlated_le_uniform p Z delta eta d G E.val L Y H hY hH hdyad)
 
 end SevenEighths.InverseSecondUniformCutoff
 end

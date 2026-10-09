@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GramScaleLoss
-
 namespace OAI
 
 noncomputable section

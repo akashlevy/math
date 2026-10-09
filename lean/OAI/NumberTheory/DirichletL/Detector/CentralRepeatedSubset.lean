@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.CentralRepeatedSum
-
 namespace OAI
 
 noncomputable section

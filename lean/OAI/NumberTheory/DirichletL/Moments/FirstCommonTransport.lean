@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstSectorLocalization
 import OAI.NumberTheory.DirichletL.Moments.FirstSectorEnergy
-
 namespace OAI
 
 noncomputable section

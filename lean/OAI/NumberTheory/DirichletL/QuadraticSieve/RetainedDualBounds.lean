@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.PrincipalMajorants
-
 namespace OAI
 
 noncomputable section
@@ -8,76 +7,24 @@ namespace CanonicalQuadraticSieve
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 section
 
-open scoped BigOperators Classical SchwartzMap
-
 section
-open ActualEisensteinCubic ConcreteTraceCRT ConcretePrimeRowBridge EisensteinSchwartzPoisson
+open ConcretePrimeRowBridge EisensteinSchwartzPoisson
 open TruncatedPrincipalPoisson IdealMobiusDivisorSum
 
 def primePoolDensity (G : Ideal O) : ℂ :=
@@ -180,7 +127,7 @@ theorem unrestrictedDualPrincipalTruncation_eq
 end
 
 section
-open ActualEisensteinCubic ConcreteTraceCRT ConcretePrimeRowBridge EisensteinSchwartzPoisson
+open ConcretePrimeRowBridge EisensteinSchwartzPoisson
 open TruncatedPrincipalPoisson UnrestrictedIdealReindex GaussGeneratorTransport
 
 theorem dualPrincipalIdeal_truncated_all_conductors
@@ -233,7 +180,7 @@ theorem dualPrincipalIdeal_truncated_all_conductors
 
 end
 
-open ActualEisensteinCubic ConcreteTraceCRT ConcretePrimeRowBridge EisensteinSchwartzPoisson
+open ConcretePrimeRowBridge EisensteinSchwartzPoisson
 open TruncatedPrincipalPoisson IdealCoprimeSieveOperator
 
 theorem unrestrictedDualPrincipal_error_uniform (l : ℕ) :
@@ -525,8 +472,7 @@ theorem retained_dual_principal_global (l : ℕ) :
 
 end
 
-open scoped BigOperators Classical
-open ActualEisensteinCubic QuadraticSquarefreeKernel CompletedGauss
+open QuadraticSquarefreeKernel CompletedGauss
 
 def highSquareParts (M K : ℝ) : Finset (Ideal O) := (highKernelRange M K).image squarePart
 

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseMarkedReferenceDeleted
 import OAI.NumberTheory.DirichletL.Detector.DetectorMomentPrimeGeometry
-
 namespace OAI
 
 noncomputable section

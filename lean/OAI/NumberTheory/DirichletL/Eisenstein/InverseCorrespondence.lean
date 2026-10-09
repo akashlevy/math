@@ -1,77 +1,23 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.CubeCuspAverage
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 
@@ -194,28 +140,7 @@ open Filter MeasureTheory
 open scoped BigOperators Classical Topology MatrixGroups
 open Finset AddChar MulChar EisensteinEmbedding
 
-local notation "O" => ActualEisensteinCubic.O
-
-theorem integralCoverTrace_cusp_representative {H K : Subgroup (SL(2,ActualEisensteinCubic.O))}
-    (hHK : H≤K) (hK : K≤CubicKubota.levelThree) [H.IsFiniteRelIndex K]
-    (G : IntegralQuotientL2 H) (f : IntegralOrbitQuotient H→ℂ) (hmeas : Measurable f)
-    (hrep : G=ᵐ[integralQuotientVolume H]f) (C : ℝ)
-    (hdec : ∀M : CubicKubota.levelThree,∀z : ℂ,∀v : ℝ,∀hv : 0<v,1<v→
-      ‖f (integralOrbitProjection H (complexMatrix M•upperPoint z v hv))‖≤C/v^3) :
-    ∃g : IntegralOrbitQuotient K→ℂ,Measurable g ∧
-      integralCoverTrace hHK hK G=ᵐ[integralQuotientVolume K]g ∧
-      ∀M : CubicKubota.levelThree,∀z : ℂ,∀v : ℝ,∀hv : 0<v,1<v→
-        ‖g (integralOrbitProjection K (complexMatrix M•upperPoint z v hv))‖≤
-          (H.relIndex K:ℝ)*C/v^3 := by
-  refine ⟨integralCoverTraceFunction H K f,
-    integralCoverTraceFunction_measurable H K f hmeas,
-    integralCoverTrace_representative hHK hK G f hmeas hrep,?_⟩
-  exact integralCoverTraceFunction_cusp_decay H K hK f C hdec
-
 end CubicEisenstein
-
-open Filter MeasureTheory
-open scoped BigOperators Classical
 
 namespace CubicEisenstein
 
@@ -294,15 +219,6 @@ lemma period_integral_twisted_translation (f:ℂ→ℂ) (freq:ℂ)
     · congr 1;ring
   simp_rw [he]
   rw [integral_const_mul,period_integral_translation g hp b]
-
-lemma affineCuspBlock_integral_translation (h q r:Eis) (j n:ℕ)
-    (hq:q≠0) (hr:r=omega^j*ramifiedTraceLambda^n ∨ r=-(omega^j*ramifiedTraceLambda^n))
-    (hbase:(3:Eis)∣h+ramifiedAffineParameter j n*q) (v:ℝ) (s b:ℂ) :
-    (∫z in periodDomain,affineCuspBlock q r (z+b) v s*ShortDraftTrace.breveE (-ninthCuspFrequency h*z))=
-      ShortDraftTrace.breveE (ninthCuspFrequency h*b)*
-        ∫z in periodDomain,affineCuspBlock q r z v s*ShortDraftTrace.breveE (-ninthCuspFrequency h*z) :=
-  period_integral_twisted_translation (fun z=>affineCuspBlock q r z v s) (ninthCuspFrequency h)
-    (affineCuspBlock_weighted_periodic h q r j n hq hr hbase v s) b
 
 end
 section
@@ -481,25 +397,6 @@ lemma ramifiedCusp_unit_period_constant (b:Bool) :
       ramifiedTraceLambda]
     linear_combination (2*omega+2)*ramified_omega_relation
 
-lemma ramifiedCusp_support_standard (b:Bool) (h:Eis) :
-    (3:Eis)∣h-onceCuspScale (ramifiedCuspScaleUnit b) ↔
-      (3:Eis)∣h-(if b then -(omega-1) else omega-1) := by
-  have hc:(3:Eis)∣onceCuspScale (ramifiedCuspScaleUnit b)-(if b then -(omega-1) else omega-1):=by
-    cases b
-    · refine ⟨1,?_⟩
-      simp [ramifiedCuspScaleUnit,onceCuspScale,Units.val_neg,ramifiedOmegaUnit_val,
-        ramifiedTraceLambda]
-      linear_combination -2*ramified_omega_relation
-    · refine ⟨0,?_⟩
-      simp only [ramifiedCuspScaleUnit,ite_true,onceCuspScale,Units.val_pow_eq_pow_val,ramifiedOmegaUnit_val,
-        ramifiedTraceLambda]
-      linear_combination (2*omega-1)*ramified_omega_relation
-  constructor
-  · intro hh
-    convert dvd_add hh hc using 1 ;ring
-  · intro hh
-    convert dvd_sub hh hc using 1 ;ring
-
 end
 
 open Filter MeasureTheory
@@ -557,9 +454,7 @@ lemma ramifiedCusp_unit_base (b:Bool) (h:Eis)
 
 end CubicEisenstein
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
-open Finset AddChar MulChar EisensteinEmbedding
+open scoped MatrixGroups
 
 namespace CubicKubota
 open CubicEisenstein
@@ -585,67 +480,6 @@ def cubeKernelRangeEquiv (p : ActualEisensteinCubic.O) (hp : p≠0) :
     (cubeKernelLeftGlobal p).range≃*(cubeKernelRightGlobal p hp).range :=
   (MonoidHom.ofInjective (cubeKernelLeftGlobal_injective p hp)).symm.trans
     (MonoidHom.ofInjective (cubeKernelRightGlobal_injective p hp))
-
-def cubeCoverMatrix (p : ActualEisensteinCubic.O) (hp : p≠0) : SL(2,ℂ) :=
-  (cubeArchimedean_correspondence p hp).choose
-
-lemma cubeCoverMatrix_spec (p : ActualEisensteinCubic.O) (hp : p≠0) :
-    cubeCoverMatrix p hp 0 1=0 ∧ cubeCoverMatrix p hp 1 0=0 ∧
-    cubeCoverMatrix p hp 0 0/cubeCoverMatrix p hp 1 1=ConcreteTraceCRT.eisEmbedding p^3 ∧
-    ∀x : cubeKernelCorrespondence p,
-      cubeCoverMatrix p hp*integralComplexMatrix (cubeKernelLeftGlobal p x)=
-        integralComplexMatrix (cubeKernelRightGlobal p hp x)*cubeCoverMatrix p hp :=
-  (cubeArchimedean_correspondence p hp).choose_spec
-
-lemma cubeCoverMatrix_intertwines (p : ActualEisensteinCubic.O) (hp : p≠0) :
-    IntegralCoverIntertwines (cubeKernelRangeEquiv p hp) (cubeCoverMatrix p hp) := by
-  intro h
-  let x := (MonoidHom.ofInjective (cubeKernelLeftGlobal_injective p hp)).symm h
-  have hl : cubeKernelLeftGlobal p x=(h : SL(2,ActualEisensteinCubic.O)) :=
-    MonoidHom.apply_ofInjective_symm (cubeKernelLeftGlobal_injective p hp) h
-  change cubeCoverMatrix p hp*integralComplexMatrix (h : SL(2,ActualEisensteinCubic.O))=
-    integralComplexMatrix (cubeKernelRightGlobal p hp x)*cubeCoverMatrix p hp
-  rw [←hl]
-  exact (cubeCoverMatrix_spec p hp).2.2.2 x
-
-lemma cubeLeft_le_levelThree (p : ActualEisensteinCubic.O) :
-    (cubeKernelLeftGlobal p).range≤levelThree :=
-  (cubeKernelLeftGlobal_le p).trans globalKubotaKernel_le_levelThree
-
-lemma cubeRight_le_levelThree (p : ActualEisensteinCubic.O) (hp : p≠0) :
-    (cubeKernelRightGlobal p hp).range≤levelThree :=
-  (cubeKernelRightGlobal_le p hp).trans globalKubotaKernel_le_levelThree
-
-def cubeForwardL2Pullback (p : ActualEisensteinCubic.O) (hp : p≠0) :
-    IntegralQuotientL2 (cubeKernelRightGlobal p hp).range→ₗᵢ[ℂ]
-      IntegralQuotientL2 (cubeKernelLeftGlobal p).range :=
-  integralConjugatePullback (cubeKernelRangeEquiv p hp) (cubeCoverMatrix p hp)
-    (cubeCoverMatrix_intertwines p hp) (cubeLeft_le_levelThree p) (cubeRight_le_levelThree p hp)
-
-def cubeInverseL2Pullback (p : ActualEisensteinCubic.O) (hp : p≠0) :
-    IntegralQuotientL2 (cubeKernelLeftGlobal p).range→ₗᵢ[ℂ]
-      IntegralQuotientL2 (cubeKernelRightGlobal p hp).range :=
-  integralConjugatePullback (cubeKernelRangeEquiv p hp).symm (cubeCoverMatrix p hp)⁻¹
-    (integralCoverIntertwines_inverse _ _ (cubeCoverMatrix_intertwines p hp))
-    (cubeRight_le_levelThree p hp) (cubeLeft_le_levelThree p)
-
-theorem cubeInverseL2Pullback_ae (p : ActualEisensteinCubic.O) (hp : p≠0)
-    (F : IntegralQuotientL2 (cubeKernelLeftGlobal p).range) :
-    cubeInverseL2Pullback p hp F=ᵐ[integralQuotientVolume (cubeKernelRightGlobal p hp).range]
-      fun q=>F (integralConjugateMap (cubeKernelRangeEquiv p hp).symm (cubeCoverMatrix p hp)⁻¹
-        (integralCoverIntertwines_inverse _ _ (cubeCoverMatrix_intertwines p hp)) q) :=
-  integralConjugatePullback_ae _ _ _ _ _ F
-
-def cubeInverseL2Correspondence (p : ActualEisensteinCubic.O) (hp : p≠0) : KernelQuotientL2→L[ℂ]KernelQuotientL2 := by
-  letI := (cubeKernelGlobal_finite_covers p hp).1
-  letI := (cubeKernelGlobal_finite_covers p hp).2
-  letI : (cubeKernelLeftGlobal p).range.IsFiniteRelIndex globalKubotaKernel :=
-    Subgroup.isFiniteRelIndex_of_finiteIndex
-  letI : (cubeKernelRightGlobal p hp).range.IsFiniteRelIndex globalKubotaKernel :=
-    Subgroup.isFiniteRelIndex_of_finiteIndex
-  exact (integralCoverTrace (cubeKernelRightGlobal_le p hp) globalKubotaKernel_le_levelThree).comp
-    ((cubeInverseL2Pullback p hp).toContinuousLinearMap.comp
-      (integralCoverPullback (cubeKernelLeftGlobal_le p) globalKubotaKernel_le_levelThree))
 
 end CubicKubota
 

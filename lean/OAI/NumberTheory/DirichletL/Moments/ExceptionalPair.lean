@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.ChildRows
 import OAI.NumberTheory.DirichletL.Hecke.UnitRows
-
 namespace OAI
 
 noncomputable section
@@ -10,7 +9,6 @@ namespace SevenEighths.CenteredMomentExceptionalPair
 open HeckeFamily CenteredExceptionalProfile CenteredMomentChildRows CenteredMomentFixedRay
 open CanonicalRowCompletion CanonicalQuadraticSieve RayFourExpansion
 local notation "O" => HeckeFamily.O
-local notation "λ₀" => ConcretePrimeRowBridge.goodLambda
 
 theorem idealCoeff_ne_zero_iff (χ : Character) (I : Ideal O) :
     idealCoeff χ I ≠ 0 ↔ I ≠ ⊥ ∧ IsCoprime I χ.modulus := by

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DyadicReflectedPointwise
-
 namespace OAI
 
 noncomputable section

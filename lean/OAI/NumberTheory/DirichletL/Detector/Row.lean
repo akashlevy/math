@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Foundation
 import OAI.NumberTheory.DirichletL.Hecke.Family
 import OAI.NumberTheory.DirichletL.Detector.Completed
-
 namespace OAI
 
 noncomputable section
@@ -32,16 +31,6 @@ theorem rowCoefficient_apply (η : HeckeFamily.Character) (Xi : O →* ℂ)
     (s : O) (hs : Supported (Ideal.span {s})) (m a : O) :
     rowCoefficient η Xi s hs m a = HeckeFamily.elementCoeff η a * star (Xi a) *
       sexticReciprocityPhase s a * idealRowHom m (Ideal.span {a}) := rfl
-
-theorem rowCoefficient_apply_unit (η : HeckeFamily.Character) (Xi : O →* ℂ)
-    (s : O) (hs : Supported (Ideal.span {s})) (m a : O) (hXi : ‖Xi a‖ = 1) :
-    rowCoefficient η Xi s hs m a = HeckeFamily.elementCoeff η a * (Xi a)⁻¹ *
-      sexticReciprocityPhase a s * idealRowHom m (Ideal.span {a}) := by
-  rw [rowCoefficient_apply]
-  have hc : star (Xi a) = (Xi a)⁻¹ := (Complex.inv_eq_conj hXi).symm
-  have hsym : sexticReciprocityPhase s a = sexticReciprocityPhase a s := by
-    simp only [sexticReciprocityPhase, QuadraticAllOddCRT.quadraticRaySign_symm]
-  rw [hc, hsym]
 
 theorem rowCoefficient_norm_le_one (η : HeckeFamily.Character) (Xi : O →* ℂ)
     (hXi : ∀ a, ‖Xi a‖ ≤ 1) (s : O) (hs : Supported (Ideal.span {s})) (m a : O) :

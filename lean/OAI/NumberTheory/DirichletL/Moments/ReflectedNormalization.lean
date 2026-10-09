@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.OneReflectionEnergy
 import OAI.NumberTheory.DirichletL.Moments.ReflectedAnnuli
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.ScatteringCoefficients
-
 namespace OAI
 
 noncomputable section
@@ -8,77 +7,21 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
-open Finset AddChar MulChar EisensteinEmbedding
 
 local notation "O" => ActualEisensteinCubic.O
 
@@ -97,63 +40,9 @@ lemma kernelCuspFourierFamily_analyticAt_nonreal (h : ActualEisensteinCubic.O) (
       (kernelLocalCorrectedSeed_analyticAt_nonreal kernelCuspAverageCompact
         kernelCuspAverageCompact_isCompact a b ha hab s hs hi) rfl
 
-def continuedNonzeroScattering (h : ActualEisensteinCubic.O) (s : ℂ) : ℂ :=
-  kernelCuspFourierFamily h 2 3 (by norm_num) (by norm_num) s /
-    (((9*Real.sqrt 3/2:ℝ):ℂ)*cuspWhittakerHeightFactor s h)
-
 def nonzeroScatteringResidue (h : ActualEisensteinCubic.O) : ℂ :=
   kernelCuspFourier h cubicEisensteinResidue /
     (((9*Real.sqrt 3/2:ℝ):ℂ)*cuspWhittakerHeightFactor (4/3:ℂ) h)
-
-lemma continuedNonzeroScattering_meromorphicAt_center (h : ActualEisensteinCubic.O) :
-    MeromorphicAt (continuedNonzeroScattering h) (4/3:ℂ) := by
-  exact (kernelCuspFourierFamily_meromorphicAt h 2 3 (by norm_num) (by norm_num)).div
-    ((analyticAt_const.mul (cuspWhittakerHeightFactor_analyticAt h (4/3) (by norm_num))).meromorphicAt)
-
-lemma continuedNonzeroScattering_meromorphicOn_upper (h : ActualEisensteinCubic.O) :
-    MeromorphicOn (continuedNonzeroScattering h) {s : ℂ | 1<s.re ∧ 0<s.im} := by
-  intro s hs
-  exact (kernelCuspFourierFamily_analyticAt_nonreal h 2 3 (by norm_num) (by norm_num)
-    s (ne_of_gt hs.1) (ne_of_gt hs.2)).meromorphicAt.div
-    ((analyticAt_const.mul (cuspWhittakerHeightFactor_analyticAt h s hs.1)).meromorphicAt)
-
-lemma continuedNonzeroScattering_residue_limit (h : ActualEisensteinCubic.O) :
-    Tendsto (fun s : ℂ => (s-4/3)*continuedNonzeroScattering h s)
-      (𝓝[≠] (4/3:ℂ)) (𝓝 (nonzeroScatteringResidue h)) := by
-  have hden : Tendsto (fun s : ℂ => ((9*Real.sqrt 3/2:ℝ):ℂ)*cuspWhittakerHeightFactor s h)
-      (𝓝[≠] (4/3:ℂ)) (𝓝 (((9*Real.sqrt 3/2:ℝ):ℂ)*cuspWhittakerHeightFactor (4/3:ℂ) h)) := (continuousAt_const.mul
-    (cuspWhittakerHeightFactor_analyticAt h (4/3) (by norm_num)).continuousAt).tendsto.mono_left
-      (show 𝓝[≠] (4/3:ℂ)≤𝓝 (4/3:ℂ) from nhdsWithin_le_nhds)
-  have hlimit := (kernelCuspFourierFamily_residue_limit h 2 3 (by norm_num) (by norm_num)).div hden
-    (mul_ne_zero cusp_volume_ne_zero (cuspWhittakerHeightFactor_center_ne_zero h))
-  change Tendsto (fun s : ℂ =>
-      ((s-4/3)*kernelCuspFourierFamily h 2 3 (by norm_num) (by norm_num) s)/
-        (((9*Real.sqrt 3/2:ℝ):ℂ)*cuspWhittakerHeightFactor s h))
-      (𝓝[≠] (4/3:ℂ)) (𝓝 (nonzeroScatteringResidue h)) at hlimit
-  convert hlimit using 1
-  funext s
-  exact (mul_div_assoc _ _ _).symm
-
-lemma continuedNonzeroScattering_initial (h : ActualEisensteinCubic.O) (hh : h≠0) (s : ℂ)
-    (hs : 4<s.re) (hi : 0<s.im) (hH : cuspWhittakerHeightFactor s h≠0) :
-    continuedNonzeroScattering h s=scatteringCoefficient s h := by
-  unfold continuedNonzeroScattering
-  rw [kernelCuspFourierFamily_nonzero_of_initial_overlap h hh 2 3
-    (by norm_num) (by norm_num) s (by linarith)
-    (kernelEisensteinL2Correction_initial_overlap 2 3 (by norm_num) (by norm_num) s hs hi)]
-  field_simp [cusp_volume_ne_zero,hH]
-
-lemma cuspWhittakerHeightFactor_ne_zero_near_five (h : ActualEisensteinCubic.O) :
-    ∀ᶠ s : ℂ in 𝓝 (5:ℂ),4<s.re ∧ cuspWhittakerHeightFactor s h≠0 := by
-  have hpos := cuspWhittakerHeightFactor_real_re_pos 5 (by norm_num) h
-  have hH : cuspWhittakerHeightFactor (5:ℂ) h≠0 := by
-    intro he
-    norm_num only [Complex.ofReal_ofNat] at hpos
-    rw [he,Complex.zero_re] at hpos
-    exact lt_irrefl 0 hpos
-  have hre : ∀ᶠ s : ℂ in 𝓝 (5:ℂ),4<s.re :=
-    (isOpen_lt continuous_const Complex.continuous_re).mem_nhds (by norm_num)
-  exact hre.and ((cuspWhittakerHeightFactor_analyticAt h 5 (by norm_num)).continuousAt.eventually_ne hH)
 
 lemma kernelCuspFourierFamily_eq_upper (h : ActualEisensteinCubic.O) (hh : h≠0) :
     Set.EqOn (kernelCuspFourierFamily h 2 3 (by norm_num) (by norm_num))
@@ -185,102 +74,10 @@ lemma kernelCuspFourierFamily_eq_upper (h : ActualEisensteinCubic.O) (hh : h≠0
       (kernelEisensteinL2Correction_initial_overlap 2 3 (by norm_num) (by norm_num) s hs.1 hs.2)
   exact hleft.eqOn_of_preconnected_of_eventuallyEq hright hconvex.isPreconnected hstart hevent
 
-lemma continuedNonzeroScattering_eq_upper (h : ActualEisensteinCubic.O) (hh : h≠0) (s : ℂ)
-    (hs : 2<s.re) (hi : 0<s.im) (hH : cuspWhittakerHeightFactor s h≠0) :
-    continuedNonzeroScattering h s=scatteringCoefficient s h := by
-  unfold continuedNonzeroScattering
-  rw [kernelCuspFourierFamily_eq_upper h hh ⟨hs,hi⟩]
-  field_simp [cusp_volume_ne_zero,hH]
-
-lemma continuedNonzeroScattering_initial_open (h : ActualEisensteinCubic.O) (hh : h≠0) :
-    ∃U : Set ℂ,IsOpen U ∧ U.Nonempty ∧ U⊆{s : ℂ | 4<s.re ∧ 0<s.im} ∧
-      Set.EqOn (continuedNonzeroScattering h) (fun s => scatteringCoefficient s h) U := by
-  obtain ⟨ε,hε,hball⟩ := Metric.eventually_nhds_iff.mp (cuspWhittakerHeightFactor_ne_zero_near_five h)
-  let z : ℂ := 5+(ε/2:ℝ)*Complex.I
-  have hz : dist z (5:ℂ)<ε := by
-    have hdist : dist z (5:ℂ)=ε/2 := by
-      simp [z,dist_eq_norm,hε.le]
-    rw [hdist]
-    linarith
-  have hzim : 0<z.im := by simpa [z] using half_pos hε
-  refine ⟨Metric.ball (5:ℂ) ε ∩ {s : ℂ | 0<s.im},
-    Metric.isOpen_ball.inter (isOpen_lt continuous_const Complex.continuous_im),⟨z,hz,hzim⟩,?_,?_⟩
-  · intro s hs
-    exact ⟨(hball hs.1).1,hs.2⟩
-  · intro s hs
-    exact continuedNonzeroScattering_initial h hh s (hball hs.1).1 hs.2 (hball hs.1).2
-
 end
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
-
-lemma weightedWhittakerIntegrand_integrable (ρ : BoundedContinuousFunction ℝ ℂ) (freq s : ℂ) (hs : 1<s.re) :
-    Integrable (fun p : ℝ × ℂ => ρ p.1*whittakerIntegrand freq s p) whittakerProductVolume := by
-  apply ((whittaker_bound_integrable s.re hs).const_mul ‖ρ‖).mono'
-  · exact ((ρ.continuous.comp continuous_fst).mul (whittakerIntegrand_continuous freq s)).aestronglyMeasurable
-  · exact Eventually.of_forall (fun p => by
-      rw [norm_mul]
-      exact mul_le_mul (ρ.norm_coe_le_norm p.1)
-        (whittakerIntegrand_norm_bound freq s p s.re (by linarith) le_rfl) (norm_nonneg _) (norm_nonneg _))
-
-lemma weightedWhittakerProduct_differentiableAt (ρ : BoundedContinuousFunction ℝ ℂ) (freq s : ℂ) (hs : 1<s.re) :
-    DifferentiableAt ℂ
-      (fun w => ∫p : ℝ × ℂ,ρ p.1*whittakerIntegrand freq w p∂whittakerProductVolume) s := by
-  let b : ℝ := (s.re+1)/2
-  let ε : ℝ := (s.re-1)/4
-  have hb : 1<b := by dsimp [b]; linarith
-  have hε : 0<ε := by dsimp [ε]; linarith
-  have hsb : b+ε<s.re := by dsimp [b,ε]; linarith
-  have hU : {w : ℂ | b+ε<w.re}∈𝓝 s :=
-    (isOpen_lt continuous_const Complex.continuous_re).mem_nhds hsb
-  have h := hasDerivAt_integral_of_dominated_loc_of_deriv_le
-    («μ» := whittakerProductVolume)
-    (F := fun w (p : ℝ × ℂ) => ρ p.1*whittakerIntegrand freq w p)
-    (F' := fun w (p : ℝ × ℂ) => ρ p.1*whittakerIntegrandDeriv freq w p)
-    (bound := fun p => ‖ρ‖*(ε⁻¹*(1+‖p.2‖^2)^(-b))) hU
-    (Eventually.of_forall (fun w =>
-      ((ρ.continuous.comp continuous_fst).mul (whittakerIntegrand_continuous freq w)).aestronglyMeasurable))
-    (weightedWhittakerIntegrand_integrable ρ freq s hs)
-    ((ρ.continuous.comp continuous_fst).mul (whittakerIntegrandDeriv_continuous freq s)).aestronglyMeasurable
-    (Eventually.of_forall (fun p w hw => by
-      rw [norm_mul]
-      exact mul_le_mul (ρ.norm_coe_le_norm p.1)
-        (whittakerIntegrandDeriv_norm_bound freq w p b ε (by linarith) hε hw.le)
-        (norm_nonneg _) (norm_nonneg _)))
-    (((whittaker_bound_integrable b hb).const_mul ε⁻¹).const_mul ‖ρ‖)
-    (Eventually.of_forall (fun p w _ => (whittakerIntegrand_hasDerivAt freq w p).const_mul (ρ p.1)))
-  exact h.2.differentiableAt
-
-lemma weightedWhittakerProduct_eq_average (ρ : BoundedContinuousFunction ℝ ℂ) (freq s : ℂ) (hs : 1<s.re) :
-    (∫p : ℝ × ℂ,ρ p.1*whittakerIntegrand freq s p∂whittakerProductVolume)=
-      ∫v in Set.Icc (5:ℝ) 6,ρ v*(v:ℂ)^(-s-1)*sourceFourierKernel s (freq*v) := by
-  have hi := weightedWhittakerIntegrand_integrable ρ freq s hs
-  unfold whittakerProductVolume at hi ⊢
-  rw [integral_prod _ hi]
-  apply integral_congr_ae
-  filter_upwards [ae_restrict_mem measurableSet_Icc] with v hv
-  calc
-    _ = ∫z : ℂ,(ρ v*(v:ℂ)^(-s-1))*(hyperbolicKernel s z*ShortDraftTrace.breveE (-(freq*v)*z)) := by
-      apply integral_congr_ae
-      exact Eventually.of_forall (fun z => by
-        dsimp only
-        rw [whittakerIntegrand_eq freq s v hv.1 z]
-        ring)
-    _ = _ := integral_const_mul _ _
-
-theorem cuspWeightedWhittakerAverage_differentiableAt (ρ : BoundedContinuousFunction ℝ ℂ) (freq s : ℂ) (hs : 1<s.re) :
-    DifferentiableAt ℂ
-      (fun w => ∫v in Set.Icc (5:ℝ) 6,ρ v*(v:ℂ)^(-w-1)*sourceFourierKernel w (freq*v)) s := by
-  have he : (fun w => ∫v in Set.Icc (5:ℝ) 6,ρ v*(v:ℂ)^(-w-1)*sourceFourierKernel w (freq*v))
-      =ᶠ[𝓝 s](fun w => ∫p : ℝ × ℂ,ρ p.1*whittakerIntegrand freq w p∂whittakerProductVolume) := by
-    filter_upwards [(isOpen_lt continuous_const Complex.continuous_re).mem_nhds hs] with w hw
-    exact (weightedWhittakerProduct_eq_average ρ freq w hw).symm
-  exact (weightedWhittakerProduct_differentiableAt ρ freq s hs).congr_of_eventuallyEq he
-
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ENNReal
+open scoped ENNReal
 
 theorem kernelCompact_projection_measure_bound (K : Set HyperbolicSpace) (hK : IsCompact K) :
     ∃N : ℕ,Measure.map (integralOrbitProjection globalKubotaKernel) (hyperbolicVolume.restrict K)≤
@@ -485,9 +282,7 @@ theorem cuspWeightedWhittakerInterval_differentiableAt (ρ : BoundedContinuousFu
 
 end
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology InnerProductSpace ComplexConjugate MatrixGroups ENNReal
-open Finset AddChar MulChar EisensteinEmbedding
+open scoped InnerProductSpace ComplexConjugate MatrixGroups ENNReal
 
 local notation "O" => ActualEisensteinCubic.O
 
@@ -502,133 +297,6 @@ lemma cuspWeightedFourierPhase_bound (ρ : BoundedContinuousFunction ℝ ℂ) (h
     ‖cuspWeightedFourierPhase ρ h w‖≤‖ρ‖ := by
   rw [cuspWeightedFourierPhase,norm_mul,cuspFourierPhase_norm,mul_one]
   exact ρ.norm_coe_le_norm _
-
-lemma cuspWeightedFourierTest_memLp (ρ : BoundedContinuousFunction ℝ ℂ) (h : ActualEisensteinCubic.O) :
-    MemLp (fun w => star (cuspWeightedFourierPhase ρ h w)) 2
-      (hyperbolicVolume.restrict (cuspPeriodStrip 5 6)) := by
-  apply MemLp.of_bound (cuspWeightedFourierPhase_continuous ρ h).star.aestronglyMeasurable ‖ρ‖
-  exact Eventually.of_forall (fun w => by rw [norm_star]; exact cuspWeightedFourierPhase_bound ρ h w)
-
-def cuspWeightedFourierTestL2 (ρ : BoundedContinuousFunction ℝ ℂ) (h : ActualEisensteinCubic.O) : CuspStripL2 :=
-  (cuspWeightedFourierTest_memLp ρ h).toLp (fun w => star (cuspWeightedFourierPhase ρ h w))
-
-def kernelCuspWeightedFourier (ρ : BoundedContinuousFunction ℝ ℂ) (h : ActualEisensteinCubic.O) : KernelQuotientL2→L[ℂ]ℂ :=
-  (innerSL ℂ (cuspWeightedFourierTestL2 ρ h)).comp kernelCuspPullback
-
-lemma kernelCuspWeightedFourier_integral (ρ : BoundedContinuousFunction ℝ ℂ) (h : ActualEisensteinCubic.O) (F : KernelQuotientL2) :
-    kernelCuspWeightedFourier ρ h F=∫w in cuspPeriodStrip 5 6,
-      F (integralOrbitProjection globalKubotaKernel w)*cuspWeightedFourierPhase ρ h w∂hyperbolicVolume := by
-  change inner ℂ (cuspWeightedFourierTestL2 ρ h) (kernelCuspPullback F)=_
-  rw [L2.inner_def]
-  apply integral_congr_ae
-  filter_upwards [MemLp.coeFn_toLp (cuspWeightedFourierTest_memLp ρ h),kernelCuspPullback_ae_eq F] with w hw hp
-  rw [RCLike.inner_apply,cuspWeightedFourierTestL2,hw,hp]
-  simp only [starRingEnd_apply,star_star]
-
-lemma kernelCuspWeightedFourier_restrict (ρ : BoundedContinuousFunction ℝ ℂ) (h : ActualEisensteinCubic.O) (F : KernelQuotientL2) :
-    kernelCuspWeightedFourier ρ h (kernelMassRestrictionCLM kernelCuspAverageCompact
-      kernelCuspAverageCompact_isCompact.measurableSet F)=kernelCuspWeightedFourier ρ h F := by
-  rw [kernelCuspWeightedFourier_integral,kernelCuspWeightedFourier_integral]
-  have hm := kernelProjection_cuspPeriodStrip_measurePreserving 5 6 (by norm_num)
-  have he := hm.quasiMeasurePreserving.ae_eq_comp (ae_restrict_of_ae
-    (kernelMassRestriction_coe kernelCuspAverageCompact kernelCuspAverageCompact_isCompact.measurableSet F)
-    (s := kernelCuspStripSet))
-  apply integral_congr_ae
-  filter_upwards [he,ae_restrict_mem (cuspPeriodStrip_measurable 5 6)] with w hw hwm
-  exact congrArg (fun z : ℂ => z*cuspWeightedFourierPhase ρ h w)
-    (hw.trans (Set.indicator_of_mem (kernelCuspStripSet_subset_compact ⟨w,hwm,rfl⟩) _))
-
-def kernelCuspWeightedFourierFamily (ρ : BoundedContinuousFunction ℝ ℂ) (h : ActualEisensteinCubic.O) (s : ℂ) : ℂ :=
-  kernelCuspWeightedFourier ρ h
-    (kernelLocalCorrectedSeed kernelCuspAverageCompact kernelCuspAverageCompact_isCompact
-      2 3 (by norm_num) (by norm_num) s)
-
-lemma kernelCuspWeightedFourierFamily_meromorphicAt (ρ : BoundedContinuousFunction ℝ ℂ) (h : ActualEisensteinCubic.O) :
-    MeromorphicAt (kernelCuspWeightedFourierFamily ρ h) (4/3:ℂ) :=
-  meromorphicAt_clm (kernelCuspWeightedFourier ρ h)
-    (kernelLocalCorrectedSeed_meromorphicAt kernelCuspAverageCompact kernelCuspAverageCompact_isCompact
-      2 3 (by norm_num) (by norm_num))
-
-lemma kernelCuspWeightedFourierFamily_analyticAt_nonreal (ρ : BoundedContinuousFunction ℝ ℂ) (h : ActualEisensteinCubic.O)
-    (s : ℂ) (hs : s.re≠1) (hi : s.im≠0) :
-    AnalyticAt ℂ (kernelCuspWeightedFourierFamily ρ h) s := by
-  exact (ContinuousLinearMap.analyticAt (𝕜 := ℂ) (E := KernelQuotientL2) (F := ℂ)
-    (kernelCuspWeightedFourier ρ h) _).comp_of_eq
-      (kernelLocalCorrectedSeed_analyticAt_nonreal kernelCuspAverageCompact
-        kernelCuspAverageCompact_isCompact 2 3 (by norm_num) (by norm_num) s hs hi) rfl
-
-lemma kernelCuspWeightedFourierFamily_residue_limit (ρ : BoundedContinuousFunction ℝ ℂ) (h : ActualEisensteinCubic.O) :
-    Tendsto (fun s : ℂ => (s-4/3)*kernelCuspWeightedFourierFamily ρ h s)
-      (𝓝[≠] (4/3:ℂ)) (𝓝 (kernelCuspWeightedFourier ρ h cubicEisensteinResidue)) := by
-  have hh := (kernelCuspWeightedFourier ρ h).continuous.continuousAt.tendsto.comp
-    (cubicEisensteinResidue_local_limit kernelCuspAverageCompact kernelCuspAverageCompact_isCompact)
-  simpa only [Function.comp_def,map_smul,smul_eq_mul,kernelCuspWeightedFourier_restrict,
-    kernelCuspWeightedFourierFamily] using hh
-
-lemma kernelCuspWeightedFourierFamily_initial (ρ : BoundedContinuousFunction ℝ ℂ) (h : ActualEisensteinCubic.O)
-    (s : ℂ) (hs : 4<s.re) (hi : 0<s.im) :
-    kernelCuspWeightedFourierFamily ρ h s=∫w in cuspPeriodStrip 5 6,
-      hyperbolicEisenstein s w*cuspWeightedFourierPhase ρ h w∂hyperbolicVolume := by
-  rw [kernelCuspWeightedFourierFamily,kernelCuspWeightedFourier_integral]
-  have hm := kernelProjection_cuspPeriodStrip_measurePreserving 5 6 (by norm_num)
-  have he := hm.quasiMeasurePreserving.ae_eq_comp (ae_restrict_of_ae
-    (cubicEisensteinLocalFamily_initial_ae kernelCuspAverageCompact kernelCuspAverageCompact_isCompact s hs hi)
-    (s := kernelCuspStripSet))
-  apply integral_congr_ae
-  filter_upwards [he,ae_restrict_mem (cuspPeriodStrip_measurable 5 6)] with w hw hwm
-  dsimp only [Function.comp_def] at hw
-  rw [hw,Set.indicator_of_mem (kernelCuspStripSet_subset_compact ⟨w,hwm,rfl⟩),
-    kernelQuotientEisenstein_mk]
-
-def cuspWeightedWhittakerHeightFactor (ρ : BoundedContinuousFunction ℝ ℂ) (s : ℂ) (h : ActualEisensteinCubic.O) : ℂ :=
-  ∫v in Set.Icc (5:ℝ) 6,ρ v*((v:ℂ)^(-s-1)*sourceFourierKernel s (cuspFrequency h*v))
-
-lemma hyperbolicEisenstein_cusp_weighted_fourier_nonzero (ρ : BoundedContinuousFunction ℝ ℂ)
-    (s : ℂ) (hs : 2<s.re) (h : ActualEisensteinCubic.O) (hh : h≠0) :
-    (∫w in cuspPeriodStrip 5 6,hyperbolicEisenstein s w*cuspWeightedFourierPhase ρ h w∂hyperbolicVolume)=
-      ((9*Real.sqrt 3/2:ℝ):ℂ)*scatteringCoefficient s h*cuspWeightedWhittakerHeightFactor ρ s h := by
-  let g : HyperbolicSpace→ℂ := fun w => hyperbolicEisenstein s w*cuspWeightedFourierPhase ρ h w
-  have hg : Continuous g := (hyperbolicEisenstein_continuous s hs).mul (cuspWeightedFourierPhase_continuous ρ h)
-  rw [cuspPeriodStrip_integral_coordinates g hg.aestronglyMeasurable (cuspCoordinateLift_weighted_integrable g hg)]
-  have hexp : ∀v∈Set.Icc (5:ℝ) 6,
-      ((∫z in periodDomain,g (cuspCoordinateLift (v,z)))/(v:ℂ)^3)=
-        (((9*Real.sqrt 3/2:ℝ):ℂ)*scatteringCoefficient s h)*
-          (ρ v*((v:ℂ)^(-s-1)*sourceFourierKernel s (cuspFrequency h*v))) := by
-    intro v hv
-    have hpos : 0<v := lt_of_lt_of_le (by norm_num) hv.1
-    have hinner : (∫z in periodDomain,g (cuspCoordinateLift (v,z)))=
-        ρ v*(eisensteinFourierCoefficient v hpos s h*((9*Real.sqrt 3/2:ℝ):ℂ)) := by
-      simp_rw [g,cuspCoordinateLift_positive v _ hpos,hyperbolicEisenstein_upperPoint,
-        cuspWeightedFourierPhase,hyperbolicHeight_upperPoint,cuspFourierPhase,hyperbolicHorizontal_upperPoint]
-      have hrearr : (∫z in periodDomain,upperEisenstein z v hpos s*
-          (ρ v*ShortDraftTrace.breveE (-cuspFrequency h*z)))=
-          ρ v*(∫z in periodDomain,upperEisenstein z v hpos s*ShortDraftTrace.breveE (-cuspFrequency h*z)) := by
-        rw [←integral_const_mul]
-        apply integral_congr_ae
-        exact Eventually.of_forall (fun z => by ring)
-      rw [hrearr,eisensteinFourierCoefficient]
-      congr 1
-      exact (div_mul_cancel₀ _ cusp_volume_ne_zero).symm
-    rw [hinner,eisensteinFourierCoefficient_formula v hpos s hs h,ite_eq_right hh,zero_add]
-    have hv0 : (v:ℂ)≠0 := Complex.ofReal_ne_zero.mpr hpos.ne'
-    have hp : (v:ℂ)^(-s-1)=(v:ℂ)^(2-s)/(v:ℂ)^3 := by
-      rw [show -s-1=(2-s)-3 by ring,Complex.cpow_sub _ _ hv0]
-      congr 1
-      exact Complex.cpow_natCast _ 3
-    rw [hp]
-    ring
-  calc
-    _ = ∫v in Set.Icc (5:ℝ) 6,(((9*Real.sqrt 3/2:ℝ):ℂ)*scatteringCoefficient s h)*
-        (ρ v*((v:ℂ)^(-s-1)*sourceFourierKernel s (cuspFrequency h*v))) :=
-      setIntegral_congr_fun measurableSet_Icc hexp
-    _ = _ := integral_const_mul _ _
-
-lemma kernelCuspWeightedFourierFamily_initial_factor (ρ : BoundedContinuousFunction ℝ ℂ)
-    (h : ActualEisensteinCubic.O) (hh : h≠0) (s : ℂ) (hs : 4<s.re) (hi : 0<s.im) :
-    kernelCuspWeightedFourierFamily ρ h s=
-      ((9*Real.sqrt 3/2:ℝ):ℂ)*scatteringCoefficient s h*cuspWeightedWhittakerHeightFactor ρ s h := by
-  rw [kernelCuspWeightedFourierFamily_initial ρ h s hs hi,
-    hyperbolicEisenstein_cusp_weighted_fourier_nonzero ρ s (by linarith) h hh]
 
 end CubicEisenstein
 

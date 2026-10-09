@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.PriorityCellBudget
-
 namespace OAI
 
 noncomputable section

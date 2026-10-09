@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GaussianTuple
 import OAI.NumberTheory.DirichletL.Detector.Windows
-
 namespace OAI
 
 noncomputable section

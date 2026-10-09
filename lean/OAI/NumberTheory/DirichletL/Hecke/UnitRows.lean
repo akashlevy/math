@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.RowClosure
 import OAI.NumberTheory.DirichletL.Hecke.FiniteDeletion
-
 namespace OAI
 
 noncomputable section
@@ -10,16 +9,6 @@ open HeckeFamily CanonicalUnitEuler CanonicalRowCompletion
 open ActualEisensteinCubic CubicRamified ConcreteTraceCRT
 open CanonicalQuadraticSieve
 local notation "O" => HeckeFamily.O
-local notation "ω" => HeckeFamily.omega
-local notation "λ₀" => ConcretePrimeRowBridge.goodLambda
-
-theorem seven_coprime_thirty_six : IsCoprime sevenPrime (36 : O) := by
-  have hω : ω ^ 2 = -ω - 1 := by
-    simpa [HeckeFamily.omega] using IsCyclotomicExtension.Rat.Three.eta_sq
-      (IsCyclotomicExtension.zeta_spec 3 ℚ HeckeFamily.K)
-  change IsCoprime (1 + 3 * ω) (36 : O)
-  refine ⟨31 * (-2 - 3 * ω), -6, ?_⟩
-  linear_combination -279 * hω
 
 theorem supported_unit_thirty_six (n : O) (hn : Supported (Ideal.span {n})) :
     IsUnit (Ideal.Quotient.mk (Ideal.span {(36 : O)}) n) := by
@@ -57,51 +46,6 @@ theorem elementCoeff_character (u : Oˣ) (n : O) :
   · rfl
   · change 0 = if Supported (Ideal.span {n}) then _ else 0
     rw [ite_eq_right (fun hs => hn (supported_unit_thirty_six n hs))]
-
-theorem seven_supported : Supported (Ideal.span {sevenPrime}) := by
-  rw [supported_span_iff]
-  constructor
-  · intro h
-    have hd : λ₀ ∣ (36 : O) :=
-      ((dvd_pow_self λ₀ (by decide : (2 : ℕ) ≠ 0)).trans lambda_sq_dvd_three).trans ⟨12, by norm_num⟩
-    exact PrimaryIdealUnitReindex.lambda_prime_actual.not_isUnit
-      (seven_coprime_thirty_six.isUnit_of_dvd' h hd)
-  · intro h
-    have hu := seven_coprime_thirty_six.isUnit_of_dvd' h (show (2 : O) ∣ 36 from ⟨18, by norm_num⟩)
-    exact negative_two_prime.not_isUnit hu.neg
-
-theorem unitSupplement_seven (u : Oˣ) :
-    unitSupplement u sevenPrime = eisEmbedding (u : O) := by
-  change (if Supported (Ideal.span {sevenPrime}) then idealRowHom (u : O) (Ideal.span {sevenPrime}) else 0) = _
-  rw [ite_eq_left seven_supported,
-    idealRowHom_unit_norm u _ seven_supported.1
-      (supported_factors_good _ seven_supported)]
-  change eisEmbedding ((u : O) ^ ((Ideal.absNorm sevenIdeal - 1) / 6)) = _
-  rw [sevenIdeal_norm]
-  norm_num
-
-theorem character_nonprincipal (u : Oˣ) (hu : u ≠ 1) :
-    (character u).residue ≠ 1 := by
-  have hv : elementCoeff (character u) sevenPrime = eisEmbedding (u : O) := by
-    rw [elementCoeff_character, unitSupplement_seven]
-  have hv0 : elementCoeff (character u) sevenPrime ≠ 0 :=
-    hv ▸ (u.isUnit.map eisEmbedding).ne_zero
-  intro h
-  have hunit := MulChar.apply_ne_zero_iff.mp hv0
-  have hv1 : elementCoeff (character u) sevenPrime = 1 := by
-    change (character u).residue _ = 1
-    rw [h, MulChar.one_apply hunit]
-  apply hu
-  apply Units.ext
-  apply eisEmbedding_injective
-  simpa only [Units.val_one, map_one] using hv.symm.trans hv1
-
-theorem masked_character_nonprincipal (u : Oˣ) (hu : u ≠ 1) (χ : Character)
-    (hmask : ∀ I : Ideal O, idealCoeff χ I =
-      if IsCoprime I χ.modulus then idealCoeff (character u) I else 0) :
-    χ.residue ≠ 1 := by
-  intro h
-  exact character_nonprincipal u hu ((HeckeFiniteDeletion.principal_iff_of_mask χ (character u) hmask).mp h)
 
 end SevenEighths.HeckeUnitRows
 

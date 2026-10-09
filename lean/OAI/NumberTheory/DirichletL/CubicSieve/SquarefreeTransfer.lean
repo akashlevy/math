@@ -1,74 +1,23 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.LogarithmicSectors
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 namespace SecondPassArithmetic
 
@@ -79,69 +28,10 @@ open FirstPassCubeLabels (primeProductNorm)
 open ConcreteTraceCRT (eisEmbedding)
 open SecondPassIntegration (densityChildEnergy childGeometricMean childEnergy)
 
-variable {ι : Type*} [DecidableEq ι]
-  (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-  (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-  (hg : ∀ i, lambda ∉ Ideal.span {p i})
-
-def secondSquarefreeLogNormalizedEnergy (B C D F : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (K : Finset ι → Finset ι → Finset O) (R : Finset ι) (X M : ℝ) (j : SecondLogIndex)
-    (Ψ₁ Ψ₂ : O →* ℂ) (m : O) (V₁ V₂ : ℝ → ℂ) (J : ℕ) : ℝ :=
-  densityChildEnergy p hp hcop hg F Ψ₁ Ψ₂ m
-    (secondSquarefreeLogTargets p B C D F v₁ v₂ ε₁ ε₂ K R X M j) V₁ V₂
-    (secondLogX p R X j) (secondLogX p R X j) J /
-  (secondLogX p R X j * secondLogLabelBound p B C v₁ v₂ ε₁ ε₂ j)
-
-lemma secondSquarefreeLogNormalizedEnergy_nonneg
-    (B C D F : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (K : Finset ι → Finset ι → Finset O) (R : Finset ι) (X M : ℝ) (hX : 0 < X)
-    (j : SecondLogIndex) (Ψ₁ Ψ₂ : O →* ℂ) (m : O) (V₁ V₂ : ℝ → ℂ) (J : ℕ) :
-    0 ≤ secondSquarefreeLogNormalizedEnergy p hp hcop hg B C D F v₁ v₂ ε₁ ε₂ K R X M j Ψ₁ Ψ₂ m V₁ V₂ J := by
-  apply div_nonneg
-  · apply integral_nonneg
-    intro t₁
-    apply integral_nonneg
-    intro t₂
-    apply integral_nonneg
-    intro t₃
-    exact mul_nonneg (JointLogSeparation.tripleLogDensity_nonneg _ _)
-      (mul_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _))
-  · exact mul_nonneg (secondLogX_pos p hp R X hX j).le
-      (zero_le_one.trans (secondLogLabelBound_ge_one p hp B C v₁ v₂ ε₁ ε₂ j))
-
-lemma secondSquarefreeLogNormalizedEnergy_empty
-    (B C D F : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (K : Finset ι → Finset ι → Finset O) (R : Finset ι) (X M : ℝ)
-    (j : SecondLogIndex) (Ψ₁ Ψ₂ : O →* ℂ) (m : O) (V₁ V₂ : ℝ → ℂ) (J : ℕ)
-    (hT : secondSquarefreeLogTargets p B C D F v₁ v₂ ε₁ ε₂ K R X M j = ∅) :
-    secondSquarefreeLogNormalizedEnergy p hp hcop hg B C D F v₁ v₂ ε₁ ε₂ K R X M j Ψ₁ Ψ₂ m V₁ V₂ J = 0 := by
-  simp only [secondSquarefreeLogNormalizedEnergy, hT, densityChildEnergy, childGeometricMean, childEnergy,
-    Finset.sum_empty, Finset.sum_const_zero, Real.sqrt_zero, mul_zero, integral_zero, zero_div]
-
-theorem secondSquarefreeLog_normalized_cost
-    (B C D F : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (K : Finset ι → Finset ι → Finset O) (R : Finset ι) (X Y M : ℝ) (hX : 0 < X)
-    (j : SecondLogIndex) (Ψ₁ Ψ₂ : O →* ℂ) (m : O) (V₁ V₂ : ℝ → ℂ) (J : ℕ) :
-    (Y*primeProductNorm p R/X^2) *
-      densityChildEnergy p hp hcop hg F Ψ₁ Ψ₂ m
-        (secondSquarefreeLogTargets p B C D F v₁ v₂ ε₁ ε₂ K R X M j) V₁ V₂
-        (secondLogX p R X j) (secondLogX p R X j) J =
-    (Y*‖eisEmbedding (secondBaseLabel p B C v₁ v₂ ε₁ ε₂)‖^2*Real.exp 2/X) *
-      secondSquarefreeLogNormalizedEnergy p hp hcop hg B C D F v₁ v₂ ε₁ ε₂ K R X M j Ψ₁ Ψ₂ m V₁ V₂ J := by
-  unfold secondSquarefreeLogNormalizedEnergy
-  rw [secondLogX_label_cost]
-  have hR := (FirstPassCubeLabels.primeProductNorm_pos p hp R).ne'
-  have hc := (zero_lt_one.trans_le (element_norm_ge_one _ (secondBaseLabel_ne_zero p hp B C v₁ v₂ ε₁ ε₂))).ne'
-  have hcn : ‖eisEmbedding (secondBaseLabel p B C v₁ v₂ ε₁ ε₂)‖ ≠ 0 := by
-    intro h; apply hc; rw [h]; norm_num
-  field_simp
-
 end SecondPassArithmetic
 
 section
 
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory
 namespace SecondPassArithmetic
 
 section
@@ -152,227 +42,12 @@ open EisensteinSchwartzPoisson (paperRadialFourier)
 open RayFourExpansion (RayCharacter crossCoeff)
 open SecondPassIntegration (densityChildEnergy)
 
-def firstCoreSquarefreeBudget
-    {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (windows : Fin 7 → ℝ → ℂ) (Cₐ Cₛ Cw Ctail : ℝ)
-    (g V : 𝓢(ℝ, ℂ)) (negative : Bool) (M ε : ℝ) (tailOrder decayOrder J : ℕ)
-    (Y : ℝ) (A₀ B C D F : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (χ : RayCharacter) (Ψ : O →* ℂ) (m : O) (r₁ : FirstCoreIndex) (X Z : ℝ) : ℝ :=
-  let v := fun i => v₁ i + v₂ i
-  let c := primeSubsetGenerator (fun i => Ideal.span {p i}) C
-  let d := primeSubsetGenerator (fun i => Ideal.span {p i}) D
-  let Ψ' := firstCoreTwist negative χ Ψ r₁
-  let m' := m * b0Label p B v ε₁ ε₂
-  let c' := c * jLabel p B v ε₁ ε₂
-  let X' := X / primeProductNorm p A₀
-  let Usupp := X' * Real.exp M
-  let K := firstCoreSecondCutoff p A₀ X Y M Z
-  let Kmax := firstCoreSecondRowBound p D A₀ X Y M Z
-  let Hbase := normalizedColumn p (fun S => firstCoreBaseProfile g V negative (columnLog p X' S))
-  (primeProductNorm p A₀)⁻¹ *
-    (|Y| * ‖paperRadialFourier rowMajorant 0‖ *
-        (∑ G ∈ (F\A₀).powerset, ‖secondInputCoefficient p hg Ψ' m' c' d Hbase G‖^2) +
-      (∑ z : SecondRayIndex, ∑ R ∈ boundedPrimeSupports p (F\A₀) Usupp,
-        ∑ j ∈ secondLogBinBox Usupp Kmax,
-        (Y * primeProductNorm p R / X'^2 * ‖secondRayCoefficient z‖ * Cw * Cₐ *
-          (secondLogLabelBound p B C v₁ v₂ ε₁ ε₂ j *
-            Ideal.absNorm (Ideal.span {b0Label p B v ε₁ ε₂}))^ε) *
-        (Cₛ /
-          (1+Y*secondLogK j*(primeProductNorm p R)^2/(primeProductNorm p D*X'^2))^decayOrder) *
-        densityChildEnergy p hp hcop hg (F\A₀) (secondRayMinus Ψ' z) (secondRayPlus Ψ' z)
-          (m' * primeSubsetGenerator (fun i => Ideal.span {p i}) R)
-          (secondSquarefreeLogTargets p B C D (F\A₀) v₁ v₂ ε₁ ε₂ K R X' M j)
-          (windows 5) (windows 6) (secondLogX p R X' j) (secondLogX p R X' j) J) +
-      Ctail*(1+Usupp)^4*Y*(1+(1+Usupp)^3/Y)^2/(1+Z)^tailOrder)
-
-theorem firstInputFamilyEnergy_squarefree_transfer
-    {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1)
-    (U : ℝ → ℂ) (hUc : HasCompactSupport U) (hUs : ContDiff ℝ ∞ U)
-    (g V : 𝓢(ℝ, ℂ)) (negative : Bool) (hU : ∀ t, g t ≠ 0 → U t = 1)
-    (M : ℝ) (hM : 0 ≤ M) (hgM : ∀ t, g t ≠ 0 → |t| ≤ M)
-    (ε : ℝ) (hε : 0 < ε) (tailOrder decayOrder J : ℕ) :
-    ∃ (windows : Fin 7 → ℝ → ℂ) (Cₐ Cₛ Cw Ctail : ℝ),
-      0 < Cₐ ∧ 0 ≤ Cₛ ∧ 0 ≤ Cw ∧ 0 < Ctail ∧
-      ∀ (Y : ℝ), 0 < Y →
-      ∀ (B C D F : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-        (Ψ : O →* ℂ) (m : O) (X Z : ℝ) (Srows : Finset O),
-        (∀ i ∈ B, 0 < v₁ i + v₂ i) → Disjoint C B → D ⊆ C ∪ B →
-        (∀ a : O, ‖Ψ a‖ ≤ 1) → 0 < X → 0 ≤ Z →
-        (∀ z ∈ Srows, (Ideal.absNorm (Ideal.span {z}) : ℝ) ≤ Y) →
-        (∀ z ∈ Srows, z ≠ 0) →
-        firstInputFamilyEnergy p hg F B (fun i => v₁ i+v₂ i) ε₁ ε₂ negative Ψ m
-          (fun S => g (columnLog p X S)) V X
-          (primeSubsetGenerator (fun i => Ideal.span {p i}) C)
-          (primeSubsetGenerator (fun i => Ideal.span {p i}) D) (2*(J+2)) Srows ≤
-        (∫ t : ℝ, firstLogDensity 0 t) *
-          ∑ a : RayCharacter × RayCharacter, ∑ A₀ ∈ F.powerset,
-            ‖crossCoeff a.1 a.2‖ * ∑ r : FirstCoreIndex,
-              ‖firstCoreOuter p hg B (fun i => v₁ i+v₂ i) ε₁ ε₂ negative Ψ m A₀ r‖ *
-                firstCoreSquarefreeBudget p hp hcop hg windows Cₐ Cₛ Cw Ctail
-                  g V negative M ε tailOrder decayOrder J Y A₀ B C D F v₁ v₂ ε₁ ε₂
-                  (if negative then a.1 else a.2) Ψ m r X Z := by
-  obtain ⟨windows,Cₐ,Cₛ,Cw,Ctail,hCₐ,hCₛ,hCw,hCtail,hbound⟩ :=
-    firstCoreInputRow_squarefree_binned_integrated_transfer p hp hcop hg hinj hc hpr U hUc hUs
-      g V negative hU M hM hgM ε hε tailOrder decayOrder J
-  refine ⟨windows,Cₐ,Cₛ,Cw,Ctail,hCₐ,hCₛ,hCw,hCtail,?_⟩
-  intro Y hY B C D F v₁ v₂ ε₁ ε₂ Ψ m X Z Srows hv hCB hD hΨ hX hZ hSrows hSrows0
-  unfold firstInputFamilyEnergy
-  simp only [Finset.mul_sum]
-  apply Finset.sum_le_sum
-  intro a ha
-  apply Finset.sum_le_sum
-  intro A₀ hA₀
-  apply Finset.sum_le_sum
-  intro r hr
-  have hb := hbound Y hY A₀ B C D F v₁ v₂ ε₁ ε₂ (if negative then a.1 else a.2)
-    Ψ m r X Z Srows hv hCB hD hΨ hX hZ hSrows hSrows0
-  have he : (∫ t : ℝ, firstLogDensity (2*(J+2)) t *
-      ∑ z ∈ Srows, ‖firstCoreInputRow p hg F A₀ B (fun i => v₁ i+v₂ i) ε₁ ε₂ negative
-        (if negative then a.1 else a.2) Ψ m (normalizedColumn p (fun S => g (columnLog p X S)))
-        V (columnLog p X) (primeSubsetGenerator (fun i => Ideal.span {p i}) C)
-        (primeSubsetGenerator (fun i => Ideal.span {p i}) D) r t z‖^2) ≤
-      (∫ t : ℝ, firstLogDensity 0 t) *
-        firstCoreSquarefreeBudget p hp hcop hg windows Cₐ Cₛ Cw Ctail
-          g V negative M ε tailOrder decayOrder J Y A₀ B C D F v₁ v₂ ε₁ ε₂
-          (if negative then a.1 else a.2) Ψ m r X Z := by
-    simpa only [firstCoreSquarefreeBudget, mul_assoc] using hb
-  have hw := mul_le_mul_of_nonneg_left he (mul_nonneg (norm_nonneg (crossCoeff a.1 a.2))
-    (norm_nonneg (firstCoreOuter p hg B (fun i => v₁ i+v₂ i) ε₁ ε₂ negative Ψ m A₀ r)))
-  convert hw using 1 <;> (try simp only [Finset.mul_sum]) <;> ring
-
 end
 
 open ActualEisensteinCubic
-open FirstPassCubeLabels (columnLog normalizedColumn primeProductNorm b0Label jLabel firstLogDensity
-  actualFirstKernel originalLabelColumn cubeActiveSupport dilationLabel)
+open FirstPassCubeLabels (columnLog normalizedColumn primeProductNorm b0Label jLabel firstLogDensity actualFirstKernel originalLabelColumn cubeActiveSupport dilationLabel)
 open ConcreteTraceCRT (eisEmbedding)
 open RayFourExpansion (RayCharacter crossCoeff)
-
-structure SquarefreeBudgetData where
-  windows : Fin 7 → ℝ → ℂ
-  arithmetic : ℝ
-  smooth : ℝ
-  windowBound : ℝ
-  tail : ℝ
-  arithmetic_pos : 0 < arithmetic
-  smooth_nonneg : 0 ≤ smooth
-  windowBound_nonneg : 0 ≤ windowBound
-  tail_pos : 0 < tail
-
-def firstSquarefreeFamilyBudget {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i}) (data : SquarefreeBudgetData)
-    (g V : 𝓢(ℝ,ℂ)) (negative : Bool) (M ε : ℝ) (tailOrder decayOrder J : ℕ)
-    (Y : ℝ) (B C D F : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (Ψ : O →* ℂ) (m : O) (X Z : ℝ) : ℝ :=
-  ∑ a : RayCharacter × RayCharacter, ∑ A₀ ∈ F.powerset,
-    ‖crossCoeff a.1 a.2‖ * ∑ r : FirstCoreIndex,
-      ‖firstCoreOuter p hg B (fun i => v₁ i+v₂ i) ε₁ ε₂ negative Ψ m A₀ r‖ *
-        firstCoreSquarefreeBudget p hp hcop hg data.windows data.arithmetic data.smooth data.windowBound data.tail
-          g V negative M ε tailOrder decayOrder J Y A₀ B C D F v₁ v₂ ε₁ ε₂
-          (if negative then a.1 else a.2) Ψ m r X Z
-
-theorem first_passage_squarefree_child_transfer
-    {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1)
-    (F B C D : Finset ι) (hFB : Disjoint F B) (hCB : Disjoint C B) (hD : D ⊆ C∪B)
-    (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool) (hv : ∀ i ∈ B, 0 < v₁ i+v₂ i)
-    (Ψ₁ Ψ₂ : O →* ℂ) (m₁ m₂ : O)
-    (hΨ₁ : ∀ a, ‖Ψ₁ a‖ ≤ 1) (hΨ₂ : ∀ a, ‖Ψ₂ a‖ ≤ 1)
-    (W g₁ g₂ V₁ V₂ : 𝓢(ℝ,ℂ))
-    (U₁ U₂ : ℝ → ℂ) (hUc₁ : HasCompactSupport U₁) (hUs₁ : ContDiff ℝ ∞ U₁)
-    (hUc₂ : HasCompactSupport U₂) (hUs₂ : ContDiff ℝ ∞ U₂)
-    (hU₁ : ∀ t, g₁ t ≠ 0 → U₁ t=1) (hU₂ : ∀ t, g₂ t ≠ 0 → U₂ t=1)
-    (X₁ X₂ : ℝ) (hX₁ : 0 < X₁) (hX₂ : 0 < X₂)
-    (M₁ M₂ N₁ N₂ : ℝ) (hM₁ : 0 ≤ M₁) (hM₂ : 0 ≤ M₂) (hN₁ : 0 ≤ N₁) (hN₂ : 0 ≤ N₂)
-    (hg₁ : ∀ t, g₁ t ≠ 0 → |t| ≤ M₁) (hg₂ : ∀ t, g₂ t ≠ 0 → |t| ≤ M₂)
-    (hV₁ : ∀ t, V₁ t ≠ 0 → |t| ≤ N₁) (hV₂ : ∀ t, V₂ t ≠ 0 → |t| ≤ N₂)
-    (ε deltaLoss : ℝ) (hε : 0 < ε) (hδ : 0 < deltaLoss) (tailOrder decayOrder J : ℕ) :
-    ∃ (data₁ data₂ : SquarefreeBudgetData) (K₀ : ℝ), 0 ≤ K₀ ∧
-      ∀ (lengthScale : ℝ), 0 < lengthScale → ∀ (s : Finset (Ideal O × O)) (T : Finset O)
-        (w : Ideal O × O → ℂ) (M Y Z : ℝ),
-      0 ≤ M → 0 < Y → 0 ≤ Z →
-      (∀ x ∈ s, Squarefree x.1) → (∀ x ∈ s, x.2 ≠ 0) →
-      (∀ x ∈ s, DescentWeightedCauchy.firstElementRowMap
-        (dilationLabel p B (fun i => v₁ i+v₂ i) ε₁ ε₂) x ∈ T) →
-      (∀ z ∈ T, z ≠ 0) → (∀ z ∈ T, (Ideal.absNorm (Ideal.span {z}) : ℝ) ≤ Y) →
-      (∀ x ∈ s, ‖w x‖ ≤ M) →
-      let c := primeSubsetGenerator (fun i => Ideal.span {p i}) C
-      let d := primeSubsetGenerator (fun i => Ideal.span {p i}) D
-      ‖∑ x ∈ s, w x * actualFirstKernel p hp hcop hg F B (fun i => v₁ i+v₂ i) ε₁ ε₂
-        (originalLabelColumn p hg B ε₁ ε₂ true
-          (multiplicativeCoreColumn p Ψ₁ m₁ (fun S => g₁ (columnLog p X₁ S)))
-          c (ConcretePrimeRowBridge.idealGenerator x.1))
-        (originalLabelColumn p hg B ε₁ ε₂ false
-          (multiplicativeCoreColumn p Ψ₂ m₂ (fun S => g₂ (columnLog p X₂ S)))
-          c (ConcretePrimeRowBridge.idealGenerator x.1)) W V₁ V₂ X₁ X₂ lengthScale d x.2‖ ≤
-      (lengthScale/‖eisEmbedding (∏ i ∈ cubeActiveSupport B (fun i => v₁ i+v₂ i) ε₁ ε₂,p i)‖) *
-        (M*K₀*Y^deltaLoss) *
-        Real.sqrt (firstSquarefreeFamilyBudget p hp hcop hg data₁ g₁ V₁ true M₁ ε
-          tailOrder decayOrder J Y B C D F v₁ v₂ ε₁ ε₂ Ψ₁ m₁ X₁ Z) *
-        Real.sqrt (firstSquarefreeFamilyBudget p hp hcop hg data₂ g₂ V₂ false M₂ ε
-          tailOrder decayOrder J Y B C D F v₁ v₂ ε₁ ε₂ Ψ₂ m₂ X₂ Z) := by
-  obtain ⟨windows₁,A₁,S₁,H₁,Q₁,hA₁,hS₁,hH₁,hQ₁,hleft⟩ :=
-    firstInputFamilyEnergy_squarefree_transfer p hp hcop hg hinj hc hpr U₁ hUc₁ hUs₁
-      g₁ V₁ true hU₁ M₁ hM₁ hg₁ ε hε tailOrder decayOrder J
-  obtain ⟨windows₂,A₂,S₂,H₂,Q₂,hA₂,hS₂,hH₂,hQ₂,hright⟩ :=
-    firstInputFamilyEnergy_squarefree_transfer p hp hcop hg hinj hc hpr U₂ hUc₂ hUs₂
-      g₂ V₂ false hU₂ M₂ hM₂ hg₂ ε hε tailOrder decayOrder J
-  let data₁ : SquarefreeBudgetData := ⟨windows₁,A₁,S₁,H₁,Q₁,hA₁,hS₁,hH₁,hQ₁⟩
-  let data₂ : SquarefreeBudgetData := ⟨windows₂,A₂,S₂,H₂,Q₂,hA₂,hS₂,hH₂,hQ₂⟩
-  obtain ⟨K₀,hK₀,hfirst⟩ := first_passage_transfer_input_family p hp hinj hcop hg hc hpr
-    F B hFB (fun i => v₁ i+v₂ i) ε₁ ε₂ hv Ψ₁ Ψ₂ m₁ m₂
-    (fun S => g₁ (columnLog p X₁ S)) (fun S => g₂ (columnLog p X₂ S))
-    (fun G hG => hΨ₁ _) (fun G hG => hΨ₂ _) W V₁ V₂ X₁ X₂ hX₁ hX₂
-    N₁ N₂ hN₁ hN₂ hV₁ hV₂ (2*(J+2)) deltaLoss hδ
-  let I₀ : ℝ := ∫ t, firstLogDensity 0 t
-  have hI₀ : 0 ≤ I₀ := integral_nonneg (FirstPassCubeLabels.firstLogDensity_nonneg 0)
-  refine ⟨data₁,data₂,K₀*I₀,mul_nonneg hK₀ hI₀,?_⟩
-  intro lengthScale hL s T w M Y Z hM hY hZ hs hs0 hmap hT0 hT hw
-  dsimp only
-  have h₁ := hleft Y hY B C D F v₁ v₂ ε₁ ε₂ Ψ₁ m₁ X₁ Z T hv hCB hD hΨ₁ hX₁ hZ hT hT0
-  have h₂ := hright Y hY B C D F v₁ v₂ ε₁ ε₂ Ψ₂ m₂ X₂ Z T hv hCB hD hΨ₂ hX₂ hZ hT hT0
-  change _ ≤ I₀*firstSquarefreeFamilyBudget p hp hcop hg data₁ g₁ V₁ true M₁ ε
-    tailOrder decayOrder J Y B C D F v₁ v₂ ε₁ ε₂ Ψ₁ m₁ X₁ Z at h₁
-  change _ ≤ I₀*firstSquarefreeFamilyBudget p hp hcop hg data₂ g₂ V₂ false M₂ ε
-    tailOrder decayOrder J Y B C D F v₁ v₂ ε₁ ε₂ Ψ₂ m₂ X₂ Z at h₂
-  have hb := hfirst lengthScale hL (primeSubsetGenerator (fun i => Ideal.span {p i}) C)
-    (primeSubsetGenerator (fun i => Ideal.span {p i}) D) (primeSubsetGenerator_ne_zero _ _)
-    s T w M Y hM hY.le hs hs0 hmap hT0 hT hw
-  apply hb.trans
-  calc
-    _ ≤ (lengthScale/‖eisEmbedding (∏ i ∈ cubeActiveSupport B (fun i => v₁ i+v₂ i) ε₁ ε₂,p i)‖) *
-        (M*K₀*Y^deltaLoss) *
-        Real.sqrt (I₀*firstSquarefreeFamilyBudget p hp hcop hg data₁ g₁ V₁ true M₁ ε
-          tailOrder decayOrder J Y B C D F v₁ v₂ ε₁ ε₂ Ψ₁ m₁ X₁ Z) *
-        Real.sqrt (I₀*firstSquarefreeFamilyBudget p hp hcop hg data₂ g₂ V₂ false M₂ ε
-          tailOrder decayOrder J Y B C D F v₁ v₂ ε₁ ε₂ Ψ₂ m₂ X₂ Z) := by
-      gcongr
-    _ = _ := by
-      rw [Real.sqrt_mul hI₀, Real.sqrt_mul hI₀]
-      calc
-        _ = (lengthScale/‖eisEmbedding (∏ i ∈ cubeActiveSupport B (fun i => v₁ i+v₂ i) ε₁ ε₂,p i)‖) *
-          (M*K₀*Y^deltaLoss) * (Real.sqrt I₀)^2 *
-          Real.sqrt (firstSquarefreeFamilyBudget p hp hcop hg data₁ g₁ V₁ true M₁ ε
-            tailOrder decayOrder J Y B C D F v₁ v₂ ε₁ ε₂ Ψ₁ m₁ X₁ Z) *
-          Real.sqrt (firstSquarefreeFamilyBudget p hp hcop hg data₂ g₂ V₂ false M₂ ε
-            tailOrder decayOrder J Y B C D F v₁ v₂ ε₁ ε₂ Ψ₂ m₂ X₂ Z) := by ring
-        _ = _ := by rw [Real.sq_sqrt hI₀]; ring
 
 end SecondPassArithmetic
 
@@ -541,7 +216,6 @@ theorem first_passage_full_uniform_transfer
 end FirstPassCubeLabels
 end
 
-open scoped BigOperators Classical SchwartzMap
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 open FirstPassCubeLabels (actualFirstKernel originalLabelColumn cubeActiveSupport dilationLabel)

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GramCanonicalSource
-
 namespace OAI
 
 noncomputable section

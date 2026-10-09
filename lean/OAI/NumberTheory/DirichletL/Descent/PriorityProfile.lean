@@ -1,6 +1,5 @@
-import OAI.NumberTheory.DirichletL.Descent.SecondBlockEnergy
+import OAI.NumberTheory.DirichletL.Inversion.SecondChildWindows
 import OAI.NumberTheory.DirichletL.Descent.WholePriorityPhysical
-
 namespace OAI
 
 noncomputable section

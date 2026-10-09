@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondPhysicalBlock
-
 namespace OAI
 
 noncomputable section

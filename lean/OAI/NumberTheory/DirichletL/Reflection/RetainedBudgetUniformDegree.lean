@@ -1,6 +1,8 @@
-import OAI.NumberTheory.DirichletL.Reflection.RetainedBudget
+import OAI.NumberTheory.DirichletL.Reflection.OriginalBranchSum
+import OAI.NumberTheory.DirichletL.Reflection.LiteralNormalized
+import OAI.NumberTheory.DirichletL.Reflection.InactiveEnergy
+import OAI.NumberTheory.DirichletL.Reflection.CountBudget
 import OAI.NumberTheory.DirichletL.Reflection.OriginalRetainedUniformDegree
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

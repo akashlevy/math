@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.FirstStageLossBudget
-
 namespace OAI
 
 noncomputable section

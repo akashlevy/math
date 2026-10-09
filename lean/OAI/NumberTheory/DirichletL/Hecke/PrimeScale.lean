@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.PrimeRow
 import OAI.NumberTheory.DirichletL.ConductorBounds
-
 namespace OAI
 
 noncomputable section
@@ -39,16 +38,6 @@ variable (H : Subgroup (O ⧸ M)ˣ) (hH : RayOrthogonality.globalUnits M≤H)
 theorem twisted_modulus_bound (χ : Character) (θ : RayQuotient.Characters M H) :
     (HeckePrimeRay.twistedFamily M H hH χ θ).modulus.absNorm≤χ.modulus.absNorm*M.absNorm :=
   product_modulus_bound χ (HeckeRayQuotient.character M H hH θ)
-
-theorem twisted_row_modulus_bound (χ : Character) (m u : O)
-    (hχ : χ.modulus.absNorm≤HeckeRowClosure.rowConductorBound (HeckeRayFamily.character M 1) m 1 u)
-    (θ : RayQuotient.Characters M H) :
-    (HeckePrimeRay.twistedFamily M H hH χ θ).modulus.absNorm≤
-      M.absNorm^2*(Ideal.span {m}).absNorm*(Ideal.span {(72 : O)}).absNorm*(Ideal.span {u}).absNorm := by
-  apply (twisted_modulus_bound M H hH χ θ).trans
-  have hn := Nat.mul_le_mul_right M.absNorm hχ
-  simpa [HeckeRowClosure.rowConductorBound,HeckeRayFamily.character,
-    Character.ofResidue,pow_two,mul_assoc,mul_left_comm,mul_comm] using hn
 
 end SevenEighths.HeckePrimeScale
 

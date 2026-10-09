@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.RayPrimes
 import OAI.NumberTheory.DirichletL.PrimeCounting.AnnularPrimeMass
-
 namespace OAI
 
 noncomputable section
@@ -16,13 +15,6 @@ def normalizer (S : Finset (Ideal O)) (W : ℝ → ℝ) (x : ℝ) : ℝ :=
   PNT.AnnularPrimeMass.weightedPrimeSumDeleted (RayQuotient.identityClass M H) S W x
 
 include hH
-
-theorem asymptotic (S : Finset (Ideal O)) (W : ℝ → ℝ)
-    (hW : ContDiff ℝ ∞ W) (hc : HasCompactSupport W) (hp : tsupport W ⊆ Set.Ioi 0) :
-    Tendsto (fun x : ℝ => Real.log x / x ^ (1/6 : ℝ) * normalizer M H S W x)
-      atTop (𝓝 ((RayQuotient.classNumber M H : ℝ)⁻¹ * ∫ y : ℝ, W y * y ^ (-5/6 : ℝ))) :=
-  PNT.AnnularPrimeMass.weightedPrimeSumDeleted_tendsto _ S
-    (HeckeRayPrimes.quotientClassCoeff_ratio_tendsto M H hH) W hW hc hp
 
 theorem eventually_lower_bound (S : Finset (Ideal O)) (W : ℝ → ℝ)
     (hW : ContDiff ℝ ∞ W) (hc : HasCompactSupport W) (hp : tsupport W ⊆ Set.Ioi 0)

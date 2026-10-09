@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLiveIdentity
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLiveCount
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileScales
-
 namespace OAI
 
 noncomputable section

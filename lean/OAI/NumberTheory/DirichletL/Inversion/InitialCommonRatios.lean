@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialCommonTuples
-
 namespace OAI
 
 noncomputable section

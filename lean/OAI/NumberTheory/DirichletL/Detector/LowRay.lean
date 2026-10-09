@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.PhysicalRows
-
 namespace OAI
 
 noncomputable section
@@ -52,25 +51,11 @@ lemma physicalRowMonoid_eq_ray (η : HeckeFamily.Character) (C : CalibrationData
   exact rowCoefficient_congr_ray η C.Xi s (physicalRayRepresentative (physicalRay s.val))
     (physicalRayRepresentative_spec s).symm r.2
 
-lemma physicalRayRowMonoid_norm (η : HeckeFamily.Character) (C : CalibrationData)
-    (σ : RayRing) (m n : O) : ‖physicalRayRowMonoid η C σ m n‖≤1 :=
-  rowCoefficient_norm_le_one η C.Xi C.Xi_norm_le_one _ _ m n
-
 def physicalRayPeriodicBase (η : HeckeFamily.Character) (S : Finset Id)
     (hS : ∀P∈S,P.IsMaximal) (σ : RayRing) (χ : RayCharacter) : O→*ℂ :=
   lowPeriodicBase η (calibrationForSet S hS) (calibrationForSet S hS).generator
     (calibrationLowData S hS) (physicalRayRepresentative σ).val
       (physicalRayRepresentative σ).property χ
-
-theorem physicalRayPeriodicBase_uniform (η : HeckeFamily.Character) (S : Finset Id)
-    (hS : ∀P∈S,P.IsMaximal) :
-    ∃L : Id,L≠0 ∧ ∀σ : RayRing,∀χ : RayCharacter,
-      FactorsModulo L (physicalRayPeriodicBase η S hS σ χ) ∧
-      ∀n : O,‖physicalRayPeriodicBase η S hS σ χ n‖≤1 := by
-  refine ⟨lowBaseModulus η (calibrationForSet S hS) (calibrationForSet S hS).generator (calibrationLowData S hS),
-    lowBaseModulus_ne_zero η _ _ (calibrationForSet S hS).generator_ne_zero _,?_⟩
-  intro σ χ
-  exact ⟨lowPeriodicBase_periodic η _ _ _ _ _ χ,lowPeriodicBase_norm η _ _ _ _ _ χ⟩
 
 theorem physicalRayRow_eq_periodic_inverse (η : HeckeFamily.Character)
     (S : Finset Id) (hS : ∀P∈S,P.IsMaximal) (hbad : fixedBadPrimes⊆S)

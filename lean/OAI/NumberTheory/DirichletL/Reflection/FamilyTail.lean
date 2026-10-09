@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.UniformTail
 import OAI.NumberTheory.DirichletL.Reflection.TruncatedSource
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

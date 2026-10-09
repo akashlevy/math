@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.DetectorInverseRawField
 import OAI.NumberTheory.DirichletL.Detector.DetectorInverseMarkedField
-
 namespace OAI
 
 noncomputable section

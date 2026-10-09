@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.WholePriorityParents
 import OAI.NumberTheory.DirichletL.Inversion.PrioritySecondSource
-
 namespace OAI
 
 noncomputable section
@@ -54,21 +53,6 @@ theorem whole_parent_full
       (principalWindow om lo hi hlo hs negative t) X Y r core R label y :=
   parentPoisson_full p hp hcop hg hinj hc hpr y pool hq negative Ψ m slots J
     (fun i=>lists i\extra y.cube) a om lo hi hlo hs X t Y hX hY r core R label
-
-omit [DecidableEq σ] in
-theorem whole_residual_lists_attach
-    (hinj : Function.Injective (fun i=>Ideal.span {p i}))
-    (extra : CubeCoordinates ι→Finset ι) (negative : Bool)
-    (J : Finset σ) (lists : σ→Finset ι)
-    (q : Source ι Jo×((∀ i∈J,ι)×(∀ i∈J,ι))) :
-    residualLists p negative (fun i=>lists i\extra (attach p J q).cube) (attach p J q)=
-      fun i=>lists i\wholeExtractedSupport (fun x=>extra x.cube) negative q.1 := by
-  rw [residualLists_attach p hinj]
-  funext i
-  ext k
-  simp only [Finset.mem_sdiff,wholeExtractedSupport,Finset.mem_union]
-  change (k ∈ lists i ∧ k ∉ extra q.1.cube) ∧ k ∉ extractedSupport negative q.1 ↔ _
-  tauto
 
 theorem whole_signed_source_full
     (hinj : Function.Injective (fun i=>Ideal.span {p i}))

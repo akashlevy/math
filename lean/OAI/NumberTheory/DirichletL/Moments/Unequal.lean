@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.Canonical
 import OAI.NumberTheory.DirichletL.Moments.FullCorrelation
 import OAI.NumberTheory.DirichletL.Moments.Fourier
-
 namespace OAI
 
 noncomputable section
@@ -167,17 +166,6 @@ theorem unequal_prime_power_factor (p : O) [(Ideal.span {p}).IsMaximal]
   rw [supported_product_power_character_mk p hp hg hj k] at h
   simpa only [actualCorrelation, supportedCorrelation, tsum_fintype] using h
 
-theorem unequal_prime_power_zero_of_nonunit (p : O) [(Ideal.span {p}).IsMaximal]
-    (hp : Supported (Ideal.span {p})) (hg : goodLambda ∉ Ideal.span {p})
-    {j d : ℕ} (hj : 1 ≤ j) (hd : 1 ≤ d) (k : O) (hk : p ∣ k) :
-    actualCorrelation (p ^ j * p ^ d) (p ^ j)
-      (supported_mul_elements _ _ (supported_power p hp j) (supported_power p hp d))
-      (supported_power p hp j) (p ^ j * k) = 0 := by
-  rw [unequal_prime_power_factor p hp hg hj hd k]
-  have hk0 : Ideal.Quotient.mk (Ideal.span {p}) k = 0 :=
-    Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.mem_span_singleton.mpr hk)
-  rw [hk0, MulChar.map_zero, zero_mul]
-
 theorem unequal_prime_power_norm_le (p : O) [(Ideal.span {p}).IsMaximal]
     (hp : Supported (Ideal.span {p})) (hg : goodLambda ∉ Ideal.span {p})
     {j d : ℕ} (hj : 1 ≤ j) (hd : 1 ≤ d) (k : O) :
@@ -202,31 +190,6 @@ theorem unequal_prime_power_norm_le (p : O) [(Ideal.span {p}).IsMaximal]
       rw [← Nat.cast_pow, ← map_pow Ideal.absNorm,
         Ideal.span_singleton_pow]
       simp [Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card]
-
-theorem unequal_prime_power_support (p : O) [(Ideal.span {p}).IsMaximal]
-    (hp : Supported (Ideal.span {p})) (hg : goodLambda ∉ Ideal.span {p})
-    (hchar : ringChar (O ⧸ Ideal.span {p}) ≠ 2)
-    {j d : ℕ} (hj : 1 ≤ j) (hd : 1 ≤ d) (h : O)
-    (hne : actualCorrelation (p ^ j * p ^ d) (p ^ j)
-      (supported_mul_elements _ _ (supported_power p hp j) (supported_power p hp d))
-      (supported_power p hp j) h ≠ 0) :
-    ∃ k : O, h = p ^ j * k ∧ 6 ∣ j ∧ ¬ p ∣ k := by
-  have hp0 := supported_element_ne_zero p hp
-  let := finite_quotient_span (pow_ne_zero j hp0)
-  let : Fintype (Residue (p ^ j)) := Fintype.ofFinite _
-  let := finite_quotient_span (mul_ne_zero (pow_ne_zero j hp0) (pow_ne_zero d hp0))
-  let : Fintype (Residue (p ^ j * p ^ d)) := Fintype.ofFinite _
-  have hdiv : p ^ j ∣ h := by
-    by_contra hn
-    exact hne (fullModulusCorrelation_eq_zero_of_common_not_dvd _ _ (p ^ j) h
-      (supportedModulusCharacter _ _) (supportedModulusCharacter _ _)
-      (dvd_mul_right _ _) dvd_rfl hn)
-  obtain ⟨k, rfl⟩ := hdiv
-  refine ⟨k, rfl, ?_, ?_⟩
-  · by_contra hj6
-    exact hne (unequal_prime_power_zero_of_not_six p hp hg hchar hj hd hj6 k)
-  · intro hk
-    exact hne (unequal_prime_power_zero_of_nonunit p hp hg hj hd k hk)
 
 end Eisenstein
 

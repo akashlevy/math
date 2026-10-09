@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondFrozenRatioCost
 import OAI.NumberTheory.DirichletL.Moments.SecondNonexceptionalAggregate
 import OAI.NumberTheory.DirichletL.Moments.OriginalCommonHarmonic
-
 namespace OAI
 
 noncomputable section

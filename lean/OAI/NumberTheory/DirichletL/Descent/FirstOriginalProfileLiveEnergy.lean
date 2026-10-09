@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLiveSource
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfilePhysical
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileAssembly
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileWindows
-
 namespace OAI
 
 noncomputable section

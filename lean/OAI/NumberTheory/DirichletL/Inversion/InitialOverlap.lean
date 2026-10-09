@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Foundation
 import OAI.NumberTheory.DirichletL.Descent.Overlap
-
 namespace OAI
 
 noncomputable section
@@ -108,16 +107,6 @@ theorem column_injOn (S : Finset (Ideal O)) {P j : Ideal O}
   have hm' := reconstruct_column hP hj (mem_original.mp hm).2.2
   rw [← hn', ← hm', he]
 
-def overlapEquiv (S : Finset (Ideal O)) {P j : Ideal O}
-    (hP : Squarefree P) (hj : j ∣ P) : original S P j ≃ columns S P j where
-  toFun n := ⟨column P j n, Finset.mem_image.mpr ⟨n, n.property, rfl⟩⟩
-  invFun c := ⟨reconstruct P j c, by
-    obtain ⟨hc, hcj, hPc, hnS⟩ := (mem_columns hP hj).mp c.property
-    exact mem_original.mpr ⟨hnS, reconstruct_properties hP hj hc hcj hPc⟩⟩
-  left_inv n := Subtype.ext (reconstruct_column hP hj (mem_original.mp n.property).2.2)
-  right_inv c := Subtype.ext (column_reconstruct hP hj
-    ((mem_columns hP hj).mp c.property).2.2.1)
-
 theorem reconstruct_mul_residual {P j c : Ideal O} (hPc : residual P j ∣ c) :
     reconstruct P j c * residual P j = j * c := by
   unfold reconstruct
@@ -141,14 +130,6 @@ theorem cutoff_argument {P j c : Ideal O} (hP : Squarefree P) (hj : j ∣ P)
     apply (eq_div_iff h0).mpr
     exact_mod_cast norm_reconstruct hPc
   rw [hn, div_div]
-
-theorem columns_filter (S : Finset (Ideal O)) {P j : Ideal O}
-    (hP : Squarefree P) (hj : j ∣ P) (mask : Ideal O → Prop) [DecidablePred mask] :
-    columns (S.filter mask) P j =
-      (columns S P j).filter fun c => mask (reconstruct P j c) := by
-  ext c
-  simp only [mem_columns hP hj, Finset.mem_filter]
-  tauto
 
 theorem sum_reconstruct (S : Finset (Ideal O)) {P j : Ideal O}
     (hP : Squarefree P) (hj : j ∣ P) (F : Ideal O → ℂ) :
@@ -205,21 +186,6 @@ theorem sum_original_partition (S : Finset (Ideal O)) {P : Ideal O}
     exact (mem_idealDivisors hP.ne_zero).mpr (GCDMonoid.gcd_dvd_right _ _)
   have h := Finset.sum_fiberwise_of_maps_to hmap F
   simpa only [original, Finset.filter_filter] using h.symm
-
-theorem polynomial_all_overlaps (S : Finset (Ideal O)) {P : Ideal O}
-    (hP : Squarefree P) (ψ : Ideal O →* ℂ) (a : Ideal O → ℂ)
-    (W : ℝ → ℂ) (X : ℝ) :
-    (∑ n ∈ S.filter Squarefree,
-      (moebius n : ℂ) * ψ n * ψ P * a n * W ((Ideal.absNorm n : ℝ) / X)) =
-    ∑ j ∈ idealDivisors P,
-      ((moebius j : ℂ) * (moebius (residual P j) : ℂ) * ψ j ^ 2) *
-        ∑ c ∈ columns S P j, (moebius c : ℂ) * ψ c * a (reconstruct P j c) *
-          W ((Ideal.absNorm j : ℝ) * Ideal.absNorm c /
-            ((Ideal.absNorm (residual P j) : ℝ) * X)) := by
-  rw [sum_original_partition S hP]
-  apply Finset.sum_congr rfl
-  intro j hj
-  exact polynomial_fixed_overlap S hP ((mem_idealDivisors hP.ne_zero).mp hj) ψ a W X
 
 theorem scaled_cutoff_argument {P j c : Ideal O} (hP : Squarefree P) (hj : j ∣ P)
     (hPc : residual P j ∣ c) {Z : ℝ} (hZ : 0 < Z) (r z G : ℝ) :
@@ -322,14 +288,6 @@ theorem original_normalized_polynomial (S : Finset (Ideal O)) {P : Ideal O}
   simp only [← mul_assoc] at hf
   rw [hf]
   exact normalized_polynomial_all_overlaps S hP ψ a W hZ r z G
-
-theorem overlap_coefficient_norm_le {P j : Ideal O} (hP : Squarefree P) (hj : j ∣ P)
-    (ψ : Ideal O →* ℂ) (hψ : ‖ψ j‖ ≤ 1) :
-    ‖(moebius j : ℂ) * (moebius (residual P j) : ℂ) * ψ j ^ 2‖ ≤ 1 := by
-  have hjSF := hP.squarefree_of_dvd hj
-  have hresSF := residual_squarefree hP hj
-  simpa [norm_mul, hjSF.moebius_eq, hresSF.moebius_eq] using
-    InverseMoment.overlap_scalar_norm_le hψ
 
 end SevenEighths.InverseInitialOverlap
 

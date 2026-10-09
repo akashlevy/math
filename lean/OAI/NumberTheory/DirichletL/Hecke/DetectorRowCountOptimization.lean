@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRowCountCrossing
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRowCount
-
 namespace OAI
 
 noncomputable section

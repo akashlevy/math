@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.AmplificationFamilyEnergy
 import OAI.NumberTheory.DirichletL.Moments.AmplificationSourcePool
-
 namespace OAI
 
 noncomputable section

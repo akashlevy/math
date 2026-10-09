@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.LowRetained
 import OAI.NumberTheory.DirichletL.Reflection.CountBudget
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

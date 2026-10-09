@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.ReferenceHomogeneousError
-
 namespace OAI
 
 noncomputable section

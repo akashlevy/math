@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.PhysicalMellinCoefficient
 import OAI.NumberTheory.DirichletL.Detector.RadialSpectral
-
 namespace OAI
 
 noncomputable section

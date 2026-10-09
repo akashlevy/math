@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalSource
 import OAI.NumberTheory.DirichletL.Moments.SecondDyadicPartition
 import OAI.NumberTheory.DirichletL.Moments.SecondRetainedRows
 import OAI.NumberTheory.DirichletL.Moments.OriginalCommonHarmonic
-
 namespace OAI
 
 noncomputable section
@@ -178,9 +177,6 @@ theorem retainedBlock_eq_blocks
     congr 1
     exact hpart.symm
   · simp [hab]
-
-lemma block_retained (K R A B:ℝ)(n:Blocks K R A B):Retained R (n 1):=
-  ((mem_retainedIndices R (n 1)).mp (n 1).property).1
 
 def retainedInfiniteBlock (η:Character)(m A:O)(t:ℝ)(S:Finset (Ideal O))(c:Ideal O→ℂ)
     (C D:Ideal O)(hC:Supported C)(hD:Supported D)(E:Finset (CommonIndex C D))

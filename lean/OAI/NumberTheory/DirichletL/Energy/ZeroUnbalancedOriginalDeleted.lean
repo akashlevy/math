@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Energy.ZeroReferenceReflection
 import OAI.NumberTheory.DirichletL.Energy.ZeroUnbalancedDeletedGeometry
 import OAI.NumberTheory.DirichletL.Energy.ZeroReferenceError
-
 namespace OAI
 
 noncomputable section

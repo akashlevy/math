@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.NonprincipalShift
 import OAI.NumberTheory.DirichletL.Detector.PrincipalSplit
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.PrincipalNormalized
-
 namespace OAI
 
 noncomputable section

@@ -1,73 +1,23 @@
 import OAI.NumberTheory.DirichletL.Mellin.ReflectedKernel
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
 namespace SquarefreeDivisorBound
 open scoped BigOperators Classical
@@ -293,7 +243,6 @@ theorem integral_eq_of_strip_decay
 
 end VerticalContourShift
 
-open scoped BigOperators Classical
 namespace FirstPassCubeLabels
 abbrev O := ActualEisensteinCubic.O
 open ActualEisensteinCubic
@@ -557,29 +506,8 @@ theorem cube_pair_product_decomposition
 
 end Reassembly
 
-theorem mobius_column_after_dual_dilation
-    {ι κ : Type*} [DecidableEq ι] (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hg : ∀ i, lambda ∉ P i) (columns : Finset ι) (C : Finset ι → ℂ)
-    (p : κ → O) (B : Finset κ) (v : κ → ℕ) (ε₁ ε₂ : κ → Bool)
-    (hv : ∀ j ∈ B, 0 < v j) (side : Bool) (z : O) :
-    (∑ S ∈ columns.powerset, FirstCauchyArithmetic.supportMobius P S * C S *
-      ((rowCoprimeMask P S (cubeRadical p B) *
-        finiteSquarefreeRow P hg S (aLabel p B (if side then ε₂ else ε₁)) ^ 4 *
-        finiteSquarefreeRow P hg S (crtLabel p B v ε₁ ε₂ side)) *
-        star (finiteSquarefreeRow P hg S z))) =
-    FirstCauchyArithmetic.supportConjugateSum P hg columns
-      (fun S => C S * finiteSquarefreeRow P hg S (jLabel p B v ε₁ ε₂) ^ 4 *
-        rowCoprimeMask P S (b0Label p B v ε₁ ε₂))
-      (z * dilationLabel p B v ε₁ ε₂) := by
-  unfold FirstCauchyArithmetic.supportConjugateSum
-  apply Finset.sum_congr rfl
-  intro S hS
-  rw [first_pass_after_dual_dilation P hg S p B v ε₁ ε₂ hv side z]
-  ring
-
 end FirstPassCubeLabels
 
-open scoped BigOperators Classical SchwartzMap
 namespace QuadraticInitialBound
 open ActualEisensteinCubic ConcreteTraceCRT EisensteinSchwartzPoisson
 open FiniteGaussPhase MixedCrossSeparation ActualEisensteinCoordinates QuadraticGaussRay

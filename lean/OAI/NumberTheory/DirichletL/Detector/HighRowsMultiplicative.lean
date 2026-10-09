@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.HighEulerGeneral
 import OAI.NumberTheory.DirichletL.Detector.SixthFrequency
-
 namespace OAI
 
 noncomputable section

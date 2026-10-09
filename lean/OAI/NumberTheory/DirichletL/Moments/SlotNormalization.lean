@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.WholeSlotDeletion
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialHighFrequencyTailWeights
 import OAI.NumberTheory.DirichletL.Inversion.InitialHighFrequencyTailKernel
-
 namespace OAI
 
 noncomputable section

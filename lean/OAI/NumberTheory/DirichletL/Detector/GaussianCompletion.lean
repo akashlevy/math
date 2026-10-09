@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GaussianMellin
 import OAI.NumberTheory.DirichletL.Detector.PhysicalAnalytic
-
 namespace OAI
 
 noncomputable section
@@ -72,35 +71,6 @@ theorem spectralRow_eq_gaussianCompleted (S : Finset Id) (D : Id) (Ψ : O→*ℂ
   apply tsum_congr
   intro p
   exact gaussian_mellinSummand S D Ψ σ Z hZ p.1 p.2
-
-theorem markedPhysicalProbe_eq_gaussian (η : HeckeFamily.Character) (C : CalibrationData)
-    (D : Id) (W0 W1 : ℝ→ℂ) (X Y Z : ℝ) (hZ : 0<Z) :
-    markedPhysicalProbe η C D W0 W1 X Y Z=
-      (Y:ℂ)⁻¹*∑'s : {I : Id // CanonicalQuadraticSieve.Supported I},
-        if ∀P∈C.excluded,¬P∣s.val then
-          let a := primaryGenerator s.val
-          let ha := CanonicalQuadraticSieve.supported_primaryGenerator_ne_zero s.val s.property
-          let has := (CanonicalQuadraticSieve.supported_span_primaryGenerator_iff s.val).mpr s.property
-          let q : ℝ := Ideal.absNorm s.val
-          W1 (q/Y)*CanonicalRowCompletion.idealRowHom C.generator s.val/
-            (C.tau*C.residueMonoid a*(Real.sqrt (elementNorm C.generator*q*X):ℂ))*
-          ∑'m : O,C.residueMonoid m*(Real.sqrt q:ℂ)⁻¹*sexticGauss a ha (-m)*
-            W0 (elementNorm m/(elementNorm C.generator*q*X))*
-            correctedCompletedT C.excluded D (rowCoefficient η C.Xi a has m)
-              gaussianCompletedProfile Z
-        else 0 := by
-  unfold markedPhysicalProbe
-  congr 1
-  apply tsum_congr
-  intro s
-  split_ifs with h
-  · dsimp only
-    congr 1
-    apply tsum_congr
-    intro m
-    rw [spectralRow_eq_gaussianCompleted _ _ _
-      (rowCoefficient_norm_le_one η C.Xi C.Xi_norm_le_one _ _ m) 4 (by norm_num) Z hZ]
-  · rfl
 
 end SevenEighths.ProbePhysical
 end

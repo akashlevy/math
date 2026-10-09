@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.GlobalPriorityMass
 import OAI.NumberTheory.DirichletL.Descent.WholePriorityParentBounds
-
 namespace OAI
 
 noncomputable section

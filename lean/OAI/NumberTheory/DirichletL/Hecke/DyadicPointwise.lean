@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DyadicBuffered
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondSeparatedColumns
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

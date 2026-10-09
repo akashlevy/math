@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.SlotMass
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -40,18 +39,6 @@ theorem harmonic_product_small_power (rmax : ℕ) (ε : ℝ) (hε : 0<ε) :
       · congr 1;norm_num
     _ ≤ _ := mul_le_mul_of_nonneg_right (pow_le_pow_right₀ hD (Nat.mul_le_mul_left 2 hcard)) (Real.rpow_nonneg hp.le _)
 
-theorem inactive_product_small_power (rmax : ℕ) (ε : ℝ) (hε : 0<ε) :
-    ∃ C : ℝ,0<C ∧ ∀ {σ : Type*} [Fintype σ] (T : Finset σ) (H : σ→ℝ),
-      Fintype.card σ≤rmax → (∀ i,1≤H i) →
-      (∏ i : {i // i∉T},256*(columnDyadicLength (H i.val)+1:ℝ))^2≤C*(∏ i,H i)^ε := by
-  obtain ⟨C,hC,hb⟩ := harmonic_product_small_power rmax ε hε
-  refine ⟨C,hC,?_⟩
-  intro σ _ T H hcard hH
-  apply (hb (fun i : {i // i∉T} => H i.val)
-    ((Fintype.card_subtype_le _).trans hcard) (fun i => hH i.val)).trans
-  apply mul_le_mul_of_nonneg_left _ hC.le
-  exact Real.rpow_le_rpow (Finset.prod_nonneg (fun i _ => zero_le_one.trans (hH i.val)))
-    (subtype_product_le_full (fun i => i∉T) H hH) hε.le
 end
 end SevenEighths.InverseReflectedPhase
 

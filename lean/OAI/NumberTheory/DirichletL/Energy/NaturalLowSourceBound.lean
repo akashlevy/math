@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Energy.LowFixedRadialEntry
 import OAI.NumberTheory.DirichletL.Energy.OriginalProfileControl
 import OAI.NumberTheory.DirichletL.Energy.InputParentCapacity
-
 namespace OAI
 
 noncomputable section

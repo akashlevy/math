@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.HighEuler
-
 namespace OAI
 
 noncomputable section
@@ -42,13 +41,6 @@ theorem highPrimeTerm_tsum_eq_localFactor (η : HeckeFamily.Character) (x w z : 
     simp only [highPrimeTerm_zero_of_two_le η x w z P e _ _ _ hh,tsum_zero]),
     ←Fin.sum_univ_eq_sum_range]
   rfl
-
-theorem bareIdealHighSeries_hasProd_localFactor (η : HeckeFamily.Character) (x w z : ℂ)
-    (hx : 3/2<x.re) (hw : 2<w.re) (hz : 1/6<z.re) :
-    HasProd (fun P : PrimeIdeal=>idealHighLocalFactor η P.val x w z)
-      (bareIdealHighSeries η 1 x w z) := by
-  have h := bareIdealHighSeries_hasProd η x w z hx hw hz
-  simpa only [highPrimeTerm_tsum_eq_localFactor η x w z hx hw hz] using h
 
 end SevenEighths.ProbePhysical
 end

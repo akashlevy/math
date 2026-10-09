@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.DyadicCount
 import OAI.NumberTheory.DirichletL.Energy.Profiles
 import OAI.NumberTheory.DirichletL.Moments.SmoothedWindowEnergy
-
 namespace OAI
 
 noncomputable section
@@ -56,7 +55,6 @@ def profile:𝓢(ℝ,ℂ):=
 lemma profile_apply (x:ℝ):profile x=(weight x:ℂ):=rfl
 lemma profile_nonneg (x:ℝ):0≤(profile x).re:=(weight_bounds x).1
 lemma profile_le_one (x:ℝ):(profile x).re≤1:=(weight_bounds x).2
-lemma profile_zero:profile 0=0:=by rw [profile_apply,weight_zero_low 0 (by norm_num)];rfl
 lemma profile_one (x:ℝ)(hx:1/4≤x)(hx':x≤1):profile x=1:=by
   rw [profile_apply,weight_one x hx hx'];rfl
 

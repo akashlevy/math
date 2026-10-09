@@ -1,6 +1,5 @@
-import OAI.NumberTheory.DirichletL.PrimeRows.SelectedHolomorphic
+import OAI.NumberTheory.DirichletL.PrimeRows.SelectedAnalytic
 import OAI.NumberTheory.DirichletL.PrimeRows.FirstContinuation
-
 namespace OAI
 
 noncomputable section

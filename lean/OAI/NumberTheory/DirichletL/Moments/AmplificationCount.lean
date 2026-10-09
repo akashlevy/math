@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.AmplificationGlobal
 import OAI.NumberTheory.DirichletL.CenteredExceptionalCount
-
 namespace OAI
 
 noncomputable section

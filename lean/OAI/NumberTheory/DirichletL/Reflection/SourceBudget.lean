@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.SourceCost
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

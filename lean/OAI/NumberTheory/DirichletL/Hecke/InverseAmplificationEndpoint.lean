@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationRaw
-
 namespace OAI
 
 noncomputable section

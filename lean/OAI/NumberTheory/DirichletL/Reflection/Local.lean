@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.MarkedPhase
 import OAI.NumberTheory.DirichletL.Descent.Poisson
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

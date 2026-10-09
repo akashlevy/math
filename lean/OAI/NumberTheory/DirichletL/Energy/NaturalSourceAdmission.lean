@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.NaturalLowSourceBound
-
 namespace OAI
 
 noncomputable section
@@ -47,38 +46,6 @@ theorem both_matches :
     CenteredMomentAllocatedRayDictionary.Matches Q H hH s₀ η₀ θ w σ freq W bslot Z := by
   constructor <;> constructor <;> intros <;> rfl
 
-lemma source_fields :
-    (s).η = state.character ∧ (s₀).η = state.character ∧
-    (s).m = state.mask ∧ (s₀).m = state.mask ∧ (s).A = 1 ∧ (s₀).A = 1 ∧
-    (s).t = t ∧ (s₀).t = t ∧
-    (s).W₁ = p.profile 0 ∧ (s₀).W₁ = p.profile 0 ∧
-    (s).W₂ = p.profile 1 ∧ (s₀).W₂ = p.profile 1 ∧
-    (s).lower = aslot ∧ (s₀).lower = aslot ∧ (s).upper = bslot ∧ (s₀).upper = bslot := by
-  repeat' constructor
-
-lemma slot_fields (i : ι) :
-    (s).P i = Z^(w i) ∧ (s₀).P i = Z^(w i) ∧
-    (s).lo i = aslot ∧ (s₀).lo i = aslot ∧ (s).hi i = bslot ∧ (s₀).hi i = bslot ∧
-    (s).M i = profileBound W hW aslot bslot lo hi haslot hWs ∧
-    (s₀).M i = profileBound W hW aslot bslot lo hi haslot hWs ∧
-    (s).slots i = primePool Q H bslot (Z^(w i)) ∧
-    (s₀).slots i = primePool Q H bslot (Z^(w i)) := by repeat' constructor
-
-lemma slot_coefficient (i : ι) (I : Ideal O) :
-    (s).toData.coefficient i I = idealCoeff (relativeCharacter Q H hH η₀ (θ i)) I *
-      annularWeight W (Z^(w i)) (σ i) (freq i) I ∧
-    (s₀).toData.coefficient i I = (s).toData.coefficient i I := ⟨rfl, rfl⟩
-
-lemma rectangles :
-    (s).X₁ = X₁ ∧ (s).X₂ = X₂ ∧ (s).Y₁ = X₁ ∧ (s).Y₂ = X₂ ∧
-    (s₀).X₁ = X₁ ∧ (s₀).X₂ = X₂ ∧
-    (s₀).Y₁ = smallScale b ∧ (s₀).Y₂ = X₁*X₂/smallScale b ∧
-    (s₀).Y₁*(s₀).Y₂ = X₁*X₂ := by
-  refine ⟨rfl,rfl,rfl,rfl,rfl,rfl,rfl,rfl,?_⟩
-  exact (s₀).same_product
-
-lemma raw_volume : volume s = X₁*X₂*∏ i, Z^(w i) ∧ volume s₀ = volume s := ⟨rfl,rfl⟩
-
 lemma volume_log (hZ : 1 < Z) :
     Real.logb Z (volume s) = Real.logb Z X₁ + Real.logb Z X₂ + ∑ i, w i ∧
     Real.logb Z (volume s₀) = Real.logb Z X₁ + Real.logb Z X₂ + ∑ i, w i := by
@@ -87,17 +54,6 @@ lemma volume_log (hZ : 1 < Z) :
     ∑ i, Real.logb Z (Z^(w i)) at hh
   simp only [Real.logb_rpow (zero_lt_one.trans hZ) hZ.ne'] at hh
   exact ⟨hh,hh⟩
-
-theorem capacity_admission (hZ : 1 < Z) (hw : ∀ i, 0 ≤ w i) (κ : ℝ)
-    (hκ : 1/6 ≤ κ)
-    (hcap : length Z X₁ + length Z X₂ + 6*κ*(∑ i, w i) ≤ state.width) :
-    (∀ i, 1 ≤ (s).P i ∧ 1 ≤ (s₀).P i) ∧
-    volume s ≤ Z^state.width ∧ volume s₀ ≤ Z^state.width := by
-  have hPi : ∀ i, 1 ≤ (s).P i := fun i => Real.one_le_rpow hZ.le (hw i)
-  have hv := original_volume_cap s Z κ state.width hZ hκ hPi (by
-    change length Z X₁ + length Z X₂ + 6*κ*(∑ i, Real.logb Z (Z^(w i))) ≤ _
-    simpa only [Real.logb_rpow (zero_lt_one.trans hZ) hZ.ne'] using hcap)
-  exact ⟨fun i => ⟨hPi i,hPi i⟩,hv,hv⟩
 
 theorem low_admission (hZ : 1 < Z)
     (hlow : length Z X₁ + length Z X₂ + ∑ i, w i ≤ 5*state.width/6) :
@@ -116,37 +72,6 @@ theorem lower_product_admission (N : ℕ) (hN : Fintype.card ι ≤ N) :
   have hh := lower_product s N aslot haslot hN (fun _ => le_rfl)
   have hb := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hh ha.le) ha.le
   exact ⟨lowerProduct_pos N haslot ha,hb,hb⟩
-
-theorem profile_control_admission (N : ℕ) (hN : Fintype.card ι ≤ N)
-    (S : Finset (ℕ×ℕ)) :
-    (plainControl s (p.profile 0) (p.profile 1))^2 ≤
-      (profileBound W hW aslot bslot lo hi haslot hWs)^(2*N)*
-        (p.control (insert (0,0) S))^2 ∧
-    (plainControl s₀ (p.profile 0) (p.profile 1))^2 ≤
-      (profileBound W hW aslot bslot lo hi haslot hWs)^(2*N)*
-        (p.control (insert (0,0) S))^2 := by
-  have hh := plain_control_sq_le s p S N _
-    (profileBound_ge_one W hW aslot bslot lo hi haslot hWs) hN (fun _ => le_rfl)
-  exact ⟨hh,hh⟩
-
-theorem normalized_zero_source (R : Ideal O) (z : O) :
-    positiveSlotRow state.character (fixedBadMask*idealGenerator R) 1 z
-      (p.profile 0) (p.profile 1) (s).slots (s).toData.coefficient (s).P t X₁ X₂ =
-    (Real.sqrt (volume s) : ℂ)⁻¹ *
-      ∑ I ∈ finiteColumns (Fintype.piFinset (s₀).pools),
-        CenteredMomentOriginalCommonHarmonic.coefficient s₀ R 1 I * rowWeight state.character fixedBadMask 1 z t I := by
-  have hh := normalized_input_difference s₀ R z
-  have hz := comparison_row_zero s
-    (CenteredMomentDetectorPlainSource.support_zero _ a b ha (p.support 0))
-    (CenteredMomentDetectorPlainSource.support_zero _ a b ha (p.support 1)) R z
-  change positiveSlotRow state.character (fixedBadMask*idealGenerator R) 1 z
-      (p.profile 0) (p.profile 1) (s).slots (s).toData.coefficient (s).P t X₁ X₂ -
-    positiveSlotRow (s).η (fixedBadMask*idealGenerator R) 1 z (s).W₁ (s).W₂ (s).slots
-      (s).toData.coefficient (s).P (s).t (s₀).Y₁ (s₀).Y₂ = _ at hh
-  change positiveSlotRow (s).η (fixedBadMask*idealGenerator R) 1 z (s).W₁ (s).W₂ (s).slots
-    (s).toData.coefficient (s).P (s).t (s₀).Y₁ (s₀).Y₂ = 0 at hz
-  rw [hz,sub_zero] at hh
-  exact hh
 
 end Source
 

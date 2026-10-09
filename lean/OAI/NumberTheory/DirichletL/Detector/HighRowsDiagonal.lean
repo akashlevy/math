@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LocalSummation
-
 namespace OAI
 
 noncomputable section

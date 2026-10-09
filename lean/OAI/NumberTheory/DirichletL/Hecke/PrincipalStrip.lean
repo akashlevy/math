@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.Presentation
 import OAI.NumberTheory.DirichletL.Hecke.Origin
-
 namespace OAI
 
 noncomputable section

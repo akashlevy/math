@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.SecondChildWindows
-
 namespace OAI
 
 noncomputable section
@@ -39,31 +38,6 @@ theorem overlap_column_interval (I : Finset σ) (lo hi y : σ→ℝ)
       _≤yj*yc := mul_le_mul_of_nonneg_right hj.1 hc.le
       _≤b*(∏i∈I,y i) := hsourceHi
       _≤b*(∏i∈I,hi i) := mul_le_mul_of_nonneg_left hhiP (ha.le.trans hab)
-
-omit [DecidableEq σ] in
-theorem exists_overlap_fresh (I : Finset σ) (lo hi : σ→ℝ)
-    (a b jlo jhi : ℝ) (ha : 0<a) (hab : a≤b)
-    (hlo : ∀i∈I,0<lo i) (hhi : ∀i∈I,lo i≤hi i)
-    (hjlo : 0<jlo) (hjhi : jlo≤jhi) :
-    ∃(wFresh : 𝓢(ℝ,ℂ))(A B:ℝ),0<A ∧ A≤B ∧
-      HasCompactSupport (wFresh:ℝ→ℂ) ∧ tsupport (wFresh:ℝ→ℂ)⊆Set.Icc A B ∧
-      ∀(W:ℝ→ℂ),(Function.support W⊆Set.Icc a b)→
-      ∀(y:σ→ℝ)(yj yc:ℝ),
-      (∀i∈I,y i∈Set.Icc (lo i) (hi i))→yj∈Set.Icc jlo jhi→0<yc→
-      W (yj*yc/(∏i∈I,y i))≠0→wFresh yc=1 := by
-  let lower := a*(∏i∈I,lo i)/jhi
-  let upper := b*(∏i∈I,hi i)/jlo
-  have hl : 0<lower := div_pos (mul_pos ha (Finset.prod_pos hlo)) (hjlo.trans_le hjhi)
-  have hu : 0<upper := div_pos (mul_pos (ha.trans_le hab)
-    (Finset.prod_pos (fun i hi=>(hlo i hi).trans_le (hhi i hi)))) hjlo
-  obtain ⟨w,hwc,hwone,hws⟩ := InverseSecondChildWindows.positive_cutoff
-    lower (lower+upper+1) hl (by linarith)
-  refine ⟨w,lower/2,lower+upper+2,half_pos hl,by linarith,hwc,?_,?_⟩
-  · convert hws using 1 ; ring_nf
-  · intro W hW y yj yc hy hj hc hn
-    have hb := overlap_column_interval I lo hi y a b jlo jhi yj yc ha hab hlo hy hjlo hj hc (hW hn)
-    apply hwone
-    exact ⟨hb.1,by change yc≤lower+upper+1;have := hb.2;change yc≤upper at this;linarith⟩
 
 end SevenEighths.InverseInitialOverlapFresh
 

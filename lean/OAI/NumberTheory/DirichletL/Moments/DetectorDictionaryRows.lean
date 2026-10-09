@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.DetectorDictionarySlots
 import OAI.NumberTheory.DirichletL.Detector.DetectorMomentData
-
 namespace OAI
 
 noncomputable section

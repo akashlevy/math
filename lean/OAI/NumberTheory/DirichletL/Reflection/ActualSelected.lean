@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.SelectedExpansion
 import OAI.NumberTheory.DirichletL.Reflection.MarkedActualSource
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -20,8 +19,6 @@ local notation "E" => D.primeFiberEquiv R I F (Q*Ideal.span {(72:Eis)}) hR hI hF
 local notation "K" => rowResidualPart I (Ideal.span (Set.singleton m)*F)
 local notation "hK" => rowResidualPart_admissible I (Ideal.span (Set.singleton m)*F) hbad
 local notation "Pall" => PrimeFamily.sum (freePrimeFamily D.movingIdeal (Q*Ideal.span {(72:Eis)}) D.movingSupported) S
-local notation "Jall" => Sum.elim (fun P : FreePrimeIndex D.movingIdeal (Q*Ideal.span {(72:Eis)}) =>
-  Multiset.count (Subtype.val (Subtype.val P)) (UniqueFactorizationMonoid.normalizedFactors D.movingIdeal)%6) (fun _ : σ => 0)
 
 include hR hI hF hm hf hz hbad hcop hpow hmask
 

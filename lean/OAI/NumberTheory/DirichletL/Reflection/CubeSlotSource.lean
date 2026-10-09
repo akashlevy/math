@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.CubeSlotChoices
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

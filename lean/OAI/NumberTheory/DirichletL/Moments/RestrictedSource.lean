@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.RestrictedDomain
 import OAI.NumberTheory.DirichletL.Moments.OriginalChildEnergy
-
 namespace OAI
 
 noncomputable section

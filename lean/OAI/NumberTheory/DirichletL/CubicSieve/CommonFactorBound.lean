@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.QuotientColumns
 import OAI.NumberTheory.DirichletL.CubicSieve.Recurrence
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

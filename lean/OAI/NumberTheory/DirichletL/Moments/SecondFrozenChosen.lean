@@ -9,7 +9,6 @@ import OAI.NumberTheory.DirichletL.Moments.OriginalCommonHarmonic
 import OAI.NumberTheory.DirichletL.Moments.SecondSupportedChildren
 import OAI.NumberTheory.DirichletL.Moments.SecondPhysicalCost
 import OAI.NumberTheory.DirichletL.Moments.ExceptionalAmplitudePair
-
 namespace OAI
 
 noncomputable section
@@ -37,14 +36,14 @@ variable {ι:Type*} [Fintype ι] [DecidableEq ι]
 local instance : DecidableEq (ι⊕Fin 2) := Classical.decEq _
 
 open CenteredMomentSecondOriginalChildren CenteredMomentSecondSupportedChildren
-open CenteredMomentSecondPhysicalBlock CenteredMomentSecondCanonicalScalar
+open CenteredMomentSecondPhysicalBlock
 open CenteredMomentSecondPhysicalWindow CenteredMomentSecondWholeKernel
-open CenteredMomentSecondPhysicalCost CenteredMomentCommonRadialData CenteredMomentExceptionalAmplitudePair
+open CenteredMomentSecondPhysicalCost CenteredMomentExceptionalAmplitudePair
 
 open CenteredMomentSecondHeightFamily
 open CenteredMomentSecondExceptionalFamily CenteredMomentSecondEnergySplit
 open CenteredMomentSecondDyadicRowSupport CenteredMomentFirstAmplificationChoice
-open CenteredMomentOriginalCommonHarmonic CenteredMomentExceptionalAmplitudePair
+open CenteredMomentOriginalCommonHarmonic
 
 def canonicalRadial (τ:Character)(Q:Ideal O)(n:Fin 4→ℤ):Radial:=
   sourceRadial (fun z=>z≠0 ∧ ¬CenteredExceptionalProfile.FixedInducingRow τ Q fixedBadMask 1 z)

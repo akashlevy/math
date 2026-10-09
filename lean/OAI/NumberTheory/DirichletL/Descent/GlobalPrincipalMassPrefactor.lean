@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.GlobalPrincipalMassSource
 import OAI.NumberTheory.DirichletL.Descent.PhysicalExponents
-
 namespace OAI
 
 noncomputable section
@@ -15,12 +14,6 @@ def physicalPrincipalFactor (Z M r ell V delta A B R j t eta tau eps window : �
   (Z^(firstKappa M r ell V delta A B R)*Real.exp ((9/2:ℝ)*(eta*Real.log Z)))*
     Z^(firstPhysicalHeight M r ell V delta B j+12*eta+tau)*
     (Z^(r-A-B-t)*Real.exp window)^(1+eps)
-
-lemma principal_nominal_identity (M r ell V delta A B R j t : ℝ) :
-    firstKappa M r ell V delta A B R+firstPhysicalHeight M r ell V delta B j+
-      (r-A-B-t)+(ell+R/2+B+t)=r+3*ell+V-B-j := by
-  unfold firstKappa firstPhysicalHeight
-  ring
 
 lemma physical_principal_exact (Z M r ell V delta A B R j t eta tau eps window loss : ℝ)
     (hZ : 0<Z) :

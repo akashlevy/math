@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SourceBlockWindows
-
 namespace OAI
 
 noncomputable section

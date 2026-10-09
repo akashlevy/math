@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Foundation
 import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-
 namespace OAI
 
 noncomputable section

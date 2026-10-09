@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLiveEnergy
 import OAI.NumberTheory.DirichletL.Descent.OriginalCellPriority
-
 namespace OAI
 
 noncomputable section

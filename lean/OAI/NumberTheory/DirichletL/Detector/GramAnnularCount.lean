@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GramShell
-
 namespace OAI
 
 noncomputable section

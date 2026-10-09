@@ -1,5 +1,5 @@
-import OAI.NumberTheory.DirichletL.Hecke.DetectorRowSpecialization
-
+import OAI.NumberTheory.DirichletL.Hecke.RowClosure
+import OAI.NumberTheory.DirichletL.Hecke.Dyadic
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.SourceBesselExpansion
 import OAI.NumberTheory.DirichletL.Eisenstein.InverseCuspCoordinates
-
 namespace OAI
 
 noncomputable section
@@ -9,76 +8,21 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open Filter MeasureTheory Asymptotics
-open scoped BigOperators Classical Topology
 
 def reflectedCuspProfile (A : ℂ) (Q : ℝ) (g : ℝ→ℂ) (v : ℝ) : ℂ :=
   A*((v:ℂ)^(-2:ℂ)*g ((Q*v)⁻¹))
@@ -167,9 +111,6 @@ theorem cusp_mellin_entire (f g : ℝ→ℂ) (A : ℂ) (Q decayF decayG : ℝ)
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
-open Finset AddChar MulChar EisensteinEmbedding
 
 section
 local notation "O" => ActualEisensteinCubic.O
@@ -237,30 +178,6 @@ lemma fullFunction_horizontal_hasDerivAt (constant : ℂ) (v : ℝ) (hv : 0<v)
     (constant*(v:ℂ)^(2/3:ℂ))
   simpa only [fullFunction,function,
     hyperbolicHeight_upperPoint,hyperbolicHorizontal_upperPoint] using hh
-
-theorem fullFunction_wirtingerBar (constant : ℂ) (v : ℝ) (hv : 0<v) (z : ℂ) :
-    horizontalWirtingerBar (fun w => coeff.fullFunction constant (upperPoint w v hv)) z=
-      ∑'h : ActualEisensteinCubic.O,(2*Real.pi*Complex.I*star (cuspFrequency h))*coeff.term h (v,z) := by
-  have h1 := (coeff.fullFunction_horizontal_hasDerivAt constant v hv z 1 0).deriv
-  have hI := (coeff.fullFunction_horizontal_hasDerivAt constant v hv z Complex.I 0).deriv
-  simp only [mul_one,Complex.ofReal_zero,zero_mul,add_zero] at h1 hI
-  rw [horizontalWirtingerBar,h1,hI]
-  have hs1 := coeff.directionalTerm_summable v hv z 1
-  have hsI := (coeff.directionalTerm_summable v hv z Complex.I).mul_left Complex.I
-  rw [←tsum_mul_left,←hs1.tsum_add hsI,←tsum_mul_left]
-  apply tsum_congr
-  intro h
-  unfold directionalTerm
-  linear_combination coeff.term h (v,z)*horizontalPhaseMultiplier_wirtinger (cuspFrequency h)
-
-lemma fullFunction_wirtingerBar_summable (v : ℝ) (hv : 0<v) (z : ℂ) :
-    Summable (fun h : ActualEisensteinCubic.O => (2*Real.pi*Complex.I*star (cuspFrequency h))*coeff.term h (v,z)) := by
-  have hs := ((coeff.directionalTerm_summable v hv z 1).add
-    ((coeff.directionalTerm_summable v hv z Complex.I).mul_left Complex.I)).mul_left (1/2:ℂ)
-  apply hs.congr
-  intro h
-  unfold directionalTerm
-  linear_combination coeff.term h (v,z)*horizontalPhaseMultiplier_wirtinger (cuspFrequency h)
 
 end SubexponentialBesselCoefficients
 end
@@ -396,12 +313,9 @@ end SubexponentialBesselCoefficients
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
-open Finset AddChar MulChar EisensteinEmbedding
+open scoped MatrixGroups
 
 section
-local notation "O" => ActualEisensteinCubic.O
 
 lemma spatialComplexSplit_differentiable : Differentiable ℝ spatialComplexSplit := by
   change Differentiable ℝ (fun p : EuclideanSpatial => (p 2,(p 0:ℂ)+(p 1:ℂ)*Complex.I))
@@ -461,17 +375,6 @@ lemma cubicSourceResidualFunction_translate_split_differentiableAt (g : SL(2,ℂ
   rw [cubicSourceResidualFunction_eq_bessel]
   exact sourceBesselCoefficients.fullFunction_translate_split_differentiableAt
     ((3*(Real.pi:ℂ))*constantArithmeticResidue) g p hp
-
-lemma cubicSourceResidualFunction_split_differentiableAt (p : ℂ × ℝ) (hp : 0<p.2) :
-    DifferentiableAt ℝ
-      (fun q : ℂ × ℝ => cubicSourceResidualFunction (cuspCoordinateLift (q.2,q.1))) p := by
-  simpa only [one_smul] using cubicSourceResidualFunction_translate_split_differentiableAt 1 p hp
-
-lemma cubicSourceResidualFunction_wirtingerBar (v : ℝ) (hv : 0<v) (z : ℂ) :
-    horizontalWirtingerBar (fun w => cubicSourceResidualFunction (upperPoint w v hv)) z=
-      ∑'h : ActualEisensteinCubic.O,(2*Real.pi*Complex.I*star (cuspFrequency h))*sourceBesselCoefficients.term h (v,z) := by
-  rw [cubicSourceResidualFunction_eq_bessel]
-  exact sourceBesselCoefficients.fullFunction_wirtingerBar _ v hv z
 
 lemma cubicSourceResidualFunction_wirtingerBar_cusp_decay (a : ℝ) (ha : 0<a) :
     ∃C : ℝ,0≤C ∧ ∀(v : ℝ)(hv : 0<v)(z : ℂ),a≤v →
@@ -545,12 +448,6 @@ lemma fullFunction_wirtingerZ_cusp_decay (constant : ℂ) (a : ℝ) (ha : 0<a) :
 
 end SubexponentialBesselCoefficients
 
-lemma cubicSourceResidualFunction_wirtingerZ (v : ℝ) (hv : 0<v) (z : ℂ) :
-    horizontalWirtingerZ (fun w => cubicSourceResidualFunction (upperPoint w v hv)) z=
-      ∑'h : ActualEisensteinCubic.O,(2*Real.pi*Complex.I*cuspFrequency h)*sourceBesselCoefficients.term h (v,z) := by
-  rw [cubicSourceResidualFunction_eq_bessel]
-  exact sourceBesselCoefficients.fullFunction_wirtingerZ _ v hv z
-
 lemma cubicSourceResidualFunction_wirtingerZ_cusp_decay (a : ℝ) (ha : 0<a) :
     ∃C : ℝ,0≤C ∧ ∀(v : ℝ)(hv : 0<v)(z : ℂ),a≤v →
       ‖horizontalWirtingerZ (fun w => cubicSourceResidualFunction (upperPoint w v hv)) z‖≤
@@ -566,20 +463,9 @@ lemma cubicSourceConjugateFunction_translate_split_differentiableAt (g : SL(2,�
       (fun q : ℂ × ℝ => cubicSourceConjugateFunction (g • cuspCoordinateLift (q.2,q.1))) p :=
   (cubicSourceResidualFunction_translate_split_differentiableAt g p hp).star
 
-lemma cubicSourceConjugateFunction_wirtingerBar_cusp_decay (a : ℝ) (ha : 0<a) :
-    ∃C : ℝ,0≤C ∧ ∀(v : ℝ)(hv : 0<v)(z : ℂ),a≤v →
-      ‖horizontalWirtingerBar (fun w => cubicSourceConjugateFunction (upperPoint w v hv)) z‖≤
-        C*Real.exp (-residualCuspDecayRate*v) := by
-  obtain ⟨C,hC,hbound⟩ := cubicSourceResidualFunction_wirtingerZ_cusp_decay a ha
-  refine ⟨C,hC,?_⟩
-  intro v hv z hav
-  simpa only [cubicSourceConjugateFunction,horizontalWirtingerBar_star,norm_star] using hbound v hv z hav
-
 end
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
-open Finset AddChar MulChar EisensteinEmbedding
+open scoped MatrixGroups
 
 lemma horizontalWirtingerBar_translate (f : ℂ→ℂ) (a : ℂ) :
     horizontalWirtingerBar (fun z=>f (z+a)) 0=horizontalWirtingerBar f a := by
@@ -634,50 +520,6 @@ lemma cuspDerivative_of_transform (f : HyperbolicSpace→ℂ) (g H : SL(2,ℂ))
   rw [he]
   simp only [_root_.smul_apply,smul_eq_mul]
   ring
-
-lemma cubicSourceResidualFunction_levelThree (G : CubicKubota.levelThree) (w : HyperbolicSpace) :
-    cubicSourceResidualFunction (complexMatrix G•w)=
-      CubicKubota.complexCharacter G*cubicSourceResidualFunction w := by
-  have hh := cubicSourceResidualFunction_automorphy (CubicKubota.sourceLevelInclusion G) w
-  change cubicSourceResidualFunction (complexMatrix G•w)=
-    CubicKubota.levelTwoComplexCharacter ⟨G.val,CubicKubota.levelThree_le_levelTwo G.property⟩*
-      cubicSourceResidualFunction w at hh
-  rw [CubicKubota.levelTwoComplexCharacter_restrict] at hh
-  exact hh
-
-lemma cubicSourceConjugateFunction_levelThree (G : CubicKubota.levelThree) (w : HyperbolicSpace) :
-    cubicSourceConjugateFunction (complexMatrix G•w)=
-      star (CubicKubota.complexCharacter G)*cubicSourceConjugateFunction w := by
-  simp only [cubicSourceConjugateFunction,cubicSourceResidualFunction_levelThree,star_mul]
-  ring
-
-theorem cubicSourceResidualFunction_cuspDerivative (G : CubicKubota.levelThree)
-    (g H : SL(2,ℂ)) (hfactor : g=complexMatrix G*H) (hc : g 1 0≠0)
-    (v : ℝ) (hv : 0<v) :
-    horizontalWirtingerBar (fun z=>cubicSourceResidualFunction (upperPoint z v hv)) (g 0 0/g 1 0)=
-      (CubicKubota.complexCharacter G*(-1/((g 1 0)^2*(v:ℂ)^2)))*
-        horizontalWirtingerZ
-          (fun z=>cubicSourceResidualFunction (H•upperPoint z (1/(‖g 1 0‖^2*v)) (by positivity)))
-          (-g 1 1/g 1 0) := by
-  refine cuspDerivative_of_transform cubicSourceResidualFunction g H
-    (CubicKubota.complexCharacter G) ?_ hc v hv ?_
-  · intro w
-    rw [hfactor,mul_smul,cubicSourceResidualFunction_levelThree]
-  · exact cubicSourceResidualFunction_translate_split_differentiableAt H _ (by positivity)
-
-theorem cubicSourceConjugateFunction_cuspDerivative (G : CubicKubota.levelThree)
-    (g H : SL(2,ℂ)) (hfactor : g=complexMatrix G*H) (hc : g 1 0≠0)
-    (v : ℝ) (hv : 0<v) :
-    horizontalWirtingerBar (fun z=>cubicSourceConjugateFunction (upperPoint z v hv)) (g 0 0/g 1 0)=
-      (star (CubicKubota.complexCharacter G)*(-1/((g 1 0)^2*(v:ℂ)^2)))*
-        horizontalWirtingerZ
-          (fun z=>cubicSourceConjugateFunction (H•upperPoint z (1/(‖g 1 0‖^2*v)) (by positivity)))
-          (-g 1 1/g 1 0) := by
-  refine cuspDerivative_of_transform cubicSourceConjugateFunction g H
-    (star (CubicKubota.complexCharacter G)) ?_ hc v hv ?_
-  · intro w
-    rw [hfactor,mul_smul,cubicSourceConjugateFunction_levelThree]
-  · exact cubicSourceConjugateFunction_translate_split_differentiableAt H _ (by positivity)
 
 end CubicEisenstein
 

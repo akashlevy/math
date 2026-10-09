@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.TupleRows
 import OAI.NumberTheory.DirichletL.Detector.CompensationActual
-
 namespace OAI
 
 noncomputable section

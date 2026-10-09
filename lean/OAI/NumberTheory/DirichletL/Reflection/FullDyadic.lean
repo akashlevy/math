@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.FullRaw
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

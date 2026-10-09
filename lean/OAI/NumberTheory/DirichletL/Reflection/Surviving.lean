@@ -1,6 +1,5 @@
-import OAI.NumberTheory.DirichletL.Reflection.PhysicalEnergy
+import OAI.NumberTheory.DirichletL.Reflection.KernelAdmissible
 import OAI.NumberTheory.DirichletL.Inversion.TerminalWidths
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -95,22 +94,6 @@ theorem surviving_extracted_scales (F : PrimeFamily φ)
     exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr (frozenExtracted_ne_zero F jF e v))
   exact ⟨max_eq_right ((one_le_div (hp 1)).mpr h.1),
     max_eq_right ((one_le_div (hp 2)).mpr h.2)⟩
-
-theorem surviving_frozen_local_assignments (F : PrimeFamily φ) (jF : φ→ℕ)
-    (A : Ideal Eis→Ideal Eis→ℂ) (nset bset : Finset (Ideal Eis))
-    (e : φ→Fin 3) (he : e∈survivingFrozenBranches F jF A nset bset) :
-    ∃ n∈nset, ∃ b∈bset, ∀ i,
-      (jF i≠4 → e i=0) ∧
-      (jF i=4 → e i=1 → primaryGenerator n∈F.ideal i) ∧
-      (jF i=4 → e i=2 → primaryGenerator n∉F.ideal i ∧ primaryGenerator b∈F.ideal i) := by
-  obtain ⟨n,hn,b,hb,hz⟩ := (mem_survivingFrozenBranches F jF A nset bset e).mp he
-  refine ⟨n,hn,b,hb,?_⟩
-  have hh := (mul_ne_zero_iff.mp hz).2
-  intro i
-  have hi := (Finset.prod_ne_zero_iff.mp hh) i (Finset.mem_univ i)
-  simpa only [PrimeFamily.generator_span] using
-    InverseTerminalWidths.surviving_local_piece (Ideal.span {F.generator i}) (F.generator_good i)
-      (jF i) (e i) (primaryGenerator n) (primaryGenerator b) hi
 
 end
 end SevenEighths.InverseReflectedPhase

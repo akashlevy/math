@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.GammaZeroDetector
 import OAI.NumberTheory.DirichletL.Hecke.DetectorWitnessArithmetic
 import Mathlib.Analysis.MellinInversion
-
 namespace OAI
 
 noncomputable section
@@ -244,27 +243,6 @@ theorem detector_hasSum_pairs (χ : Character) (V : ℝ → ℂ) {D Y : ℝ}
   unfold pairExponential detectorIntegral
   simpa only [pairGamma_tsum χ V hD hV hρ, line] using h
 
-theorem detector_eq_double_sum (χ : Character) (V : ℝ → ℂ) {D Y : ℝ}
-    (hD : 0 < D) (hY : 0 < Y) (hV : ∀ x : ℝ, 2 ≤ x → V x = 0)
-    {ρ : ℂ} (hρ : -1 < ρ.re) :
-    detectorIntegral χ V D Y ρ = ∑' J : Ideal O, ∑' K : Ideal O,
-      (UniqueFactorizationMonoid.moebius J : ℂ) * V ((J.absNorm : ℝ)/D) *
-      idealCoeff χ (J*K) * (((J*K).absNorm : ℝ) : ℂ)^(-ρ) *
-        Complex.exp (-(((J*K).absNorm : ℝ) : ℂ)/(Y : ℂ)) := by
-  have h := detector_hasSum_pairs χ V hD hY hV hρ
-  rw [← h.tsum_eq, h.summable.tsum_prod]
-  rfl
-
-theorem pairExponential_zero_left (χ : Character) (V : ℝ → ℂ) (D : ℝ)
-    (ρ : ℂ) (Y : ℝ) (K : Ideal O) : pairExponential χ V D ρ Y (0,K) = 0 := by
-  unfold pairExponential
-  rw [pairCoefficient_zero_norm χ V D _ (by simp [pairNorm]), zero_mul, zero_mul]
-
-theorem pairExponential_zero_right (χ : Character) (V : ℝ → ℂ) (D : ℝ)
-    (ρ : ℂ) (Y : ℝ) (J : Ideal O) : pairExponential χ V D ρ Y (J,0) = 0 := by
-  unfold pairExponential
-  rw [pairCoefficient_zero_norm χ V D _ (by simp [pairNorm]), zero_mul, zero_mul]
-
 theorem pairExponential_fiber (χ : Character) (V : ℝ → ℂ) (D : ℝ)
     (ρ : ℂ) (Y : ℝ) (J : Ideal O) :
     (∑' p : CompletedGauss.MulFiber J, pairExponential χ V D ρ Y p.val) =
@@ -292,67 +270,6 @@ theorem detector_hasSum_convolution (χ : Character) (V : ℝ → ℂ) {D Y : �
   change HasSum (fun J : Ideal O => ∑' p : CompletedGauss.MulFiber J,
     pairExponential χ V D ρ Y p.val) _ at h
   simpa only [pairExponential_fiber] using h
-
-theorem detector_large_product_tail (χ : Character) (V : ℝ → ℂ) {D Y : ℝ}
-    (hD : 2 ≤ D) (hY : 0 < Y)
-    (hV : ∀ x : ℝ, 0 ≤ x → x ≤ 1 → V x = 1)
-    (hVzero : ∀ x : ℝ, 2 ≤ x → V x = 0) {ρ : ℂ} (hρ : -1 < ρ.re) :
-    (∑' J : Ideal O, HeckeDetectorWitnessArithmetic.exponentialTerm χ V D ρ Y J *
-      (1-V (2*(J.absNorm : ℝ)/D))) =
-      detectorIntegral χ V D Y ρ - Complex.exp (-1/(Y : ℂ)) := by
-  have h := detector_hasSum_convolution χ V (by linarith : 0 < D) hY hVzero hρ
-  rw [HeckeDetectorWitnessArithmetic.exponential_sum_tail χ V D hD hV hVzero ρ Y h.summable,
-    h.tsum_eq]
-
-theorem pairExponential_summable_norm (χ : Character) (V : ℝ → ℂ) {D Y : ℝ}
-    (hD : 0 < D) (hY : 0 < Y) (hV : ∀ x : ℝ, 2 ≤ x → V x = 0)
-    {ρ : ℂ} (hρ : -1 < ρ.re) :
-    Summable (fun p : Ideal O × Ideal O => ‖pairExponential χ V D ρ Y p‖) :=
-  (detector_hasSum_pairs χ V hD hY hV hρ).summable.norm
-
-def pairTail (χ : Character) (V : ℝ → ℂ) (D : ℝ) (ρ : ℂ) (Y : ℝ)
-    (p : Ideal O × Ideal O) : ℂ :=
-  pairExponential χ V D ρ Y p * (1-V (2*pairNorm p/D))
-
-theorem pairTail_summable (χ : Character) (V : ℝ → ℂ) {D Y : ℝ}
-    (hD : 0 < D) (hY : 0 < Y) (hVzero : ∀ x : ℝ, 2 ≤ x → V x = 0)
-    (hV : ∀ x : ℝ, ‖V x‖ ≤ 1) {ρ : ℂ} (hρ : -1 < ρ.re) :
-    Summable (pairTail χ V D ρ Y) := by
-  apply Summable.of_norm
-  apply ((pairExponential_summable_norm χ V hD hY hVzero hρ).mul_right 2).of_nonneg_of_le
-    (fun _ => norm_nonneg _)
-  intro p
-  rw [pairTail, norm_mul]
-  apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-  have hn := norm_sub_le (1 : ℂ) (V (2*pairNorm p/D))
-  rw [norm_one] at hn
-  linarith [hV (2*pairNorm p/D)]
-
-theorem pairTail_fiber (χ : Character) (V : ℝ → ℂ) (D : ℝ)
-    (ρ : ℂ) (Y : ℝ) (J : Ideal O) :
-    (∑' p : CompletedGauss.MulFiber J, pairTail χ V D ρ Y p.val) =
-      HeckeDetectorWitnessArithmetic.exponentialTerm χ V D ρ Y J *
-        (1-V (2*(J.absNorm : ℝ)/D)) := by
-  have hn (p : CompletedGauss.MulFiber J) : pairNorm p.val = (J.absNorm : ℝ) := by
-    rw [pairNorm, p.property]
-  simp_rw [pairTail, hn]
-  rw [tsum_mul_right, pairExponential_fiber]
-
-theorem detector_eq_pair_tail (χ : Character) (V : ℝ → ℂ) {D Y : ℝ}
-    (hD : 2 ≤ D) (hY : 0 < Y)
-    (hVone : ∀ x : ℝ, 0 ≤ x → x ≤ 1 → V x = 1)
-    (hVzero : ∀ x : ℝ, 2 ≤ x → V x = 0)
-    (hV : ∀ x : ℝ, ‖V x‖ ≤ 1) {ρ : ℂ} (hρ : -1 < ρ.re) :
-    HasSum (pairTail χ V D ρ Y)
-      (detectorIntegral χ V D Y ρ - Complex.exp (-1/(Y : ℂ))) := by
-  have hs := pairTail_summable χ V (by linarith : 0 < D) hY hVzero hV hρ
-  have hf := hs.hasSum.tsum_fiberwise (fun p : Ideal O × Ideal O => p.1*p.2)
-  change HasSum (fun J : Ideal O => ∑' p : CompletedGauss.MulFiber J,
-    pairTail χ V D ρ Y p.val) _ at hf
-  simp_rw [pairTail_fiber] at hf
-  have he := hf.tsum_eq
-  rw [detector_large_product_tail χ V hD hY hVone hVzero hρ] at he
-  exact he.symm ▸ hs.hasSum
 
 end SevenEighths.GammaDetectorExpansion
 

@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.PlainGlobalActual
 import OAI.NumberTheory.DirichletL.Moments.CoreFloor
 import OAI.NumberTheory.DirichletL.Moments.DetectorDictionary
-
 namespace OAI
 
 noncomputable section
@@ -80,59 +79,6 @@ local notation "O"=>HeckeFamily.O
   rw [tsum_mul_left] at hh
   exact hh.trans ((mul_le_mul_of_nonneg_left
     (radial_weight_lattice_bound_all r.profile r.scale r.scale_pos) (sq_nonneg B)).trans_eq (by ring))
-
- theorem zero_all_lengths_floor (a b:ℝ)(ha:0<a):
-    ∃S:Finset (ℕ×ℕ),∃C:ℝ,0<C ∧
-    ∀(W₁ W₂:SchwartzMap ℝ ℂ),Function.support (W₁:ℝ→ℂ)⊆Set.Icc a b→
-      Function.support (W₂:ℝ→ℂ)⊆Set.Icc a b→
-    ∀(η:Character)(mask A:O)(r:Radial)(χ:O→Character),
-      (∀z,r.keep z→(χ z).residue≠1)→
-      (∀z,r.keep z→∀n,elementCoeff (χ z) n=
-        CanonicalRowCompletion.rowTwist (HeckeRowClosure.elementHom η) mask 1 (A*z) n)→
-    ∀(Z m q ρ Cscale t X₁ X₂:ℝ),1≤Z→0≤m→0≤q→0≤Cscale→
-      r.scale=Z^m→m+q≤ρ→1≤X₁→1≤X₂→
-      (∀z,r.keep z→((χ z).modulus.absNorm:ℝ)≤Cscale*Z^(m+q))→
-    zeroEnergy η mask A t W₁ W₂ X₁ X₂ r≤
-      C*Cscale^4*diagonalControl r.profile*
-        ((S.sup (schwartzSeminormFamily ℝ ℝ ℂ) W₁)*
-         (S.sup (schwartzSeminormFamily ℝ ℝ ℂ) W₂))^2*(3+|t|)^8*Z^(m+q+4*ρ):=by
-  obtain ⟨S,C,hC,hpoly⟩:=global_polynomial_bound a b ha
-  refine ⟨S,C^4,pow_pos hC _,?_⟩
-  intro W₁ W₂ hs₁ hs₂ η mask A r χ hχ hrow Z m q ρ Cscale t X₁ X₂ hZ hm hq hCs hscale hfloor hX₁ hX₂ hmod
-  let B₁:=S.sup (schwartzSeminormFamily ℝ ℝ ℂ) W₁
-  let B₂:=S.sup (schwartzSeminormFamily ℝ ℝ ℂ) W₂
-  have hB₁:0≤B₁:=apply_nonneg _ _
-  have hB₂:0≤B₂:=apply_nonneg _ _
-  let V:=3+|t|
-  let Q:=Cscale*Z^(m+q)
-  have hQ:0≤Q:=mul_nonneg hCs (Real.rpow_nonneg (zero_le_one.trans hZ) _)
-  let B:=C^2*(B₁*B₂)*Q^2*V^4
-  have hB:0≤B:=by dsimp [B]; positivity
-  have hpoint (z:O)(hz:r.keep z):‖zeroRow η mask A z t W₁ W₂ X₁ X₂‖≤B:=by
-    rw [zero_row_norm η (χ z) mask A z (hrow z hz) W₁ W₂ a b ha hs₁ hs₂
-      (W₁.smooth ⊤) (W₂.smooth ⊤) t X₁ X₂ (zero_lt_one.trans_le hX₁) (zero_lt_one.trans_le hX₂)]
-    have hb₁:=hpoly W₁ hs₁ (χ z) (hχ z hz) X₁ t hX₁
-    have hb₂:=hpoly W₂ hs₂ (χ z) (hχ z hz) X₂ t hX₂
-    have h₁:‖polynomial (χ z) false W₁ X₁ 0 t‖≤C*B₁*Q*V^2:=
-      hb₁.trans (by dsimp [V]; gcongr; exact hmod z hz)
-    have h₂:‖polynomial (χ z) false W₂ X₂ 0 t‖≤C*B₂*Q*V^2:=
-      hb₂.trans (by dsimp [V]; gcongr; exact hmod z hz)
-    exact (mul_le_mul h₁ h₂ (norm_nonneg _) (by positivity)).trans_eq (by dsimp [B];ring)
-  have hb:=radial_bound_on_keep (fun z=>zeroRow η mask A z t W₁ W₂ X₁ X₂) r B hB hpoint
-  change zeroEnergy η mask A t W₁ W₂ X₁ X₂ r≤_ at hb
-  rw [hscale,max_eq_right (Real.one_le_rpow hZ hm)] at hb
-  have hz:0<Z:=zero_lt_one.trans_le hZ
-  have hp:Z^m*(Z^(m+q))^4≤Z^(m+q+4*ρ):=by
-    rw [←Real.rpow_natCast,←Real.rpow_mul hz.le,←Real.rpow_add hz]
-    apply Real.rpow_le_rpow_of_exponent_le hZ
-    norm_num
-    linarith
-  have hd:=diagonalControl_nonneg r.profile
-  apply hb.trans
-  calc
-    _=(C^4*Cscale^4*diagonalControl r.profile*(B₁*B₂)^2*V^8)*(Z^m*(Z^(m+q))^4):=by
-      dsimp [B,Q]; ring
-    _≤_:=mul_le_mul_of_nonneg_left hp (by positivity)
 
 end SevenEighths.CenteredMomentPlainGlobalEnergy
 

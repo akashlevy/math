@@ -1,79 +1,23 @@
 import OAI.NumberTheory.DirichletL.GaussSum.ReflectionPool
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
-
-open scoped Classical
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 
@@ -141,212 +85,17 @@ lemma A4_traceLambda_pow_four : ramifiedTraceLambda^4=(9:Eis) := by
     _=(eisLam^2)^2:=by ring
     _=9:=by rw [TraceLambdaPhase.eisLam_sq];norm_num
 
-structure PrincipalStratumArithmetic {ι:Type*} [Fintype ι]
-    (p:ι→Eis) (N a0 c0:Eis) where
-  lift : (∀i,(Eis⧸Ideal.span {p i})ˣ)→ι→Eis
-  lift_period : ∀v i,N^2∣lift v i
-  lift_residue : ∀v i,Ideal.Quotient.mk (Ideal.span {p i}) (lift v i)=(v i:Eis⧸Ideal.span {p i})
-  U : Eis
-  w : Eis
-  bezout : U*(∏i,p i)+(ramifiedTraceLambda^3*w)*c0=1
-  sigma : ∀i,(Eis⧸Ideal.span {p i})ˣ
-  epsilon : ∀i,(Eis⧸Ideal.span {p i})ˣ
-  sigma_value : ∀i,(sigma i:Eis⧸Ideal.span {p i})=
-    Ideal.Quotient.mk (Ideal.span {p i}) (ramifiedTraceLambda^2*c0*cofactor p i)
-  epsilon_value : ∀i,Ideal.Quotient.mk (Ideal.span {p i}) (ramifiedTraceLambda^3*c0*cofactor p i)*
-    (sigma i:Eis⧸Ideal.span {p i})*(epsilon i:Eis⧸Ideal.span {p i})=-1
-  gamma : (∀i,(Eis⧸Ideal.span {p i})ˣ)→levelThree
-  numerator : ∀v,(gamma v:SL(2,Eis)) 0 0=finiteCrossNumerator a0 c0 ramifiedTraceLambda p (lift v)
-  denominator : ∀v,(gamma v:SL(2,Eis)) 1 0=c0*∏i,p i
-  numerator_fixed : ∀v,(9:Eis)*c0∣(gamma v:SL(2,Eis)) 0 0-(gamma (fun _=>1):SL(2,Eis)) 0 0
-  inverse_fixed : ∀v,ramifiedTraceLambda^3*c0∣(gamma v:SL(2,Eis)) 1 1-(gamma (fun _=>1):SL(2,Eis)) 1 1
-
-theorem exists_principalStratumArithmetic {ι:Type*} [Fintype ι]
-    (p:ι→Eis) [∀i,(Ideal.span {p i}).IsMaximal] (hp:∀i,p i≠0)
-    (hcop:Pairwise (Function.onFun IsCoprime (fun i=>Ideal.span {p i})))
-    (hprimary:∀i,lambda^2∣p i-1)
-    (N a0 c0:Eis) (hc0:c0≠0) (hc3:(3:Eis)∣c0)
-    (hN:(9:Eis)*c0∣N) (ha0:lambda^2∣a0-1) (hac:IsCoprime a0 c0)
-    (hNp:∀i,IsCoprime N (p i)) :
-    Nonempty (PrincipalStratumArithmetic p N a0 c0) := by
-  have h9N:(9:Eis)∣N:=(dvd_mul_right 9 c0).trans hN
-  have hcN:c0∣N:=(dvd_mul_left c0 9).trans hN
-  have hD9:ramifiedTraceLambda^3*c0∣(9:Eis)*c0 := by
-    refine ⟨ramifiedTraceLambda,?_⟩
-    rw [←A4_traceLambda_pow_four]
-    ring
-  have hDN:ramifiedTraceLambda^3*c0∣N:=hD9.trans hN
-  have hl9:ramifiedTraceLambda∣(9:Eis) := by
-    rw [←A4_traceLambda_pow_four]
-    exact dvd_pow_self _ (by decide)
-  have hlN:ramifiedTraceLambda∣N:=hl9.trans h9N
-  have hstdN:lambda^2∣N:=lambda_sq_dvd_three.trans
-    ((show (3:Eis)∣9 from ⟨3,by norm_num⟩).trans h9N)
-  let r:Eis:=∏i,p i
-  have hr:lambda^2∣r-1:=primary_finset_product Finset.univ p (fun i _=>hprimary i)
-  have hNr:IsCoprime N r:=IsCoprime.prod_right (fun i _=>hNp i)
-  have hrNc:IsCoprime r (N*c0):=hNr.symm.mul_right
-    (hNr.symm.of_isCoprime_of_dvd_right hcN)
-  obtain ⟨U,w,huw⟩:=hNr.symm.of_isCoprime_of_dvd_right hDN
-  have hbez:U*r+(ramifiedTraceLambda^3*w)*c0=1 := by
-    linear_combination huw
-  obtain ⟨σ,ε,hσ,hε⟩:=exists_A4_local_units p hp hcop c0 U w hbez
-  have hlf (v:∀i,(Eis⧸Ideal.span {p i})ˣ):=
-    exists_strong_unit_frequency_lifts N p hNp v
-  choose lift hlift hres hlcop using hlf
-  let a:=fun v=>finiteCrossNumerator a0 c0 ramifiedTraceLambda p (lift v)
-  have hap:∀v,lambda^2∣a v-1 := by
-    intro v
-    have hfixed:N∣a v-a0*r:=finiteCrossNumerator_fixed N a0 c0 ramifiedTraceLambda p (lift v)
-      (fun i=>(dvd_pow_self N (by decide : (2:ℕ)≠0)).trans (hlift v i))
-    have hbase:=primary_mul a0 r ha0 hr
-    convert dvd_add (hstdN.trans hfixed) hbase using 1 ; ring
-  have hpairs:Pairwise (Function.onFun IsCoprime p):=by
-    intro i k hik
-    exact (Ideal.isCoprime_span_singleton_iff _ _).mp (hcop hik)
-  have hacop:∀v,IsCoprime (a v) (c0*r) := by
-    intro v
-    exact finiteCrossNumerator_coprime a0 c0 ramifiedTraceLambda p (lift v) hac hpairs
-      (fun i=>(hNp i).of_isCoprime_of_dvd_left hcN)
-      (fun i=>(hNp i).of_isCoprime_of_dvd_left hlN) (hlcop v)
-  obtain ⟨b,d,C,hdet,hb,hd,hmat⟩:=exists_primary_numerator_sector_completions
-    N c0 hc0 h9N (fun (_:∀i,(Eis⧸Ideal.span {p i})ˣ)=>()) a (fun _=>r)
-    hap (fun _=>hr) hacop (fun _=>hrNc)
-    (fun v z _=>finiteCrossNumerator_fixed_sector N a0 c0 ramifiedTraceLambda p (lift v)
-      p (lift z) hcN (hlift v) (hlift z) (by simp))
-    (fun _ _ _=>by simp)
-  let mat:=fun v=>controlledCompletionMatrix (a v) (b v) (c0*r) (d v) (hdet v)
-  have hm:∀v,mat v∈levelThree:=by
-    intro v
-    apply A3_principal_mem_levelThree (mat v)
-    · exact three_dvd_primary_sub_one (a v) (hap v)
-    · exact (show (3:Eis)∣9 from ⟨3,by norm_num⟩).trans (hb v)
-    · exact dvd_mul_of_dvd_left hc3 r
-    · exact hd v
-  let gamma:=fun v=>(⟨mat v,hm v⟩:levelThree)
-  have hentry (v:∀i,(Eis⧸Ideal.span {p i})ˣ) (i j:Fin 2):
-      N∣(mat v) i j-(mat (fun _=>1)) i j := by
-    have he:=congrArg (fun T:Matrix (Fin 2) (Fin 2) (Eis⧸Ideal.span {N})=>T i j)
-      ((hmat v).trans (hmat (fun _=>1)).symm)
-    change Ideal.Quotient.mk (Ideal.span {N}) ((mat v) i j)=
-      Ideal.Quotient.mk (Ideal.span {N}) ((mat (fun _=>1)) i j) at he
-    exact Ideal.mem_span_singleton.mp (Ideal.Quotient.eq.mp he)
-  exact ⟨{
-    lift := lift
-    lift_period := hlift
-    lift_residue := hres
-    U := U
-    w := w
-    bezout := hbez
-    sigma := σ
-    epsilon := ε
-    sigma_value := hσ
-    epsilon_value := hε
-    gamma := gamma
-    numerator := fun _=>rfl
-    denominator := fun _=>rfl
-    numerator_fixed := fun v=>hN.trans (hentry v 0 0)
-    inverse_fixed := fun v=>hDN.trans (hentry v 1 1)
-  }⟩
-
-lemma PrincipalStratumArithmetic.frequency_congruence {ι:Type*} [Fintype ι]
-    {p:ι→Eis} {N a0 c0:Eis} (D:PrincipalStratumArithmetic p N a0 c0)
-    (v:∀i,(Eis⧸Ideal.span {p i})ˣ) (i:ι) :
-    Ideal.Quotient.mk (Ideal.span {p i}) ((D.gamma v:SL(2,Eis)) 0 0)=
-      (D.sigma i:Eis⧸Ideal.span {p i})*(v i:Eis⧸Ideal.span {p i}) := by
-  rw [D.numerator,finiteCrossNumerator_local,D.sigma_value,D.lift_residue]
-
 end
 
 open scoped BigOperators Classical ContDiff MatrixGroups Matrix
 
 open ActualEisensteinCubic ConcreteTraceCRT CompletedGauss CompletedDyadic
 open CubicKubota CubicJacobiGlobal ShortDraftCusp LocalReflectionBrackets FiniteGaussPhase
-local notation "Eis" => ActualEisensteinCubic.O
 namespace PrincipalStratumArithmetic
-variable {ι:Type*} [Fintype ι] {p:ι→Eis} {N a0 c0:Eis}
-
-noncomputable def datum (D:PrincipalStratumArithmetic p N a0 c0)
-    (hp:∀i,p i≠0) (hc0:c0≠0) (v:∀i,(Eis⧸Ideal.span {p i})ˣ) : SourceCuspDatum :=
-  principalCuspDatum (D.gamma v) (by
-    rw [D.denominator];exact mul_ne_zero hc0 (Finset.prod_ne_zero_iff.mpr (fun i _=>hp i)))
-
-lemma datum_point (D:PrincipalStratumArithmetic p N a0 c0)
-    (hp:∀i,p i≠0) (hc0:c0≠0) (v:∀i,(Eis⧸Ideal.span {p i})ˣ) :
-    (D.datum hp hc0 v).point=eisEmbedding a0/eisEmbedding c0+
-      eisLam^2*∑i,eisEmbedding (D.lift v i)/eisEmbedding (p i) := by
-  rw [SourceCuspDatum.point,datum,principalCuspDatum_matrix,
-    integralComplexMatrix_apply,integralComplexMatrix_apply,D.numerator,D.denominator]
-  simpa only [ramifiedEmbedding_traceLambda] using
-    ShortDraftCRT.finiteCrossNumerator_fraction a0 c0 ramifiedTraceLambda p (D.lift v) hc0 hp
-
-noncomputable def smoothedValue (D:PrincipalStratumArithmetic p N a0 c0)
-    [∀i,(Ideal.span {p i}).IsMaximal] (hp:∀i,p i≠0) (hc0:c0≠0)
-    (hg:∀i,lambda∉Ideal.span {p i}) (j:ι→ℕ) (W:ℝ→ℂ) (X:ℝ) : ℂ := by
-  letI (i:ι):Fintype (Eis⧸Ideal.span {p i}):=Fintype.ofFinite _
-  exact ∑v:∀i,(Eis⧸Ideal.span {p i})ˣ,
-    (∏i,finiteAdditiveFourierCoeff (quotientTrace (p i) (hp i))
-      (fun t=>(actualSextic (Ideal.span {p i}) (hg i)^j i) t) (v i))*
-    (D.datum hp hc0 v).smoothedKernel W X
-
-noncomputable def reflectedValue (D:PrincipalStratumArithmetic p N a0 c0)
-    [∀i,(Ideal.span {p i}).IsMaximal] (hp:∀i,p i≠0) (hc0:c0≠0)
-    (hg:∀i,lambda∉Ideal.span {p i}) (j:ι→ℕ) (W:ℝ→ℂ) (X:ℝ) : ℂ := by
-  letI (i:ι):Field (Eis⧸Ideal.span {p i}):=Ideal.Quotient.field _
-  letI (i:ι):Fintype (Eis⧸Ideal.span {p i}):=Fintype.ofFinite _
-  let c:=c0*∏i,p i
-  let Q:ℝ:=‖eisEmbedding c‖^2
-  exact fixedRadialCoefficientScalar*∑'t:ThetaFullIndex,
-    ((fixedConjugateCuspArray 0 t.1 t.2.1 t.2.2.1.val t.2.2.2.val*
-      sourceFrequencyAngle (thetaFullFrequency t))/
-      ((ramifiedScale 1 completedRamifiedStep t.2.1*
-        Real.sqrt (Ideal.absNorm t.2.2.1.val:ℝ)*(Ideal.absNorm t.2.2.2.val:ℝ):ℝ):ℂ))*
-    CubicReflectionKernel.paperKernel (Vstar W)
-      (X*sourceCuspRadialLength (thetaFullFrequency t)/(27*Q^2))*
-    (-(Q:ℂ)/(eisEmbedding c)^2*
-      ((star (eisEmbedding (symbol c0 ((D.gamma (fun _=>1):SL(2,Eis)) 0 0)))*
-        A4BadPhase c0 hc0 ((D.gamma (fun _=>1):SL(2,Eis)) 1 1) D.U (ramifiedTraceLambda*thetaFullFrequency t))*
-      ∏i,(((actualSextic (Ideal.span {p i}) (hg i))⁻¹)^2) (D.sigma i)*
-        phase (actualSextic (Ideal.span {p i}) (hg i)) (quotientTrace (p i) (hp i)) (j i) (D.epsilon i)*
-        bracket (actualSextic (Ideal.span {p i}) (hg i)) (j i)
-          (Ideal.Quotient.mk _ (ramifiedTraceLambda*thetaFullFrequency t))))
-
-theorem smoothed_eq_reflected (D:PrincipalStratumArithmetic p N a0 c0)
-    [∀i,(Ideal.span {p i}).IsMaximal] (hp:∀i,p i≠0) (hc0:c0≠0)
-    (hcop:Pairwise (Function.onFun IsCoprime (fun i=>Ideal.span {p i})))
-    (hg:∀i,lambda∉Ideal.span {p i}) (hchar:∀i,ringChar (Eis⧸Ideal.span {p i})≠2)
-    (hr:lambda^2∣(∏i,p i)-1) (j:ι→ℕ) (hj:∀i,j i<6)
-    (W:ℝ→ℂ) (lo hi:ℝ) (hlo:0<lo) (hsupp:Function.support W⊆Set.Icc lo hi)
-    (hW:ContDiff ℝ ∞ W) (X:ℝ) (hX:0<X) :
-    D.smoothedValue hp hc0 hg j W X=D.reflectedValue hp hc0 hg j W X := by
-  simpa only [smoothedValue,reflectedValue,datum] using
-    principal_stratum_smoothed p hp hcop hg hchar c0 D.U D.w hc0 hr D.bezout
-      D.gamma D.denominator D.numerator_fixed D.inverse_fixed D.sigma D.epsilon
-      D.frequency_congruence D.epsilon_value j hj W lo hi hlo hsupp hW X hX
 
 end PrincipalStratumArithmetic
 
-theorem exists_constructed_principal_reflection {ι:Type*} [Fintype ι]
-    (p:ι→Eis) [∀i,(Ideal.span {p i}).IsMaximal] (hp:∀i,p i≠0)
-    (hcop:Pairwise (Function.onFun IsCoprime (fun i=>Ideal.span {p i})))
-    (hprimary:∀i,lambda^2∣p i-1)
-    (hg:∀i,lambda∉Ideal.span {p i}) (hchar:∀i,ringChar (Eis⧸Ideal.span {p i})≠2)
-    (N a0 c0:Eis) (hc0:c0≠0) (hc3:(3:Eis)∣c0)
-    (hN:(9:Eis)*c0∣N) (ha0:lambda^2∣a0-1) (hac:IsCoprime a0 c0)
-    (hNp:∀i,IsCoprime N (p i)) :
-    ∃D:PrincipalStratumArithmetic p N a0 c0,
-      ∀j:ι→ℕ,(∀i,j i<6)→∀(W:ℝ→ℂ)(lo hi:ℝ),0<lo→
-        Function.support W⊆Set.Icc lo hi→ContDiff ℝ ∞ W→∀X:ℝ,0<X→
-        D.smoothedValue hp hc0 hg j W X=D.reflectedValue hp hc0 hg j W X := by
-  obtain ⟨D⟩:=exists_principalStratumArithmetic p hp hcop hprimary N a0 c0 hc0 hc3 hN ha0 hac hNp
-  refine ⟨D,?_⟩
-  intro j hj W lo hi hlo hsupp hW X hX
-  exact D.smoothed_eq_reflected hp hc0 hcop hg hchar
-    (primary_finset_product Finset.univ p (fun i _=>hprimary i)) j hj W lo hi hlo hsupp hW X hX
-
 end CubicEisenstein
-
-open scoped BigOperators Classical
 
 namespace CanonicalRowCompletion
 
@@ -420,38 +169,6 @@ lemma freePrimeIndex_coprime (I Q:Ideal Eis) (P:FreePrimeIndex I Q) :
     (show P.val.val.IsMaximal from inferInstance).eq_of_le ht le_sup_right
   exact P.property (le_sup_left.trans he.symm.le)
 
-lemma freePrimeProduct_coprime (I Q:Ideal Eis) :
-    IsCoprime Q (∏P:FreePrimeIndex I Q,P.val.val) :=
-  IsCoprime.prod_right (fun P _=>freePrimeIndex_coprime I Q P)
-
-lemma freePrimeRow_eq_principalSexticRow (I:Ideal Eis) (hI:Supported I) (Q:Ideal Eis) (n:Eis) :
-    freePrimeRow I hI Q n=
-      principalSexticRow (fun P:FreePrimeIndex I Q=>P.val.val) (freePrimeIndex_pairwise_coprime I Q)
-        (fun P=>(supported_factors_good I hI P.val.val (Multiset.mem_toFinset.mp P.val.property)).2.1)
-        (fun P=>(normalizedFactors I).count P.val.val%6)
-        (finitePrimeModulus (fun P:FreePrimeIndex I Q=>P.val.val))
-        (span_finitePrimeModulus _) (Ideal.Quotient.mk _ n) := by
-  rw [principalSexticRow_mk]
-  rfl
-
-theorem fixed_conductor_absorb_shared_primes (I:Ideal Eis) (hI:Supported I) (Q:Ideal Eis)
-    (φ:Eis→*ℂ) (hφ:CanonicalCoefficientClass.FactorsModulo Q φ) (hφn:∀n,‖φ n‖≤1) :
-    CanonicalCoefficientClass.FactorsModulo Q (φ*basePrimeRow I hI Q) ∧
-    (∀n,‖(φ*basePrimeRow I hI Q) n‖≤1) ∧
-    IsCoprime Q (∏P:FreePrimeIndex I Q,P.val.val) ∧
-    (∀n,φ n*idealRowHom n I=(φ*basePrimeRow I hI Q) n*freePrimeRow I hI Q n) := by
-  refine ⟨?_,?_,freePrimeProduct_coprime I Q,?_⟩
-  · intro x y hxy
-    change φ x*basePrimeRow I hI Q x=φ y*basePrimeRow I hI Q y
-    rw [hφ x y hxy,basePrimeRow_periodic I hI Q x y hxy]
-  · intro n
-    change ‖φ n*basePrimeRow I hI Q n‖≤1
-    rw [norm_mul]
-    exact (mul_le_of_le_one_left (norm_nonneg _) (hφn n)).trans (basePrimeRow_norm I hI Q n)
-  · intro n
-    rw [idealRowHom_fixed_conductor_split I hI Q n]
-    exact (mul_assoc _ _ _).symm
-
 end
 section
 
@@ -481,57 +198,6 @@ lemma fixedFreeRow_norm (I:Ideal Eis) (hI:Supported I) (Q:Ideal Eis)
   change ‖φ n*freePrimeRow I hI Q n‖≤1
   rw [norm_mul]
   exact (mul_le_of_le_one_left (norm_nonneg _) (hφ n)).trans (freePrimeRow_norm I hI Q n)
-
-theorem exists_actual_coprime_row (Ψ:Eis→*ℂ) (Q:Ideal Eis)
-    (hΨ:CanonicalCoefficientClass.FactorsModulo Q Ψ) (hΨnorm:∀n,‖Ψ n‖≤1)
-    (m f z:Eis) (hm:m≠0) (hf:f≠0) (hz:z≠0) (hmLam:lambda∣m) (hm2:(2:Eis)∣m) :
-    ∃(I:Ideal Eis)(hI:Supported I)(φ:Eis→*ℂ),
-      CanonicalCoefficientClass.FactorsModulo (Q*Ideal.span {(72:Eis)}) φ ∧
-      (∀n,‖φ n‖≤1) ∧
-      IsCoprime (Q*Ideal.span {(72:Eis)})
-        (∏P:FreePrimeIndex I (Q*Ideal.span {(72:Eis)}),P.val.val) ∧
-      (∀n,lambda^2∣n-1 → rowTwist Ψ m f z n=φ n*freePrimeRow I hI (Q*Ideal.span {(72:Eis)}) n) := by
-  obtain ⟨I,hI,φ,hφ,hφn,hrow⟩:=exists_fixed_twist_principal_row Ψ Q hΨ hΨnorm m f z hm hf hz hmLam hm2
-  obtain ⟨hperiod,hnorm,hcop,hprod⟩:=fixed_conductor_absorb_shared_primes I hI _ φ hφ hφn
-  refine ⟨I,hI,φ*basePrimeRow I hI _,hperiod,hnorm,hcop,?_⟩
-  intro n hpn
-  rw [hrow n hpn,←idealRowHom_eq_principalSexticRow I hI n,hprod n]
-
-theorem exists_actual_coprime_completed_row (Ψ:Eis→*ℂ) (Q:Ideal Eis)
-    (hQ:Q≠0) (hΨ:CanonicalCoefficientClass.FactorsModulo Q Ψ) (hΨnorm:∀n,‖Ψ n‖≤1)
-    (m f z:Eis) (hm:m≠0) (hf:f≠0) (hz:z≠0) (hmLam:lambda∣m) (hm2:(2:Eis)∣m) :
-    ∃(I:Ideal Eis)(hI:Supported I)(φ:Eis→*ℂ),
-      CanonicalCoefficientClass.FactorsModulo (Q*Ideal.span {(72:Eis)}) φ ∧
-      (∀n,‖φ n‖≤1) ∧
-      IsCoprime (Q*Ideal.span {(72:Eis)})
-        (∏P:FreePrimeIndex I (Q*Ideal.span {(72:Eis)}),P.val.val) ∧
-      (Q*Ideal.span {(72:Eis)}*(∏P:FreePrimeIndex I (Q*Ideal.span {(72:Eis)}),P.val.val))≠0 ∧
-      CanonicalCoefficientClass.FactorsModulo
-        (Q*Ideal.span {(72:Eis)}*(∏P:FreePrimeIndex I (Q*Ideal.span {(72:Eis)}),P.val.val))
-        (φ*freePrimeRow I hI (Q*Ideal.span {(72:Eis)})) ∧
-      (∀n,‖(φ*freePrimeRow I hI (Q*Ideal.span {(72:Eis)})) n‖≤1) ∧
-      (∀W X,completedT (rowTwist Ψ m f z) W X=
-        completedT (φ*freePrimeRow I hI (Q*Ideal.span {(72:Eis)})) W X) := by
-  obtain ⟨I,hI,φ,hφ,hφn,hcop,hrow⟩:=exists_actual_coprime_row Ψ Q hΨ hΨnorm m f z hm hf hz hmLam hm2
-  refine ⟨I,hI,φ,hφ,hφn,hcop,?_,fixedFreeRow_periodic I hI _ φ hφ,
-    fixedFreeRow_norm I hI _ φ hφn,?_⟩
-  · apply mul_ne_zero
-    · apply mul_ne_zero hQ
-      simp only [ne_eq,Ideal.zero_eq_bot,Ideal.span_singleton_eq_bot]
-      norm_num
-    · exact finite_prime_product_ne_bot (fun P:FreePrimeIndex I (Q*Ideal.span {(72:Eis)})=>P.val.val)
-  · intro W X
-    exact completedT_congr_primary _ _ hrow W X
-
-def fixedQuotientValue (Q:Ideal Eis) (φ:Eis→*ℂ) (x:Eis⧸Q) : ℂ := φ (Quotient.out x)
-
-lemma fixedQuotientValue_mk (Q:Ideal Eis) (φ:Eis→*ℂ)
-    (hφ:CanonicalCoefficientClass.FactorsModulo Q φ) (n:Eis) :
-    fixedQuotientValue Q φ (Ideal.Quotient.mk Q n)=φ n :=
-  hφ _ _ (Ideal.Quotient.eq.mp (Ideal.Quotient.mk_out _))
-
-lemma fixedQuotientValue_norm (Q:Ideal Eis) (φ:Eis→*ℂ) (hφ:∀n,‖φ n‖≤1) (x:Eis⧸Q) :
-    ‖fixedQuotientValue Q φ x‖≤1 := hφ _
 
 end
 
@@ -629,18 +295,6 @@ theorem goodMaskMovingIdeal_exponent (I F:Ideal Eis) (hI:I≠0) (hF:Squarefree F
     squarefree_prime_count_indicator F P hF (Ideal.prime_of_isPrime (NeZero.ne P) inferInstance)]
   unfold completedLocalExponent
   omega
-
-theorem goodMaskMovingIdeal_generator_exponent (I F:Ideal Eis) (hI:I≠0) (hF:Squarefree F)
-    (m:Eis) (v:Eisˣ)
-    (um:Eisˣ) (am bm:ℕ) (g:Eis) (hg:Supported (Ideal.span {g}))
-    (hm:m=um.val*lambda^am*(2:Eis)^bm*g)
-    (u:Eisˣ) (a b:ℕ) (r:Eis) (hr:Supported (Ideal.span {r}))
-    (hx:(idealGenerator F)^4*(v.val*idealGenerator I)=u.val*lambda^a*(2:Eis)^b*r)
-    (P:Ideal Eis) [P.IsMaximal] (hgood:lambda∉P) (hodd:ringChar (Eis⧸P)≠2) :
-    (normalizedFactors (goodMaskMovingIdeal g r)).count P%6=completedLocalExponent I F P := by
-  exact goodMaskMovingIdeal_exponent I F hI hF m (idealGenerator F) (v.val*idealGenerator I)
-    (span_idealGenerator F) (by rw [Ideal.span_singleton_mul_left_unit v.isUnit,span_idealGenerator])
-    um am bm g hg hm u a b r hr hx P hgood hodd
 
 end CanonicalRowCompletion
 

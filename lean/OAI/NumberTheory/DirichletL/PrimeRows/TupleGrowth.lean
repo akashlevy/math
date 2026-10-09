@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.PrimeRows.PrincipalMask
 import OAI.NumberTheory.DirichletL.PrimeRows.Conductor
 import OAI.NumberTheory.DirichletL.Hecke.LogarithmicInput
 import OAI.NumberTheory.DirichletL.Hecke.DeletionBounds
-
 namespace OAI
 
 noncomputable section

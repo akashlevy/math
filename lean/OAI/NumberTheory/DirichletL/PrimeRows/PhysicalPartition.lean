@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.ExhaustivePartition
 import OAI.NumberTheory.DirichletL.Detector.CanonicalPhysicalRows
-
 namespace OAI
 
 noncomputable section

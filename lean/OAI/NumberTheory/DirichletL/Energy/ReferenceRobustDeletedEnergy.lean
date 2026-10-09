@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Energy.DeletedRobustGeometry
 import OAI.NumberTheory.DirichletL.Energy.ReferenceLowReflectionError
 import OAI.NumberTheory.DirichletL.Energy.ReferenceLowDirect
-
 namespace OAI
 
 noncomputable section

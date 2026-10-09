@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.UniformReflectionProfile
 import OAI.NumberTheory.DirichletL.Moments.OneReflectionScaleEnergy
-
 namespace OAI
 
 noncomputable section

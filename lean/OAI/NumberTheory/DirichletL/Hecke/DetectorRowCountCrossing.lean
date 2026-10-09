@@ -1,5 +1,5 @@
-import OAI.NumberTheory.DirichletL.Hecke.DetectorSimultaneous
-
+import OAI.NumberTheory.DirichletL.Hecke.DetectorDyadicGeometry
+import OAI.NumberTheory.DirichletL.Hecke.DetectorDyadicLengths
 namespace OAI
 
 noncomputable section
@@ -54,14 +54,6 @@ theorem crossing_bounds {x t : ℝ} (hx : 0≤x) (hx' : x≤1/2)
     unfold denominator
     nlinarith
 
-theorem crossing_average (δ x t r : ℝ) (hd : denominator x≠0) :
-    ((2-8*x/9)*inverseExponent δ x r+(1-x)*plainExponent δ x t r)/denominator x =
-      shortExponent δ x t := by
-  unfold inverseExponent plainExponent shortExponent primeWeight
-  field_simp
-  unfold denominator
-  ring
-
 lemma inverse_at_crossing (δ x t : ℝ) (hd : denominator x≠0) :
     inverseExponent δ x (crossing x t)=shortExponent δ x t := by
   unfold inverseExponent crossing shortExponent primeWeight
@@ -92,34 +84,12 @@ theorem selected_short_bound {δ x t r : ℝ} (hδ : 0≤δ) (_hx : 0≤x) (hx' 
     have hh := mul_le_mul_of_nonneg_left hr (show 0≤1-x by linarith)
     nlinarith [mul_nonneg hδ (sub_nonneg.mpr hh)]
 
-theorem strict_inverse_capacity {r ν : ℝ} (hr : 23/37≤r) (hν : 0<ν) :
-    r+2*((1-r)/2-ν)<1 ∧ 2*r+8*((1-r)/2-ν)<3 ∧
-      (1-r)/2≤7/37 ∧ 9/37≤3-2*r-8*((1-r)/2-ν) := by
-  constructor
-  · linarith
-  constructor
-  · linarith
-  constructor <;> linarith
-
-lemma plain_capacity_bound {m κ : ℝ} (hm : 1/3≤m) (hm' : m≤1/2) (hκ : 3/4≤κ) :
-    0≤(1-2*m)/(6*κ) ∧ (1-2*m)/(6*κ)≤2/27 := by
-  have hkp : 0<6*κ := by linarith
-  constructor
-  · exact div_nonneg (by linarith) hkp.le
-  · apply (div_le_iff₀ hkp).mpr
-    nlinarith
-
-lemma prime_supply_margin : (8/39 : ℝ)-7/37=23/1443 := by norm_num
-
 lemma short_ge_base {δ x t : ℝ} (hδ : 0≤δ) (_hx : 0≤x) (hx' : x≤1/2)
     (ht : t≤3/2) : 1-δ≤shortExponent δ x t := by
   have hd : 0<denominator x := lt_of_lt_of_le (by norm_num) (denominator_lower hx')
   have hp : 0≤primeWeight x := mul_nonneg (by linarith) (by linarith)
   unfold shortExponent
   exact le_add_of_nonneg_right (mul_nonneg (div_nonneg (mul_nonneg hδ hp) hd.le) (by linarith))
-
-lemma inverse_capacity_exponent (δ x r : ℝ) :
-    1-δ*r-2*(δ*x)*((1-r)/2)=inverseExponent δ x r := by unfold inverseExponent; ring
 
 theorem capacity_loss {q m Δ γ : ℝ} (_hq : 0≤q) (hq' : q≤1/2)
     (hm : 1/3-γ≤m) (hm' : m≤1/2) (hΔ : 0≤Δ) (hΔ' : Δ≤1/8) (hγ : 0≤γ) :

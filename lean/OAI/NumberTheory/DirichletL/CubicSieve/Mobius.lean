@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.Gcd
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve
@@ -34,30 +33,6 @@ lemma sum_divisible_rows (R : Finset O) (d : O) (f : O → ℂ) :
   apply Finset.sum_congr rfl
   intro z hz
   rw [elementQuotient_mul d z (Finset.mem_filter.mp hz).2]
-
-lemma dividedRows_ne_zero (R : Finset O) (hR : ∀ z ∈ R, z ≠ 0) (d : O)
-    (w : O) (hw : w ∈ dividedRows R d) : w ≠ 0 := by
-  obtain ⟨z, hz, rfl⟩ := Finset.mem_image.mp hw
-  intro he
-  have h := elementQuotient_mul d z (Finset.mem_filter.mp hz).2
-  rw [he, mul_zero] at h
-  exact hR z (Finset.mem_filter.mp hz).1 h.symm
-
-lemma dividedRows_norm_le (R : Finset O) (M : ℝ)
-    (hR : ∀ z ∈ R, (Ideal.absNorm (Ideal.span {z}) : ℝ) ≤ M)
-    (d : O) (hd : d ≠ 0) (w : O) (hw : w ∈ dividedRows R d) :
-    (Ideal.absNorm (Ideal.span {w}) : ℝ) ≤ M / (Ideal.absNorm (Ideal.span {d}) : ℝ) := by
-  obtain ⟨z, hz, rfl⟩ := Finset.mem_image.mp hw
-  have hdN : 0 < (Ideal.absNorm (Ideal.span {d}) : ℝ) := by
-    exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr
-      (Ideal.span_singleton_eq_bot.not.mpr hd))
-  apply (le_div_iff₀ hdN).mpr
-  calc
-    _ = (Ideal.absNorm (Ideal.span {d * elementQuotient d z}) : ℝ) := by
-      rw [← Ideal.span_singleton_mul_span_singleton, map_mul, Nat.cast_mul, mul_comm]
-    _ = (Ideal.absNorm (Ideal.span {z}) : ℝ) := by
-      rw [elementQuotient_mul d z (Finset.mem_filter.mp hz).2]
-    _ ≤ M := hR z (Finset.mem_filter.mp hz).1
 
 lemma cubicRow_mul_argument (I : Ideal O) (hI : primaryGenerator I ≠ 0) (x y : O) :
     cubicRow I (x * y) = cubicRow I x * cubicRow I y := by

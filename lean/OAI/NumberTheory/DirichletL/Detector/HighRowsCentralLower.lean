@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsCentralDefect
-
 namespace OAI
 
 noncomputable section

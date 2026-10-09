@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.FirstLiveAdmission
-
 namespace OAI
 
 noncomputable section
@@ -28,54 +27,6 @@ open CenteredMomentLogDyadic CenteredMomentRowNorm
 open CenteredMomentEnergyFirstLiveAdmission
 local notation "O" => HeckeFamily.O
 local instance {ι : Type*} : DecidableEq (ι ⊕ Fin 2) := Classical.decEq _
-
-theorem eventually_main_packet (N : ℕ) (b b₁ b₂ l a A P : ℝ)
-    (hb : 1 ≤ b) (hb₁ : 1 ≤ b₁) (hb₂ : 1 ≤ b₂)
-    (hl : 0 < l) (ha : 0 < a) (hA : 0 ≤ A) (hP : 0 ≤ P) :
-    ∀ᶠ Z : ℝ in atTop, 1 < Z ∧ ∀ {ι : Type*} [Fintype ι] [DecidableEq ι],
-      ∀ s : Input ι, Fintype.card ι ≤ N → Endpoints b b₁ b₂ s → l ≤ s.lower →
-      (∀ x, s.W₁ x ≠ 0 → a ≤ x) → (∀ x, s.W₂ x ≠ 0 → a ≤ x) →
-      ∀ κ : ℝ, 1/6 ≤ κ → (∀ i, 1 ≤ s.P i) →
-      length Z s.X₁ + length Z s.X₂ + 6*κ*(∑ i, Real.logb Z (s.P i)) ≤ A →
-      (s.η.modulus.absNorm : ℝ) ≤ Z^A →
-      ∀ R seed0 : Ideal O, R ≠ 0 → (R.absNorm : ℝ) ≤ Z^P → Squarefree seed0 →
-      ∀ C D : Ideal O, ∀ hC : Supported C, ∀ hD : Supported D,
-      (C,D) ∈ CenteredMomentFirstSectors.commonLabels
-        (CenteredMomentSourceRow.supportedColumns (activeSource
-          (finiteColumns (Fintype.piFinset s.pools)) (coefficient s R seed0)))
-        (CenteredMomentSourceRow.supportedColumns (activeSource
-          (finiteColumns (Fintype.piFinset s.pools)) (coefficient s R seed0))) →
-      ∀ E : Finset (CommonIndex C D), ∀ ξ₁ ξ₂ : RayCharacter,
-      ∀ F : FixedPair s.η C D hC E ξ₁ ξ₂, ∀ τ : Character, τ = F.left ∨ τ = F.right →
-      ∀ K Csec Tsec σ ξ reserve : ℝ, 0 < K → 0 < Csec → 0 ≤ σ → 0 ≤ ξ → ξ ≤ 1 →
-      0 ≤ reserve →
-      Tsec ≤ Csec * firstNominalScale C D
-        (Ideal.span {primeSubsetGenerator (fun Q : CommonIndex C D => Q.val) E}) K (volume s) →
-      ∀ rows : Finset O, ∀ W : 𝓢(ℝ,ℂ), ∀ n : Fin 4 → ℤ,
-      Retained (frequencyRadius Tsec Z ξ) (n 1) →
-      block s.η (fixedBadMask*idealGenerator R) 1 s.t
-        (finiteColumns (Fintype.piFinset s.pools)) (coefficient s R seed0)
-        C D hC hD E rows W (fun _ => logAnnulus) K
-        (dyadicScale (n 0)) (dyadicScale (n 1))
-        (dyadicScale (n 2)) (dyadicScale (n 3)) ≠ 0 →
-      ∀ side : Bool, ∀ B : actualAllocations s.pools (columnIdeal C D side), ∀ t : ℝ, ∀ innerL : Ideal O,
-      frozenCoefficient B.val (columnIdeal C D side) R s.ν s.W s.P ≠ 0 →
-      let Km := columnMainRadius C D E K (volume s) Z σ (frequencyLoss Z (32*Csec) ξ) reserve side
-      Ready (child s (columnIdeal C D side) R B τ t) (R*columnIdeal C D side) Km Z ξ (readyBudget A P) ∧
-      (∀ I : Ideal O, coefficient (child s (columnIdeal C D side) R B τ t) (R*columnIdeal C D side) innerL I ≠ 0 →
-        lowerFactor N l a * volume (child s (columnIdeal C D side) R B τ t) ≤ (I.absNorm : ℝ)) := by
-  filter_upwards [CenteredMomentEnergyFirstLiveAdmission.eventually_main_packet
-    N b b₁ b₂ l a A P hb hb₁ hb₂ hl ha hA hP] with Z hz
-  refine ⟨hz.1, ?_⟩
-  intro ι _ _ s hc he hs hW₁ hW₂ κ hκ hPs hcapacity hη R seed0 hR hRN hseed
-    C D hC hD hlabel E ξ₁ ξ₂ F τ hτ K Csec Tsec σ ξ reserve hK hCsec hσ hξ hξ1
-    hreserve hsec rows W n hn hblock side B t innerL hB
-  dsimp only
-  have hm := hz.2 s hc he hs hW₁ hW₂ κ hκ hPs hcapacity hη R seed0 hR hRN hseed
-    C D hC hD hlabel E ξ₁ ξ₂ F τ hτ K Csec Tsec σ ξ reserve hK hCsec hσ hξ hξ1
-    hreserve hsec rows W n hn hblock side B t hB
-  exact ⟨hm.1, main_lower_support N l a hl ha s hc hs hW₁ hW₂
-    (columnIdeal C D side) R innerL B τ t⟩
 
 theorem eventually_error_packet (N : ℕ) (b b₁ b₂ l a A P : ℝ)
     (hb : 1 ≤ b) (hb₁ : 1 ≤ b₁) (hb₂ : 1 ≤ b₂)

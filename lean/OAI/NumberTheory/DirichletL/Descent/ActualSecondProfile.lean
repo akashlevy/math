@@ -1,6 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondWholeKernel
-import OAI.NumberTheory.DirichletL.Descent.SecondFiniteMeasure
-
+import OAI.NumberTheory.DirichletL.Descent.SecondKernelMeasure
+import OAI.NumberTheory.DirichletL.Descent.ProfileIntegral
 namespace OAI
 
 namespace SevenEighths.InverseMoment

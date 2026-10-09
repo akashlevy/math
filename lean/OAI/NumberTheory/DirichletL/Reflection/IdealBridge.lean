@@ -1,5 +1,4 @@
-import OAI.NumberTheory.DirichletL.Reflection.Branch
-
+import OAI.NumberTheory.DirichletL.Reflection.Brackets
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

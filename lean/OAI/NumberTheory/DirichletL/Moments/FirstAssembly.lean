@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstColumns
-
 namespace OAI
 
 noncomputable section
@@ -84,26 +83,6 @@ theorem finite_first_children {α β : Type*} (S : Finset α) (T : Finset β)
   simp_rw [first_divisor_pair L a b ha hb c d e r ρ h]
   simp_rw [← Finset.mul_sum (s:=T),← Finset.mul_sum (s:=S)]
   rw [pair_ray_fubini]
-  ring
-
-theorem separated_first_gaussPolynomials {α β : Type*} (S : Finset α) (T : Finset β)
-    (L : Ideal O) (a : α → O) (b : β → O)
-    (ha : ∀ i,Supported (Ideal.span {a i})) (hb : ∀ j,Supported (Ideal.span {b j}))
-    (c : α → ℂ) (d : β → ℂ) (e r : O) (ρ : O → ℂ) (χ ξ : RayCharacter)
-    (f : α → ℂ) (g : β → ℂ) (h : O) :
-    (∑ i∈S,∑ j∈T,
-      ((divisorCoefficient L a (fun i => c i*leftCoefficient e r ρ (a i)) χ i*gaussRow (a i) (ha i) h)*
-        star (divisorCoefficient L b (fun j => d j*rightCoefficient e r ρ (b j)) (ξ⁻¹) j*
-          gaussRow (b j) (hb j) (-h)))*(f i*star (g j))) =
-      gaussPolynomial S a ha (fun i => divisorCoefficient L a (fun i => c i*leftCoefficient e r ρ (a i)) χ i*f i) h*
-        star (gaussPolynomial T b hb
-          (fun j => divisorCoefficient L b (fun j => d j*rightCoefficient e r ρ (b j)) (ξ⁻¹) j*g j) (-h)) := by
-  simp only [gaussPolynomial,star_sum,star_mul,Finset.sum_mul,Finset.mul_sum]
-  rw [Finset.sum_comm]
-  apply Finset.sum_congr rfl
-  intro i hi
-  apply Finset.sum_congr rfl
-  intro j hj
   ring
 
 end SevenEighths.CenteredMomentFirstAssembly

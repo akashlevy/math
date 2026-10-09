@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstMarkedZeroSource
 import OAI.NumberTheory.DirichletL.Descent.ReopenedPhysicalEnergy
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.AllocationCost
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.FullDyadic
 import OAI.NumberTheory.DirichletL.Reflection.PhysicalIntegral
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

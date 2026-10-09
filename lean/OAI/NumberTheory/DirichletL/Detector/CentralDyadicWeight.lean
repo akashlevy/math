@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.CentralCubeNorm
 import OAI.NumberTheory.DirichletL.Detector.CentralExponent
-
 namespace OAI
 
 noncomputable section
@@ -45,18 +44,6 @@ lemma annular_power_uniform (p pmax : ℝ) (hp : p≤pmax) :
 
 def mixedSourceExponent (a v d R q : ℝ) : ℝ :=
   ProbeCentralExponent.sourceExponent a v R q+(d-v)*R
-
-lemma mixed_physical_exponent (Z a v d R q e eps loss mesh : ℝ) (N : ℕ)
-    (hZ : 0<Z) :
-    ((Z^(17/48:ℝ))^(4/25:ℝ)*Z^(a+16*e-33/50)*(Z^(23/48:ℝ))^(-a-6*e))*
-      ((Z^d)^R*(Z^v)^(a-1/2+12*e+eps*(N+8)-17/50)*Z^(-2/75+q/6+mesh/6+loss))=
-    Z^(mixedSourceExponent a v d R q+ProbeCentralExponent.realLoss N v e eps loss mesh) := by
-  rw [ProbeCentralExponent.physical_scale_identity Z a e hZ]
-  simp_rw [←Real.rpow_mul hZ.le]
-  rw [←Real.rpow_add hZ,←Real.rpow_add hZ,←Real.rpow_add hZ]
-  congr 1
-  unfold mixedSourceExponent ProbeCentralExponent.sourceExponent ProbeCentralExponent.realLoss
-  ring
 
 lemma mixed_source_slack (a v d R q μ Rmax : ℝ)
     (hR : 0≤R) (hRmax : R≤Rmax) (hμ : 0≤μ) (hd : d-v≤μ) :

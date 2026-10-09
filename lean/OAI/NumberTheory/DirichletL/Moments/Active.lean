@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.Canonical
 import OAI.NumberTheory.DirichletL.Moments.FirstPoisson
-
 namespace OAI
 
 noncomputable section
@@ -98,47 +97,7 @@ theorem activePrimes_pairwise_coprime (P : ι → Ideal O) [∀ i, (P i).IsMaxim
   apply Ideal.isCoprime_of_isMaximal
   exact fun he => hij (Subtype.ext (hinj he))
 
-theorem active_gauss_norm (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hinj : Function.Injective P) (hg : ∀ i, goodLambda ∉ P i)
-    (hchar : ∀ i, ringChar (O ⧸ P i) ≠ 2) (B : Finset ι) (c d : ι → ℕ) :
-    ‖canonicalNormalizedGauss (fun i : activeSupport B c d => P i.val)
-      (activePrimes_pairwise_coprime P hinj B c d) (fun i => hg i.val)
-      (fun i => netExponent (c i.val) (d i.val))‖ = 1 :=
-  norm_canonicalNormalizedGauss (fun i : activeSupport B c d => P i.val)
-    (activePrimes_pairwise_coprime P hinj B c d) (fun i => hg i.val)
-    (fun i => hchar i.val) (fun i => netExponent (c i.val) (d i.val))
-    (netExponent_ne_zero B c d) (fun _i => netExponent_lt_six _ _)
-
 open ConcreteTraceCRT EisensteinSchwartzPoisson
-
-theorem common_ideal_pair_poisson (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hinj : Function.Injective P) (hg : ∀ i, goodLambda ∉ P i)
-    (hchar : ∀ i, ringChar (O ⧸ P i) ≠ 2)
-    (B : Finset ι) (c d : ι → ℕ)
-    (hc : ∀ i ∈ B, c i ≠ 0) (hd : ∀ i ∈ B, d i ≠ 0)
-    (W : 𝓢(ℝ, ℂ)) (K : ℝ) (hK : 0 < K) :
-    let Q := fun i : activeSupport B c d => P i.val
-    let row := finiteSexticRow Q (fun i => hg i.val)
-      (fun i => netExponent (c i.val) (d i.val))
-    let r := finitePrimeModulus Q
-    (∑' z : O, (idealRowHom z (∏ i ∈ B, P i ^ c i) *
-      star (idealRowHom z (∏ i ∈ B, P i ^ d i))) *
-      W (‖eisEmbedding z‖ ^ 2 / K)) =
-      ((K : ℂ) * canonicalNormalizedGauss Q
-        (activePrimes_pairwise_coprime P hinj B c d) (fun i => hg i.val)
-        (fun i => netExponent (c i.val) (d i.val)) / (‖eisEmbedding r‖ : ℂ)) *
-      ∑ E ∈ (principalSupport B c d).powerset,
-        let e := primeSubsetGenerator P E
-        ((UniqueFactorizationMonoid.moebius (∏ i ∈ E, P i) : ℂ) * row e /
-          (‖eisEmbedding e‖ ^ 2 : ℝ)) *
-        ∑' h : O, star (row h) * paperRadialFourier W
-          (K * ‖eisEmbedding h‖ ^ 2 / (‖eisEmbedding e‖ ^ 2 * ‖eisEmbedding r‖ ^ 2)) := by
-  simp_rw [common_ideal_pair_active P hg hchar B c d hc hd]
-  exact canonical_masked_radial_poisson_collected P hinj (principalSupport B c d)
-    (fun i : activeSupport B c d => P i.val)
-    (activePrimes_pairwise_coprime P hinj B c d) (fun i => hg i.val)
-    (fun i => hchar i.val) (fun i => netExponent (c i.val) (d i.val))
-    (netExponent_ne_zero B c d) (fun i => netExponent_lt_six _ _) W K hK
 
 end SevenEighths.CenteredMomentActive
 end

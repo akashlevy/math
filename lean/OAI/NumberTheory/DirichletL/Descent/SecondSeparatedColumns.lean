@@ -1,6 +1,5 @@
-import OAI.NumberTheory.DirichletL.Descent.ActualSecondUniform
+import OAI.NumberTheory.DirichletL.Descent.ActualSecondMeasure
 import OAI.NumberTheory.DirichletL.Descent.FreshWindows
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

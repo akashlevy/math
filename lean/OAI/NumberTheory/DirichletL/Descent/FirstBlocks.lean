@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstCommonColumns
 import OAI.NumberTheory.DirichletL.Descent.DensityAssembly
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -66,46 +65,6 @@ theorem first_block_modes_eq_columns (F : Finset ι) (selector : Finset ι → �
       rw [firstCommonColumn_pair]
       dsimp only [H]
       ring
-
-theorem first_blocks_reconstruct {κ : Type*} (blocks : Finset κ)
-    (F : Finset ι) (selector : κ → Finset ι → ℂ)
-    (hpartition : ∀ D ∈ F.powerset, ∑ a ∈ blocks, selector a D = 1)
-    (C₁ C₂ : Finset ι → ℂ) (W₁ W₂ : ℝ → ℂ) (Φ : 𝓢(ℝ,ℂ))
-    (A₁ A₂ C R K : ℝ) (d h : Eis) :
-    (∑ a ∈ blocks, firstBlockedPhysicalRows p hg F (selector a) C₁ C₂ W₁ W₂ Φ A₁ A₂ C R K d h) =
-      firstPhysicalCommonRows p hg F C₁ C₂ W₁ W₂ Φ A₁ A₂ C R K d h := by
-  rw [firstPhysicalCommonRows_indexed]
-  unfold firstBlockedPhysicalRows
-  rw [Finset.sum_comm]
-  apply Finset.sum_congr rfl
-  intro j hj
-  have hDj : j.2.1 ∈ F.powerset := (Finset.mem_sigma.mp (Finset.mem_product.mp hj).2).1
-  rw [← Finset.sum_mul, ← Finset.sum_mul, hpartition j.2.1 hDj, one_mul]
-
-def firstCommonBlockSelector {κ : Type*} [DecidableEq κ]
-    (label : Finset ι → κ) (a : κ) (D : Finset ι) : ℂ :=
-  if label D = a then 1 else 0
-
-theorem first_source_blocks_reconstruct {κ : Type*} [DecidableEq κ]
-    (F : Finset ι) (label : Finset ι → κ)
-    (C₁ C₂ : Finset ι → ℂ) (W₁ W₂ : ℝ → ℂ) (Φ : 𝓢(ℝ,ℂ))
-    (A₁ A₂ C R K : ℝ) (d h : Eis) :
-    (∑ a ∈ F.powerset.image label,
-      firstBlockedPhysicalRows p hg F (firstCommonBlockSelector label a)
-        C₁ C₂ W₁ W₂ Φ A₁ A₂ C R K d h) =
-      firstPhysicalCommonRows p hg F C₁ C₂ W₁ W₂ Φ A₁ A₂ C R K d h := by
-  apply first_blocks_reconstruct
-  intro D hD
-  have hm : label D ∈ F.powerset.image label := Finset.mem_image_of_mem label hD
-  simp [firstCommonBlockSelector,hm]
-
-theorem first_block_nonzero_label {κ : Type*} [DecidableEq κ]
-    (label : Finset ι → κ) (a : κ) (C₁ C₂ : Finset ι → ℂ) (h : Eis)
-    (j : FirstCommonIndex ι)
-    (hn : firstCommonBlockSelector label a j.2.1 * firstCommonWeight p hg C₁ C₂ h j ≠ 0) :
-    label j.2.1 = a := by
-  by_contra he
-  simp [firstCommonBlockSelector,he] at hn
 
 theorem first_block_normalized_density (F : Finset ι) (selector : Finset ι → ℂ)
     (C₁ C₂ : Finset ι → ℂ) (W₁ W₂ ω₁ ω₂ : ℝ → ℂ) (Φ : 𝓢(ℝ,ℂ))

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.PrimeDyadic
 import OAI.NumberTheory.DirichletL.PrimeCounting.IdealPrimeMass
-
 namespace OAI
 
 noncomputable section

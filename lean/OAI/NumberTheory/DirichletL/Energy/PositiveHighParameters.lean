@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.PositiveHighSource
 import OAI.NumberTheory.DirichletL.Energy.OriginalProfileControl
-
 namespace OAI
 
 noncomputable section
@@ -10,7 +9,7 @@ namespace SevenEighths.CenteredMomentEnergyPositiveHighParameters
 open HeckeFamily ConcretePrimeRowBridge QuadraticInitialBound
 open CenteredMomentEnergyState CenteredMomentEnergyBands CenteredMomentInductionEnergy
 open CenteredMomentEnergyReferenceState CenteredMomentEnergyReferenceLowBands
-open CenteredMomentEnergyReferenceLivePower CenteredMomentEnergyOriginalSource
+open CenteredMomentEnergyOriginalSource
 open CenteredMomentEnergyPositiveHighSource CenteredMomentEnergyOriginalProfileControl
 open CenteredMomentEnergyOriginalHighReflectionSymmetric
 open CenteredMomentEnergyFixedRadialReduction CenteredMomentEnergyPhysicalEntry
@@ -50,29 +49,6 @@ lemma actual_conductor_scale (hZ:1<Z):
   exact mul_le_mul_of_nonneg_left s.modulus_bound (Real.rpow_nonneg (by linarith) _)
 
 omit [DecidableEq α] in
-lemma balanced_log_volume (κ:ℝ)(hZ:1<Z)(hw:∀i,0≤w i)(hκ:3/4≤κ)
-    (hcap:length Z X₁+length Z X₂+6*κ*(∑i,w i)≤s.width):
-    Real.logb Z (CenteredMomentAmplificationChildInput.volume balancedSource)≤s.width:=by
-  have hv:0<CenteredMomentAmplificationChildInput.volume balancedSource:=by
-    rw [balanced_volume]
-    exact mul_pos (mul_pos hX₁ hX₂) (Finset.prod_pos (fun _ _=>Real.rpow_pos_of_pos (by linarith) _))
-  exact (Real.logb_le_iff_le_rpow hZ hv).mpr
-    (balanced_volume_bound M H hH η₀ θ W hW aslot bslot lo hi haslot hWs
-      w σ freq hσ s p ha t X₁ X₂ hX₁ hX₂ κ s.width hZ hw hκ hcap le_rfl)
-
-omit [DecidableEq α] in
-lemma balanced_actual_four_scales (hZ:1<Z)(hwidth:0<s.width)
-    (hshort:s.width/4≤min (length Z X₁) (length Z X₂)):
-    let M0:=Real.logb Z s.radial.scale+Real.logb Z (s.character.modulus.absNorm:ℝ);
-    Z^(M0/4)≤(balancedSource).X₁ ∧ Z^(M0/4)≤(balancedSource).X₂ ∧
-    Z^(M0/4)≤(balancedSource).Y₁ ∧ Z^(M0/4)≤(balancedSource).Y₂:=by
-  have hf:=balanced_four_scale_gates Z s.width X₁ X₂ hZ hwidth hX₁ hX₂ hshort
-  have hm:=actual_width_le s hZ
-  have hp:Z^((Real.logb Z s.radial.scale+Real.logb Z (s.character.modulus.absNorm:ℝ))/4)≤
-      Z^(s.width/4):=Real.rpow_le_rpow_of_exponent_le hZ.le (by linarith)
-  exact ⟨hp.trans hf.1,hp.trans hf.2.1,hp.trans hf.2.2.1,hp.trans hf.2.2.2.1⟩
-
-omit [DecidableEq α] in
 lemma balanced_control (N:ℕ)(hN:Fintype.card α≤N)(S:Finset (ℕ×ℕ)):
     (plainControl balancedSource (p.profile 0) (p.profile 1))^2≤
       (CenteredMomentEnergyNaturalInputMatches.profileBound W hW aslot bslot lo hi haslot hWs)^(2*N)*
@@ -80,22 +56,6 @@ lemma balanced_control (N:ℕ)(hN:Fintype.card α≤N)(S:Finset (ℕ×ℕ)):
   apply plain_control_sq_le balancedSource p S N _
     (CenteredMomentEnergyNaturalInputMatches.profileBound_ge_one W hW aslot bslot lo hi haslot hWs)
     hN (fun _=>le_rfl)
-
-omit [DecidableEq α] in
-lemma balanced_source_cost (N:ℕ)(hN:Fintype.card α≤N)(hZ:1<Z):
-    CenteredMomentFirstReferenceEnergy.sourceFactor balancedSource a a s.radial.scale≤
-      (Real.exp (Real.log 4)*CenteredMomentFirstPhysicalSource.fixedPresentationCost/
-        ((min 1 aslot)^N*a*a))*Z^s.width:=by
-  have hK:0<s.radial.scale:=by rw [s.scale_eq]; positivity
-  have hc:=source_factor_le balancedSource N aslot a s.radial.scale haslot ha hK hN (fun _=>le_rfl)
-  have hconst:0≤Real.exp (Real.log 4)*CenteredMomentFirstPhysicalSource.fixedPresentationCost/
-        ((min 1 aslot)^N*a*a):=by
-    have hp:=CenteredMomentFirstPhysicalSource.fixedPresentationCost_pos
-    positivity
-  have he:(balancedSource).η=s.character:=rfl
-  rw [he] at hc
-  apply hc.trans
-  simpa only [mul_assoc] using mul_le_mul_of_nonneg_left (actual_conductor_scale s hZ) hconst
 
 end SevenEighths.CenteredMomentEnergyPositiveHighParameters
 

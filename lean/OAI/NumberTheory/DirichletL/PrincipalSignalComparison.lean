@@ -4,7 +4,6 @@ import OAI.NumberTheory.DirichletL.Hecke.SignalBounds
 import OAI.NumberTheory.DirichletL.Detector.SourceExclusions
 import OAI.NumberTheory.DirichletL.Detector.CompensationActual
 import OAI.NumberTheory.DirichletL.Detector.Basic
-
 namespace OAI
 
 noncomputable section
@@ -22,13 +21,6 @@ theorem raw_inverse_ae_reciprocal (χ : Character) (a : ℝ) :
     exact ht (by simpa using congrArg Complex.im h)
   · intro h
     exact ht (by simpa using congrArg Complex.im h)
-
-theorem raw_quotient_integral_eq (χ : Character) (a : ℝ) (F : ℝ → ℂ) :
-    (∫ t : ℝ, F t / LFunction χ ((a : ℂ)+t*I)) =
-      ∫ t : ℝ, F t * HeckeReciprocal.reciprocal χ ((a : ℂ)+t*I) := by
-  apply integral_congr_ae
-  filter_upwards [raw_inverse_ae_reciprocal χ a] with t ht
-  simp only [div_eq_mul_inv, ht]
 
 variable {κ ι : Type*}
 
@@ -53,11 +45,6 @@ structure SlotBounds (S : Finset κ) (T : κ → Finset ι) (w Q : κ → ι →
   mass_pos : ∀ j ∈ S, 0 < slotMass T w j
 
 def slotErrorConstant (S : Finset κ) : ℝ := S.card * 2 ^ S.card * 1440
-
-theorem slot_scalar_ne_zero (S : Finset κ) (T : κ → Finset ι) (w Q : κ → ι → ℝ)
-    (A η : κ → ι → ℂ) {P : ℝ} (h : SlotBounds S T w Q A η P) :
-    PrincipalSlotEstimate.principalScalar S (slotMass T w) ≠ 0 :=
-  PrincipalSlotEstimate.principalScalar_ne_zero S _ h.mass_pos
 
 theorem slotRatio_error (S : Finset κ) (T : κ → Finset ι) (w Q : κ → ι → ℝ)
     (A η : κ → ι → ℂ) {P : ℝ} (h : SlotBounds S T w Q A η P)
@@ -313,33 +300,8 @@ theorem prime_coprime_of_norm_gt (η : Character) (P : PrimeIdeal)
     (Ideal.absNorm_eq_zero_iff.not.mpr η.modulus_ne_bot)
   exact (Nat.not_le_of_gt hN) (Nat.le_of_dvd hn (Ideal.absNorm_dvd_absNorm_of_le hle))
 
-def annularPrimeWeight (W : ℝ → ℝ) (scale : ℝ) (P : PrimeIdeal) : ℝ :=
-  W ((Ideal.absNorm P.val : ℝ)/scale) * (Ideal.absNorm P.val : ℝ)^(-(5/6 : ℝ))
-
-theorem annularPrimeWeight_nonneg (W : ℝ → ℝ) (hW : ∀ x, 0 ≤ W x)
-    (scale : ℝ) (P : PrimeIdeal) : 0 ≤ annularPrimeWeight W scale P :=
-  mul_nonneg (hW _) (Real.rpow_nonneg (Nat.cast_nonneg _) _)
-
-theorem annularPrimeWeight_norm_lower (W : ℝ → ℝ) (c scale : ℝ)
-    (hscale : 0 < scale) (hW : ∀ x, W x ≠ 0 → c ≤ x) (P : PrimeIdeal)
-    (hw : annularPrimeWeight W scale P ≠ 0) : c*scale ≤ (Ideal.absNorm P.val : ℝ) :=
-  (le_div_iff₀ hscale).mp (hW _ (left_ne_zero_of_mul hw))
-
-theorem annularPrimeWeight_target_unit (W : ℝ → ℝ) (c scale : ℝ)
-    (hscale : 0 < scale) (hW : ∀ x, W x ≠ 0 → c ≤ x) (η : Character)
-    (hthreshold : (Ideal.absNorm η.modulus : ℝ) < c*scale) (P : PrimeIdeal)
-    (hw : annularPrimeWeight W scale P ≠ 0) : ‖idealCoeff η P.val‖ = 1 := by
-  have hN : Ideal.absNorm η.modulus < Ideal.absNorm P.val := by
-    exact_mod_cast hthreshold.trans_le (annularPrimeWeight_norm_lower W c scale hscale hW P hw)
-  exact idealCoeff_norm_one_of_coprime η P.val P.property.ne_zero (prime_coprime_of_norm_gt η P hN)
-
 def sourceCorrection (η : Character) (E : Finset (Ideal HeckeFamily.O)) (s : ℂ) : ℂ :=
   globalClosedCorrection η E s 1 (1/6)
-
-theorem sourceCorrection_eq_principal (η : Character) (E : Finset (Ideal HeckeFamily.O))
-    (hE : SourceExclusions E) : sourceCorrection η E = principalCorrection η E := by
-  funext s
-  exact source_globalCorrection_principal E hE η s
 
 theorem sourceCorrection_differentiable (η : Character) (E : Finset (Ideal HeckeFamily.O))
     (hE : SourceExclusions E) :
@@ -351,13 +313,6 @@ theorem sourceCorrection_bound (η : Character) (E : Finset (Ideal HeckeFamily.O
     ‖sourceCorrection η E s - 1‖ ≤ 1/2 :=
   globalClosedCorrection_bound η E hE.tail s 1 (1/6) hs.le (by norm_num) (by norm_num)
 
-def actualSlotResidue (η : Character) (E : Finset (Ideal HeckeFamily.O))
-    (hE : SourceExclusions E) (a Z : ℝ) (S : Finset κ)
-    (T : κ → Finset PrimeIdeal) (w : κ → PrimeIdeal → ℝ) : ℂ :=
-  slotResidue (η.excludePrimes E hE.prime) (sourceCorrection η E) a Z S T w
-    (fun _ P => Ideal.absNorm P.val)
-    (fun _ P => actualAPhase η (primaryGenerator P.val)) (fun _ P => idealCoeff η P.val)
-
 theorem actual_principal_slot (η : Character) (P : PrimeIdeal) (s : ℂ) :
     compensatedReplacement (coordV (Ideal.absNorm P.val) (1/6))
       (coordW (Ideal.absNorm P.val) 1 1) (coordD (Ideal.absNorm P.val) (idealCoeff η P.val) 1 s)
@@ -366,30 +321,6 @@ theorem actual_principal_slot (η : Character) (P : PrimeIdeal) (s : ℂ) :
       ((Ideal.absNorm P.val : ℂ)^(-1 : ℂ)) / idealClosedCorrection η P s 1 (1/6) =
       principalSlot (Ideal.absNorm P.val) (actualAPhase η (primaryGenerator P.val))
         (idealCoeff η P.val) s := rfl
-
-theorem exists_actualSlotResidue_bound (η : Character) (E : Finset (Ideal HeckeFamily.O))
-    (hE : SourceExclusions E) {a : ℝ} (ha : 7/8 < a) (ha2 : a ≤ 2)
-    (hβ : HeckeZeroSupremum.beta < a) (S : Finset κ) :
-    ∃ D : ℝ, 0 ≤ D ∧ ∀ (T : κ → Finset PrimeIdeal) (w : κ → PrimeIdeal → ℝ) (P Z : ℝ),
-      480 ≤ P → 1440 * P^(-(7/8 : ℝ)) ≤ 1 →
-      (∀ j ∈ S, ∀ p ∈ T j, 0 ≤ w j p) →
-      (∀ j ∈ S, ∀ p ∈ T j, P ≤ (Ideal.absNorm p.val : ℝ)) →
-      (∀ j ∈ S, ∀ p ∈ T j, IsCoprime p.val η.modulus) →
-      (∀ j ∈ S, 0 < slotMass T w j) → 1 ≤ Z →
-      ‖actualSlotResidue η E hE a Z S T w -
-          signal (η.excludePrimes E hE.prime) (sourceCorrection η E) (-11/16) Z‖ ≤
-        D * Z^(a-11/16) * P^(-(7/8 : ℝ)) := by
-  obtain ⟨D, hD, hb⟩ := exists_slotResidue_bound (ι := PrimeIdeal)
-    (η.excludePrimes E hE.prime) (sourceCorrection η E)
-    (sourceCorrection_differentiable η E hE) (sourceCorrection_bound η E hE)
-    ha ha2 hβ S
-  refine ⟨D, hD, ?_⟩
-  intro T w P Z hP hsmall hw hnorm hcop hmass hZ
-  exact (hb T w (fun _ p => Ideal.absNorm p.val)
-    (fun _ p => actualAPhase η (primaryGenerator p.val)) (fun _ p => idealCoeff η p.val) P Z
-    ⟨hP, hsmall, hw, hnorm, fun j hj p hp => actualAPhase_norm_le_one η _,
-      fun j hj p hp => idealCoeff_norm_one_of_coprime η p.val p.property.ne_zero (hcop j hj p hp),
-      hmass⟩ hZ).2
 
 open PrincipalMellinResidues
 
@@ -490,88 +421,6 @@ theorem source_double_residue_integrable (W0 W1 : SchwartzMap ℝ ℂ)
   filter_upwards [] with t
   exact ((div_eq_iff hn).mp (normalized_source_double_residue W0 W1 M χ Y Z hZ _
     (H _) (B _) S T w Q A η hc (hB _))).symm
-
-def activePools (T : κ → Finset ι) (w : κ → ι → ℝ) (j : κ) : Finset ι :=
-  (T j).filter (fun p => w j p ≠ 0)
-
-theorem slotMass_active (T : κ → Finset ι) (w : κ → ι → ℝ) :
-    slotMass (activePools T w) w = slotMass T w := by
-  funext j
-  simp only [slotMass, activePools, Finset.sum_filter]
-  apply Finset.sum_congr rfl
-  intro p hp
-  by_cases hw : w j p = 0 <;> simp [hw]
-
-theorem slotProduct_active (S : Finset κ) (T : κ → Finset ι) (w Q : κ → ι → ℝ)
-    (A η : κ → ι → ℂ) (s : ℂ) :
-    slotProduct S (activePools T w) w Q A η s = slotProduct S T w Q A η s := by
-  apply Finset.prod_congr rfl
-  intro j hj
-  simp only [activePools, Finset.sum_filter]
-  apply Finset.sum_congr rfl
-  intro p hp
-  by_cases hw : w j p = 0 <;> simp [hw]
-
-theorem slotRatio_active (S : Finset κ) (T : κ → Finset ι) (w Q : κ → ι → ℝ)
-    (A η : κ → ι → ℂ) (s : ℂ) :
-    slotRatio S (activePools T w) w Q A η s = slotRatio S T w Q A η s := by
-  rw [slotRatio, slotRatio, slotProduct_active, slotMass_active]
-
-theorem slotResidue_active (χ : Character) (H : ℂ → ℂ) (a Z : ℝ)
-    (S : Finset κ) (T : κ → Finset ι) (w Q : κ → ι → ℝ) (A η : κ → ι → ℂ) :
-    slotResidue χ H a Z S (activePools T w) w Q A η = slotResidue χ H a Z S T w Q A η := by
-  simp only [slotResidue, slotRatio_active]
-
-theorem slotResidue_isBigO (S : Finset κ) (c0 ell saving : ℝ)
-    (hc0 : 0 < c0) (hsaving : saving ≤ (7/8)*ell)
-    (χ : Character) (H : ℂ → ℂ)
-    (hH : DifferentiableOn ℂ H {s : ℂ | 7/8 < s.re})
-    (hb : ∀ s : ℂ, 7/8 < s.re → ‖H s-1‖ ≤ 1/2)
-    {a : ℝ} (ha : 7/8 < a) (ha2 : a ≤ 2) (hβ : HeckeZeroSupremum.beta < a)
-    (T : ℝ → κ → Finset ι) (w Q : ℝ → κ → ι → ℝ) (A η : ℝ → κ → ι → ℂ)
-    (hdata : ∀ᶠ Z : ℝ in atTop,
-      SlotBounds S (activePools (T Z) (w Z)) (w Z) (Q Z) (A Z) (η Z) (c0*Z^ell)) :
-    (fun Z : ℝ => slotResidue χ H a Z S (T Z) (w Z) (Q Z) (A Z) (η Z) -
-        signal χ H (-11/16) Z) =O[atTop] (fun Z : ℝ => Z^(a-11/16-saving)) := by
-  obtain ⟨D, hD, hd⟩ := exists_slotResidue_bound χ H hH hb ha ha2 hβ S
-  apply IsBigO.of_bound (D*c0^(-(7/8 : ℝ)))
-  filter_upwards [hdata, eventually_ge_atTop (1 : ℝ)] with Z hz hZ
-  have hZ0 : 0 < Z := by linarith
-  have he := (hd (activePools (T Z) (w Z)) (w Z) (Q Z) (A Z) (η Z)
-    (c0*Z^ell) Z hz hZ).2
-  rw [slotResidue_active] at he
-  have hp : (c0*Z^ell)^(-(7/8 : ℝ)) = c0^(-(7/8 : ℝ))*Z^(ell*(-(7/8 : ℝ))) := by
-    rw [Real.mul_rpow hc0.le (Real.rpow_nonneg hZ0.le _), ← Real.rpow_mul hZ0.le]
-  rw [hp] at he
-  have hpow : Z^(a-11/16+ell*(-(7/8 : ℝ))) ≤ Z^(a-11/16-saving) :=
-    Real.rpow_le_rpow_of_exponent_le hZ (by linarith)
-  have he' : ‖slotResidue χ H a Z S (T Z) (w Z) (Q Z) (A Z) (η Z) -
-      signal χ H (-11/16) Z‖ ≤ (D*c0^(-(7/8 : ℝ)))*Z^(a-11/16-saving) := by
-    calc
-      _ ≤ D*Z^(a-11/16)*(c0^(-(7/8 : ℝ))*Z^(ell*(-(7/8 : ℝ)))) := he
-      _ = (D*c0^(-(7/8 : ℝ)))*Z^(a-11/16+ell*(-(7/8 : ℝ))) := by
-        rw [Real.rpow_add hZ0]
-        ring_nf
-      _ ≤ _ := mul_le_mul_of_nonneg_left hpow (by positivity)
-  simpa only [Real.norm_eq_abs, abs_of_pos (Real.rpow_pos_of_pos hZ0 _)] using he'
-
-theorem actualSlotResidue_isBigO (S : Finset κ) (c0 ell saving : ℝ)
-    (hc0 : 0 < c0) (hsaving : saving ≤ (7/8)*ell)
-    (E : Finset (Ideal HeckeFamily.O)) (hE : SourceExclusions E) (η : Character)
-    {a : ℝ} (ha : 7/8 < a) (ha2 : a ≤ 2) (hβ : HeckeZeroSupremum.beta < a)
-    (T : ℝ → κ → Finset PrimeIdeal) (w : ℝ → κ → PrimeIdeal → ℝ)
-    (hdata : ∀ᶠ Z : ℝ in atTop,
-      SlotBounds S (activePools (T Z) (w Z)) (w Z) (fun _ p => Ideal.absNorm p.val)
-        (fun _ p => actualAPhase η (primaryGenerator p.val)) (fun _ p => idealCoeff η p.val)
-        (c0*Z^ell)) :
-    (fun Z : ℝ => actualSlotResidue η E hE a Z S (T Z) (w Z) -
-        signal (η.excludePrimes E hE.prime) (sourceCorrection η E) (-11/16) Z)
-      =O[atTop] (fun Z : ℝ => Z^(a-11/16-saving)) :=
-  slotResidue_isBigO S c0 ell saving hc0 hsaving (η.excludePrimes E hE.prime)
-    (sourceCorrection η E) (sourceCorrection_differentiable η E hE)
-    (sourceCorrection_bound η E hE) ha ha2 hβ T w
-    (fun _ _ p => Ideal.absNorm p.val)
-    (fun _ _ p => actualAPhase η (primaryGenerator p.val)) (fun _ _ p => idealCoeff η p.val) hdata
 
 theorem fixedPrincipal_product_eq (E : Finset (Ideal HeckeFamily.O)) (hE : SourceExclusions E) :
     letI : NeZero (∏ p ∈ E, p) := ⟨fixedPrimeProduct_ne_zero E hE.prime⟩

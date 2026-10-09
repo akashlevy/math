@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.PrimeRows.SelectedFirstBounds
 import OAI.NumberTheory.DirichletL.PrimeRows.PrincipalMask
 import OAI.NumberTheory.DirichletL.Hecke.LogarithmicInput
 import OAI.NumberTheory.DirichletL.Hecke.DyadicReflectedFamily
-
 namespace OAI
 
 noncomputable section

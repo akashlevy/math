@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.DyadIntegral
 import OAI.NumberTheory.DirichletL.PrimeRows.NonprincipalContour
-
 namespace OAI
 
 noncomputable section

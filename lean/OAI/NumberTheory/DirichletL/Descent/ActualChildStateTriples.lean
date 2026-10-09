@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.ActualChildStateSupport
 import OAI.NumberTheory.DirichletL.Descent.ActualChildStateLabels
-
 namespace OAI
 
 noncomputable section
@@ -43,25 +42,6 @@ theorem actual_cell_triple_margins
     exact actual_cell_child_margins p hp hpr source hs hk d x hx 1 1 m hm
       Z r ell V M Q z c A B t j eta hZ hparent hA ht hV hj heta hbin hQ
       (h1 x hxs) (h2 x hxs) (hT x hxs)
-
-omit hp in
-
-theorem actual_child_enlarged_row_bounds (Z M : ℝ) (hZ : 1<Z) (k : O)
-    (hk : k∈nonzeroChildFrequencyBall 1 (Z^M)) :
-    k≠0 ∧ ‖eisEmbedding k‖^2≤Z^M ∧ 0≤M := by
-  have hb := (mem_nonzeroChildFrequencyBall 1 one_ne_zero _ k).mp hk
-  simp only [one_mul] at hb
-  exact ⟨(Finset.mem_erase.mp hk).1,hb.2,actual_child_row_length_nonneg Z M hZ k hk⟩
-
-omit hp in
-
-theorem actual_child_size_caps (F M Q z c cap : ℝ)
-    (hinv : CanonicalMargins F M Q z c) (hM : 0≤M) (hQ : 0≤Q) (hz : 0≤z)
-    (hc : 0≤c) (hF : F≤cap) : M≤cap ∧ Q≤cap ∧ z≤cap := by
-  obtain ⟨h1,h2⟩ := hinv
-  constructor
-  · linarith
-  constructor <;> linarith
 
 end SevenEighths.InverseMoment
 end

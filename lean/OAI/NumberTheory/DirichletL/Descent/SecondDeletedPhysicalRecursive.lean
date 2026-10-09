@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondDeletedPhysicalEnergy
 import OAI.NumberTheory.DirichletL.Descent.SecondNormalizedEnergy
 import OAI.NumberTheory.DirichletL.Descent.SecondBalancedSource
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

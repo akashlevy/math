@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.Family
 import Mathlib.Data.ZMod.Basic
-
 namespace OAI
 
 noncomputable section

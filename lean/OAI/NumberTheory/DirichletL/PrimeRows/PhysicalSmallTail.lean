@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.SmallTail
 import OAI.NumberTheory.DirichletL.PrimeRows.PhysicalDyad
-
 namespace OAI
 
 noncomputable section

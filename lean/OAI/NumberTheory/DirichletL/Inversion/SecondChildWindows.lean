@@ -1,6 +1,7 @@
-import OAI.NumberTheory.DirichletL.Descent.SecondDeletedMovingMass
+import OAI.NumberTheory.DirichletL.Descent.SecondDeletedPhysicalRecursive
+import OAI.NumberTheory.DirichletL.Descent.SecondBalancedSource
+import OAI.NumberTheory.DirichletL.Descent.SecondOriginalMass
 import OAI.NumberTheory.DirichletL.Descent.FreshWindows
-
 namespace OAI
 
 noncomputable section

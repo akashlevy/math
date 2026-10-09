@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondNonexceptionalScalar
-
 namespace OAI
 
 noncomputable section
@@ -34,11 +33,6 @@ theorem ratio_penalty_le (r a:ℝ) (hr:0<r) (_ha:0≤a) (ha1:a≤1) :
 
 def retainedRatio (n:Fin 4→ℤ):ℝ :=
   dyadicScale (n 0)*dyadicScale (n 1)/(dyadicScale (n 2)*dyadicScale (n 3))
-
-theorem retainedRatio_pos (n:Fin 4→ℤ):0<retainedRatio n := by
-  unfold retainedRatio
-  exact div_pos (mul_pos (dyadicScale_pos _) (dyadicScale_pos _))
-    (mul_pos (dyadicScale_pos _) (dyadicScale_pos _))
 
 theorem actual_envelope_scalar_ratio (η:Character)(t:ℝ)(S:Finset (Ideal O))(β:Ideal O→ℂ)
     (C D:Ideal O)(hC:Supported C)(hD:Supported D)(U:Finset (CommonIndex C D))

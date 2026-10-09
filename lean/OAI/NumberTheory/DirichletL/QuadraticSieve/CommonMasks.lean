@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.CuspCoercivity
-
 namespace OAI
 
 noncomputable section
@@ -8,76 +7,24 @@ namespace CanonicalQuadraticSieve
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 section
 
-open scoped BigOperators Classical SchwartzMap
-
 section
-open ActualEisensteinCubic ConcreteTraceCRT ConcretePrimeRowBridge CompletedGauss
+open ConcretePrimeRowBridge CompletedGauss
 open EisensteinSchwartzPoisson UnrestrictedIdealReindex IdealMobiusDivisorSum
 
 def maskedPairDualTail (G I J : Ideal O) (W : 𝓢(ℝ,ℂ)) (M K : ℝ) : ℂ :=
@@ -144,7 +91,7 @@ theorem maskedPairIdealDualKernel_retained
 end
 
 section
-open ActualEisensteinCubic ConcretePrimeRowBridge IdealMobiusDivisorSum EisensteinSchwartzPoisson
+open ConcretePrimeRowBridge IdealMobiusDivisorSum EisensteinSchwartzPoisson
 
 theorem retainedDualPrincipalSum_pair_expansion {n : Type} [Fintype n] [DecidableEq n]
     (W : 𝓢(ℝ,ℂ)) (cols : n → Ideal O) (a : n → ℂ) (M F K : ℝ) :
@@ -232,7 +179,7 @@ theorem maskedDualFamily_retained {n : Type} [Fintype n] [DecidableEq n]
 end
 
 section
-open ActualEisensteinCubic ConcreteTraceCRT ConcretePrimeRowBridge EisensteinSchwartzPoisson CompletedGauss
+open ConcretePrimeRowBridge EisensteinSchwartzPoisson CompletedGauss
 open IdealMobiusDivisorSum
 
 theorem normalizedFactors_commonMaskIdeal (D : Ideal O) :
@@ -418,7 +365,7 @@ theorem originalLow_gcd_aggregate
 
 end
 
-open ActualEisensteinCubic ConcretePrimeRowBridge IdealMobiusDivisorSum EisensteinSchwartzPoisson
+open ConcretePrimeRowBridge IdealMobiusDivisorSum EisensteinSchwartzPoisson
 
 theorem originalDual_gcd_aggregate {n : Type} [Fintype n] [DecidableEq n]
     (D : Ideal O) (hD : D≠0) (cols : n → Ideal O) (hcols : ∀ j, Admissible (cols j))
@@ -489,8 +436,7 @@ end
 
 section
 
-open scoped BigOperators Classical
-open ActualEisensteinCubic ConcretePrimeRowBridge IdealMobiusDivisorSum
+open ConcretePrimeRowBridge IdealMobiusDivisorSum
 
 theorem residual_commonMask_coprime (D I : Ideal O) (hI : Admissible I) (hDI : D∣I) :
     IsCoprime (commonMaskIdeal D) (idealQuotient D I) := by
@@ -536,8 +482,7 @@ theorem idealQuotient_shell (D I : Ideal O) (hD : D≠0) (hDI : D∣I) (N : ℝ)
 
 end
 
-open scoped BigOperators Classical SchwartzMap
-open ActualEisensteinCubic ConcretePrimeRowBridge IdealMobiusDivisorSum EisensteinSchwartzPoisson
+open ConcretePrimeRowBridge IdealMobiusDivisorSum EisensteinSchwartzPoisson
 
 def gcdRaySupport {n : Type} [Fintype n] (cols : n → Ideal O) (a : n → ℂ)
     (D : Ideal O) (c : EisensteinEPrimaryPhase.Coord) : Finset n :=
@@ -597,12 +542,6 @@ theorem gcd_ray_pair_sum_restrict {n : Type} [Fintype n]
   have hj := (mem_gcdRaySupport cols a D c j.val).mp j.property
   have hk := (mem_gcdRaySupport cols a D c k.val).mp k.property
   simp only [f,hj.2.1,hk.2.1,and_true]
-
-theorem gcdRaySupport_energy {n : Type} [Fintype n]
-    (cols : n → Ideal O) (a : n → ℂ) (D : Ideal O) (c : EisensteinEPrimaryPhase.Coord) :
-    (∑ j : gcdRaySupport cols a D c, ‖a j.val‖^2) ≤ ∑ j, ‖a j‖^2 := by
-  rw [Finset.sum_coe_sort (gcdRaySupport cols a D c) (fun j => ‖a j‖^2)]
-  exact Finset.sum_le_univ_sum_of_nonneg (fun j => sq_nonneg ‖a j‖)
 
 theorem gcdRaySupport_quotient_properties (N X : ℝ) (a : idealRange N → ℂ)
     (ha : CoefficientOnShell N X a) (D : Ideal O) (hD : D≠0)

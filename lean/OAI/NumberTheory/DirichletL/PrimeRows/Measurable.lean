@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.WeightedTuple
 import Mathlib.MeasureTheory.Constructions.Polish.Basic
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.FirstJoint
 import OAI.NumberTheory.DirichletL.PrimeRows.WZTransport
-
 namespace OAI
 
 noncomputable section

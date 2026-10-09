@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.LiveSupport
 import OAI.NumberTheory.DirichletL.Moments.SourceRow
 import OAI.NumberTheory.DirichletL.Moments.GaussEnergy
-
 namespace OAI
 
 noncomputable section

@@ -1,77 +1,23 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.CoordinateLaplacian
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace SecondPassArithmetic
 
@@ -206,54 +152,20 @@ theorem lowerCubeBin_transfer_mass (X B F : ℝ) (hB : B≠0) :
   rw [mul_pow,←he]
   field_simp
 
-theorem lowerCubeBin_energy_normalization (ell B F : ℝ) (hell : 0<ell) (hB : 0<B) :
-    (ell*B^3)*((B*Real.sqrt ell)^2)⁻¹*
-      (ell*(Real.exp 1*B)^2*F)*(ell*(Real.exp 1*B)^3*F)=
-      Real.exp 5*((ell*B^3)*F)^2 := by
-  have he : (Real.exp 1)^5=Real.exp 5 := by
-    rw [show (5:ℝ)=1+1+1+1+1 by norm_num]
-    simp only [Real.exp_add]
-    ring
-  rw [mul_pow,Real.sq_sqrt hell.le]
-  simp only [mul_pow]
-  rw [←he]
-  field_simp
-
 theorem canonical_live_scale_bounds (Z X F : ℝ) (r : ℕ)
     (hZ : Real.exp 9000≤Z) (hX : 1≤X) (hF : 1≤F)
     (hmass : X*F≤canonicalRankMass Z r) : X≤Z^3 ∧ F≤Z^3 := by
   have hm := hmass.trans (canonicalRankMass_global Z hZ r)
   constructor <;> nlinarith
 
-theorem canonical_small_or_live (Z X F K : ℝ) (r : ℕ) (m : ActualEisensteinCubic.O)
-    (hZ : Real.exp 9000≤Z) (_hX : 0<X) (hF : 1≤F) (hK : 0≤K) (hm : m≠0)
-    (hmass : X*F≤canonicalRankMass Z r) (hinv : K*‖eisEmbedding m‖^2≤X*F) :
-    K≤F ∨ (1<X ∧ X≤Z^3 ∧ F≤Z^3) := by
-  by_cases hx : X≤1
-  · exact Or.inl (smallColumn_row_le_label m hm X F K hx (by linarith) hK hinv)
-  · have hl := lt_of_not_ge hx
-    exact Or.inr ⟨hl,canonical_live_scale_bounds Z X F r hZ hl.le hF hmass⟩
-
-def canonicalPoolCutoff (Bsupport Z : ℝ) : ℕ := ⌈Bsupport*Z^3⌉₊
-
-theorem canonicalPoolCutoff_covers (Bsupport b Z X : ℝ)
-    (hB : 0≤Bsupport) (hb : b≤Bsupport) (hX : 0≤X) (hXZ : X≤Z^3) :
-    b*X≤(canonicalPoolCutoff Bsupport Z:ℝ) := by
-  calc
-    b*X ≤ Bsupport*X := mul_le_mul_of_nonneg_right hb hX
-    _ ≤ Bsupport*Z^3 := mul_le_mul_of_nonneg_left hXZ hB
-    _ ≤ _ := Nat.le_ceil _
-
 end SecondPassArithmetic
 
-open MeasureTheory
-open scoped BigOperators Classical
 namespace CanonicalRowCompletion
 
 section
 open ActualEisensteinCubic
 open CompletedGauss hiding O
-open ConcretePrimeRowBridge hiding O columnWeight
+open ConcretePrimeRowBridge hiding O
 open CanonicalQuadraticSieve hiding O
 open SecondPassArithmetic hiding O
 open ConcreteTraceCRT (eisEmbedding)
@@ -269,12 +181,6 @@ theorem rowFamilyEnergy_eq_sum (labels : Finset (Ideal ActualEisensteinCubic.O))
   unfold rowFamilyEnergy
   simp only [nonzeroRowMajorantSum_exact_disk _ K hK, Complex.re_sum,
     Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, mul_zero, sub_zero]
-
-theorem rowFamilyEnergy_nonneg (labels : Finset (Ideal ActualEisensteinCubic.O)) (P : Ideal ActualEisensteinCubic.O → ActualEisensteinCubic.O → ℂ)
-    (K : ℝ) (hK : 0 < K) : 0 ≤ rowFamilyEnergy labels P K := by
-  rw [rowFamilyEnergy_eq_sum labels P K hK]
-  exact Finset.sum_nonneg (fun I hI => Finset.sum_nonneg
-    (fun z hz => mul_nonneg (rowMajorant_nonneg _) (sq_nonneg _)))
 
 theorem rowFamilyEnergy_integral_polynomial
     (labels : Finset (Ideal ActualEisensteinCubic.O)) (K : ℝ) (hK : 0 < K)
@@ -348,7 +254,7 @@ open MeasureTheory
 open scoped BigOperators Classical SchwartzMap
 open ActualEisensteinCubic
 open CompletedGauss hiding O
-open ConcretePrimeRowBridge hiding O columnWeight
+open ConcretePrimeRowBridge hiding O
 open SecondPassArithmetic hiding O
 open FirstPassCubeLabels hiding O
 open CanonicalCubeSeparation JointLogSeparation
@@ -411,7 +317,7 @@ end
 section
 open ActualEisensteinCubic
 open CompletedGauss hiding O
-open ConcretePrimeRowBridge hiding O columnWeight
+open ConcretePrimeRowBridge hiding O
 open CanonicalQuadraticSieve hiding O
 open SecondPassArithmetic hiding O
 open ConcreteTraceCRT (eisEmbedding)
@@ -473,7 +379,7 @@ open MeasureTheory
 open scoped BigOperators Classical SchwartzMap ContDiff
 open ActualEisensteinCubic
 open CompletedGauss hiding O
-open ConcretePrimeRowBridge hiding O columnWeight
+open ConcretePrimeRowBridge hiding O
 open CanonicalQuadraticSieve hiding O
 open SecondPassArithmetic hiding O
 open FirstPassCubeLabels hiding O
@@ -533,7 +439,6 @@ theorem outsideCanonicalBin_energy
 
 end CanonicalRowCompletion
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 open ConcreteTraceCRT (eisEmbedding)
@@ -566,27 +471,6 @@ theorem canonicalRankMargin_step (σ η : ℝ) (hη : 0≤η) (r s : ℕ)
   have hn' : ((3000-r:ℕ):ℝ)+1≤((3000-s:ℕ):ℝ) := by exact_mod_cast hn
   unfold canonicalRankMargin
   nlinarith
-
-theorem canonicalRatio_exp_loss (K M R : ℝ) (hM : 0<M) :
-    K*R/(Real.exp 3*M)=(K*R/M)/Real.exp 3 := by
-  field_simp
-
-theorem canonicalRankMargin_padding (Z σ η a : ℝ) (r s : ℕ)
-    (hZ : 1<Z) (hη : 0≤η) (hr : r≤3000) (hs : s+1≤r)
-    (ha : 0≤a) (hbound : a≤Z^(-canonicalRankMargin σ η r)) :
-    Z^η*(a/Real.exp 3)≤Z^(-canonicalRankMargin σ η s) := by
-  have hZ0 : 0<Z := zero_lt_one.trans hZ
-  have hmargin := canonicalRankMargin_step σ η hη r s hr hs
-  calc
-    Z^η*(a/Real.exp 3) ≤ Z^η*a :=
-      mul_le_mul_of_nonneg_left (div_le_self ha (Real.one_le_exp (by norm_num)))
-        (Real.rpow_nonneg hZ0.le _)
-    _ ≤ Z^η*Z^(-canonicalRankMargin σ η r) :=
-      mul_le_mul_of_nonneg_left hbound (Real.rpow_nonneg hZ0.le _)
-    _ = Z^(η-canonicalRankMargin σ η r) := by
-      rw [sub_eq_add_neg,Real.rpow_add hZ0]
-    _ ≤ Z^(-canonicalRankMargin σ η s) :=
-      Real.rpow_le_rpow_of_exponent_le hZ.le (by linarith)
 
 variable {ι : Type*} [DecidableEq ι] (p : ι → ActualEisensteinCubic.O) (hp : ∀i,p i≠0)
   [∀i,(Ideal.span {p i}).IsMaximal]
@@ -654,64 +538,6 @@ theorem canonical_retained_scale_closure
     apply (div_le_self (div_nonneg (mul_nonneg hK0.le (sq_nonneg _)) (mul_pos hX hF0).le)
       (Real.one_le_exp (by norm_num))).trans
     exact (div_le_iff₀ (mul_pos hX hF0)).mpr (by simpa only [mul_comm] using hinv)
-  refine ⟨hXc,hFc,hKc,hrank,?_,?_,?_,fixedTripleMask_ne_zero_of_bin p hp source side q j hq m hm,
-    globalCanonicalLabels_bounds p hp source side q j hk⟩
-  · exact hsmall.trans ((div_le_self hK0.le
-      (Real.one_le_rpow hZ.le (by norm_num : (0:ℝ)≤1/1000))).trans hstart)
-  · exact canonicalRankMass_child Z X F _ _ _ _ hrank0 hrank hmass hMc'
-  · exact (div_le_iff₀ (mul_pos hXc (zero_lt_one.trans_le hFc))).mp hratio' |>.trans_eq (by ring)
-
-include hp in
-
-theorem canonical_retained_unpadded_closure
-    (source : Finset (GlobalSecondData ι)) (side : Bool)
-    (q : Ideal ActualEisensteinCubic.O × Ideal ActualEisensteinCubic.O × Ideal ActualEisensteinCubic.O) (j : GlobalLogIndex)
-    (hq : q∈globalBinTriples p source side j)
-    (Z σ η X B F K : ℝ) (m : ActualEisensteinCubic.O)
-    (hZ : 1<Z) (hZbig : Real.exp 9000≤Z) (hη : 0≤η) (hηsmall : η≤(1:ℝ)/1000)
-    (hX : 0<X) (hB : 0<B) (hF : 1≤F) (hK : 1≤K) (hm : m≠0)
-    (hprogress : Z^((1:ℝ)/1000)≤(Real.exp 1*B)*F)
-    (hstart : K≤Z^3) (hmass : X*F≤canonicalRankMass Z (fixedDepthRank Z K))
-    (hinv : K*‖eisEmbedding m‖^2≤
-      (X*F)*Z^(-canonicalRankMargin σ η (fixedDepthRank Z K)))
-    (hk : ∀x∈source,x.source.frequency≠0)
-    (hb₁ : ∀x∈source,‖eisEmbedding (primeProduct p x.cube.support x.cube.leftExponent)‖^2≤Real.exp 1*B)
-    (hb₂ : ∀x∈source,‖eisEmbedding (primeProduct p x.cube.support x.cube.rightExponent)‖^2≤Real.exp 1*B)
-    (hretained : globalBinRadial (X/B^3)
-      (globalPooledRowScale K (X/B^3) (Real.exp 1*B) F j) j≤Z^η) :
-    let X':=globalPooledColumnScale (X/B^3) j
-    let F':=globalPooledLabelScale j
-    let K':=globalLogRep j 8*Real.exp 1
-    0<X' ∧ 1≤F' ∧ 1≤K' ∧
-      fixedDepthRank Z K'+1≤fixedDepthRank Z K ∧ K'≤Z^3 ∧
-      X'*F'≤canonicalRankMass Z (fixedDepthRank Z K') ∧
-      K'*‖eisEmbedding (fixedTripleMask m q)‖^2≤
-        (X'*F')*Z^(-canonicalRankMargin σ η (fixedDepthRank Z K')) ∧
-      fixedTripleMask m q≠0 ∧
-      (∀I∈globalCanonicalLabels p source side q j,
-        I≠⊥ ∧ Squarefree I ∧ (Ideal.absNorm I:ℝ)≤F') := by
-  have hZ0 : 0<Z := zero_lt_one.trans hZ
-  have hK0 : 0<K := zero_lt_one.trans_le hK
-  have hF0 : 0<F := zero_lt_one.trans_le hF
-  have hBup : 0<Real.exp 1*B := mul_pos (Real.exp_pos _) hB
-  have hell : 0<X/B^3 := div_pos hX (pow_pos hB 3)
-  have hlarge : Real.exp 4≤(Real.exp 1*B)*F := (canonicalProgress_large Z hZbig).trans hprogress
-  obtain ⟨hXc,hFc,hKc,hMc,hsmall,hrank,hrank0,hratio,hlabels⟩ :=
-    globalRetained_canonical_geometry p hp source side q j hq Z η K K
-      (X/B^3) (Real.exp 1*B) F m hZ hηsmall hK0 hK0 le_rfl hell hBup hF
-      hprogress hlarge hstart hk hb₁ hb₂ hretained
-  have hMc' : globalPooledColumnScale (X/B^3) j*globalPooledLabelScale j≤Real.exp 3*(X*F) := by
-    simpa only [lowerCubeBin_transfer_mass X B F hB.ne'] using hMc
-  have hparent : K*‖eisEmbedding m‖^2/(X*F)≤
-      Z^(-canonicalRankMargin σ η (fixedDepthRank Z K)) :=
-    (div_le_iff₀ (mul_pos hX hF0)).mpr (by simpa only [mul_comm] using hinv)
-  have hratio' : globalLogRep j 8*Real.exp 1*‖eisEmbedding (fixedTripleMask m q)‖^2/
-      (globalPooledColumnScale (X/B^3) j*globalPooledLabelScale j)≤
-      Z^(-canonicalRankMargin σ η (fixedDepthRank Z (globalLogRep j 8*Real.exp 1))) := by
-    rw [lowerCubeBin_transfer_mass X B F hB.ne',canonicalRatio_exp_loss K (X*F)
-      (‖eisEmbedding m‖^2) (mul_pos hX hF0)] at hratio
-    exact hratio.trans (canonicalRankMargin_padding Z σ η _ _ _ hZ hη hrank0 hrank
-      (div_nonneg (mul_nonneg hK0.le (sq_nonneg _)) (mul_pos hX hF0).le) hparent)
   refine ⟨hXc,hFc,hKc,hrank,?_,?_,?_,fixedTripleMask_ne_zero_of_bin p hp source side q j hq m hm,
     globalCanonicalLabels_bounds p hp source side q j hk⟩
   · exact hsmall.trans ((div_le_self hK0.le

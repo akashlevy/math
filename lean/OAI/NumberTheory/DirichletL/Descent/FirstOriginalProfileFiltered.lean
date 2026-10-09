@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileUniform
 import OAI.NumberTheory.DirichletL.Descent.FirstGlobalPush
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

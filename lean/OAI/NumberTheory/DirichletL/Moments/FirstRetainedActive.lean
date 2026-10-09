@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstRetainedSector
 import OAI.NumberTheory.DirichletL.Moments.ActiveSource
-
 namespace OAI
 
 noncomputable section

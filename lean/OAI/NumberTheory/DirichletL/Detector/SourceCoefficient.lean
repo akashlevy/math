@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.CompletedCoefficient
 import OAI.NumberTheory.DirichletL.Detector.CalibrationCancellation
-
 namespace OAI
 
 noncomputable section

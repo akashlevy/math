@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Reflection.LowExponent
 import OAI.NumberTheory.DirichletL.Reflection.RetainedCaps
 import OAI.NumberTheory.DirichletL.Reflection.BranchCount
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.InitialRows
 import OAI.NumberTheory.DirichletL.Detector.TupleKernel
-
 namespace OAI
 
 noncomputable section

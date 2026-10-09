@@ -2,7 +2,6 @@ import Mathlib.RingTheory.UniqueFactorizationDomain.Moebius
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.NormNum
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -32,28 +31,6 @@ theorem moebius_character_overlap (ψ : M →* ℂ) {j n₀ P₀ : M}
   rw [hjn.moebius_mul, Int.cast_mul, map_mul, map_mul, map_mul, hμ]
   ring
 
-theorem hybrid_mask_quotients {k P c R r : M}
-    (hk : Squarefree k) (hP : Squarefree P) (hc : Squarefree c)
-    (hPc : IsRelPrime P c) (hRk : R ∣ k) (hrk : r ∣ k)
-    (hRP : R ∣ P) (hrc : r ∣ c) :
-    ∃ k' P' c' : M,
-      k = (R * r) * k' ∧ P = R * P' ∧ c = r * c' ∧
-      IsRelPrime R r ∧ IsRelPrime k' (R * r) ∧
-      IsRelPrime P' R ∧ IsRelPrime c' r ∧
-      Squarefree k' ∧ Squarefree P' ∧ Squarefree c' := by
-  have hRr : IsRelPrime R r := (hPc.of_dvd_left hRP).of_dvd_right hrc
-  obtain ⟨k', hk'⟩ := hRr.mul_dvd hRk hrk
-  obtain ⟨P', hP'⟩ := hRP
-  obtain ⟨c', hc'⟩ := hrc
-  have hks : Squarefree ((R * r) * k') := hk' ▸ hk
-  have hPs : Squarefree (R * P') := hP' ▸ hP
-  have hcs : Squarefree (r * c') := hc' ▸ hc
-  obtain ⟨hkrel, _, hksf⟩ := squarefree_mul_iff.mp hks
-  obtain ⟨hPrel, _, hPsf⟩ := squarefree_mul_iff.mp hPs
-  obtain ⟨hcrel, _, hcsf⟩ := squarefree_mul_iff.mp hcs
-  exact ⟨k', P', c', hk', hP', hc', hRr, hkrel.symm,
-    hPrel.symm, hcrel.symm, hksf, hPsf, hcsf⟩
-
 end Moebius
 
 theorem inverse_eq_square_of_fourth_eq {z : ℂ} (hz : z ^ 4 = z) :
@@ -81,10 +58,6 @@ theorem inverse_square_cube_mask {M : Type*} [Monoid M]
     (ψ (n * b ^ 3))⁻¹ ^ 2 = (ψ n)⁻¹ ^ 2 * ψ b ^ 6 := by
   rw [map_mul, map_pow, mul_inv_rev, mul_pow, inverse_cube_square_eq_sixth h]
   ring
-
-theorem overlap_scalar_norm_le {z : ℂ} (hz : ‖z‖ ≤ 1) : ‖z ^ 2‖ ≤ 1 := by
-  rw [norm_pow]
-  simpa using pow_le_pow_left₀ (norm_nonneg z) hz 2
 
 end SevenEighths.InverseMoment
 

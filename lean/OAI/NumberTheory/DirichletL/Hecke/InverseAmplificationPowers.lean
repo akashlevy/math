@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationBudget
-
 namespace OAI
 
 noncomputable section

@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Foundation
 import OAI.NumberTheory.DirichletL.IdealEuler
 import Mathlib.NumberTheory.LSeries.PrimesInAP
-
 namespace OAI
 
 namespace SevenEighths.UnitSexticWitness
@@ -102,34 +101,6 @@ theorem exists_unit_witness (u : Oˣ) (hu : u ≠ 1)
     apply hu
     apply Units.ext
     exact eisEmbedding_injective (by simpa using hh)
-
-theorem exists_prime_embedding_after_deletion
-    (S : Finset SmoothMobiusCorrection.PrimeIdeal) (B : ℕ) :
-    ∃ P : SmoothMobiusCorrection.PrimeIdeal, P ∉ S ∧ B < Ideal.absNorm P.val ∧
-      lambda ∉ P.val ∧ ringChar (O ⧸ P.val) ≠ 2 ∧
-      ∀ u : Oˣ, IdealEuler.deletePrimes S (idealRowHom u.val) P.val = eisEmbedding u.val := by
-  obtain ⟨P, hp, hs, hb, hm, hg, ho, he⟩ :=
-    exists_prime_unit_embedding (S.image Subtype.val) B
-  let : P.IsMaximal := hp
-  let Q : SmoothMobiusCorrection.PrimeIdeal :=
-    ⟨P, Ideal.prime_of_isPrime (NeZero.ne P) inferInstance⟩
-  have hQ : Q ∉ S := fun h => hs (Finset.mem_image.mpr ⟨Q, h, rfl⟩)
-  refine ⟨Q, hQ, hb, hg, ho, ?_⟩
-  intro u
-  rw [IdealEuler.deletePrimes_prime, ite_eq_right hQ]
-  exact he u
-
-theorem deleted_unit_row_ne_principal (u : Oˣ) (hu : u ≠ 1)
-    (S : Finset SmoothMobiusCorrection.PrimeIdeal) :
-    IdealEuler.deletePrimes S (idealRowHom u.val) ≠
-      IdealEuler.deletePrimes S (idealRowHom (1 : O)) := by
-  obtain ⟨P, hs, hb, hg, ho, he⟩ := exists_prime_embedding_after_deletion S 0
-  intro h
-  have hp := DFunLike.congr_fun h P.val
-  rw [he u, show (1 : O) = (1 : Oˣ).val from rfl, he 1, Units.val_one, map_one] at hp
-  apply hu
-  apply Units.ext
-  exact eisEmbedding_injective (by simpa using hp)
 
 end
 end SevenEighths.UnitSexticWitness

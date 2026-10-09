@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.GlobalPrincipalMass
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.AllocatedHomogeneous
 import OAI.NumberTheory.DirichletL.Energy.ChildState
-
 namespace OAI
 
 noncomputable section

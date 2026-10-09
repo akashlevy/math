@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialCommonTransform
-
 namespace OAI
 
 noncomputable section
@@ -9,7 +8,7 @@ open ActualEisensteinCubic CompletedGauss CanonicalQuadraticSieve ConcretePrimeR
 open FirstCauchyArithmetic SecondPassArithmetic UniqueFactorizationMonoid CanonicalRowCompletion
 namespace SevenEighths.InverseInitialLargePool
 open InverseInitialOverlap InverseInitialPoissonBridge InverseInitialKernelBridge
-open InverseInitialRayAttachment InverseInitialArithmetic InverseInitialCommonPool
+open InverseInitialRayAttachment InverseInitialArithmetic
 open InverseInitialEnergyCallerWindow InverseInitialCommonForcing InverseInitialCommonTuples
 local notation "Eis"=>ActualEisensteinCubic.O
 local notation "O"=>ActualEisensteinCubic.O
@@ -94,75 +93,6 @@ theorem residual_eq_large_input
   by_cases hc : (∏i∈A,i.val)∈columns S P j
   · simp only [hc,hsub hc,ite_true]
   · simp only [hc,ite_false,ite_self]
-
-theorem residual_eq_large_forcing
-    (W:ℝ→ℂ)(Z r z G b:ℝ)(hZ:0<Z)(hW:∀x,W x≠0→x≤b)
-    {P j:Ideal Eis}(hP:Admissible P)(hj:j∣P)
-    (F:Finset (Ideal Eis))(hF:∀I∈F,Admissible I)
-    (hsub:columns (originalSource Z r b) P j⊆F)
-    (η:Ideal Eis→*ℂ)(u:Eis) :
-    letI : ∀i:primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-      fun i=>by rw [poolPrimary_span F hF i];infer_instance
-    residualNormalizedPolynomial (originalSource Z r b) P j η (fun _=>1) W Z r z G u =
-      ((Z^(-(r+z-2*G)/2):ℝ):ℂ)*inputConjugateRow
-        (poolPrimary F) (poolPrimary_good F hF) Finset.univ
-        (elementCharacter η) (primaryGenerator j) 1 1
-        (fun A=>if residual P j∣(∏i∈A,i.val) then
-          residualOverlapWindow P j W Z z G
-            (((∏i∈A,i.val).absNorm:ℝ)/Z^(r+z-2*G)) else 0) u := by
-  let : ∀i:primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-    fun i=>by rw [poolPrimary_span F hF i];infer_instance
-  rw [residual_eq_large_input _ F hP hj hF hsub η (fun _=>1) W Z r z G u]
-  simp only [one_mul]
-  apply congrArg (fun v:ℂ=>((Z^(-(r+z-2*G)/2):ℝ):ℂ)*v)
-  rw [initial_input_row (poolPrimary F) (poolPrimary_good F hF),
-    initial_input_row (poolPrimary F) (poolPrimary_good F hF)]
-  unfold supportConjugateSum
-  apply Finset.sum_congr rfl
-  intro A hA
-  have he := common_selector_window W Z r z G b hZ hW hP hj F hF A
-  have hm : rowCoprimeMask (fun i:primePool F=>Ideal.span {poolPrimary F i}) A
-      (primaryGenerator j)=rowCoprimeMask (fun i:primePool F=>i.val) A
-        (primaryGenerator j) := by
-    congr 1
-    funext i
-    exact poolPrimary_span F hF i
-  dsimp only
-  rw [hm]
-  linear_combination
-    (supportMobius (fun i:primePool F=>Ideal.span {poolPrimary F i}) A *
-      elementCharacter η (∏i∈A,poolPrimary F i) *
-      star (finiteSquarefreeRow (fun i:primePool F=>Ideal.span {poolPrimary F i})
-        (poolPrimary_good F hF) A u))*he
-
-variable {κ:Type*}
-theorem original_tuples_large_input
-    (W:ℝ→ℂ)(Z r z G b:ℝ)(hZ:0<Z)(hW:∀x,W x≠0→x≤b)
-    (T:Finset κ)(P:κ→Ideal Eis)(j:Ideal Eis)
-    (hP:∀k∈T,Admissible (P k))(hj:∀k∈T,j∣P k)
-    (F:Finset (Ideal Eis))(hF:∀I∈F,Admissible I)
-    (hsub:tupleColumns (originalSource Z r b) T P j⊆F)
-    (η:Ideal Eis→*ℂ)(a:κ→ℂ)(u:Eis) :
-    let S := originalSource Z r b
-    letI : ∀i:primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-      fun i=>by rw [poolPrimary_span F hF i];infer_instance
-    (∑k∈T,a k*residualNormalizedPolynomial S (P k) j η (fun _=>1) W Z r z G u)=
-      ((Z^(-(r+z-2*G)/2):ℝ):ℂ)*inputConjugateRow
-        (poolPrimary F) (poolPrimary_good F hF) Finset.univ
-        (elementCharacter η) (primaryGenerator j) 1 1
-        (fun A=>∑k∈T,a k*(if residual (P k) j∣(∏i∈A,i.val) then
-          residualOverlapWindow (P k) j W Z z G
-            (((∏i∈A,i.val).absNorm:ℝ)/Z^(r+z-2*G)) else 0)) u := by
-  intro S
-  let : ∀i:primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-    fun i=>by rw [poolPrimary_span F hF i];infer_instance
-  rw [input_finset_sum (poolPrimary F) (poolPrimary_good F hF)]
-  rw [Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro k hk
-  rw [residual_eq_large_forcing W Z r z G b hZ hW (hP k hk) (hj k hk) F hF
-    (fun c hc=>hsub (Finset.mem_biUnion.mpr ⟨k,hk,hc⟩)) η u]
-  ring
 
 end SevenEighths.InverseInitialLargePool
 

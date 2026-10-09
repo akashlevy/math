@@ -2,7 +2,6 @@ import Mathlib.NumberTheory.GaussSum
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Ring
-
 namespace OAI
 
 namespace SevenEighths.ProbeGauss
@@ -21,19 +20,6 @@ theorem frequencyGauss_nonzero {F : Type*} [Field F] [Fintype F]
     (ξ : MulChar F ℂ) (ψ : AddChar F ℂ) {h : F} (hh : h ≠ 0) :
     frequencyGauss ξ ψ h = ξ⁻¹ h * gaussSum ξ ψ := by
   exact gaussSum_mulShift_eq ξ ψ (Units.mk0 h hh)
-
-theorem frequencyGauss_zero_nonprincipal {F : Type*} [Field F] [Fintype F]
-    (ξ : MulChar F ℂ) (ψ : AddChar F ℂ) (hξ : ξ ≠ 1) :
-    frequencyGauss ξ ψ 0 = 0 := by
-  simpa [frequencyGauss] using MulChar.sum_eq_zero_of_ne_one hξ
-
-theorem frequencyGauss_nonprincipal {F : Type*} [Field F] [Fintype F]
-    (ξ : MulChar F ℂ) (ψ : AddChar F ℂ) (hξ : ξ ≠ 1) (h : F) :
-    frequencyGauss ξ ψ h = ξ⁻¹ h * gaussSum ξ ψ := by
-  by_cases hh : h = 0
-  · subst h
-    rw [frequencyGauss_zero_nonprincipal ξ ψ hξ, MulChar.map_zero, zero_mul]
-  · exact frequencyGauss_nonzero ξ ψ hh
 
 theorem frequencyGauss_principal {F : Type*} [Field F] [Fintype F]
     (ψ : AddChar F ℂ) (hψ : ψ ≠ 1) (h : F) :

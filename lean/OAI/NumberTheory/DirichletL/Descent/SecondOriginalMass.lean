@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondActualMass
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

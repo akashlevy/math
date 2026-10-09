@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRowCountEndpoint
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-
 namespace OAI
 
 noncomputable section
@@ -19,11 +18,6 @@ lemma original_exponent_identity (a d R q : ℝ) :
     sourceExponent a d R q=3/16+relativeExponent (2*a-1) d R q := by
   unfold sourceExponent relativeExponent
   ring
-
-lemma frequency_slope_bounds (δ R : ℝ) (_hδ : 0≤δ) (hδ1 : δ≤1)
-    (hRlo : 1-δ≤R) (hRhi : R≤139/96) :
-    4/25≤R+δ/2-17/50 ∧ R+δ/2-17/50≤2 := by
-  constructor <;> linarith
 
 lemma relative_extend (δ d R q ζ : ℝ) (hζ : 0≤ζ) (hd : d≤13/16+ζ)
     (hslo : 0≤R+δ/2-17/50) (hshi : R+δ/2-17/50≤2) :
@@ -70,14 +64,6 @@ lemma floor_source_margin (q Δ ζ d : ℝ) (hq : q≤1/100)
   rw [original_exponent_identity]
   norm_num only at *
   unfold relativeExponent at he ⊢
-  nlinarith
-
-lemma intermediate_source_margin (δ q Δ d : ℝ) (_hδ : 0≤δ) (hδ1 : δ≤5/6)
-    (hq : q≤δ/2) (hd : d≤1/2) :
-    sourceExponent ((1+δ)/2) d (76/75-(2/3)*δ) q-(3/16+Δ)≤-49/14400-Δ := by
-  have hs : 0≤(76/75-(2/3)*δ)+δ/2-17/50 := by linarith
-  have hm := mul_le_mul_of_nonneg_right hd hs
-  unfold sourceExponent
   nlinarith
 
 def realLoss (N : ℕ) (d e eps heightLoss mesh : ℝ) : ℝ :=

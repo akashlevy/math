@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.InitialProduct
 import OAI.NumberTheory.DirichletL.Detector.RawMellinTerm
-
 namespace OAI
 
 noncomputable section

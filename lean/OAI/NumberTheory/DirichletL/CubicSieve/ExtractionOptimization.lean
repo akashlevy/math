@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.FullNorm
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

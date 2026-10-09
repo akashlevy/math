@@ -1,75 +1,23 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.DyadicKernel
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 namespace InitialMeanSquare
 
@@ -159,179 +107,12 @@ end
 open ActualEisensteinCubic SecondPassArithmetic SecondPassIntegration JointLogSeparation
 open FirstPassCubeLabels (primeProductNorm normalizedColumn columnLog firstLogDensity)
 
-def initialBinCost {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (F R : Finset ι) (Ψ : O →* ℂ) (m : O) (ray : SecondRayIndex)
-    (K : Finset ι → Finset ι → Finset O) (Z H M ε : ℝ) (j : SecondLogIndex)
-    (windows : Fin 7 → ℝ → ℂ) (B : Frequency → ℝ) : ℝ :=
-  let s := secondLogSector p ∅ F K R Z M j
-  let X := initialLogColumn Z (primeProductNorm p R) j
-  let r := primeSubsetGenerator (fun i => Ideal.span {p i}) R
-  (H*primeProductNorm p R/Z^2*‖secondRayCoefficient ray‖*(secondLogK j*Real.exp 2)^ε)*
-    (∫ t₁ : ℝ, ∫ t₂ : ℝ, ∫ t₃ : ℝ, B (t₁,t₂,t₃)*
-      sourceGeometricMean p hp hcop hg F (secondRayMinus Ψ ray) (secondRayPlus Ψ ray)
-        (m*r) (s.image (sourceObservation p)) (windows 5) (windows 6) X X (t₁,t₂,t₃))
-
-theorem initial_nonzero_source_transfer
-    (U : ℝ → ℂ) (hUc : HasCompactSupport U) (hUs : ContDiff ℝ ∞ U)
-    (g W : 𝓢(ℝ,ℂ)) (A : ℝ) (hA : 0 ≤ A)
-    (hU : ∀ t, g t ≠ 0 → U t=1) (hgA : ∀ t, g t ≠ 0 → |t| ≤ A)
-    (ε : ℝ) (hε : 0 < ε) (N J : ℕ) :
-    ∃ (windows : Fin 7 → ℝ → ℂ) (C Cₛ : ℝ), 0 ≤ C ∧ 0 ≤ Cₛ ∧
-      (∀ i, HasCompactSupport (windows i)) ∧ (∀ i, ContDiff ℝ ∞ (windows i)) ∧
-      ∀ {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-        [∀ i, (Ideal.span {p i}).IsMaximal]
-        (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-        (hg : ∀ i, lambda ∉ Ideal.span {p i})
-        (hinj : Function.Injective (fun i => Ideal.span {p i}))
-        (_hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-        (_hpr : ∀ i, lambda^2 ∣ p i-1)
-        (F : Finset ι) (Ψ : O →* ℂ) (m : O)
-        (K : Finset ι → Finset ι → Finset O) (Z H Kmax : ℝ),
-        0 < Z → 0 < H → (∀ a, ‖Ψ a‖ ≤ 1) →
-        (∀ R ∈ F.powerset, ∀ x ∈ secondSupportedSector p F K R Z A,
-          elementNorm (sourceObservation p x).1 ≤ Kmax) →
-        ∃ B : SecondRayIndex → Finset ι → SecondLogIndex → Frequency → ℝ,
-          (∀ ray R j q, 0 ≤ B ray R j q) ∧
-          (∀ ray R j q, (1+H*secondLogK j*(primeProductNorm p R)^2/Z^2)^N*B ray R j q ≤
-            Cₛ*firstLogDensity J q.1*firstLogDensity J q.2.1*firstLogDensity J q.2.2) ∧
-          ‖truncatedSecondSource p hp hg hinj F Ψ m 1 1
-            (fun V => normalizedColumn p (fun T => g (columnLog p Z T)) V)
-            W H (fun C E => (K C E).erase 0)‖ ≤
-            C*(∑ ray : SecondRayIndex, ∑ R ∈ boundedPrimeSupports p F (Z*Real.exp A),
-              ∑ j ∈ secondLogBinBox (Z*Real.exp A) Kmax,
-                initialBinCost p hp hcop hg F R Ψ m ray K Z H A ε j windows (B ray R j)) := by
-  obtain ⟨windows,C,Cₛ,hC,hCₛ,hwc,hws,ht⟩ :=
-    initial_bin_transfer U hUc hUs g W A hA hU hgA ε hε N J
-  refine ⟨windows,C,Cₛ,hC,hCₛ,hwc,hws,?_⟩
-  intro ι _ p hp _ hcop hg hinj hc hpr F Ψ m K Z H Kmax hZ hH hΨ hK
-  let B : SecondRayIndex → Finset ι → SecondLogIndex → Frequency → ℝ :=
-    fun ray R j => Classical.choose
-      (ht p hp hcop hg hinj hc hpr F R Ψ m ray K Z H A j hZ hH hΨ)
-  have hB (ray : SecondRayIndex) (R : Finset ι) (j : SecondLogIndex) :=
-    Classical.choose_spec (ht p hp hcop hg hinj hc hpr F R Ψ m ray K Z H A j hZ hH hΨ)
-  refine ⟨B,fun ray R j => (hB ray R j).1,fun ray R j => (hB ray R j).2.1,?_⟩
-  apply (initial_nonzero_source_norm_le_bins p hp hcop hg hinj hc hpr F Ψ m
-    g W Z H A Kmax hZ hgA K hK).trans
-  simp only [Finset.mul_sum]
-  apply Finset.sum_le_sum
-  intro ray hray
-  apply Finset.sum_le_sum
-  intro R hR
-  apply Finset.sum_le_sum
-  intro j hj
-  convert (hB ray R j).2.2 using 1 ; dsimp only [initialBinCost, B] ; ring
-
 end InitialMeanSquare
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace CompletedGauss
 
 section
 open ActualEisensteinCubic CanonicalQuadraticSieve CompletedDyadic
-
-theorem completed_smooth_series_rowPhase
-    (V₀ V₁ V₂ : ℝ→ℂ) (M₀ M₁ M₂ : ℝ)
-    (hM₀ : 0≤M₀) (hM₁ : 0≤M₁) (hM₂ : 0≤M₂)
-    (hV₀ : ∀y,V₀ y≠0 → |y|≤M₀) (hV₁ : ∀y,V₁ y≠0 → |y|≤M₁)
-    (hV₂ : ∀y,V₂ y≠0 → |y|≤M₂)
-    (hV₀n : ∀y,‖V₀ y‖≤1) (hV₁n : ∀y,‖V₁ y‖≤1) (hV₂n : ∀y,‖V₂ y‖≤1)
-    (W : ℝ→ℂ) (a b : ℝ) (ha : 0<a)
-    (hsupp : Function.support W⊆Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    (deltaLoss ρ q : ℝ) (hδ : 0<deltaLoss) (hρ : 0<ρ) (hq : 1<q) :
-    ∃C : ℝ,0<C ∧ ∀K Y H : ℝ,1≤K → 0<Y → 0<H →
-    ∀S T : (ℕ×ℕ×ℕ)→Finset (Ideal O),
-      (∀i,∀I∈S i,I≠0 ∧ (Ideal.absNorm I:ℝ)≤(2:ℝ)^i.2.2) →
-      (∀i,∀I∈T i,I≠0 ∧ (Ideal.absNorm I:ℝ)≤(2:ℝ)^i.2.1) →
-    ∀β : (ℕ×ℕ×ℕ)→Ideal O→Ideal O→ℂ,
-      (∀i,∀n∈S i,∀v∈T i,‖β i n v‖≤
-        1/(Real.sqrt ((2:ℝ)^i.2.2)*(2:ℝ)^i.2.1*ramifiedScale ρ q i.1*Real.sqrt H)) →
-    ∀σ : (ℕ×ℕ×ℕ)→idealRange K→ℂ,(∀i k,‖σ i k‖≤1) →
-      (∀k,Summable (fun i => ‖σ i k*completedSmoothDyadicBlock V₀ V₁ V₂ W K Y ρ q S T β i k‖)) ∧
-      (∑k : idealRange K,‖∑'i : ℕ×ℕ×ℕ,
-        σ i k*completedSmoothDyadicBlock V₀ V₁ V₂ W K Y ρ q S T β i k‖^2)
-        ≤C*(K*Y)^(2*deltaLoss)*(K+Y)/H := by
-  obtain ⟨A,hA⟩ := exists_nat_gt (deltaLoss+1/2)
-  obtain ⟨Cq,hCq,hquad⟩ := completed_smooth_quadratic V₀ V₁ V₂ M₀ M₁ M₂
-    hM₀ hM₁ hM₂ hV₀ hV₁ hV₂ hV₀n hV₁n hV₂n W a b ha hsupp hW A (2*deltaLoss) (by positivity)
-  obtain ⟨Cs,hCs,hsum⟩ := normMajorant_sum_bound deltaLoss A ρ q hδ hA hρ hq
-  refine ⟨2*Cq*Cs^2,by positivity,?_⟩
-  intro K Y H hK hY hH S T hS hT β hβ σ hσ
-  have hKp : 0<K := by linarith
-  have hqp : 0<q := by linarith
-  let g : (ℕ×ℕ×ℕ)→ℝ := fun i => Real.sqrt Cq *
-    normMajorant deltaLoss A K Y⁻¹ (ramifiedScale ρ q i.1) H ((2:ℝ)^i.2.2) ((2:ℝ)^i.2.1)
-  have hg0 (i : ℕ×ℕ×ℕ) : 0≤g i := by
-    dsimp [g]
-    exact mul_nonneg (Real.sqrt_nonneg _) (normMajorant_nonneg _ _ _ _ _ _ _ _
-      hKp (by positivity) (ramifiedScale_pos ρ q hρ hqp _) hH (by positivity) (by positivity))
-  have henergy (i : ℕ×ℕ×ℕ) :
-      (∑k : idealRange K,‖σ i k*completedSmoothDyadicBlock V₀ V₁ V₂ W K Y ρ q S T β i k‖^2)
-        ≤(g i)^2 := by
-    let U : ℝ := (2:ℝ)^i.2.2
-    let B : ℝ := (2:ℝ)^i.2.1
-    let r : ℝ := ramifiedScale ρ q i.1
-    let R : ℝ := Y⁻¹*r^3*B^3*U
-    have hU : 1≤U := one_le_pow₀ (by norm_num)
-    have hB : 1≤B := one_le_pow₀ (by norm_num)
-    have hUp : 0<U := by positivity
-    have hBp : 0<B := by positivity
-    have hr : 0<r := ramifiedScale_pos ρ q hρ hqp _
-    have hR : 0<R := by dsimp [R]; positivity
-    have h := hquad K U B (1/(Real.sqrt U*B*r*Real.sqrt H)) R
-      hK hU hB (by positivity) hR (S i) (T i) (hS i) (hT i) (β i) (hβ i)
-      (fun k => Real.log ((Ideal.absNorm k.val:ℝ)/K))
-      (fun n => Real.log ((Ideal.absNorm n:ℝ)/U))
-      (fun v => Real.log ((Ideal.absNorm v:ℝ)/B))
-    change (∑k,‖completedSmoothDyadicBlock V₀ V₁ V₂ W K Y ρ q S T β i k‖^2)≤_ at h
-    have hphase : (∑k : idealRange K,‖σ i k*completedSmoothDyadicBlock V₀ V₁ V₂ W K Y ρ q S T β i k‖^2)≤
-        ∑k : idealRange K,‖completedSmoothDyadicBlock V₀ V₁ V₂ W K Y ρ q S T β i k‖^2 := by
-      apply Finset.sum_le_sum
-      intro k _
-      apply pow_le_pow_left₀ (norm_nonneg _)
-      rw [norm_mul]
-      exact mul_le_of_le_one_left (norm_nonneg _) (hσ i k)
-    apply (hphase.trans h).trans
-    have he : Cq*(K*(U*B))^(2*deltaLoss)*(K+U*B)*(U*B)*
-        (1/(Real.sqrt U*B*r*Real.sqrt H))^2/(1+R)^(2*A)=
-        Cq*((K*(U*B))^(2*deltaLoss)*(K+U*B)/(B*r^2*H)/(1+R)^(2*(A:ℝ))) := by
-      rw [show 2*(A:ℝ)=((2*A:ℕ):ℝ) by norm_num,Real.rpow_natCast]
-      simp only [one_div,inv_pow,mul_pow,Real.sq_sqrt hUp.le,Real.sq_sqrt hH.le]
-      field_simp
-
-    rw [he]
-    have hm := smooth_energy_le_normMajorant_sq deltaLoss A K Y⁻¹ r H U B
-      hKp (by positivity) hr hH hUp hBp
-    calc
-      _ ≤ Cq*(normMajorant deltaLoss A K Y⁻¹ r H U B)^2 := mul_le_mul_of_nonneg_left hm hCq.le
-      _ = (g i)^2 := by dsimp [g,U,B,r]; rw [mul_pow,Real.sq_sqrt hCq.le]
-  obtain ⟨hs,hb⟩ := hsum K Y H hKp hY hH
-  have hm := finite_tsum_energy_bound
-    (fun i k => σ i k*completedSmoothDyadicBlock V₀ V₁ V₂ W K Y ρ q S T β i k) g hg0
-    (hs.mul_left (Real.sqrt Cq)) henergy
-  refine ⟨hm.1,hm.2.trans ?_⟩
-  have hb' : (∑'i,g i)≤Real.sqrt Cq*(Cs*(K*Y)^deltaLoss*(Real.sqrt K+Real.sqrt Y)/Real.sqrt H) := by
-    rw [show g=(fun i => Real.sqrt Cq*normMajorant deltaLoss A K Y⁻¹
-      (ramifiedScale ρ q i.1) H ((2:ℝ)^i.2.2) ((2:ℝ)^i.2.1)) from rfl,tsum_mul_left]
-    exact mul_le_mul_of_nonneg_left hb (Real.sqrt_nonneg _)
-  have hsq := pow_le_pow_left₀ (tsum_nonneg hg0) hb' 2
-  apply hsq.trans
-  have hroot : (Real.sqrt K+Real.sqrt Y)^2≤2*(K+Y) := by
-    nlinarith [Real.sq_sqrt hKp.le,Real.sq_sqrt hY.le,
-      sq_nonneg (Real.sqrt K-Real.sqrt Y)]
-  simp only [mul_pow,div_pow,Real.sq_sqrt hCq.le,Real.sq_sqrt hH.le]
-  have hp : ((K*Y)^deltaLoss)^2=(K*Y)^(2*deltaLoss) := by
-    rw [←Real.rpow_mul_natCast (mul_pos hKp hY).le]
-    congr 1
-    ring
-  rw [hp]
-  calc
-    _ ≤ Cq*(Cs^2*(K*Y)^(2*deltaLoss)*(2*(K+Y))/H) := by
-      apply mul_le_mul_of_nonneg_left _ hCq.le
-      exact div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_left hroot (by positivity)) hH.le
-    _ = _ := by ring
 
 end
 
@@ -543,7 +324,7 @@ theorem reflectedDyadicCoefficient_norm {ι : Type*} [Fintype ι]
       apply one_div_le_one_div_of_le (by positivity)
       exact mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hroot hr.le) hbase.le
 
-open ActualEisensteinCubic CanonicalQuadraticSieve CompletedDyadic
+open CanonicalQuadraticSieve CompletedDyadic
 
 def reflectedBranchBlock {ι : Type*} [Fintype ι]
     (P : ι→Ideal O) [∀i,(P i).IsMaximal] (hg : ∀i,lambda∉P i)
@@ -553,45 +334,6 @@ def reflectedBranchBlock {ι : Type*} [Fintype ι]
     (σ : (ℕ×ℕ×ℕ)→idealRange K→ℂ) (i : ℕ×ℕ×ℕ) (k : idealRange K) : ℂ :=
   σ i k*completedSmoothDyadicBlock completedShellWindow completedShellWindow completedShellWindow
     W K Y ρ q S T (fun v => reflectedDyadicCoefficient P hg j e (η v) (ramifiedScale ρ q v.1)) i k
-
-theorem completed_reflected_branch_series
-    (W : ℝ→ℂ) (a b : ℝ) (ha : 0<a)
-    (hsupp : Function.support W⊆Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    (deltaLoss ρ q : ℝ) (hδ : 0<deltaLoss) (hρ : 0<ρ) (hq : 1<q) :
-    ∃C : ℝ,0<C ∧ ∀K Y : ℝ,1≤K → 0<Y →
-    ∀{ι : Type*} [Fintype ι] (P : ι→Ideal O) [∀i,(P i).IsMaximal]
-      (hg : ∀i,lambda∉P i) (j : ι→ℕ) (e : ι→Fin 3),
-    ∀S T : (ℕ×ℕ×ℕ)→Finset (Ideal O),
-      (∀i,∀I∈S i,I≠0 ∧ (2:ℝ)^i.2.2/2≤(Ideal.absNorm I:ℝ) ∧ (Ideal.absNorm I:ℝ)≤(2:ℝ)^i.2.2) →
-      (∀i,∀I∈T i,I≠0 ∧ (2:ℝ)^i.2.1/2≤(Ideal.absNorm I:ℝ) ∧ (Ideal.absNorm I:ℝ)≤(2:ℝ)^i.2.1) →
-    ∀η : (ℕ×ℕ×ℕ)→Ideal O→Ideal O→ℂ,
-      (∀i,∀n∈S i,∀v∈T i,‖η i n v‖≤1) →
-    ∀σ : (ℕ×ℕ×ℕ)→idealRange K→ℂ,(∀i k,‖σ i k‖≤1) →
-      (∀k,Summable (fun i => ‖reflectedBranchBlock P hg j e W K Y ρ q S T η σ i k‖)) ∧
-      (∑k : idealRange K,‖∑'i : ℕ×ℕ×ℕ,reflectedBranchBlock P hg j e W K Y ρ q S T η σ i k‖^2)
-        ≤C*(K*Y)^(2*deltaLoss)*(K+Y)/
-          ((Ideal.absNorm (reflectionExtractedDivisor P j e 0):ℝ)*
-            (Ideal.absNorm (reflectionExtractedDivisor P j e 2):ℝ)) := by
-  have hl : 0≤Real.log 2 := Real.log_nonneg (by norm_num)
-  obtain ⟨C,hC,h⟩ := completed_smooth_series_rowPhase
-    completedShellWindow completedShellWindow completedShellWindow (Real.log 2) (Real.log 2) (Real.log 2)
-    hl hl hl completedShellWindow_support completedShellWindow_support completedShellWindow_support
-    completedShellWindow_norm completedShellWindow_norm completedShellWindow_norm
-    W a b ha hsupp hW deltaLoss ρ q hδ hρ hq
-  refine ⟨C,hC,?_⟩
-  intro K Y hK hY ι _ P _ hg j e S T hS hT η hη σ hσ
-  have hn (v : Fin 3) : 0<(Ideal.absNorm (reflectionExtractedDivisor P j e v):ℝ) := by
-    exact_mod_cast Nat.pos_of_ne_zero (fun hz =>
-      reflectionExtractedDivisor_ne_zero P (fun i => NeZero.ne (P i)) j e v
-        (Ideal.absNorm_eq_zero_iff.mp hz))
-  exact h K Y _ hK hY (mul_pos (hn 0) (hn 2)) S T
-    (fun i I hI => ⟨(hS i I hI).1,(hS i I hI).2.2⟩)
-    (fun i I hI => ⟨(hT i I hI).1,(hT i I hI).2.2⟩)
-    (fun v => reflectedDyadicCoefficient P hg j e (η v) (ramifiedScale ρ q v.1))
-    (fun i n hn v hv => reflectedDyadicCoefficient_norm P hg j e (η i)
-      (ramifiedScale ρ q i.1) _ _ (ramifiedScale_pos ρ q hρ (by linarith) _) (by positivity) (by positivity)
-      n v (hS i n hn).1 (hT i v hv).1 (hη i n hn v hv) (hS i n hn).2.1 (hT i v hv).2.1)
-    σ hσ
 
 end CompletedGauss
 

@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstSectorTransform
 import OAI.NumberTheory.DirichletL.Moments.SecondSourcePoisson
 import OAI.NumberTheory.DirichletL.Moments.SecondScaled
-
 namespace OAI
 
 noncomputable section

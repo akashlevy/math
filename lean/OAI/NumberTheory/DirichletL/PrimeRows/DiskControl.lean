@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.DetectorBins
 import OAI.NumberTheory.DirichletL.Hecke.DyadicControl
-
 namespace OAI
 
 noncomputable section

@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Detector.GlobalHolomorphic
 import OAI.NumberTheory.DirichletL.Detector.HighEulerRational
 import OAI.NumberTheory.DirichletL.Detector.PrincipalProduct
 import OAI.NumberTheory.DirichletL.Hecke.Euler
-
 namespace OAI
 
 noncomputable section
@@ -128,15 +127,6 @@ theorem globalClosedCorrection_analytic_z (η : HeckeFamily.Character) (S : Fins
     exact idealClosedCorrection_bound η P.val (hS.norm_four P.val P.property) x w z hx hw hz.le
   · exact hS.half
 
-theorem globalClosedCorrection_principal (η : HeckeFamily.Character) (S : Finset Id)
-    (hs : ∀P : PrimeIdeal,P.val∉S → CanonicalQuadraticSieve.Supported P.val) (x : ℂ) :
-    globalClosedCorrection η S x 1 (1/6)=principalCorrection η S x := by
-  apply tprod_congr
-  intro P
-  unfold idealClosedCorrection principalLocal
-  rw [←targetMonoid_primaryGenerator η P.val.val (hs P.val P.property)]
-  rfl
-
 theorem exists_uniform_global_cutoff :
     ∃N : ℕ,4≤N ∧ ∀S : Finset Id,
       (∀P : PrimeIdeal,Ideal.absNorm P.val≤N → P.val∈S) → CorrectionTail S := by
@@ -161,13 +151,6 @@ theorem exists_uniform_global_cutoff :
     exact Summable.tsum_le_tsum_of_inj inc hi
       (fun P _=>globalPrimeDefectBound_nonneg P.val) (fun _=>le_rfl)
       (globalPrimeDefectBound_summable.subtype _) (globalPrimeDefectBound_summable.subtype _)
-
-theorem exists_global_correction (S₀ : Finset Id) :
-    ∃S : Finset Id,S₀⊆S ∧ CorrectionTail S := by
-  obtain ⟨N,hN,hcut⟩ := exists_uniform_global_cutoff
-  refine ⟨S₀∪smallPrimeSet N,Finset.subset_union_left,hcut _ ?_⟩
-  intro P hP
-  exact Finset.mem_union_right _ ((mem_smallPrimeSet N P).mpr hP)
 
 end SevenEighths.ProbePhysical
 end

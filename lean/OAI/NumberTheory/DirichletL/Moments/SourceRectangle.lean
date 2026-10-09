@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.SourceProfileMass
 import OAI.NumberTheory.DirichletL.Moments.SourceRow
 import OAI.NumberTheory.DirichletL.Moments.DivisorRowEnergy
 import OAI.NumberTheory.DirichletL.Moments.SourceLiveColumn
-
 namespace OAI
 
 noncomputable section
@@ -158,54 +157,6 @@ theorem source_polynomial_eq_full_masked_rectangle (η : Character) (m A z : O) 
   simp only [profileCoefficient,pack_product,pack_slot,pack_left,pack_right]
   ring
 
-theorem fullMaskedRectangle_pullback (η : Character) (m A z : O) (t : ℝ)
-    (slots : ι→Finset (Ideal O)) (ν Wslot : ι→Ideal O→ℂ)
-    (R L : Ideal O) (W₁ W₂ : ℝ→ℂ) (X₁ X₂ Y₁ Y₂ : ℝ) (B₁ B₂ : Ideal O) :
-    fullMaskedRectangle η m A z t slots ν Wslot R L W₁ W₂ X₁ X₂ Y₁ Y₂ B₁ B₂ =
-      fullMaskedRectangle η m A z t slots ν Wslot R L W₁ W₂
-        (X₁/Ideal.absNorm B₁) (X₂/Ideal.absNorm B₂)
-        (Y₁/Ideal.absNorm B₁) (Y₂/Ideal.absNorm B₂) 1 1 := by
-  unfold fullMaskedRectangle
-  simp only [one_mul,idealRectangle_extract]
-
-theorem pullback_same_product (X₁ X₂ Y₁ Y₂ T : ℝ) (B₁ B₂ : Ideal O)
-    (hX : X₁*X₂=T) (hY : Y₁*Y₂=T) :
-    (X₁/Ideal.absNorm B₁)*(X₂/Ideal.absNorm B₂)=T/(Ideal.absNorm B₁*Ideal.absNorm B₂:ℝ) ∧
-    (Y₁/Ideal.absNorm B₁)*(Y₂/Ideal.absNorm B₂)=T/(Ideal.absNorm B₁*Ideal.absNorm B₂:ℝ) :=
-  extracted_product_scale X₁ X₂ Y₁ Y₂ T B₁ B₂ hX hY
-
-theorem fullMaskedRectangle_modulus_one [DecidableEq ι]
-    (η : Character) (m A z : O) (t : ℝ)
-    (slots : ι→Finset (Ideal O)) (ν Wslot : ι→Ideal O→ℂ)
-    (L : Ideal O) (W₁ W₂ : ℝ→ℂ) (X₁ X₂ Y₁ Y₂ : ℝ) (B₁ B₂ : Ideal O) :
-    fullMaskedRectangle η m A z t slots ν Wslot 1 L W₁ W₂ X₁ X₂ Y₁ Y₂ B₁ B₂ =
-      CenteredMomentDivisorRowEnergy.maskedRectangle η m A z t slots
-        (fun i I=>ν i I*Wslot i I) L W₁ W₂
-        (X₁/Ideal.absNorm B₁) (X₂/Ideal.absNorm B₂)
-        (Y₁/Ideal.absNorm B₁) (Y₂/Ideal.absNorm B₂) := by
-  simp only [fullMaskedRectangle,CenteredMomentDivisorRowEnergy.maskedRectangle,
-    isCoprime_one_right,ite_true,one_mul,idealRectangle_extract]
-  apply Finset.sum_congr (by ext; simp)
-  intro v hv
-  rfl
-
-theorem source_polynomial_eq_maskedRectangle [DecidableEq ι]
-    (η : Character) (m A z : O) (t : ℝ)
-    (slots : ι→Finset (Ideal O)) (S₁ S₂ : Finset (Ideal O))
-    (L : Ideal O) (ν : ι→Ideal O→ℂ) (Wslot : ι→ℝ→ℂ) (P : ι→ℝ)
-    (W₁ W₂ : ℝ→ℂ) (X₁ X₂ Y₁ Y₂ : ℝ) (B₁ B₂ : Ideal O)
-    (h₁ : PlainCoverage S₁ W₁ B₁ X₁ Y₁) (h₂ : PlainCoverage S₂ W₂ B₂ X₂ Y₂) :
-    (∑ I∈finiteColumns (tuplePool slots S₁ S₂),
-      finiteColumnCoefficient (tuplePool slots S₁ S₂)
-        (profileCoefficient 1 ν Wslot P W₁ W₂ X₁ X₂ Y₁ Y₂ B₁ B₂ L) I * rowWeight η m A z t I)=
-      CenteredMomentDivisorRowEnergy.maskedRectangle η m A z t slots
-        (fun i I=>ν i I*Wslot i ((Ideal.absNorm I:ℝ)/P i)) L W₁ W₂
-        (X₁/Ideal.absNorm B₁) (X₂/Ideal.absNorm B₂)
-        (Y₁/Ideal.absNorm B₁) (Y₂/Ideal.absNorm B₂) :=
-  (source_polynomial_eq_full_masked_rectangle η m A z t slots S₁ S₂ 1 L ν Wslot P
-    W₁ W₂ X₁ X₂ Y₁ Y₂ B₁ B₂ h₁ h₂).trans
-    (fullMaskedRectangle_modulus_one η m A z t slots ν _ L W₁ W₂ X₁ X₂ Y₁ Y₂ B₁ B₂)
-
 theorem plainCoverage_residualPool (S : Finset (Ideal O)) (W : ℝ→ℂ)
     (B C : Ideal O) (hC : C≠0) (X Y : ℝ) (h : PlainCoverage S W B X Y) :
     PlainCoverage (residualPool C hC S) W (B*C) X Y := by
@@ -234,33 +185,6 @@ theorem plainSupportPool_coverage (W : ℝ→ℂ) (b X Y : ℝ)
   · exact Finset.mem_union_left _ (cover X hX hi)
   · exact Finset.mem_union_right _ (cover Y hY hi)
 
-theorem extracted_plainSupportPool_coverage (W : ℝ→ℂ) (B : Ideal O) (hB : B≠0)
-    (b X Y : ℝ) (hW₀ : W 0=0) (hs : Function.support W⊆Set.Iic b)
-    (hX : 0<X) (hY : 0<Y) :
-    PlainCoverage (residualPool B hB (plainSupportPool b X Y)) W B X Y := by
-  simpa only [one_mul] using plainCoverage_residualPool (plainSupportPool b X Y)
-    W 1 B hB X Y (plainSupportPool_coverage W b X Y hW₀ hs hX hY)
-
-theorem supported_source_polynomial_eq_full_rectangle
-    (η : Character) (m A z : O) (t : ℝ)
-    (slots : ι→Finset (Ideal O)) (R L : Ideal O)
-    (ν : ι→Ideal O→ℂ) (Wslot : ι→ℝ→ℂ) (P : ι→ℝ)
-    (W₁ W₂ : ℝ→ℂ) (b₁ b₂ X₁ X₂ Y₁ Y₂ : ℝ) (B₁ B₂ : Ideal O)
-    (hB₁ : B₁≠0) (hB₂ : B₂≠0) (hw₁ : W₁ 0=0) (hw₂ : W₂ 0=0)
-    (hs₁ : Function.support W₁⊆Set.Iic b₁) (hs₂ : Function.support W₂⊆Set.Iic b₂)
-    (hX₁ : 0<X₁) (hX₂ : 0<X₂) (hY₁ : 0<Y₁) (hY₂ : 0<Y₂) :
-    let T := tuplePool slots
-      (residualPool B₁ hB₁ (plainSupportPool b₁ X₁ Y₁))
-      (residualPool B₂ hB₂ (plainSupportPool b₂ X₂ Y₂))
-    (∑ I∈finiteColumns T,finiteColumnCoefficient T
-      (profileCoefficient R ν Wslot P W₁ W₂ X₁ X₂ Y₁ Y₂ B₁ B₂ L) I*rowWeight η m A z t I)=
-      fullMaskedRectangle η m A z t slots ν (fun i I=>Wslot i ((Ideal.absNorm I:ℝ)/P i))
-        R L W₁ W₂ X₁ X₂ Y₁ Y₂ B₁ B₂ :=
-  source_polynomial_eq_full_masked_rectangle η m A z t slots _ _ R L ν Wslot P
-    W₁ W₂ X₁ X₂ Y₁ Y₂ B₁ B₂
-    (extracted_plainSupportPool_coverage W₁ B₁ hB₁ b₁ X₁ Y₁ hw₁ hs₁ hX₁ hY₁)
-    (extracted_plainSupportPool_coverage W₂ B₂ hB₂ b₂ X₂ Y₂ hw₂ hs₂ hX₂ hY₂)
-
 theorem liveBox_eq_tuplePool (S : (ι⊕Fin 2)→Finset (Ideal O)) (B : Tuple ι)
     (hB : ∀ i,B i≠0) :
     liveBox S B hB = tuplePool
@@ -277,26 +201,6 @@ theorem liveBox_eq_tuplePool (S : (ι⊕Fin 2)→Finset (Ideal O)) (B : Tuple ι
       fin_cases j
       · exact h (Sum.inr 0)
       · exact h (Sum.inr 1)
-
-theorem live_source_polynomial_eq_full_rectangle
-    (η : Character) (m A z : O) (t : ℝ)
-    (S : (ι⊕Fin 2)→Finset (Ideal O)) (B : Tuple ι) (hB : ∀ i,B i≠0)
-    (C R : Ideal O) (ν : ι→Ideal O→ℂ) (Wslot : ι→ℝ→ℂ) (P : ι→ℝ)
-    (W₁ W₂ : ℝ→ℂ) (X₁ X₂ Y₁ Y₂ : ℝ) (B₁ B₂ : Ideal O)
-    (h₁ : PlainCoverage (S (Sum.inr 0)) W₁ B₁ X₁ Y₁)
-    (h₂ : PlainCoverage (S (Sum.inr 1)) W₂ B₂ X₂ Y₂) :
-    (∑ I∈finiteColumns (liveBox S B hB),finiteColumnCoefficient (liveBox S B hB)
-      (liveProfile B C R ν Wslot P W₁ W₂ X₁ X₂ Y₁ Y₂ B₁ B₂) I * rowWeight η m A z t I)=
-      fullMaskedRectangle η m A z t
-        (fun i : liveIndices B=>residualPool (B (Sum.inl i.val)) (hB _) (S (Sum.inl i.val)))
-        (fun i=>ν i.val) (fun i I=>Wslot i.val ((Ideal.absNorm I:ℝ)/P i.val))
-        (R*C) 1 W₁ W₂ X₁ X₂ Y₁ Y₂ (B₁*B (Sum.inr 0)) (B₂*B (Sum.inr 1)) := by
-  rw [liveBox_eq_tuplePool]
-  exact source_polynomial_eq_full_masked_rectangle η m A z t _ _ _ (R*C) 1
-    (fun i : liveIndices B=>ν i.val) (fun i=>Wslot i.val) (fun i=>P i.val)
-    W₁ W₂ X₁ X₂ Y₁ Y₂ _ _
-    (plainCoverage_residualPool _ W₁ B₁ _ (hB _) X₁ Y₁ h₁)
-    (plainCoverage_residualPool _ W₂ B₂ _ (hB _) X₂ Y₂ h₂)
 
 end SevenEighths.CenteredMomentSourceRectangle
 

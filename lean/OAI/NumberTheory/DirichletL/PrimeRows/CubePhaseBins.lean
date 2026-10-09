@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.RayPhaseBins
 import OAI.NumberTheory.DirichletL.PrimeRows.CubeScale
-
 namespace OAI
 
 noncomputable section

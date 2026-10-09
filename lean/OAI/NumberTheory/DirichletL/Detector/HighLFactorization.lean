@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.FixedEuler
 import OAI.NumberTheory.DirichletL.Detector.GlobalCorrection
-
 namespace OAI
 
 noncomputable section

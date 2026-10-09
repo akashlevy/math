@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.RelativeCapacityRemoval
 import OAI.NumberTheory.DirichletL.Energy.State
 import OAI.NumberTheory.DirichletL.Moments.NaturalFixedRaySourceFiber
-
 namespace OAI
 
 noncomputable section
@@ -34,19 +33,6 @@ theorem compact_radial_summable (f : O→ℂ) (keep : O→Prop) (Φ : 𝓢(ℝ,�
       rwa [←ActualEisensteinCubic.eisEmbedding_norm_sq_eq_absNorm_span])
   simp [hΦ]
 
-omit [DecidableEq ι] in
-
-theorem energy_support (η : Character) (m A : O) (t : ℝ) (W₁ W₂ : ℝ→ℂ)
-    (S : ι→Finset (Ideal O)) (β : ι→Ideal O→ℂ) (P : ι→ℝ) (X₁ X₂ : ℝ)
-    (keep : O→Prop) (Φ : 𝓢(ℝ,ℂ)) (K : ℝ) :
-    energy η m A t W₁ W₂ S β P X₁ X₂ keep Φ K=
-      energy η m A t W₁ W₂ S β P X₁ X₂
-        (fun z=>keep z ∧ Φ (‖eisEmbedding z‖^2/K)≠0) Φ K := by
-  unfold energy
-  apply tsum_congr
-  intro z
-  by_cases hk : keep z <;> by_cases hp : Φ (‖eisEmbedding z‖^2/K)=0 <;> simp [hk,hp]
-
 omit [Fintype ι] in
 
 theorem selected_eq_positive (J : Finset ι) (η : Character) (m A z : O)
@@ -76,27 +62,6 @@ theorem unit_puncture_energy (η : Character) (t : ℝ) (W₁ W₂ : ℝ→ℂ)
   · simp only [ite_eq_left hk]
     rw [natural_unit_mask_positive (naturalRow η z (hz z hk))]
   · simp only [ite_eq_right hk]
-
-theorem eventual_state_conductor (bΦ Mcap : ℝ) (hb : 0≤bΦ) :
-    ∀ᶠZ:ℝ in atTop,1<Z ∧ ∀Bmask:ℝ,∀s:NaturalState Z Bmask bΦ,
-      s.width≤Mcap → ∀z:O,∀hz:z≠0,
-      s.radial.profile (‖eisEmbedding z‖^2/s.radial.scale)≠0 →
-      ((naturalRow s.character z hz).character.modulus.absNorm:ℝ)≤Z^(Mcap+1) := by
-  filter_upwards [eventually_gt_atTop (1:ℝ),eventually_ge_atTop ((fixedConductorFactor:ℝ)*bΦ)] with Z hZ hF
-  refine ⟨hZ,?_⟩
-  intro Bmask s hwidth z hz hΦ
-  have hn : ((Ideal.span {z}).absNorm:ℝ)≤bΦ*Z^s.rowWidth := by
-    rw [←ActualEisensteinCubic.eisEmbedding_norm_sq_eq_absNorm_span,←s.scale_eq]
-    exact (div_le_iff₀ s.radial.scale_pos).mp (s.radial_support hΦ)
-  have he:=(naturalRow s.character z hz).modulus_power_bound Z s.characterWidth s.rowWidth bΦ
-    (zero_lt_one.trans hZ) hb s.modulus_bound hn
-  have hm:Z^(s.characterWidth+s.rowWidth)≤Z^Mcap:=
-    Real.rpow_le_rpow_of_exponent_le hZ.le (by simpa [NaturalState.width,add_comm] using hwidth)
-  apply he.trans
-  calc
-    _≤Z*Z^Mcap:=mul_le_mul hF hm (Real.rpow_nonneg (zero_lt_one.trans hZ).le _)
-      (zero_lt_one.trans hZ).le
-    _=Z^(Mcap+1):=by rw [Real.rpow_add (zero_lt_one.trans hZ),Real.rpow_one];ring
 
 theorem eventual_row_conductor (bΦ Mrow : ℝ) (hb : 0≤bΦ) :
     ∀ᶠZ:ℝ in atTop,1<Z ∧ ∀Bmask:ℝ,∀s:NaturalState Z Bmask bΦ,

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRawFiber
-import OAI.NumberTheory.DirichletL.Hecke.DetectorDynamicSelection
-
+import OAI.NumberTheory.DirichletL.Hecke.DetectorWitnessRows
 namespace OAI
 
 noncomputable section

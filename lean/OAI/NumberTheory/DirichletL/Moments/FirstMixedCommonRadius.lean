@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstMixedAllowance
 import OAI.NumberTheory.DirichletL.Moments.CommonRadiusSaving
-
 namespace OAI
 
 noncomputable section
@@ -85,35 +84,6 @@ theorem actual_error_column_saving (η τ : Character) (m : O)
   obtain ⟨hl,hu⟩ := pool_prime_log_range M H Sbad hbad Z sigma hZ p0 hp0
   unfold errorRemoval errorMoving
   convert error_saving_lower _ _ (nominalLog I J E K X Z-j) _ _ sigma delta reserve
-    (Real.logb Z (normValue p0)) hc hq hB hallow hl hu k hk using 1
-  congr 1
-  ring
-
-theorem actual_error_column_saving_refined (η τ : Character) (m : O)
-    (I J E : Ideal O) (_hI : Supported I) (_hJ : Supported J)
-    (A : Finset (CommonIndex I J)) (K X Z j sigma delta reserve : ℝ) (hZ : 1<Z)
-    (hmod : τ.modulus=η.modulus*Ideal.span {m}*Ideal.span {(72:O)}*
-      Ideal.span {primeSubsetGenerator (fun P : CommonIndex I J => P.val) A*activeConductor I J})
-    (M : Ideal O) [NeZero M] (H : Subgroup (O ⧸ M)ˣ)
-    (Sbad : Finset (Ideal O)) (hbad : fixedBadPrimes⊆Sbad)
-    (p0 : O) (hp0 : p0∈CenteredMomentPrimeElements.elementPool
-      (CenteredMomentPrimePool.primePool M H Sbad (1/2) 1 (Z^(sigma/3))))
-    (k : ℕ) (hk : k=1 ∨ k=6 ∨ k=7) :
-    let c := Real.logb Z ((commonPart I J).absNorm:ℝ)
-    let d := Real.logb Z ((commonPart J I).absNorm:ℝ)
-    let _p := Real.logb Z ((commonRadical I J).absNorm:ℝ)
-    let _R := Real.logb Z ((Ideal.span {activeConductor I J}).absNorm:ℝ)
-    let K0 := nominalLog I J E K X Z
-    2*(c+errorRemoval p0 Z k)/3-errorLoss sigma k-5*(delta+reserve)/6≤
-      firstSaving c (d+K0-j) (errorRemoval p0 Z k)
-        (Real.logb Z (τ.modulus.absNorm:ℝ)) (errorMoving p0 Z k) (extractedAllowance I J Z)
-        (Real.logb Z (errorCommonRadius Z d K0 c sigma delta reserve p0 k)-j) 0 := by
-  dsimp only
-  rw [error_radius_gain _ _ _ _ _ _ _ _ hZ]
-  obtain ⟨hc,hq,hB,hallow⟩ := column_saving_gates η τ m I J A Z hZ hmod
-  obtain ⟨hl,hu⟩ := pool_prime_log_range M H Sbad hbad Z sigma hZ p0 hp0
-  unfold errorRemoval errorMoving
-  convert error_saving_refined _ _ (nominalLog I J E K X Z-j) _ _ sigma delta reserve
     (Real.logb Z (normValue p0)) hc hq hB hallow hl hu k hk using 1
   congr 1
   ring

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CentralCosts
 import OAI.NumberTheory.DirichletL.PrimeRows.CentralRowCost
-
 namespace OAI
 
 noncomputable section

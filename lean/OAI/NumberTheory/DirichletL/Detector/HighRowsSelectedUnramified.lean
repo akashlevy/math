@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsSelectedError
-
 namespace OAI
 
 noncomputable section

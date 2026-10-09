@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CubeFloorGlobalIntegral
 import OAI.NumberTheory.DirichletL.PrimeRows.CubeNormalizer
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondExceptionalCount
 import OAI.NumberTheory.DirichletL.Moments.RankinRadical
-
 namespace OAI
 
 noncomputable section

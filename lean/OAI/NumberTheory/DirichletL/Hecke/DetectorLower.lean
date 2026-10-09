@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.GammaDetectorExpansion
 import OAI.NumberTheory.DirichletL.Hecke.DetectorBudget
-
 namespace OAI
 
 noncomputable section

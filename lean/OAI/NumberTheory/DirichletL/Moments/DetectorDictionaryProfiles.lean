@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.DetectorDictionary
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationRowwise
 import OAI.NumberTheory.DirichletL.Hecke.DetectorDyadicCutoff
-
 namespace OAI
 
 noncomputable section
@@ -14,19 +13,6 @@ lemma logTest_eq_iterate (W : ℝ→ℂ) (n : ℕ) : logTest W n=(logProfile^[n]
   induction n with
   | zero => rfl
   | succ n ih => simp only [logTest,Function.iterate_succ_apply',ih]
-
-lemma oriented_logTest (reverse : Bool) (W : ℝ→ℂ) (n : ℕ) :
-    orientedProfile reverse ((logProfile^[n]) W)=logTest (orientedProfile reverse W) n := by
-  rw [←logTest_eq_iterate]
-  cases reverse
-  · rfl
-  · induction n with
-    | zero => rfl
-    | succ n ih =>
-      simp only [logTest,orientedProfile,ite_true] at ih ⊢
-      funext x
-      rw [←logProfile_conjugate]
-      exact congrArg (fun f : ℝ→ℂ=>logProfile f x) ih
 
 theorem detector_profile_support (reverse : Bool) (n : ℕ) (σ t : ℝ) :
     Function.support (twistProfile (orientedProfile reverse ((logProfile^[n]) positiveAnnular)) σ t)

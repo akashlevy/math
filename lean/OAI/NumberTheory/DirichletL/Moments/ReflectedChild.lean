@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.ChildEnergy
-
 namespace OAI
 
 noncomputable section

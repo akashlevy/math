@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.PhysicalCRT
 import OAI.NumberTheory.DirichletL.Detector.PhasePowers
-
 namespace OAI
 
 noncomputable section

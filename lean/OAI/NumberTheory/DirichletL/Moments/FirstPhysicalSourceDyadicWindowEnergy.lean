@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalSourceWindowEnergy
 import OAI.NumberTheory.DirichletL.Moments.SecondWindowBudget
-
 namespace OAI
 
 noncomputable section

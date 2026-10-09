@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialOverlapFourier
 import OAI.NumberTheory.DirichletL.Inversion.InitialClippedColumns
 import OAI.NumberTheory.DirichletL.Inversion.SecondChildWindows
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.HighSeries
-
 namespace OAI
 
 noncomputable section

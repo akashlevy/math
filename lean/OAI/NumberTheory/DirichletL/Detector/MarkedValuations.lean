@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.HighExcludedEuler
 import OAI.NumberTheory.DirichletL.Detector.EulerMarked
-
 namespace OAI
 
 noncomputable section

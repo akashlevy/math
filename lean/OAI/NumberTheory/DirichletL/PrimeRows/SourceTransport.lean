@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.WZTransport
 import OAI.NumberTheory.DirichletL.PrimeRows.XShift
-
 namespace OAI
 
 noncomputable section

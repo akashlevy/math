@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondSupportedEnergy
 import OAI.NumberTheory.DirichletL.Descent.ChildCutoff
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

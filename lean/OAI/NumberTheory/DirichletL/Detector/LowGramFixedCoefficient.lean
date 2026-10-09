@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowGramArithmetic
-
 namespace OAI
 
 noncomputable section
@@ -56,13 +55,6 @@ theorem gramCoefficientExtension_periodic (S : Finset Id) (hS : ∀P∈S,P.IsMax
   have hm := gramPeriodicMonoid_periodic (calibrationForSet S hS) (calibrationForSet S hS).generator
     (calibrationLowData S hS) x y (Ideal.mul_le_left hxy)
   simp only [gramCoefficientExtension,hr,hm]
-
-lemma gramCoefficientExtension_scaled_periodic (S : Finset Id) (hS : ∀P∈S,P.IsMaximal)
-    (σ : RayRing) (d x y : O) (hxy : x-y∈gramFixedModulus S hS) :
-    gramCoefficientExtension S hS σ (d*x)=gramCoefficientExtension S hS σ (d*y) := by
-  apply gramCoefficientExtension_periodic
-  rw [←mul_sub]
-  exact (gramFixedModulus S hS).mul_mem_left d hxy
 
 end SevenEighths.ProbePhysical
 end

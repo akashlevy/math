@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FixedRay
 import OAI.NumberTheory.DirichletL.CenteredExceptionalProfile
-
 namespace OAI
 
 noncomputable section
@@ -22,28 +21,6 @@ theorem childCharacter_primary (η : Character) (χ : RayCharacter) (n : O)
     (hn : Supported (Ideal.span {n})) (hp : λ₀^2 ∣ n - 1) :
     elementCoeff (childCharacter η χ) n = elementCoeff η n * rayCharacter χ n := by
   rw [childCharacter, elementCoeff_product, primaryRayCharacter_primary χ n hn hp]
-
-theorem child_row_primary (η : Character) (χ : RayCharacter) (m A h n : O)
-    (hn : Supported (Ideal.span {n})) (hp : λ₀^2 ∣ n - 1) :
-    rowTwist (elementHom (childCharacter η χ)) m 1 (A*h) n =
-      (elementCoeff η n * rayCharacter χ n) * coprimalityMask m n *
-        idealRowHom (A*h) (Ideal.span {n}) := by
-  rw [rowTwist_extract_sixth_mask _ m 1 (A*h) n hn]
-  change elementCoeff (childCharacter η χ) n * _ * _ = _
-  rw [childCharacter_primary η χ n hn hp]
-  simp only [one_pow, one_mul]
-
-theorem child_row_extract (η : Character) (χ : RayCharacter) (m A h e n : O) :
-    rowTwist (elementHom (childCharacter η χ)) m 1 (A*h) (e*n) =
-      rowTwist (elementHom (childCharacter η χ)) m 1 (A*h) e *
-        rowTwist (elementHom (childCharacter η χ)) m 1 (A*h) n := map_mul _ _ _
-
-theorem exists_child_row_character (η : Character) (χ : RayCharacter) (m A h : O)
-    (hm : m ≠ 0) (hA : A ≠ 0) (hh : h ≠ 0)
-    (hmLam : λ₀ ∣ m) (hm2 : (2 : O) ∣ m) :
-    ∃ ρ : Character, ∀ n, elementCoeff ρ n =
-      rowTwist (elementHom (childCharacter η χ)) m 1 (A*h) n :=
-  exists_row_character (childCharacter η χ) m 1 (A*h) hm one_ne_zero (mul_ne_zero hA hh) hmLam hm2
 
 theorem old_coefficient_nonzero_coprime (η : Character) (e : O)
     (he : elementCoeff η e ≠ 0) : IsCoprime (Ideal.span {e}) η.modulus :=

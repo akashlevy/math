@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialOriginalHeight
 import OAI.NumberTheory.DirichletL.Inversion.InitialInputReindex
 import OAI.NumberTheory.DirichletL.Inversion.InitialExcludedFourier
-
 namespace OAI
 
 noncomputable section

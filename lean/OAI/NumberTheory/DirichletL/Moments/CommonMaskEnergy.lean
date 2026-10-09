@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.CommonMaskExpansion
 import OAI.NumberTheory.DirichletL.Moments.NaturalRowSourceDictionary
 import OAI.NumberTheory.DirichletL.Moments.PositiveSummability
-
 namespace OAI
 
 noncomputable section
@@ -155,15 +154,6 @@ lemma heightCoefficient_norm (β : Ideal O→ℂ) (t : ℝ) (I : Ideal O) (hI : 
     simpa using Complex.norm_cpow_eq_rpow_re_of_pos hn (Complex.I*t)
   rw [hp,mul_one]
 
-lemma normalized_twisted_plain (χ : Character) (W : ℝ→ℂ) (a b : ℝ) (ha : 0<a)
-    (hs : Function.support W⊆Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    (t X : ℝ) (hX : 0<X) :
-    (Real.sqrt X:ℂ)⁻¹*twistedIdealSum χ W t X=
-      (X:ℂ)^(Complex.I*t)*HeckeDyadic.polynomial χ false
-        (normPowerProfile W a b ha hs hW t) X 0 0 := by
-  rw [twistedIdealSum_scale χ W a b ha hs hW t X hX,plain_zero_height _ _ X hX]
-  ring
-
 theorem original_positive_normalized {α : Type*} [Fintype α] [DecidableEq α]
     {η : Character} {z : O} (F : NaturalRow η z) (R : Ideal O) (hR : R≠0)
     (W₁ W₂ : ℝ→ℂ) (a₁ b₁ a₂ b₂ : ℝ) (ha₁ : 0<a₁) (ha₂ : 0<a₂)
@@ -199,24 +189,8 @@ theorem original_positive_normalized {α : Type*} [Fintype α] [DecidableEq α]
   rw [hn]
   ring
 
-lemma deleted_height_phase (X N t : ℝ) (hX : 0<X) (hN : 0<N) :
-    (X:ℂ)^(Complex.I*t)=(N:ℂ)^(Complex.I*t)*((X/N:ℝ):ℂ)^(Complex.I*t) := by
-  have hh:=Complex.mul_cpow_ofReal_nonneg hN.le (div_nonneg hX.le hN.le) (Complex.I*t)
-  rw [←Complex.ofReal_mul,show N*(X/N)=X by field_simp] at hh
-  exact hh
-
 lemma positive_height_phase_norm (X t : ℝ) (hX : 0<X) : ‖(X:ℂ)^(Complex.I*t)‖=1 := by
   simpa using Complex.norm_cpow_eq_rpow_re_of_pos hX (Complex.I*t)
-
-lemma deleted_normalized_twisted_plain (χ : Character) (W : ℝ→ℂ) (a b : ℝ) (ha : 0<a)
-    (hs : Function.support W⊆Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    (t X N : ℝ) (hX : 0<X) (hN : 0<N) :
-    (X:ℂ)^(Complex.I*t)*HeckeDyadic.polynomial χ false
-      (normPowerProfile W a b ha hs hW t) (X/N) 0 0=
-      (N:ℂ)^(Complex.I*t)*((Real.sqrt (X/N):ℂ)⁻¹*twistedIdealSum χ W t (X/N)) := by
-  rw [normalized_twisted_plain χ W a b ha hs hW t (X/N) (div_pos hX hN),
-    deleted_height_phase X N t hX hN]
-  ring
 
 theorem original_positive_deletion {α : Type*} [Fintype α] [DecidableEq α]
     (η : Character) (z : O) (hz : z≠0) (R : Ideal O) (hR : R≠0)
@@ -288,102 +262,6 @@ theorem original_retained_zero {α : Type*} [Fintype α]
     simp
   · rw [strict_subunit_rowTwistedSum_zero η m A z W₂ b₂ t X₂ hX₂ hs₂ h]
     simp
-
-theorem original_positive_energy {α : Type*} [Fintype α] [DecidableEq α]
-    (b M : α→ℝ) (hM : ∀j,0≤M j) (ε : ℝ) (hε : 0<ε) :
-    ∃C : ℝ,0<C ∧ ∀{ι : Type*} [Fintype ι],
-      ∀(η : ι→Character)(z : ι→O)(hz : ∀i,z i≠0)(R : Ideal O),R≠0 →
-      ∀(W₁ W₂ : ι→ℝ→ℂ)(a₁ b₁ a₂ b₂ : ι→ℝ)
-        (ha₁ : ∀i,0<a₁ i)(ha₂ : ∀i,0<a₂ i)
-        (hs₁ : ∀i,Function.support (W₁ i)⊆Set.Icc (a₁ i) (b₁ i))
-        (hs₂ : ∀i,Function.support (W₂ i)⊆Set.Icc (a₂ i) (b₂ i))
-        (hW₁ : ∀i,ContDiff ℝ ∞ (W₁ i))(hW₂ : ∀i,ContDiff ℝ ∞ (W₂ i))
-        (pool : ι→α→Finset (Ideal O))(β : ι→α→Ideal O→ℂ)(P : ι→α→ℝ)
-        (t X₁ X₂ : ι→ℝ),
-      (∀i,0<X₁ i) → (∀i,0<X₂ i) →
-      (∀i j,∀I∈pool i j,Prime I) → (∀i j,0<P i j) →
-      (∀i j,∀I∈pool i j,‖β i j I‖≤M j) →
-      (∀i j,∀I∈pool i j,β i j I≠0 → (I.absNorm:ℝ)≤b j*P i j) →
-      ∀E : ℝ,0≤E →
-      let χ:=fun i=>(naturalRow (η i) (z i) (hz i)).character
-      let S:=CompletedGauss.primeSupport R
-      (∀D₁∈S.powerset,∀D₂∈S.powerset,∀J∈(Finset.univ : Finset α).powerset,
-        (∑i,‖HeckeDyadic.polynomial (χ i) false
-          (normPowerProfile (W₁ i) (a₁ i) (b₁ i) (ha₁ i) (hs₁ i) (hW₁ i) (t i))
-          (X₁ i/(Ideal.absNorm (∏I∈D₁,I):ℝ)) 0 0 *
-          HeckeDyadic.polynomial (χ i) false
-          (normPowerProfile (W₂ i) (a₂ i) (b₂ i) (ha₂ i) (hs₂ i) (hW₂ i) (t i))
-          (X₂ i/(Ideal.absNorm (∏I∈D₂,I):ℝ)) 0 0 *
-          ∏j∈Finset.univ\J,naturalSlot (χ i) (pool i j) (heightCoefficient (β i j) (t i)) (P i j)‖^2)≤E) →
-      (∑i,‖positiveSlotRow (η i)
-        (CenteredMomentSecondHeightFamily.fixedBadMask*ConcretePrimeRowBridge.idealGenerator R)
-        1 (z i) (W₁ i) (W₂ i) (pool i) (β i) (P i) (t i) (X₁ i) (X₂ i)‖^2)≤
-        C*(Ideal.absNorm (∏I∈S,I):ℝ)^ε*E := by
-  obtain ⟨C,hC,hbound⟩:=actual_shared_energy (Finset.univ : Finset α) b M (fun j _=>hM j) ε hε
-  refine ⟨C,hC,?_⟩
-  intro ι _ η z hz R hR W₁ W₂ a₁ b₁ a₂ b₂ ha₁ ha₂ hs₁ hs₂ hW₁ hW₂ pool β P t X₁ X₂
-    hX₁ hX₂ hp hP hβ hs E hE
-  dsimp only
-  intro hchild
-  have hh:=hbound (CompletedGauss.primeSupport R) (support_prime R)
-    (fun i=>(naturalRow (η i) (z i) (hz i)).character)
-    (fun i=>normPowerProfile (W₁ i) (a₁ i) (b₁ i) (ha₁ i) (hs₁ i) (hW₁ i) (t i))
-    (fun i=>normPowerProfile (W₂ i) (a₂ i) (b₂ i) (ha₂ i) (hs₂ i) (hW₂ i) (t i))
-    X₁ X₂ pool (fun i j=>heightCoefficient (β i j) (t i)) P hX₁ hX₂
-    (fun i j _=>hp i j) (fun i j _=>hP i j)
-    (fun i j _ I hi=>by rw [heightCoefficient_norm _ _ _ (hp i j I hi).ne_zero];exact hβ i j I hi)
-    (fun i j _ I hi hn=>hs i j I hi (left_ne_zero_of_mul hn)) E hE hchild
-  have he (i : ι) := original_positive_normalized (naturalRow (η i) (z i) (hz i)) R hR
-    (W₁ i) (W₂ i) (a₁ i) (b₁ i) (a₂ i) (b₂ i) (ha₁ i) (ha₂ i) (hs₁ i) (hs₂ i)
-    (hW₁ i) (hW₂ i) (pool i) (β i) (P i) (hP i) (t i) (X₁ i) (X₂ i) (hX₁ i) (hX₂ i)
-  simp_rw [he,norm_mul,positive_height_phase_norm _ _ (hX₁ _),
-    positive_height_phase_norm _ _ (hX₂ _),one_mul]
-  simpa only [excluded,norm_mul] using hh
-
-theorem original_positive_deletion_height {α : Type*} [Fintype α] [DecidableEq α]
-    (η : Character) (z : O) (hz : z≠0) (R : Ideal O) (hR : R≠0)
-    (W₁ W₂ : ℝ→ℂ) (a₁ b₁ a₂ b₂ : ℝ) (ha₁ : 0<a₁) (ha₂ : 0<a₂)
-    (hs₁ : Function.support W₁⊆Set.Icc a₁ b₁) (hs₂ : Function.support W₂⊆Set.Icc a₂ b₂)
-    (hW₁ : ContDiff ℝ ∞ W₁) (hW₂ : ContDiff ℝ ∞ W₂)
-    (pool : α→Finset (Ideal O)) (hp : ∀i,∀I∈pool i,Prime I)
-    (β : α→Ideal O→ℂ) (P : α→ℝ) (hP : ∀i,0<P i)
-    (t X₁ X₂ : ℝ) (hX₁ : 0<X₁) (hX₂ : 0<X₂) :
-    let χ:=(naturalRow η z hz).character
-    let S:=CompletedGauss.primeSupport R
-    positiveSlotRow η (CenteredMomentSecondHeightFamily.fixedBadMask*ConcretePrimeRowBridge.idealGenerator R)
-      1 z W₁ W₂ pool β P t X₁ X₂=
-      ∑D₁∈S.powerset,∑D₂∈S.powerset,∑J∈(Finset.univ : Finset α).powerset,
-        (signedCoefficient χ S D₁ D₂ J pool (fun i=>heightCoefficient (β i) t) P *
-          ((Ideal.absNorm (∏I∈D₁,I):ℂ)^(Complex.I*t)*
-           (Ideal.absNorm (∏I∈D₂,I):ℂ)^(Complex.I*t))) *
-        (((Real.sqrt (X₁/(Ideal.absNorm (∏I∈D₁,I):ℝ)):ℂ)⁻¹ *
-          twistedIdealSum χ W₁ t (X₁/(Ideal.absNorm (∏I∈D₁,I):ℝ))) *
-         ((Real.sqrt (X₂/(Ideal.absNorm (∏I∈D₂,I):ℝ)):ℂ)⁻¹ *
-          twistedIdealSum χ W₂ t (X₂/(Ideal.absNorm (∏I∈D₂,I):ℝ))) *
-         ∏i∈Finset.univ\J,naturalSlot χ (pool i) (heightCoefficient (β i) t) (P i)) := by
-  dsimp only
-  rw [original_positive_deletion η z hz R hR W₁ W₂ a₁ b₁ a₂ b₂ ha₁ ha₂ hs₁ hs₂ hW₁ hW₂
-    pool hp β P hP t X₁ X₂ hX₁ hX₂]
-  simp only [Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro D₁ hD₁
-  apply Finset.sum_congr rfl
-  intro D₂ hD₂
-  apply Finset.sum_congr rfl
-  intro J hJ
-  have hN₁:=CenteredMomentReflectionDeletion.subset_product_norm_pos D₁
-    (fun I hi=>support_prime R I (Finset.mem_powerset.mp hD₁ hi))
-  have hN₂:=CenteredMomentReflectionDeletion.subset_product_norm_pos D₂
-    (fun I hi=>support_prime R I (Finset.mem_powerset.mp hD₂ hi))
-  have h1:=deleted_normalized_twisted_plain (naturalRow η z hz).character W₁ a₁ b₁ ha₁ hs₁ hW₁
-    t X₁ (Ideal.absNorm (∏I∈D₁,I):ℝ) hX₁ hN₁
-  have h2:=deleted_normalized_twisted_plain (naturalRow η z hz).character W₂ a₂ b₂ ha₂ hs₂ hW₂
-    t X₂ (Ideal.absNorm (∏I∈D₂,I):ℝ) hX₂ hN₂
-  convert congrArg (fun q : ℂ=>
-    signedCoefficient (naturalRow η z hz).character (CompletedGauss.primeSupport R) D₁ D₂ J pool
-      (fun i=>heightCoefficient (β i) t) P * q *
-      ∏i∈Finset.univ\J,naturalSlot (naturalRow η z hz).character (pool i) (heightCoefficient (β i) t) (P i))
-    (congrArg₂ (fun x y : ℂ=>x*y) h1 h2) using 1 <;> push_cast <;> ring
 
 end SevenEighths.CenteredMomentCommonMaskEnergy
 

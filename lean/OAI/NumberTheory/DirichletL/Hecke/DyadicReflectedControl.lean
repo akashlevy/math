@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DyadicReflectedFamily
-
 namespace OAI
 
 noncomputable section

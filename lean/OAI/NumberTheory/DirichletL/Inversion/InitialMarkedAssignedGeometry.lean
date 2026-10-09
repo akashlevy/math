@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseMarkedReferenceProducts
 import OAI.NumberTheory.DirichletL.Inversion.InitialQuotientGeometry
-
 namespace OAI
 
 noncomputable section

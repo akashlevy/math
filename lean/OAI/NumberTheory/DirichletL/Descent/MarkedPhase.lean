@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.ReflectedDual
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -43,22 +42,6 @@ theorem mixedActiveBracket_product [∀ i, (Ideal.span {p i}).IsMaximal]
   rw [hsign]
   rfl
 
-theorem mixedReflectedValue_eq_signed [∀ i, (Ideal.span {p i}).IsMaximal]
-    (D : ControlledStratumArithmetic p N a0 c0 mode)
-    (s : FixedCuspShape (ControlledStratumArithmetic.fixedCusp a0 c0 mode))
-    (hp : ∀ i, p i ≠ 0) (hc0 : c0 ≠ 0) (hg : ∀ i, λ₀ ∉ Ideal.span {p i})
-    (j : ι → ℕ) (S : Finset ι) (W : ℝ → ℂ) (X : ℝ) :
-    mixedReflectedValue D s hp hc0 hg j S W X =
-      (-1 : ℂ) ^ S.card * D.reflectedValue s hp hc0 hg (markedActiveExponent S j) W X := by
-  unfold mixedReflectedValue ControlledStratumArithmetic.reflectedValue
-  simp_rw [mixedActiveBracket_product]
-  conv_rhs => rw [mul_left_comm]
-  congr 1
-  rw [← tsum_mul_left]
-  apply tsum_congr
-  intro t
-  ring
-
 theorem mixed_model_coefficient [∀ i, (Ideal.span {p i}).IsMaximal]
     (D : ControlledStratumArithmetic p N a0 c0 mode)
     (s : FixedCuspShape (ControlledStratumArithmetic.fixedCusp a0 c0 mode))
@@ -86,24 +69,6 @@ theorem mixed_model_coefficient [∀ i, (Ideal.span {p i}).IsMaximal]
       (congrArg ((-1 : ℂ) ^ S.card * ·)
         (D.model_coefficient s hp hc0 hg (markedActiveExponent S j) u m I J)).trans
           (mul_assoc _ _ _).symm
-
-theorem marked_modelRowPhase_norm [∀ i, (Ideal.span {p i}).IsMaximal]
-    (D : ControlledStratumArithmetic p N a0 c0 mode)
-    (s : FixedCuspShape (ControlledStratumArithmetic.fixedCusp a0 c0 mode))
-    (hN : (9 : Eis) * c0 ∣ N) (hr : λ₀ ^ 2 ∣ (∏ i, p i) - 1)
-    (hbase : if mode then λ₀ ^ 2 ∣ a0 - 1 else λ₀ ^ 2 ∣ c0 - 1)
-    (hp : ∀ i, p i ≠ 0) (hg : ∀ i, λ₀ ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (Eis ⧸ Ideal.span {p i}) ≠ 2)
-    (j : ι → ℕ) (hj : ∀ i, j i < 6) (S : Finset ι) (u : Eisˣ) (m : ℕ) :
-    ‖(-1 : ℂ) ^ S.card * D.modelRowPhase s hp hg (markedActiveExponent S j) u m‖ = 1 := by
-  have hj' : ∀ i, markedActiveExponent S j i < 6 := by
-    intro i
-    unfold markedActiveExponent
-    split_ifs
-    · norm_num
-    · exact hj i
-  rw [norm_mul, norm_pow, norm_neg, norm_one, one_pow, one_mul]
-  exact D.modelRowPhase_norm hN hr hbase s hp hg hchar _ hj' u m
 
 end
 end SevenEighths.InverseMoment

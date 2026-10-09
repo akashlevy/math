@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationAggregate
 import OAI.NumberTheory.DirichletL.Moments.PrimePool
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondFrozenChosen
-import OAI.NumberTheory.DirichletL.Moments.SecondRetainedRatioCost
 import OAI.NumberTheory.DirichletL.Moments.SecondRetainedRatioScalar
 import OAI.NumberTheory.DirichletL.Moments.SecondNonexceptionalChosenBlock
 import OAI.NumberTheory.DirichletL.Moments.SecondNonexceptionalScalar
@@ -12,7 +11,6 @@ import OAI.NumberTheory.DirichletL.Moments.OriginalCommonHarmonic
 import OAI.NumberTheory.DirichletL.Moments.SecondSupportedChildren
 import OAI.NumberTheory.DirichletL.Moments.SecondPhysicalCost
 import OAI.NumberTheory.DirichletL.Moments.ExceptionalAmplitudePair
-
 namespace OAI
 
 noncomputable section
@@ -29,7 +27,7 @@ open CenteredMomentHeckeColumnWindow CenteredMomentSectorLocalization RayFourExp
 open CenteredMomentSecondMaskedWindow CenteredMomentSecondRadicalColumns CenteredMomentSecondWindowBudget
 open CenteredMomentRestrictedSource CenteredMomentFirstSectors CenteredMomentSecondWindowSource
 open CenteredMomentSecondIdealBlockBound
-open CenteredMomentSecondRetainedRatioCost CenteredMomentSourceLiveColumn
+open CenteredMomentSourceLiveColumn
 local notation "O" => ActualEisensteinCubic.O
 
 open Filter
@@ -40,14 +38,14 @@ variable {ι:Type*} [Fintype ι] [DecidableEq ι]
 local instance : DecidableEq (ι⊕Fin 2) := Classical.decEq _
 
 open CenteredMomentSecondOriginalChildren CenteredMomentSecondSupportedChildren
-open CenteredMomentSecondPhysicalBlock CenteredMomentSecondCanonicalScalar
+open CenteredMomentSecondPhysicalBlock
 open CenteredMomentSecondPhysicalWindow CenteredMomentSecondWholeKernel
-open CenteredMomentSecondPhysicalCost CenteredMomentCommonRadialData CenteredMomentExceptionalAmplitudePair
+open CenteredMomentSecondPhysicalCost CenteredMomentExceptionalAmplitudePair
 
 open CenteredMomentSecondHeightFamily
 open CenteredMomentSecondExceptionalFamily CenteredMomentSecondEnergySplit
 open CenteredMomentSecondDyadicRowSupport CenteredMomentFirstAmplificationChoice
-open CenteredMomentOriginalCommonHarmonic CenteredMomentExceptionalAmplitudePair
+open CenteredMomentOriginalCommonHarmonic
 
 open CenteredMomentSecondNonexceptionalChosenBlock CenteredMomentSecondNonexceptionalScalar
 open CenteredMomentSecondRadicalBudget CenteredMomentSecondRetainedRatioScalar

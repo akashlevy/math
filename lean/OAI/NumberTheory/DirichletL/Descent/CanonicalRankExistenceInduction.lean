@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalRankExistenceSuccessor
 import OAI.NumberTheory.DirichletL.Descent.CanonicalRankDepthParameters
 import OAI.NumberTheory.DirichletL.Descent.CanonicalEnergyExistenceData
-
 namespace OAI
 
 noncomputable section

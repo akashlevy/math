@@ -1,6 +1,6 @@
-import OAI.NumberTheory.DirichletL.Reflection.CanonicalFrozenEnergy
+import OAI.NumberTheory.DirichletL.Reflection.SourcePhysical
+import OAI.NumberTheory.DirichletL.Reflection.SourceBudget
 import OAI.NumberTheory.DirichletL.Reflection.CanonicalInactiveEnergyUniformDegree
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

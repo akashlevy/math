@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseMarkedReferencePaddedEnergy
 import OAI.NumberTheory.DirichletL.Dictionary.InverseMarkedReferencePrimeGates
 import OAI.NumberTheory.DirichletL.Dictionary.InverseMarkedReferenceShift
-
 namespace OAI
 
 noncomputable section

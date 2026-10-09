@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Energy.ReferenceLowMoments
 import OAI.NumberTheory.DirichletL.Energy.ReferenceLowWindow
 import OAI.NumberTheory.DirichletL.Energy.ReferenceHomogeneous
-
 namespace OAI
 
 noncomputable section

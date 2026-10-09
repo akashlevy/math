@@ -1,56 +1,21 @@
 import OAI.NumberTheory.DirichletL.GaussSum.ThetaLocalRows
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 
 namespace TargetLocalReduction
-
-def LocalExponentialMobiusBound : Prop :=
-  ∀ (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q) (ρ : ℂ),
-    (23 / 24 : ℝ) < ρ.re → ρ.re < 1 →
-      ∃ σ : ℝ, 0 < σ ∧ σ < ρ.re ∧ σ < 1 ∧
-        (fun D : ℝ => ShortDraftMellin.mobiusExpSum χ D⁻¹) =O[atTop]
-          (fun D : ℝ => D ^ σ)
-
-theorem dirichletTarget_of_localBound
-    (hbound : LocalExponentialMobiusBound) : ShortDraft.DirichletTarget := by
-  intro q _ χ ρ h23 hprincipal
-  by_cases hρ : ρ.re < 1
-  · obtain ⟨σ, hσpos, hσρ, hσone, htop⟩ := hbound q χ ρ h23 hρ
-    by_cases hχ : χ = 1
-    · subst χ
-      have hρone : ρ ≠ 1 := by
-        intro h
-        exact hprincipal ⟨rfl, h⟩
-      exact ShortDraftMellin.principal_dirichlet_exp_zero_free_of_power_bound_only
-        q σ hσpos hσone htop ρ hσρ hρone
-    · exact ShortDraftMellin.dirichlet_exp_zero_free_of_power_bound_only
-        χ hχ σ hσpos hσone htop ρ hσρ
-  · exact ShortDraft.dirichlet_target_of_one_le_re q χ ρ
-      (le_of_not_gt hρ) hprincipal
 
 end TargetLocalReduction
 
@@ -58,95 +23,9 @@ namespace ActualEisensteinCubic
 
 open AddChar MulChar
 
-theorem canonical_A5_jone_direct (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (hchar : ringChar (O ⧸ P) ≠ 2)
-    (ψ : AddChar (O ⧸ P) ℂ) (σ : (O ⧸ P)ˣ) (ε x : O ⧸ P) :
-    let χ := canonicalSextic P hgood
-    (Nat.card (O ⧸ P) : ℂ)⁻¹ *
-      (∑ h : (O ⧸ P)ˣ,
-        (∑ t : O ⧸ P, χ t * ψ (-(h * t))) *
-        (χ ^ 2) (σ * h) *
-        ψ ((ε * x) * ((h⁻¹ : (O ⧸ P)ˣ) : O ⧸ P))) =
-      (χ ^ 2) σ *
-      ((Nat.card (O ⧸ P) : ℂ)⁻¹ *
-        gaussSum χ (ψ.mulShift (-1)) * gaussSum χ⁻¹ ψ * χ ε) * χ x := by
-  let : Field (O ⧸ P) := Ideal.Quotient.field P
-  let : Fintype (O ⧸ P) := Fintype.ofFinite _
-  have hχ : canonicalSextic P hgood ≠ 1 := by
-    simpa only [pow_one] using
-      (canonicalSextic_pow_ne_one P hgood hchar
-        (j := 1) (by decide) (by decide))
-  dsimp
-  rw [Nat.card_eq_fintype_card]
-  exact ShortDraftLocal.direct_theta_jone_local_row
-    (canonicalSextic P hgood) ψ hχ σ ε x
-
-theorem canonical_A5_jone_direct_not_quadratic (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (hchar : ringChar (O ⧸ P) ≠ 2) :
-    canonicalSextic P hgood ≠ (canonicalSextic P hgood) ^ 3 := by
-  let : Field (O ⧸ P) := Ideal.Quotient.field P
-  let : Fintype (O ⧸ P) := Fintype.ofFinite _
-  let hχ₂ : canonicalSextic P hgood ^ 2 ≠ 1 :=
-    canonicalSextic_pow_ne_one P hgood hchar
-      (j := 2) (by decide) (by decide)
-  exact ShortDraftLocal.direct_theta_jone_not_quadratic
-    (canonicalSextic P hgood) hχ₂
-
-theorem canonical_A5_jone_direct_scalar_ne_zero (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (hchar : ringChar (O ⧸ P) ≠ 2)
-    (ψ : AddChar (O ⧸ P) ℂ) (hψ : ψ.IsPrimitive)
-    (ε : O ⧸ P) (hε : ε ≠ 0) :
-    let χ := canonicalSextic P hgood
-    ((Nat.card (O ⧸ P) : ℂ)⁻¹ *
-      gaussSum χ (ψ.mulShift (-1)) * gaussSum χ⁻¹ ψ * χ ε) ≠ 0 := by
-  let : Field (O ⧸ P) := Ideal.Quotient.field P
-  let : Fintype (O ⧸ P) := Fintype.ofFinite _
-  let χ : MulChar (O ⧸ P) ℂ := canonicalSextic P hgood
-  have hχ : χ ≠ 1 := by
-    simpa only [χ, pow_one] using
-      (canonicalSextic_pow_ne_one P hgood hchar
-        (j := 1) (by decide) (by decide))
-  have hχinv : χ⁻¹ ≠ 1 := by
-    intro h
-    apply hχ
-    calc χ = (χ⁻¹)⁻¹ := by group
-      _ = 1 := by rw [h]; simp
-  have hcard : (Fintype.card (O ⧸ P) : ℂ) ≠ 0 := by
-    exact_mod_cast (Fintype.card_pos_iff.mpr ⟨(0 : O ⧸ P)⟩).ne'
-  have hψshift : (ψ.mulShift (-1)).IsPrimitive :=
-    AddChar.IsPrimitive.of_ne_one
-      (hψ (neg_ne_zero.mpr (one_ne_zero : (1 : O ⧸ P) ≠ 0)))
-  have hg1 : gaussSum χ (ψ.mulShift (-1)) ≠ 0 :=
-    gaussSum_ne_zero_of_nontrivial hcard hχ hψshift
-  have hg2 : gaussSum χ⁻¹ ψ ≠ 0 :=
-    gaussSum_ne_zero_of_nontrivial hcard hχinv hψ
-  have hχε : χ ε ≠ 0 := χ.apply_ne_zero_iff.mpr
-    (isUnit_iff_ne_zero.mpr hε)
-  dsimp only
-  rw [Nat.card_eq_fintype_card]
-  exact mul_ne_zero (mul_ne_zero (mul_ne_zero (inv_ne_zero hcard) hg1) hg2) hχε
-
-theorem canonical_A5_jone_trace_scalar_ne_zero (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (hchar : ringChar (O ⧸ P) ≠ 2)
-    (p : O) (hP : P = Ideal.span {p}) (hp : p ≠ 0)
-    (ε : O ⧸ P) (hε : ε ≠ 0) :
-    let χ := canonicalSextic P hgood
-    let ψ : AddChar (O ⧸ P) ℂ := hP.symm ▸
-      ConcreteTraceCRT.eisTraceModChar ShortDraftTrace.breveE
-        ConcreteBreveE.breveE_period_coordinates p hp
-    ((Nat.card (O ⧸ P) : ℂ)⁻¹ *
-      gaussSum χ (ψ.mulShift (-1)) * gaussSum χ⁻¹ ψ * χ ε) ≠ 0 := by
-  subst P
-  exact canonical_A5_jone_direct_scalar_ne_zero (Ideal.span {p}) hgood hchar
-    (ConcreteTraceCRT.eisTraceModChar ShortDraftTrace.breveE
-      ConcreteBreveE.breveE_period_coordinates p hp)
-    (PrimitiveTrace.eisTraceModChar_breveE_primitive (Ideal.span {p}) p rfl hp)
-    ε hε
-
 end ActualEisensteinCubic
 
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
 
 namespace ShortDraftHeckeBridge
 
@@ -193,125 +72,6 @@ theorem pair_inverse_euler_identity
       (LSeries (χ ·) s * LSeries (fun n : ℕ => χ n * (ArithmeticFunction.moebius n : ℂ)) s) *
       (LSeries (ψ ·) s * LSeries (fun n : ℕ => ψ n * (ArithmeticFunction.moebius n : ℂ)) s) := by ring
     _ = 1 := by rw [hχ, hψ]; ring
-
-theorem pair_zero_free_of_normFiber_continuation
-    {q r : ℕ} [NeZero q] [NeZero r]
-    (χ : DirichletCharacter ℂ q) (ψ : DirichletCharacter ℂ r)
-    (hχ : χ ≠ 1) (hψ : ψ ≠ 1)
-    (weight : Ideal O → ℂ)
-    (hcoeff : ∀ n : ℕ, n ≠ 0 → normFiberCoeff weight n = pairInverseCoeff χ ψ n)
-    (σ : ℝ) (hσ : σ < 1) (M : ℂ → ℂ)
-    (hM : AnalyticOnNhd ℂ M {s : ℂ | σ < s.re})
-    (hMseries : ∀ s : ℂ, 1 < s.re → M s = LSeries (normFiberCoeff weight) s)
-    (ρ : ℂ) (hρ : σ < ρ.re) :
-    χ.LFunction ρ ≠ 0 ∧ ψ.LFunction ρ ≠ 0 := by
-  let U : Set ℂ := {s : ℂ | σ < s.re}
-  have hopen : IsOpen U := Complex.isOpen_re_gt σ
-  have hLχ : AnalyticOnNhd ℂ χ.LFunction U :=
-    (Complex.analyticOnNhd_iff_differentiableOn hopen).2
-      (χ.differentiable_LFunction hχ).differentiableOn
-  have hLψ : AnalyticOnNhd ℂ ψ.LFunction U :=
-    (Complex.analyticOnNhd_iff_differentiableOn hopen).2
-      (ψ.differentiable_LFunction hψ).differentiableOn
-  have hL : AnalyticOnNhd ℂ (fun s => χ.LFunction s * ψ.LFunction s) U :=
-    hLχ.mul hLψ
-  have hW : AnalyticOnNhd ℂ (fun _ : ℂ => (1 : ℂ)) U := analyticOnNhd_const
-  have heq : ∀ s : ℂ, 1 < s.re →
-      (χ.LFunction s * ψ.LFunction s) * M s = 1 := by
-    intro s hs
-    rw [hMseries s hs, normFiber_LSeries_eq_pair_inverse χ ψ weight hcoeff s]
-    exact pair_inverse_euler_identity χ ψ s hs
-  have hprod : χ.LFunction ρ * ψ.LFunction ρ ≠ 0 :=
-    ShortDraft.zero_free_of_analytic_identity σ hσ
-      (fun s => χ.LFunction s * ψ.LFunction s) M (fun _ => (1 : ℂ))
-      hL hM hW heq ρ hρ one_ne_zero
-  exact mul_ne_zero_iff.mp hprod
-
-theorem pair_zero_free_of_normFiber_continuation_principal_left
-    {q r : ℕ} [NeZero q] [NeZero r]
-    (ψ : DirichletCharacter ℂ r) (hψ : ψ ≠ 1)
-    (weight : Ideal O → ℂ)
-    (hcoeff : ∀ n : ℕ, n ≠ 0 →
-      normFiberCoeff weight n =
-        pairInverseCoeff (1 : DirichletCharacter ℂ q) ψ n)
-    (σ : ℝ) (hσ : σ < 1) (M : ℂ → ℂ)
-    (hM : AnalyticOnNhd ℂ M {s : ℂ | σ < s.re})
-    (hMseries : ∀ s : ℂ, 1 < s.re → M s = LSeries (normFiberCoeff weight) s)
-    (ρ : ℂ) (hρ : σ < ρ.re) (hρone : ρ ≠ 1) :
-    DirichletCharacter.LFunction (1 : DirichletCharacter ℂ q) ρ ≠ 0 ∧
-      ψ.LFunction ρ ≠ 0 := by
-  let U : Set ℂ := {s : ℂ | σ < s.re}
-  have hopen : IsOpen U := Complex.isOpen_re_gt σ
-  have hLregular₁ : AnalyticOnNhd ℂ
-      (DirichletCharacter.LFunctionTrivChar₁ q) U :=
-    (Complex.analyticOnNhd_iff_differentiableOn hopen).2
-      (DirichletCharacter.differentiable_LFunctionTrivChar₁ q).differentiableOn
-  have hLψ : AnalyticOnNhd ℂ ψ.LFunction U :=
-    (Complex.analyticOnNhd_iff_differentiableOn hopen).2
-      (ψ.differentiable_LFunction hψ).differentiableOn
-  have hLregular : AnalyticOnNhd ℂ
-      (fun s => DirichletCharacter.LFunctionTrivChar₁ q s * ψ.LFunction s) U :=
-    hLregular₁.mul hLψ
-  have hW : AnalyticOnNhd ℂ (fun _ : ℂ => (1 : ℂ)) U := analyticOnNhd_const
-  have hregular : ∀ s : ℂ, σ < s.re → s ≠ 1 →
-      DirichletCharacter.LFunctionTrivChar₁ q s * ψ.LFunction s =
-        (s - 1) *
-          (DirichletCharacter.LFunction (1 : DirichletCharacter ℂ q) s *
-            ψ.LFunction s) := by
-    intro s _ hs
-    simp [DirichletCharacter.LFunctionTrivChar₁,
-      DirichletCharacter.LFunctionTrivChar, Function.update_of_ne hs]
-    ring
-  have heq : ∀ s : ℂ, 1 < s.re →
-      (DirichletCharacter.LFunctionTrivChar₁ q s * ψ.LFunction s) * M s =
-        (s - 1) * 1 := by
-    intro s hs
-    rw [hregular s (lt_trans hσ hs) (by
-      intro h; subst s; norm_num at hs)]
-    rw [hMseries s hs, normFiber_LSeries_eq_pair_inverse 1 ψ weight hcoeff s]
-    calc
-      (s - 1) * (DirichletCharacter.LFunction (1 : DirichletCharacter ℂ q) s *
-          ψ.LFunction s) * LSeries (pairInverseCoeff 1 ψ) s =
-        (s - 1) * (DirichletCharacter.LFunction (1 : DirichletCharacter ℂ q) s *
-          ψ.LFunction s * LSeries (pairInverseCoeff 1 ψ) s) := by ring
-      _ = (s - 1) * 1 := by rw [pair_inverse_euler_identity 1 ψ s hs]
-  have hprod :
-      DirichletCharacter.LFunction (1 : DirichletCharacter ℂ q) ρ *
-        ψ.LFunction ρ ≠ 0 :=
-    ShortDraft.zero_free_of_regularized_analytic_identity σ hσ
-      (fun s => DirichletCharacter.LFunction (1 : DirichletCharacter ℂ q) s *
-        ψ.LFunction s)
-      (fun s => DirichletCharacter.LFunctionTrivChar₁ q s * ψ.LFunction s)
-      M (fun _ => (1 : ℂ)) hLregular hM hW hregular heq ρ hρ hρone
-      one_ne_zero
-  exact mul_ne_zero_iff.mp hprod
-
-theorem pairInverseCoeff_comm
-    {q r : ℕ} (χ : DirichletCharacter ℂ q) (ψ : DirichletCharacter ℂ r) :
-    pairInverseCoeff χ ψ = pairInverseCoeff ψ χ := by
-  simp only [pairInverseCoeff, LSeries.convolution, mul_comm]
-
-theorem pair_zero_free_of_normFiber_continuation_principal_right
-    {q r : ℕ} [NeZero q] [NeZero r]
-    (χ : DirichletCharacter ℂ q) (hχ : χ ≠ 1)
-    (weight : Ideal O → ℂ)
-    (hcoeff : ∀ n : ℕ, n ≠ 0 →
-      normFiberCoeff weight n =
-        pairInverseCoeff χ (1 : DirichletCharacter ℂ r) n)
-    (σ : ℝ) (hσ : σ < 1) (M : ℂ → ℂ)
-    (hM : AnalyticOnNhd ℂ M {s : ℂ | σ < s.re})
-    (hMseries : ∀ s : ℂ, 1 < s.re → M s = LSeries (normFiberCoeff weight) s)
-    (ρ : ℂ) (hρ : σ < ρ.re) (hρone : ρ ≠ 1) :
-    χ.LFunction ρ ≠ 0 ∧
-      DirichletCharacter.LFunction (1 : DirichletCharacter ℂ r) ρ ≠ 0 := by
-  have hcoeff' : ∀ n : ℕ, n ≠ 0 →
-      normFiberCoeff weight n =
-        pairInverseCoeff (1 : DirichletCharacter ℂ r) χ n := by
-    intro n hn
-    rw [hcoeff n hn, pairInverseCoeff_comm]
-  have h := pair_zero_free_of_normFiber_continuation_principal_left
-    (q := r) (r := q) χ hχ weight hcoeff' σ hσ M hM hMseries ρ hρ hρone
-  exact ⟨h.2, h.1⟩
 
 end ShortDraftHeckeBridge
 private theorem pairing_algebra
@@ -451,138 +211,7 @@ theorem first_poisson_prime_sign_pairing
 
 end ActualEisensteinCubic
 
-open MulChar AddChar
-
 namespace ShortDraftLocal
-
-variable {F : Type*} [Field F] [Fintype F] [DecidableEq F]
-
-theorem direct_theta_jtwo_mask (χ : MulChar F ℂ) (ψ : AddChar F ℂ)
-    (hψ : ψ ≠ 1) (a : F) :
-    (∑ h : Fˣ, ((χ⁻¹) ^ 2 * χ ^ 2) (h : F) *
-      ψ (a * ((h⁻¹ : Fˣ) : F))) =
-      if a = 0 then (Fintype.card Fˣ : ℂ) else -1 := by
-  classical
-  have hchar : (χ⁻¹) ^ 2 * χ ^ 2 = 1 := by group
-  rw [hchar]
-  simp only [MulChar.one_apply_coe, one_mul]
-  calc
-    (∑ h : Fˣ, ψ (a * ((h⁻¹ : Fˣ) : F))) =
-        ∑ y : Fˣ, ψ (a * (y : F)) := by
-      apply Fintype.sum_equiv (Equiv.inv Fˣ)
-      intro h
-      simp
-    _ = _ := additive_unit_sum ψ hψ a
-
-theorem direct_theta_jtwo_fourier_row (χ : MulChar F ℂ) (ψ : AddChar F ℂ)
-    (hχ₂ : χ ^ 2 ≠ 1) (hψ : ψ ≠ 1)
-    (σ : Fˣ) (ε x : F) :
-    (Fintype.card F : ℂ)⁻¹ *
-      (∑ h : Fˣ,
-        (∑ t : F, (χ ^ 2) t * ψ (-(h * t))) *
-        (χ ^ 2) (σ * h) *
-        ψ ((ε * x) * ((h⁻¹ : Fˣ) : F))) =
-      (χ ^ 2) σ *
-      ((Fintype.card F : ℂ)⁻¹ *
-        gaussSum (χ ^ 2) (ψ.mulShift (-1)) *
-        (if ε * x = 0 then (Fintype.card Fˣ : ℂ) else -1)) := by
-  classical
-  have hsum :
-      (∑ h : Fˣ,
-        (∑ t : F, (χ ^ 2) t * ψ (-(h * t))) *
-        (χ ^ 2) (σ * h) *
-        ψ ((ε * x) * ((h⁻¹ : Fˣ) : F))) =
-        (χ ^ 2) σ * gaussSum (χ ^ 2) (ψ.mulShift (-1)) *
-          (∑ h : Fˣ,
-            (((χ⁻¹) ^ 2 * χ ^ 2) (h : F)) *
-              ψ ((ε * x) * ((h⁻¹ : Fˣ) : F))) := by
-    rw [Finset.mul_sum]
-    apply Finset.sum_congr rfl
-    intro h _
-    rw [nontrivial_fourier_coefficient (χ ^ 2) ψ hχ₂, map_mul]
-    simp only [MulChar.mul_apply]
-    have hpow : (χ ^ 2)⁻¹ = (χ⁻¹) ^ 2 := by group
-    rw [hpow]
-    ring
-  rw [hsum, direct_theta_jtwo_mask χ ψ hψ (ε * x)]
-  ring
-
-theorem direct_theta_active_zero_inversion (χ : MulChar F ℂ)
-    (ψ : AddChar F ℂ) (a : F) :
-    (∑ h : Fˣ, (χ ^ 2) (h : F) *
-      ψ (a * ((h⁻¹ : Fˣ) : F))) =
-      gaussSum ((χ ^ 2)⁻¹) (ψ.mulShift a) := by
-  classical
-  calc
-    (∑ h : Fˣ, (χ ^ 2) (h : F) * ψ (a * ((h⁻¹ : Fˣ) : F))) =
-        ∑ y : Fˣ, ((χ ^ 2)⁻¹) (y : F) * ψ (a * (y : F)) := by
-      apply Fintype.sum_equiv (Equiv.inv Fˣ)
-      intro y
-      simp only [Equiv.inv_apply, Units.val_inv_eq_inv_val]
-      rw [MulChar.inv_apply']
-      simp
-    _ = gaussSum ((χ ^ 2)⁻¹) (ψ.mulShift a) := by
-      rw [gaussSum_eq_units_sum]
-      simp only [AddChar.mulShift_apply]
-
-theorem direct_theta_active_zero_fourier_row (χ : MulChar F ℂ)
-    (ψ : AddChar F ℂ) (hχ₂ : χ ^ 2 ≠ 1)
-    (σ : Fˣ) (ε x : F) :
-    (-(Fintype.card F : ℂ)⁻¹) *
-      (∑ h : Fˣ, (χ ^ 2) (σ * h) *
-        ψ ((ε * x) * ((h⁻¹ : Fˣ) : F))) =
-      -(χ ^ 2) σ *
-      ((Fintype.card F : ℂ)⁻¹ *
-        gaussSum ((χ ^ 2)⁻¹) ψ * (χ ^ 2) ε) * (χ ^ 2) x := by
-  classical
-  have hχ₂inv : (χ ^ 2)⁻¹ ≠ 1 := by
-    intro h
-    apply hχ₂
-    calc χ ^ 2 = ((χ ^ 2)⁻¹)⁻¹ := by group
-      _ = 1 := by rw [h]; simp
-  have hsum :
-      (∑ h : Fˣ, (χ ^ 2) (σ * h) *
-        ψ ((ε * x) * ((h⁻¹ : Fˣ) : F))) =
-        (χ ^ 2) σ *
-          (∑ h : Fˣ, (χ ^ 2) (h : F) *
-            ψ ((ε * x) * ((h⁻¹ : Fˣ) : F))) := by
-    rw [Finset.mul_sum]
-    apply Finset.sum_congr rfl
-    intro h _
-    rw [map_mul]
-    ring
-  rw [hsum, direct_theta_active_zero_inversion χ ψ (ε * x)]
-  rw [gaussSum_mulShift_any ((χ ^ 2)⁻¹) ψ hχ₂inv (ε * x)]
-  simp only [inv_inv, map_mul]
-  ring
-
-theorem direct_theta_active_zero_full_row (χ : MulChar F ℂ)
-    (ψ : AddChar F ℂ) (hχ₂ : χ ^ 2 ≠ 1) (hψ : ψ ≠ 1)
-    (σ : Fˣ) (ε x : F) :
-    (Fintype.card F : ℂ)⁻¹ *
-      (∑ h : Fˣ,
-        (∑ t : F, (χ ^ 0) t * ψ (-(h * t))) *
-        (χ ^ 2) (σ * h) *
-        ψ ((ε * x) * ((h⁻¹ : Fˣ) : F))) =
-      -(χ ^ 2) σ *
-      ((Fintype.card F : ℂ)⁻¹ *
-        gaussSum ((χ ^ 2)⁻¹) ψ * (χ ^ 2) ε) * (χ ^ 2) x := by
-  classical
-  have hsum :
-      (∑ h : Fˣ,
-        (∑ t : F, (χ ^ 0) t * ψ (-(h * t))) *
-        (χ ^ 2) (σ * h) *
-        ψ ((ε * x) * ((h⁻¹ : Fˣ) : F))) =
-      -(∑ h : Fˣ, (χ ^ 2) (σ * h) *
-        ψ ((ε * x) * ((h⁻¹ : Fˣ) : F))) := by
-    rw [← Finset.sum_neg_distrib]
-    apply Finset.sum_congr rfl
-    intro h _
-    rw [pow_zero, trivial_fourier_coefficient ψ hψ h,
-      ite_eq_right (Units.ne_zero h)]
-    ring
-  rw [hsum]
-  convert direct_theta_active_zero_fourier_row χ ψ hχ₂ σ ε x using 1 ; ring
 
 end ShortDraftLocal
 

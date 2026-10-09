@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Detector.LocalPhysical
 import OAI.NumberTheory.DirichletL.Detector.Sextic
 import OAI.NumberTheory.DirichletL.Detector.SixthFrequency
 import OAI.NumberTheory.DirichletL.Moments.Unequal
-
 namespace OAI
 
 noncomputable section
@@ -75,13 +74,6 @@ theorem gauss_sixth_frequency (a : O) (ha : Supported (Ideal.span {a}))
       sexticGauss a (supportedElement_ne_zero a ha) h := by
   rw [sexticGauss_unit_scale a ha (p^6) h hcop.pow_left,
     supported_sixth_value a p ha hcop.symm,inv_one,one_mul]
-
-theorem twelfth_power_mask (p : O) (hs : Supported (Ideal.span {p})) (u : O) :
-    idealRowHom u (Ideal.span {p}) ^ 12 = coprimalityMask u p := by
-  rw [show 12=6*2 by decide,pow_mul,← idealRowHom_argument_pow u 6 _ hs,
-    idealRowHom_sixth_eq_mask u p hs]
-  change (if IsCoprime u p then (1 : ℂ) else 0)^2 = if IsCoprime u p then 1 else 0
-  split_ifs <;> norm_num
 
 end SevenEighths.CenteredMomentAmplification
 

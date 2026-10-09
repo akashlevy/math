@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Reflection.LowDyads
 import OAI.NumberTheory.DirichletL.Reflection.DyadBudget
 import OAI.NumberTheory.DirichletL.Reflection.MemberChoiceTransport
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

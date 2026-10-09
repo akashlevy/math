@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.FirstIntegral
 import OAI.NumberTheory.DirichletL.PrimeRows.SourceTransport
 import OAI.NumberTheory.DirichletL.PrimeRows.FirstWShift
-
 namespace OAI
 
 noncomputable section

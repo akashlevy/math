@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.RawRadialJoin
 import OAI.NumberTheory.DirichletL.Detector.OuterIndex
-
 namespace OAI
 
 noncomputable section

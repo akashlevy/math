@@ -1,73 +1,24 @@
 import OAI.NumberTheory.DirichletL.GaussSum.SquarePhaseFactorization
 import OAI.NumberTheory.DirichletL.GaussSum.MixedConversion
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace MixedCrossSeparation
 
@@ -223,37 +174,6 @@ theorem mixed_converted_gauss_separation
     exact mixed_cross_eq_quadratic p hg i k (hprimary i) (hprimary k)
   rw [hn, hp', hc]
 
-theorem quadraticCrossPhase_sq
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (p : ι → O) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i}) (A B : Finset ι) (hd : Disjoint A B) :
-    quadraticCrossPhase p hg A B ^ 2 = 1 := by
-  have hpow (i k : ι) (hik : i ≠ k) : crossSymbol p hg i k ^ 6 = 1 := by
-    simpa only [crossSymbol, map_pow, ite_eq_right (prime_generator_not_mem_other p hcop i k hik)]
-      using canonicalSextic_sixth_power_mask (Ideal.span {p i}) (hg i) (p k)
-  unfold quadraticCrossPhase
-  rw [← Finset.prod_pow]
-  apply Finset.prod_eq_one
-  intro i hi
-  rw [← Finset.prod_pow]
-  apply Finset.prod_eq_one
-  intro k hk
-  have hik : i ≠ k := by
-    intro h
-    subst k
-    exact Finset.disjoint_left.mp hd hi hk
-  rw [mul_pow, ← pow_mul, ← pow_mul]
-  norm_num only [show 3 * 2 = 6 by decide, hpow i k hik, hpow k i hik.symm, one_mul]
-
-theorem quadraticCrossPhase_eq_one_or_neg_one
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (p : ι → O) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i}) (A B : Finset ι) (hd : Disjoint A B) :
-    quadraticCrossPhase p hg A B = 1 ∨ quadraticCrossPhase p hg A B = -1 := by
-  exact sq_eq_one_iff.mp (quadraticCrossPhase_sq p hcop hg A B hd)
-
 theorem activeConvertedGauss_separated
     {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
     [∀ i, (Ideal.span {p i}).IsMaximal]
@@ -279,22 +199,6 @@ theorem activeConvertedGauss_separated
   · ext k; simp
   · intro k hk; rfl
 
-theorem active_dual_row_factorization
-    {ι : Type*} [DecidableEq ι] (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hg : ∀ i, lambda ∉ P i) (S T : Finset ι) (d h : O) :
-    let row := finiteSexticRow (activePrimes P S T) (fun i => hg i.val)
-      (activeExponent S T)
-    row d * star (row h) =
-      star (finiteSquarefreeRow P hg (S \ T) d *
-        star (finiteSquarefreeRow P hg (S \ T) h)) *
-      (finiteSquarefreeRow P hg (T \ S) d *
-        star (finiteSquarefreeRow P hg (T \ S) h)) := by
-  dsimp only
-  rw [finiteSexticRow_activeSupport, finiteSexticRow_activeSupport]
-  simp only [star_mul, star_star]
-  ring
-
-open ActualEisensteinCubic ConcreteTraceCRT FiniteGaussPhase MixedGaussConversion
 open QuadraticGaussRay ActualEisensteinCoordinates
 
 private theorem prod_subtype_erase {ι M : Type*} [DecidableEq ι] [CommMonoid M]
@@ -458,38 +362,9 @@ theorem quadraticCrossPhase_eq_rayPair
     residue_mul]
   rfl
 
-theorem mixed_converted_gauss_separation_mod_four
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (inverse : ι → Bool) (hprimary : ∀ i, lambda ^ 2 ∣ p i - 1) :
-    (∏ i, ∏ k ∈ Finset.univ.erase i,
-      (canonicalSextic (Ideal.span {p i}) (hg i) ^ (if inverse i then 5 else 1))
-        (Ideal.Quotient.mk (Ideal.span {p i}) (p k))) *
-      (∏ i, convertedLocal (p i) (hp i) (hg i) (inverse i)) =
-    convertedColumnBlock p hp hg (Finset.univ.filter fun i => inverse i = true) true *
-      convertedColumnBlock p hp hg (Finset.univ.filter fun i => inverse i = false) false *
-      quadraticRayPair
-        (residue (∏ i ∈ Finset.univ.filter (fun i => inverse i = true), p i))
-        (residue (∏ i ∈ Finset.univ.filter (fun i => inverse i = false), p i)) := by
-  rw [mixed_converted_gauss_separation p hp hg inverse hprimary]
-  congr 1
-  apply quadraticCrossPhase_eq_rayPair p hp hcop hg hchar
-  apply Finset.disjoint_left.mpr
-  intro i hi hj
-  have ht := (Finset.mem_filter.mp hi).2
-  have hf := (Finset.mem_filter.mp hj).2
-  rw [ht] at hf
-  contradiction
-
 end MixedCrossSeparation
 
-open scoped BigOperators Classical
-
 namespace CoprimeMobiusExtension
-abbrev O := ActualEisensteinCubic.O
 
 theorem sum_subset_sign {ι : Type*} [DecidableEq ι] (S : Finset ι) :
     (∑ D ∈ S.powerset, (-1 : ℂ) ^ D.card) = if S = ∅ then 1 else 0 := by
@@ -609,29 +484,6 @@ theorem double_sum_disjoint_reindexed {ι : Type*} [DecidableEq ι]
       exact sum_supersets B D hDB (Z (D ∪ U))
 
 open ActualEisensteinCubic
-
-theorem ideal_mobius_coprime_reindex
-    {ι : Type*} [DecidableEq ι] (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hprime : ∀ i, Prime (P i)) (hinj : Function.Injective P)
-    (B : Finset ι) (Z : Ideal O → Ideal O → ℂ) :
-    (∑ S ∈ B.powerset, ∑ T ∈ B.powerset,
-      if Disjoint S T then Z (∏ i ∈ S, P i) (∏ i ∈ T, P i) else 0) =
-      ∑ D ∈ B.powerset, (UniqueFactorizationMonoid.moebius (∏ i ∈ D, P i) : ℂ) *
-        ∑ U ∈ (B \ D).powerset, ∑ V ∈ (B \ D).powerset,
-          Z ((∏ i ∈ D, P i) * ∏ i ∈ U, P i) ((∏ i ∈ D, P i) * ∏ i ∈ V, P i) := by
-  rw [double_sum_disjoint_reindexed]
-  apply Finset.sum_congr rfl
-  intro D hD
-  rw [prime_product_moebius P hprime hinj]
-  congr 1
-  apply Finset.sum_congr rfl
-  intro U hU
-  apply Finset.sum_congr rfl
-  intro V hV
-  rw [Finset.prod_union (Finset.disjoint_of_subset_right
-    (Finset.mem_powerset.mp hU) disjoint_sdiff_self_right)]
-  rw [Finset.prod_union (Finset.disjoint_of_subset_right
-    (Finset.mem_powerset.mp hV) disjoint_sdiff_self_right)]
 
 end CoprimeMobiusExtension
 

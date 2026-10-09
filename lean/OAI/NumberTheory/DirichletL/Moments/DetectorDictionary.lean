@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.SlotNormalization
 import OAI.NumberTheory.DirichletL.Moments.PrimeSlotShift
 import OAI.NumberTheory.DirichletL.Hecke.DetectorCoefficientTransfer
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationProfiles
-
 namespace OAI
 
 noncomputable section
@@ -49,28 +48,6 @@ theorem positiveSlotRow_eq_product
         ∏i,normalizedSlot η m A z (S i) (β i) 0 (P i) := by
   rw [←selectedProduct_univ _ _ _ _ _ _ _ _ _ _ _ _ (mul_pos hX₁ hX₂).le (fun i=>(hP i).le)]
   unfold selectedProduct
-  rw [plain_polynomial_eq_row η χ m A z hrow W₁ X₁ σ t hX₁,
-    plain_polynomial_eq_row η χ m A z hrow W₂ X₂ σ t hX₂,
-    Real.sqrt_mul hX₁.le,Complex.ofReal_mul,mul_inv_rev]
-  ring
-
-theorem positiveSlotRow_eq_polynomials
-    (M : Ideal O) (H : Subgroup (O⧸M)ˣ)
-    (η χ : Character) (m A z : O)
-    (hrow : ∀n,elementCoeff χ n=CanonicalRowCompletion.rowTwist (elementHom η) m 1 (A*z) n)
-    (W₁ W₂ : ℝ→ℂ) (V : ι→ℝ→ℂ) (b P σp tp : ι→ℝ)
-    (X₁ X₂ σ t : ℝ) (hX₁ : 0<X₁) (hX₂ : 0<X₂) (hP : ∀i,0<P i) :
-    positiveSlotRow η m A z (twistProfile W₁ σ t) (twistProfile W₂ σ t)
-      (fun i=>primePool M H (b i) (P i))
-      (fun i=>HeckePrimeAnnular.annularWeight (V i) (P i) (σp i) (tp i)) P 0 X₁ X₂ =
-      polynomial χ false W₁ X₁ σ t*polynomial χ false W₂ X₂ σ t*
-        ∏i,HeckePrimeRay.rayPrimePolynomial M H χ (V i) (b i) (P i) (σp i) (tp i) := by
-  rw [←selectedProduct_univ _ _ _ _ _ _ _ _ _ _ _ _ (mul_pos hX₁ hX₂).le (fun i=>(hP i).le)]
-  unfold selectedProduct
-  have hslot (i : ι) := CenteredMomentPrimeSlotShift.normalizedSlot_eq_ray M H η χ m A z hrow
-    (V i) (b i) (P i) (σp i) 0 (tp i) (hP i)
-  simp_rw [hslot]
-  simp only [Complex.ofReal_zero,mul_zero,Complex.cpow_zero,one_mul,zero_add]
   rw [plain_polynomial_eq_row η χ m A z hrow W₁ X₁ σ t hX₁,
     plain_polynomial_eq_row η χ m A z hrow W₂ X₂ σ t hX₂,
     Real.sqrt_mul hX₁.le,Complex.ofReal_mul,mul_inv_rev]

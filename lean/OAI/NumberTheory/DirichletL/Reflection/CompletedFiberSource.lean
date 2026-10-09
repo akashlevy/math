@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Reflection.SourcePhysical
 import OAI.NumberTheory.DirichletL.Reflection.OriginalActiveReflection
-import OAI.NumberTheory.DirichletL.Reflection.FixedLevel
-
+import OAI.NumberTheory.DirichletL.Reflection.MarkedLevel
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

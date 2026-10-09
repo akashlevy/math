@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GramCommonParam
-
 namespace OAI
 
 noncomputable section

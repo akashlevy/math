@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.AmplificationSourceError
-
 namespace OAI
 
 noncomputable section

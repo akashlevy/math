@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Detector.CorrectionBounds
 import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
 import Mathlib.Analysis.SpecialFunctions.Complex.LogBounds
 import Mathlib.Analysis.SpecialFunctions.Exp
-
 namespace OAI
 
 noncomputable section

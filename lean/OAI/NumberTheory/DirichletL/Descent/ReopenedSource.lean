@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.Completion
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

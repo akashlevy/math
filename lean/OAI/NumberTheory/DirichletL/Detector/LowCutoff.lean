@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LowRay
 import OAI.NumberTheory.DirichletL.Detector.GaussianPartition
-
 namespace OAI
 
 noncomputable section

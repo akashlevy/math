@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.CuspCongruence
 import OAI.NumberTheory.DirichletL.Descent.MarkedStratum
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

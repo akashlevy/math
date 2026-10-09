@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstMixedRoot
 import OAI.NumberTheory.DirichletL.Moments.FirstWindowBudgets
-
 namespace OAI
 
 noncomputable section

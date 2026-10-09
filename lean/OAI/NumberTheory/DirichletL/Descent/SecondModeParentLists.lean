@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondParentLists
 import OAI.NumberTheory.DirichletL.Descent.SecondModeCanonical
-
 namespace OAI
 
 noncomputable section

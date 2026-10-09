@@ -1,75 +1,23 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.ResidualSectors
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CanonicalQuadraticSieve
 
@@ -111,7 +59,6 @@ theorem unrestrictedPairCharacter_eq_primary (I J : Ideal O) (hI : Admissible I)
   rw [(primaryGenerator_spec lengthScale hz).1] at h
   exact h
 
-open ActualEisensteinCubic ConcreteTraceCRT ConcretePrimeRowBridge CompletedGauss
 open EisensteinSchwartzPoisson UnrestrictedIdealReindex GaussGeneratorTransport
 
 theorem idealGenerator_norm_sq (lengthScale : Ideal O) :
@@ -215,21 +162,6 @@ theorem squarefree_bad_good_product (I : Ideal O) (hI : Squarefree I) :
   rw [goodSquarefreePart, ← Finset.prod_union hd, hu]
   exact squarefree_support_product_self hI
 
-theorem bad_good_coprime (I : Ideal O) :
-    IsCoprime (∏ P ∈ badPrimeSupport I, P) (goodSquarefreePart I) := by
-  unfold goodSquarefreePart
-  apply IsCoprime.prod_left
-  intro P hP
-  apply IsCoprime.prod_right
-  intro Q hQ
-  have hp := support_prime (Finset.mem_inter.mp hP).1
-  have hq := support_prime (Finset.mem_sdiff.mp hQ).1
-  let : P.IsMaximal := (Ideal.isPrime_of_prime hp).isMaximal hp.ne_zero
-  let : Q.IsMaximal := (Ideal.isPrime_of_prime hq).isMaximal hq.ne_zero
-  apply Ideal.isCoprime_of_isMaximal
-  intro heq
-  exact (Finset.mem_sdiff.mp hQ).2 (heq ▸ (Finset.mem_inter.mp hP).2)
-
 theorem unrestrictedPairCharacter_squarefree_bad_split
     (I J B : Ideal O) (hI : Admissible I) (hJ : Admissible J)
     (hray : columnRay I = columnRay J) (hB : Squarefree B) :
@@ -288,101 +220,6 @@ section
 
 open ActualEisensteinCubic ConcreteTraceCRT ConcretePrimeRowBridge CompletedGauss
 open FiniteSieveOperator
-
-theorem norm_sum_sq_eq_of_pair_gram {n : Type*} [Fintype n] (x y : n → ℂ)
-    (h : ∀ j k, star (x j) * x k = star (y j) * y k) :
-    ‖∑ j, x j‖ ^ 2 = ‖∑ j, y j‖ ^ 2 := by
-  have hs : star (∑ j, x j) * (∑ j, x j) = star (∑ j, y j) * (∑ j, y j) := by
-    simp only [star_sum, Finset.sum_mul, Finset.mul_sum]
-    exact Finset.sum_congr rfl (fun j _ => Finset.sum_congr rfl (fun k _ => h k j))
-  have hx : star (∑ j, x j) * (∑ j, x j) = (‖∑ j, x j‖ : ℂ) ^ 2 := Complex.conj_mul' _
-  have hy : star (∑ j, y j) * (∑ j, y j) = (‖∑ j, y j‖ : ℂ) ^ 2 := Complex.conj_mul' _
-  rw [hx, hy] at hs
-  exact_mod_cast hs
-
-theorem squarefree_sector_energy_bound
-    {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
-    (rows : m → Ideal O) (cols : n → Ideal O)
-    (hr : Function.Injective rows) (hc : Function.Injective cols)
-    (M N : ℝ) (hrows : ∀ i, Squarefree (rows i) ∧ (Ideal.absNorm (rows i) : ℝ) ≤ M)
-    (hcols : ∀ j, Admissible (cols j) ∧ (Ideal.absNorm (cols j) : ℝ) ≤ N)
-    (hray : ∀ j k, columnRay (cols j) = columnRay (cols k))
-    (E : fixedBadPrimes.powerset) (hE : ∀ i, badPrimeSector (rows i) = E) (a : n → ℂ) :
-    (∑ i, ‖∑ j, quadraticRow (cols j) (idealGenerator (rows i)) * a j‖ ^ 2) ≤
-      sieveNorm M N * ∑ j, ‖a j‖ ^ 2 := by
-  let good := fun i => goodSquarefreePart (rows i)
-  let d := idealGenerator (∏ P ∈ E.val, P)
-  let b := fun j => a j * quadraticRow (cols j) d
-  have hgood : Function.Injective good := by
-    intro i k h
-    apply hr
-    exact goodSquarefreePart_injective_on_sector _ _ (hrows i).1 (hrows k).1
-      ((hE i).trans (hE k).symm) h
-  have hgoodrows (i : m) : Admissible (good i) ∧ (Ideal.absNorm (good i) : ℝ) ≤ M := by
-    exact mem_idealRange.mp (goodSquarefreePart_mem_idealRange _ (hrows i).1 M (hrows i).2)
-  have hnorm (i : m) :
-      ‖∑ j, quadraticRow (cols j) (idealGenerator (rows i)) * a j‖ ^ 2 =
-      ‖∑ j, quadraticRow (cols j) (primaryGenerator (good i)) * b j‖ ^ 2 := by
-    apply norm_sum_sq_eq_of_pair_gram
-    intro j k
-    have hbad : badPrimeSupport (rows i) = E.val := congrArg Subtype.val (hE i)
-    have hp := unrestrictedPairCharacter_squarefree_bad_split (cols j) (cols k) (rows i)
-      (hcols j).1 (hcols k).1 (hray j k) (hrows i).1
-    simp only [unrestrictedPairCharacter, hbad] at hp
-    change quadraticRow (cols j) (idealGenerator (rows i)) * quadraticRow (cols k) (idealGenerator (rows i)) =
-      (quadraticRow (cols j) d * quadraticRow (cols k) d) *
-      (quadraticRow (cols j) (primaryGenerator (good i)) * quadraticRow (cols k) (primaryGenerator (good i))) at hp
-    calc
-      _ = (quadraticRow (cols j) (idealGenerator (rows i)) * quadraticRow (cols k) (idealGenerator (rows i))) *
-          (star (a j) * a k) := by
-            rw [star_mul, canonical_quadraticRow_star _ (hcols j).1]
-            ring
-      _ = _ := by
-        rw [hp]
-        simp only [b, star_mul, canonical_quadraticRow_star _ (hcols j).1]
-        ring
-  have hcoeff : (∑ j, ‖b j‖ ^ 2) ≤ ∑ j, ‖a j‖ ^ 2 := by
-    apply Finset.sum_le_sum
-    intro j _
-    apply pow_le_pow_left₀ (norm_nonneg _)
-    dsimp only [b]
-    rw [norm_mul]
-    exact mul_le_of_le_one_right (norm_nonneg _) (quadraticRow_norm_le_one _ _)
-  have hfamily := family_squared_norm_le good cols hgood hc M N hgoodrows hcols
-  calc
-    _ = ∑ i, ‖∑ j, quadraticRow (cols j) (primaryGenerator (good i)) * b j‖ ^ 2 :=
-      Finset.sum_congr rfl (fun i _ => hnorm i)
-    _ ≤ ‖operator (fun i j => quadraticRow (cols j) (primaryGenerator (good i)))‖ ^ 2 * ∑ j, ‖b j‖ ^ 2 :=
-      FiniteSieveOperator.energy_bound _ b
-    _ ≤ sieveNorm M N * ∑ j, ‖a j‖ ^ 2 :=
-      mul_le_mul hfamily hcoeff (Finset.sum_nonneg (fun _ _ => sq_nonneg _)) (sieveNorm_nonneg M N)
-
-theorem unrestricted_squarefree_energy_bound
-    {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
-    (rows : m → Ideal O) (cols : n → Ideal O)
-    (hr : Function.Injective rows) (hc : Function.Injective cols)
-    (M N : ℝ) (hrows : ∀ i, Squarefree (rows i) ∧ (Ideal.absNorm (rows i) : ℝ) ≤ M)
-    (hcols : ∀ j, Admissible (cols j) ∧ (Ideal.absNorm (cols j) : ℝ) ≤ N)
-    (hray : ∀ j k, columnRay (cols j) = columnRay (cols k)) (a : n → ℂ) :
-    (∑ i, ‖∑ j, quadraticRow (cols j) (idealGenerator (rows i)) * a j‖ ^ 2) ≤
-      4 * sieveNorm M N * ∑ j, ‖a j‖ ^ 2 := by
-  let σ := fun i => badPrimeSector (rows i)
-  have h (E : fixedBadPrimes.powerset) :
-      (∑ i : {i // σ i = E}, ‖∑ j, quadraticRow (cols j) (idealGenerator (rows i.val)) * a j‖ ^ 2) ≤
-        sieveNorm M N * ∑ j, ‖a j‖ ^ 2 := by
-    apply squarefree_sector_energy_bound (fun i : {i // σ i = E} => rows i.val) cols
-      (fun i k hik => Subtype.ext (hr hik)) hc M N
-      (fun i => hrows i.val) hcols hray E (fun i => i.property) a
-  calc
-    _ = ∑ E : fixedBadPrimes.powerset, ∑ i : {i // σ i = E},
-        ‖∑ j, quadraticRow (cols j) (idealGenerator (rows i.val)) * a j‖ ^ 2 :=
-      (Fintype.sum_fiberwise σ _).symm
-    _ ≤ ∑ _E : fixedBadPrimes.powerset, sieveNorm M N * ∑ j, ‖a j‖ ^ 2 :=
-      Finset.sum_le_sum (fun E _ => h E)
-    _ = _ := by
-      simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, Fintype.card_coe,
-        fixedBadPrimes_powerset_card]
-      ring
 
 end
 section
@@ -472,42 +309,8 @@ theorem unrestrictedPairCharacter_square
       (quadraticRow J (idealGenerator A) * quadraticRow J (idealGenerator A)) := by ring
     _ = _ := by rw [canonical_quadraticRow_squared I hI, canonical_quadraticRow_squared J hJ]
 
-theorem unrestricted_pair_squarefree_tsum
-    (I J : Ideal O) (hI : Admissible I) (hJ : Admissible J)
-    (hray : columnRay I = columnRay J) (F : ℝ → ℂ) :
-    (∑' lengthScale : NonzeroIdeal, unrestrictedPairCharacter I J lengthScale.val * F (Ideal.absNorm lengthScale.val)) =
-      ∑' p : ({A : Ideal O // A ≠ 0} × {B : Ideal O // Squarefree B}),
-        (idealZeroMask I (idealGenerator p.1.val) * idealZeroMask J (idealGenerator p.1.val)) *
-        unrestrictedPairCharacter I J p.2.val *
-        F ((Ideal.absNorm p.1.val : ℝ) ^ 2 * (Ideal.absNorm p.2.val : ℝ)) := by
-  have he := squarefree_decomposition_tsum (fun lengthScale : Ideal O =>
-    unrestrictedPairCharacter I J lengthScale * F (Ideal.absNorm lengthScale))
-  rw [he]
-  apply tsum_congr
-  intro p
-  rw [unrestrictedPairCharacter_mul I J hI hJ hray, unrestrictedPairCharacter_square I J hI hJ hray]
-  simp only [map_mul, map_pow, Nat.cast_mul, Nat.cast_pow]
-
-theorem canonical_nonprincipal_dual_squarefree
-    (I J : Ideal O) (hI : Admissible I) (hJ : Admissible J)
-    (hray : columnRay I = columnRay J) (hnt : I ≠ 1 ∨ J ≠ 1)
-    (W : SchwartzMap ℝ ℂ) (t : ℝ) (ht : 0 < t) :
-    (∑' h : O, (quadraticRow I h * quadraticRow J h) *
-      EisensteinSchwartzPoisson.paperRadialFourier W (t * ‖eisEmbedding h‖ ^ 2)) =
-      (6 : ℂ) * ∑' p : ({A : Ideal O // A ≠ 0} × {B : Ideal O // Squarefree B}),
-        (idealZeroMask I (idealGenerator p.1.val) * idealZeroMask J (idealGenerator p.1.val)) *
-        unrestrictedPairCharacter I J p.2.val *
-        EisensteinSchwartzPoisson.paperRadialFourier W
-          (t * ((Ideal.absNorm p.1.val : ℝ) ^ 2 * (Ideal.absNorm p.2.val : ℝ))) := by
-  rw [canonical_nonprincipal_dual_ideal_reindex I J hI hJ hray hnt W t ht]
-  congr 1
-  exact unrestricted_pair_squarefree_tsum I J hI hJ hray
-    (fun x => EisensteinSchwartzPoisson.paperRadialFourier W (t * x))
-
 end CanonicalQuadraticSieve
 
-open MeasureTheory
-open scoped BigOperators Classical SchwartzMap FourierTransform
 namespace JointLogSeparation
 open FourierBridge FirstPassCubeLabels
 

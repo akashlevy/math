@@ -1,5 +1,5 @@
-import OAI.NumberTheory.DirichletL.Detector.LowOriginalPools
-
+import OAI.NumberTheory.DirichletL.Detector.LowSlotScales
+import OAI.NumberTheory.DirichletL.Detector.RayPoolGood
 namespace OAI
 
 noncomputable section
@@ -7,7 +7,6 @@ open scoped Classical
 namespace SevenEighths.ProbePhysical
 open CompletedGauss CanonicalQuadraticSieve ProbeRaySlots
 local notation "O" => ActualEisensteinCubic.O
-local notation "Id" => Ideal O
 
 def lowUnselectedLength {K : ℕ} (ell : Fin K→ℝ) (J : Finset (Fin K)) : ℝ := ∑i∈J,ell i
 
@@ -44,13 +43,6 @@ lemma lowUnselectedProduct_norm_lower {K : ℕ} (ell : Fin K→ℝ)
         ←Real.rpow_sum_of_pos hZ,Finset.sum_coe_sort]
       rfl
     _≤_ := Finset.prod_le_prod₀ (fun _ _=>by positivity) (fun i _=>hslots i.val _ (p i).property)
-
-lemma originalPool_element_lower (R : Set Id) (S : Finset Id) (hS : SourceExclusions S)
-    (a b Y : ℝ) (ha : 0≤a) (hab : a≤b) (hY : 0<Y) (n : O)
-    (hn : n∈canonicalSlotSupport (pool R S a b Y)) : a*Y≤elementNorm n := by
-  obtain ⟨P,hP,rfl⟩ := Finset.mem_image.mp hn
-  rw [primaryTuple_norm P (pool_supported R S hS a b Y P hP)]
-  simpa only [mul_comm] using (pool_norm_bounds R S ha hab hY P hP).1.le
 
 lemma lowPhysicalScale_source (C : CalibrationData) (Z L : ℝ) (hZ : 0<Z) :
     lowPhysicalScale C (Z^(17/48:ℝ)/L) (Z^(23/48:ℝ)/L)=

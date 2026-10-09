@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.HighEuler
-
 namespace OAI
 
 noncomputable section

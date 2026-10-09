@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalCompleteChildren
 import OAI.NumberTheory.DirichletL.Descent.CanonicalLiveBinRank
-
 namespace OAI
 
 noncomputable section

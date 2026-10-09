@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Foundation
 import OAI.NumberTheory.DirichletL.Detector.GramLatticeDecay
 import OAI.NumberTheory.DirichletL.Detector.GramAnnularLattice
-
 namespace OAI
 
 noncomputable section
@@ -121,11 +120,6 @@ lemma amplitude_hasCompactSupport (W : ℝ→ℂ) (a b : ℝ) (ha : 0<a) (hab : 
   HasCompactSupport.of_support_subset_isCompact (sourceCompact_isCompact b)
     ((support_amplitude W a b ha hs).trans (annulus_subset_sourceCompact a b ha hab))
 
-lemma patchedProfile_hasCompactSupport (W : ℝ→ℂ) (U : 𝓢(ℝ,ℂ))
-    (a b : ℝ) (ha : 0<a) (hab : a<b) (hs : Function.support W⊆Icc a b) (v T : ℝ) :
-    HasCompactSupport (patchedProfile W U a b ha v T) :=
-  ((amplitude_hasCompactSupport W a b ha hab hs).mul_right).mul_right
-
 lemma norm_power_pair (v x y : ℝ) (hx : 0<x) (hy : 0<y) :
     (x:ℂ)^(-1+(v:ℂ)*Complex.I)*star ((y:ℂ)^(-1+(v:ℂ)*Complex.I)) =
       Complex.exp (-((Real.log x+Real.log y):ℂ))*
@@ -240,32 +234,6 @@ theorem jointProfile_annularSupport (W : ℝ→ℂ) (U : 𝓢(ℝ,ℂ))
     (v T : ℝ) (hT : 0≤T) :
     ProbeGramAnnularLattice.AnnularSupport a b (jointProfile W U a b ha hab hs hW v T hT) :=
   support_rawProfile W U a b hs v T
-
-lemma jointProfile_zero_scale (W : ℝ→ℂ) (U : 𝓢(ℝ,ℂ))
-    (a b : ℝ) (ha : 0<a) (hab : a<b)
-    (hs : Function.support W⊆Icc a b) (hW : ContDiff ℝ ∞ W) (v : ℝ) (z : Joint) :
-    jointProfile W U a b ha hab hs hW v 0 (by positivity) z=
-      (W (q1 z)*(q1 z:ℂ)^(-1+(v:ℂ)*Complex.I))*
-        star (W (q2 z)*(q2 z:ℂ)^(-1+(v:ℂ)*Complex.I))*paperRadialFourier U 0 := by
-  simp only [jointProfile_apply,rawProfile,zero_div]
-
-lemma jointProfile_zero_of_left_small (W : ℝ→ℂ) (U : 𝓢(ℝ,ℂ))
-    (a b : ℝ) (ha : 0<a) (hab : a<b)
-    (hs : Function.support W⊆Icc a b) (hW : ContDiff ℝ ∞ W)
-    (v T : ℝ) (hT : 0≤T) (z : Joint) (hz : q1 z<a) :
-    jointProfile W U a b ha hab hs hW v T hT z=0 := by
-  apply rawProfile_zero_left
-  by_contra h
-  exact (not_le.mpr hz) (hs h).1
-
-lemma jointProfile_zero_of_right_small (W : ℝ→ℂ) (U : 𝓢(ℝ,ℂ))
-    (a b : ℝ) (ha : 0<a) (hab : a<b)
-    (hs : Function.support W⊆Icc a b) (hW : ContDiff ℝ ∞ W)
-    (v T : ℝ) (hT : 0≤T) (z : Joint) (hz : q2 z<a) :
-    jointProfile W U a b ha hab hs hW v T hT z=0 := by
-  apply rawProfile_zero_right
-  by_contra h
-  exact (not_le.mpr hz) (hs h).1
 
 end ProbeGramJointConstruction
 

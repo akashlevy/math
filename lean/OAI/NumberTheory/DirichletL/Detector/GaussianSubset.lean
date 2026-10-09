@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GaussianCompensation
-
 namespace OAI
 
 noncomputable section

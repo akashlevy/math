@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.SmallPartition
-
 namespace OAI
 
 noncomputable section

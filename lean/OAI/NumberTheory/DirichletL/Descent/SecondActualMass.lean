@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondTripleBounds
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

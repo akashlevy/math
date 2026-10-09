@@ -1,83 +1,28 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.UnitNormalization
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace CanonicalRowCompletion
 open ActualEisensteinCubic
 open CompletedGauss hiding O
-open ConcretePrimeRowBridge hiding O columnWeight
+open ConcretePrimeRowBridge hiding O
 open CanonicalQuadraticSieve hiding O
 open SecondPassArithmetic hiding O
 open CanonicalCoefficientClass (IsBaseRayTwist)
@@ -149,15 +94,11 @@ theorem outsideLogEnergy_terminal_constant
 
 end CanonicalRowCompletion
 
-open scoped BigOperators Classical
 namespace CompletedGauss
 
 section
 open ActualEisensteinCubic
 open ConcreteTraceCRT (eisEmbedding)
-
-def fractionalThetaPoint (u : ActualEisensteinCubic.Oˣ) (m : ℕ) (n b : ActualEisensteinCubic.O) : ℂ :=
-  eisEmbedding u.val * eisEmbedding lambda^((m:ℤ)-4) * eisEmbedding n * eisEmbedding b^3
 
 lemma embedding_lambda_ne_zero : eisEmbedding lambda≠0 :=
   by
@@ -166,112 +107,11 @@ lemma embedding_lambda_ne_zero : eisEmbedding lambda≠0 :=
     apply ConcreteTraceCRT.eisEmbedding_injective
     simpa only [map_zero] using hz
 
-theorem fractionalThetaPoint_clear (u : ActualEisensteinCubic.Oˣ) (m : ℕ) (n b : ActualEisensteinCubic.O) :
-    eisEmbedding lambda^4*fractionalThetaPoint u m n b=
-      eisEmbedding (u.val*lambda^m*(n*b^3)) := by
-  unfold fractionalThetaPoint
-  rw [zpow_sub₀ embedding_lambda_ne_zero]
-  simp only [zpow_natCast,map_mul,map_pow]
-  field_simp [embedding_lambda_ne_zero]
-
-lemma embedding_lambda_norm_sq : ‖eisEmbedding lambda‖^2=(3:ℝ) := by
-  rw [eisEmbedding_norm_sq_eq_absNorm_span,CubicEisenstein.absNorm_span_lambda]
-  norm_num
-
-theorem fractionalThetaPoint_norm_sq (u : ActualEisensteinCubic.Oˣ) (m : ℕ) (n b : ActualEisensteinCubic.O) :
-    ‖fractionalThetaPoint u m n b‖^2=
-      (3:ℝ)^((m:ℝ)-4)*‖eisEmbedding n‖^2*(‖eisEmbedding b‖^2)^3 := by
-  have hp : (‖eisEmbedding lambda‖^((m:ℤ)-4))^2=(3:ℝ)^((m:ℝ)-4) := by
-    calc
-      _ = (‖eisEmbedding lambda‖^2)^((m:ℤ)-4) := by
-        calc
-          _ = ‖eisEmbedding lambda‖^(((m:ℤ)-4)*2):=by rw [zpow_mul]; norm_num
-          _ = ‖eisEmbedding lambda‖^((2:ℤ)*((m:ℤ)-4)):=by congr 1; ring
-          _ = _:=by rw [zpow_mul]; norm_num
-      _ = (3:ℝ)^((m:ℤ)-4):=by rw [embedding_lambda_norm_sq]
-      _ = _:=by rw [←Real.rpow_intCast]; norm_num
-  simp only [fractionalThetaPoint,norm_mul,norm_zpow,norm_pow,
-    GaussGeneratorTransport.norm_eisEmbedding_unit,one_mul,mul_pow,hp]
-  ring
-
-theorem fractionalThetaPoint_ne_zero (u : ActualEisensteinCubic.Oˣ) (m : ℕ) (n b : ActualEisensteinCubic.O)
-    (hn : n≠0) (hb : b≠0) : fractionalThetaPoint u m n b≠0 := by
-  unfold fractionalThetaPoint
-  apply mul_ne_zero
-  · apply mul_ne_zero
-    · exact mul_ne_zero ((u.isUnit.map eisEmbedding).ne_zero) (zpow_ne_zero _ embedding_lambda_ne_zero)
-    · intro hz
-      apply hn
-      apply ConcreteTraceCRT.eisEmbedding_injective
-      simpa only [map_zero] using hz
-  · apply pow_ne_zero
-    intro hz
-    apply hb
-    apply ConcreteTraceCRT.eisEmbedding_injective
-    simpa only [map_zero] using hz
-
 end
 
 section
 open ActualEisensteinCubic CompletedDyadic LocalReflectionBrackets
 open ConcreteTraceCRT (eisEmbedding)
-
-theorem fractional_cusp_coefficient (d ζ : ℂ) (u : ActualEisensteinCubic.Oˣ) (m : ℕ) (n b : ActualEisensteinCubic.O)
-    (hn : n≠0) (hb : b≠0) :
-    ζ*(d/((‖fractionalThetaPoint u m n b‖:ℝ):ℂ)) =
-      (4/3:ℂ)*(81*ζ)*(normalizedCuspAmplitude d ((m:ℝ)-4) (‖eisEmbedding b‖^2) /
-        ((4*ramifiedScale completedRamifiedInitial completedRamifiedStep m*
-          ‖eisEmbedding n‖*‖eisEmbedding b‖^2:ℝ):ℂ)) := by
-  have hn0 : 0<‖eisEmbedding n‖:=norm_pos_iff.mpr (ConcreteTraceCRT.eisEmbedding_ne_zero hn)
-  have hb0 : 0<‖eisEmbedding b‖:=norm_pos_iff.mpr (ConcreteTraceCRT.eisEmbedding_ne_zero hb)
-  have hh:=normalized_cusp_coefficient_nat d ζ m (‖eisEmbedding n‖^2) (‖eisEmbedding b‖^2)
-    (sq_pos_of_pos hn0) (sq_pos_of_pos hb0)
-  rw [←fractionalThetaPoint_norm_sq u m n b,Real.sqrt_sq (norm_nonneg _),
-    Real.sqrt_sq (norm_nonneg _)] at hh
-  exact hh
-
-def normalizedThetaAmplitude (d : ℂ→ℂ) (vartheta : ActualEisensteinCubic.O→ℂ)
-    (u : ActualEisensteinCubic.Oˣ) (m : ℕ) (n b : ActualEisensteinCubic.O) : ℂ :=
-  normalizedCuspAmplitude (d (fractionalThetaPoint u m n b)) ((m:ℝ)-4) (‖eisEmbedding b‖^2) *
-    (fractionalThetaPoint u m n b/(‖fractionalThetaPoint u m n b‖:ℂ)) *
-    vartheta (u.val*lambda^m*(n*b^3))
-
-theorem normalizedThetaAmplitude_norm (d : ℂ→ℂ) (vartheta : ActualEisensteinCubic.O→ℂ)
-    (u : ActualEisensteinCubic.Oˣ) (m : ℕ) (n b : ActualEisensteinCubic.O) (hn : n≠0) (hb : b≠0)
-    (hd : ‖d (fractionalThetaPoint u m n b)‖≤
-      27*(3:ℝ)^(((m:ℝ)-4)/6)*‖eisEmbedding b‖)
-    (hv : ‖vartheta (u.val*lambda^m*(n*b^3))‖≤1) :
-    ‖normalizedThetaAmplitude d vartheta u m n b‖≤1 := by
-  have hb0 : 0<‖eisEmbedding b‖:=norm_pos_iff.mpr (ConcreteTraceCRT.eisEmbedding_ne_zero hb)
-  have hμ : fractionalThetaPoint u m n b≠0:=fractionalThetaPoint_ne_zero u m n b hn hb
-  have ha:=normalizedCuspAmplitude_norm (d (fractionalThetaPoint u m n b)) ((m:ℝ)-4)
-    (‖eisEmbedding b‖^2) (sq_pos_of_pos hb0) (by simpa only [Real.sqrt_sq (norm_nonneg _)] using hd)
-  have hu : ‖fractionalThetaPoint u m n b/(‖fractionalThetaPoint u m n b‖:ℂ)‖=1 := by
-    rw [norm_div,Complex.norm_real,Real.norm_eq_abs,abs_of_nonneg (norm_nonneg _),div_self]
-    exact norm_ne_zero_iff.mpr hμ
-  simp only [normalizedThetaAmplitude,norm_mul,hu,mul_one]
-  exact (mul_le_of_le_one_left (norm_nonneg _) ha).trans hv
-
-theorem cusp_summand_eq_local_branches {ι : Type*} [Fintype ι]
-    (P : ι→Ideal ActualEisensteinCubic.O) [∀i,(P i).IsMaximal] (hg : ∀i,lambda∉P i) (j : ι→ℕ)
-    (d : ℂ→ℂ) (vartheta : ActualEisensteinCubic.O→ℂ) (ζ : ℂ)
-    (u : ActualEisensteinCubic.Oˣ) (m : ℕ) (n b : ActualEisensteinCubic.O) (hn : n≠0) (hb : b≠0) :
-    (ζ*(d (fractionalThetaPoint u m n b)/(‖fractionalThetaPoint u m n b‖:ℂ)))*
-      (fractionalThetaPoint u m n b/(‖fractionalThetaPoint u m n b‖:ℂ))*
-      vartheta (u.val*lambda^m*(n*b^3))*
-      (∏i,bracket (actualSextic (P i) (hg i)) (j i)
-        (Ideal.Quotient.mk (P i) (u.val*lambda^m*(n*b^3)))) =
-    (4/3:ℂ)*(81*ζ)*ramifiedBranchPhase P hg j u m*
-      ∑e : ι→Fin 3,
-        (normalizedThetaAmplitude d vartheta u m n b*reflectedBranch P hg j e n b)/
-          ((4*ramifiedScale completedRamifiedInitial completedRamifiedStep m*
-            ‖eisEmbedding n‖*‖eisEmbedding b‖^2:ℝ):ℂ) := by
-  rw [fractional_cusp_coefficient (d (fractionalThetaPoint u m n b)) ζ u m n b hn hb,
-    ramified_bracket_full_expansion]
-  simp only [normalizedThetaAmplitude,Finset.mul_sum,]
-  apply Finset.sum_congr rfl
-  intro e he
-  ring
 
 end
 
@@ -292,12 +132,6 @@ def paperLambdaUnit : ActualEisensteinCubic.Oˣ where
       (-omega^2)*(-omega)=omega^3:=by ring
       _=1:=omega_primitive.pow_eq_one
 
-lemma paperLambdaUnit_six : (paperLambdaUnit.val:ActualEisensteinCubic.O)^6=1 := by
-  change (-omega)^6=1
-  calc
-    (-omega)^6=(omega^3)^2:=by ring
-    _=1:=by rw [omega_primitive.pow_eq_one,one_pow]
-
 lemma paperLambda_eq : paperLambda=paperLambdaUnit.val*lambda := by
   change 1+2*omega=(-omega)*lambda
   change (1+2*omega:ActualEisensteinCubic.O)=(-omega)*(omega-1)
@@ -305,85 +139,8 @@ lemma paperLambda_eq : paperLambda=paperLambdaUnit.val*lambda := by
   norm_num [Finset.sum_range_succ] at hw
   linear_combination hw
 
-lemma paperLambda_embedding_ne_zero : eisEmbedding paperLambda≠0 := by
-  rw [paperLambda_eq,map_mul]
-  exact mul_ne_zero ((paperLambdaUnit.isUnit.map eisEmbedding).ne_zero) embedding_lambda_ne_zero
-
-def paperFractionalThetaPoint (u : ActualEisensteinCubic.Oˣ) (m : ℕ) (n b : ActualEisensteinCubic.O) : ℂ :=
-  eisEmbedding u.val*eisEmbedding paperLambda^((m:ℤ)-4)*eisEmbedding n*eisEmbedding b^3
-
-def paperUnitReindex (m : ℕ) : ActualEisensteinCubic.Oˣ ≃ ActualEisensteinCubic.Oˣ := Equiv.mulRight (paperLambdaUnit^(m+2))
-
-lemma paperUnitReindex_apply (m : ℕ) (u : ActualEisensteinCubic.Oˣ) :
-    paperUnitReindex m u=u*paperLambdaUnit^(m+2):=rfl
-
-theorem paperFractionalThetaPoint_eq (u : ActualEisensteinCubic.Oˣ) (m : ℕ) (n b : ActualEisensteinCubic.O) :
-    paperFractionalThetaPoint u m n b=
-      fractionalThetaPoint (paperUnitReindex m u) m n b := by
-  have ht : eisEmbedding paperLambdaUnit.val≠0:=(paperLambdaUnit.isUnit.map eisEmbedding).ne_zero
-  have ht6 : eisEmbedding paperLambdaUnit.val^6=1:=by
-    rw [←map_pow,paperLambdaUnit_six,map_one]
-  have hp : eisEmbedding paperLambdaUnit.val^((m:ℤ)-4)=eisEmbedding paperLambdaUnit.val^(m+2) := by
-    rw [show (m:ℤ)-4=((m+2:ℕ):ℤ)-6 by omega,zpow_sub₀ ht]
-    norm_num only [zpow_natCast,zpow_ofNat,ht6,div_one]
-  simp only [paperFractionalThetaPoint,fractionalThetaPoint,paperUnitReindex_apply,
-    Units.val_mul,Units.val_pow_eq_pow_val,map_mul,map_pow,paperLambda_eq,mul_zpow,hp]
-  ring
-
-theorem paperFractionalThetaPoint_clear (u : ActualEisensteinCubic.Oˣ) (m : ℕ) (n b : ActualEisensteinCubic.O) :
-    eisEmbedding paperLambda^4*paperFractionalThetaPoint u m n b=
-      eisEmbedding (u.val*paperLambda^m*(n*b^3)) := by
-  unfold paperFractionalThetaPoint
-  rw [zpow_sub₀ paperLambda_embedding_ne_zero]
-  simp only [zpow_natCast,map_mul,map_pow]
-  field_simp [paperLambda_embedding_ne_zero]
-
-theorem paperFractionalThetaPoint_norm_sq (u : ActualEisensteinCubic.Oˣ) (m : ℕ) (n b : ActualEisensteinCubic.O) :
-    ‖paperFractionalThetaPoint u m n b‖^2=
-      (3:ℝ)^((m:ℝ)-4)*‖eisEmbedding n‖^2*(‖eisEmbedding b‖^2)^3 := by
-  rw [paperFractionalThetaPoint_eq,fractionalThetaPoint_norm_sq]
-
-theorem paperIntegralArgument_eq (u : ActualEisensteinCubic.Oˣ) (m : ℕ) (n b : ActualEisensteinCubic.O) :
-    u.val*paperLambda^m*(n*b^3)=paperLambdaUnit.val^4*
-      ((paperUnitReindex m u).val*lambda^m*(n*b^3)) := by
-  apply ConcreteTraceCRT.eisEmbedding_injective
-  rw [←paperFractionalThetaPoint_clear,paperFractionalThetaPoint_eq,
-    paperLambda_eq,map_mul,mul_pow]
-  rw [map_mul,map_pow,←fractionalThetaPoint_clear]
-  ring
-
-theorem paperBracket_transport (P : Ideal ActualEisensteinCubic.O) [P.IsMaximal] (hg : lambda∉P)
-    (j : ℕ) (u : ActualEisensteinCubic.Oˣ) (m : ℕ) (n b : ActualEisensteinCubic.O) :
-    bracket (actualSextic P hg) j (Ideal.Quotient.mk P (u.val*paperLambda^m*(n*b^3))) =
-      unitArgumentFactor (actualSextic P hg) j (Ideal.Quotient.mk P (paperLambdaUnit.val^4))*
-      bracket (actualSextic P hg) j
-        (Ideal.Quotient.mk P ((paperUnitReindex m u).val*lambda^m*(n*b^3))) := by
-  rw [paperIntegralArgument_eq,map_mul]
-  apply bracket_mul_unit
-  exact ((paperLambdaUnit.isUnit.pow 4).map (Ideal.Quotient.mk P)).ne_zero
-
-lemma paperLambdaUnit_four : paperLambdaUnit.val^4=omega := by
-  change (-omega)^4=omega
-  calc
-    _=omega^3*omega:=by ring
-    _=omega:=by rw [omega_primitive.pow_eq_one,one_mul]
-
-theorem paperBracket_one_transport (P : Ideal ActualEisensteinCubic.O) [P.IsMaximal] (hg : lambda∉P)
-    (u : ActualEisensteinCubic.Oˣ) (m : ℕ) (n b : ActualEisensteinCubic.O) :
-    bracket (actualSextic P hg) 1 (Ideal.Quotient.mk P (u.val*paperLambda^m*(n*b^3))) =
-      bracket (actualSextic P hg) 1
-        (Ideal.Quotient.mk P ((paperUnitReindex m u).val*lambda^m*(n*b^3))) := by
-  rw [paperBracket_transport,paperLambdaUnit_four]
-  have hv : (actualSextic P hg (Ideal.Quotient.mk P omega))^3=1 := by
-    rw [←map_pow,←map_pow,omega_primitive.pow_eq_one,map_one,map_one]
-  have hf : unitArgumentFactor (actualSextic P hg) 1 (Ideal.Quotient.mk P omega)=1 := by
-    simp only [unitArgumentFactor,show (1:ℕ)≠4 by decide,ite_false]
-    rw [show (1:ℕ)+2=3 by rfl,MulChar.inv_apply_eq_inv',MulChar.pow_apply' _ (by decide : (3:ℕ)≠0),hv,inv_one]
-  rw [hf,one_mul]
-
 end CompletedGauss
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace CanonicalCubeSeparation
 
 lemma columnWindowRadius_exp (A : ℝ) (hA : 0≤A) :
@@ -414,14 +171,12 @@ theorem fixed_reopening_profiles (A : ℝ) (hA : 0≤A) :
     have hh:=abs_le.mpr (hvsupp (subset_tsupport v hu))
     linarith
 
-lemma fixed_reopening_child_radius (A : ℝ) : (2*A+4)+7=2*A+11 := by ring
-
 end CanonicalCubeSeparation
 
 namespace CanonicalRowCompletion
 open ActualEisensteinCubic
 open CompletedGauss hiding O
-open ConcretePrimeRowBridge hiding O columnWeight
+open ConcretePrimeRowBridge hiding O
 open CanonicalQuadraticSieve hiding O
 open SecondPassArithmetic hiding O
 open ConcreteTraceCRT (eisEmbedding)
@@ -536,25 +291,14 @@ theorem radiusIter_mono_depth (A : ℝ) (hA : 0≤A) : Monotone (radiusIter A) :
 theorem le_radiusIter (A : ℝ) (hA : 0≤A) (n : ℕ) : A≤radiusIter A n :=
   radiusIter_mono_depth A hA (Nat.zero_le n)
 
-theorem radiusIter_child_le (A : ℝ) (hA : 0≤A) (s r : ℕ) (hs : s<r) :
-    radiusIter (2*A+11) s≤radiusIter A r :=
-  radiusIter_mono_depth A hA (Nat.succ_le_of_lt hs)
-
 theorem common_pool_parent (A Z X D : ℝ) (r : ℕ) (hA : 0≤A)
     (_hZ : 0≤Z) (hX : 0≤X) (hXZ : X≤Z^3)
     (hD : Real.exp (radiusIter A r)*Z^3≤D) : Real.exp A*X≤D := by
   exact (mul_le_mul (Real.exp_le_exp.mpr (le_radiusIter A hA r)) hXZ hX
     (Real.exp_pos _).le).trans hD
 
-theorem common_pool_child (A Z D : ℝ) (s r : ℕ) (hA : 0≤A)
-    (hZ : 0≤Z) (hs : s<r) (hD : Real.exp (radiusIter A r)*Z^3≤D) :
-    Real.exp (radiusIter (2*A+11) s)*Z^3≤D :=
-  (mul_le_mul_of_nonneg_right (Real.exp_le_exp.mpr (radiusIter_child_le A hA s r hs))
-    (pow_nonneg hZ _)).trans hD
-
 end CanonicalCubeSeparation
 
-open scoped BigOperators Classical
 namespace QuadraticAllOddCRT
 open ActualEisensteinCubic
 open ConcreteTraceCRT (eisEmbedding eisTraceModChar finite_quotient_span)

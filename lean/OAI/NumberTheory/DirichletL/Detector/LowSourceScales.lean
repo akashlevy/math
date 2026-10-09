@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.LowGramScale
 import OAI.NumberTheory.DirichletL.Detector.LowTupleGram
 import OAI.NumberTheory.DirichletL.Detector.PhysicalCrudeMass
-
 namespace OAI
 
 noncomputable section

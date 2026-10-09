@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondCanonicalLedger
 import OAI.NumberTheory.DirichletL.Moments.SectorLocalization
-
 namespace OAI
 
 noncomputable section
@@ -36,16 +35,6 @@ theorem actual_retained_scalar_norm (C D : Ideal O) (hC : Supported C) (hD : Sup
   have hw := retainedWeight_bounds R (normValue ((commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U)*h))
   rw [retainedScalar,mul_right_comm,norm_mul,Complex.norm_real,Real.norm_eq_abs,abs_of_nonneg hw.1]
   exact (mul_le_of_le_one_left hw.1 (by simpa only [mul_assoc] using hs)).trans hw.2
-
-theorem original_partition_scalar (C D : Ideal O) (hC : Supported C)
-    (U : Finset (CommonIndex C D)) (R : ℝ) (h : O) (F : ℂ) :
-    (if canonicalPartition C D U (nonunitFrequencyGenerator C D U*h) then
-      (retainedWeight R (normValue ((commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U)*h)):ℂ)*F else 0)=
-      (normalizer C D U:ℂ)*(retainedScalar C D U R h*F) := by
-  have hn : (normalizer C D U:ℂ)≠0 := Complex.ofReal_ne_zero.mpr (normalizer_pos C D hC U).ne'
-  unfold retainedScalar canonicalPartitionScalar
-  change _=(normalizer C D U:ℂ)*((if _ then (normalizer C D U:ℂ)⁻¹ else 0)*_*F)
-  split_ifs <;> simp_all [mul_assoc]
 
 end SevenEighths.CenteredMomentSecondCanonicalScalar
 

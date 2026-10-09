@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GramGcdSource
 import OAI.NumberTheory.DirichletL.Detector.LowPuncture
-
 namespace OAI
 
 noncomputable section

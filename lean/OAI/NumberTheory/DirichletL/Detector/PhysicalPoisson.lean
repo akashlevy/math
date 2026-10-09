@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.PhysicalCoefficient
-
 namespace OAI
 
 noncomputable section

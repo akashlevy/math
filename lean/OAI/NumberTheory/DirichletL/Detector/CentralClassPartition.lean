@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.CentralClassArithmetic
 import OAI.NumberTheory.DirichletL.Hecke.DetectorAmplitudeFirst
 import OAI.NumberTheory.DirichletL.Hecke.DetectorClassBudget
-
 namespace OAI
 
 noncomputable section

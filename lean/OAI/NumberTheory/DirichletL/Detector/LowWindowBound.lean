@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowCommonBound
-
 namespace OAI
 
 noncomputable section

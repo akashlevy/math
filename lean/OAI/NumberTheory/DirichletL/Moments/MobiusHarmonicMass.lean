@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.WholeDivisorShell
 import OAI.NumberTheory.DirichletL.Moments.DivisorBoundary
-
 namespace OAI
 
 noncomputable section
@@ -47,18 +46,6 @@ lemma shell_mass (Ds:Finset (Ideal O)) (n:ℤ) (hn:n∈selectedShells Ds) :
     _=((selectedShells Ds).card:ℝ)*256:=by simp
     _≤(C*Z^δ)*256:=mul_le_mul_of_nonneg_right (hZ.2 Ds hn) (by norm_num)
     _=_:=by ring
-
- theorem actual_divisorPool_mass (B δ:ℝ) (hB:0≤B) (hδ:0<δ) :
-    ∃C:ℝ,0<C ∧ ∀ᶠZ:ℝ in atTop,1<Z ∧
-      ∀{α:Type*} (T:Finset α) (v:α→Ideal O),(∀j∈T,v j≠0) →
-      (∀j∈T,(Ideal.absNorm (v j):ℝ)≤Z^B) →
-      (∑D∈divisorPool T v,‖(moebius D:ℂ)‖/(Ideal.absNorm D:ℝ))≤C*Z^δ := by
-  obtain ⟨C,hC,hbound⟩:=full_mass_subpower B δ hB hδ
-  refine ⟨C,hC,?_⟩
-  filter_upwards [hbound] with Z hZ
-  refine ⟨hZ.1,?_⟩
-  intro α T v hv hn
-  exact hZ.2 (divisorPool T v) (fun D hd _=>(divisorPool_nonzero_norm T v hv (Z^B) hn D hd).2)
 
 end SevenEighths.CenteredMomentMobiusHarmonicMass
 

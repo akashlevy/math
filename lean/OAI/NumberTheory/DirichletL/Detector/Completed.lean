@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Foundation
 import OAI.NumberTheory.DirichletL.Detector.Phase
-
 namespace OAI
 
 noncomputable section
@@ -59,26 +58,9 @@ def correctedCompletedT (S : Finset (Ideal O)) (D : Ideal O) (Ψ : O →* ℂ)
 def correctionCoeff (χ : RayCharacter) : ℂ :=
   phaseCoeff (fun r => star (fixedGQuotientValue r)) χ
 
-theorem correctionCoeff_sum_norm_le :
-    (∑ χ : RayCharacter, ‖correctionCoeff χ‖) ≤ 32 := by
-  have h := phaseCoeff_sum_norm_le (fun r => star (fixedGQuotientValue r)) 2
-    (fun u => by simpa only [norm_star] using fixedGQuotientValue_norm_le_two (u : RayRing))
-  simpa only [correctionCoeff] using h.trans_eq (by norm_num : (16 : ℝ) * 2 = 32)
-
 theorem completedIndex_eq_primaryGenerator (I J : Ideal O) :
     completedIndex I J = primaryGenerator (I * J ^ 3) := by
   simp only [completedIndex, primaryGenerator_mul, CubicEisenstein.primaryGenerator_pow]
-
-theorem completedMask_zero_of_excluded (S : Finset (Ideal O)) (D I J p : Ideal O)
-    (hp : p ∈ S) (hpdiv : p ∣ I * J ^ 3) : completedMask S D I J = 0 := by
-  unfold completedMask
-  rw [ite_eq_right]
-  intro h
-  exact h.2 p hp hpdiv
-
-theorem completedMask_zero_of_not_marked (S : Finset (Ideal O)) (D I J : Ideal O)
-    (hD : ¬D ∣ I * J ^ 3) : completedMask S D I J = 0 := by
-  simp [completedMask, hD]
 
 theorem completedCorrection_expansion (I J : Ideal O) :
     completedCorrection I J =
@@ -125,23 +107,6 @@ theorem correctedCompletedT_ray_expansion (S : Finset (Ideal O)) (D : Ideal O)
   rw [Summable.tsum_finsetSum (fun χ _ =>
     (markedSummand_summable S D (rayMonoid χ * Ψ) W hW X hX).mul_left (correctionCoeff χ))]
   simp only [tsum_mul_left, markedCompletedT]
-
-theorem correctedCompletedT_norm_le (S : Finset (Ideal O)) (D : Ideal O)
-    (Ψ : O →* ℂ) (W : ℝ → ℂ) (hW : HasCompactSupport W) (X : ℝ) (hX : 0 < X)
-    {B : ℝ} (hB : 0 ≤ B)
-    (hbound : ∀ χ : RayCharacter, ‖markedCompletedT S D (rayMonoid χ * Ψ) W X‖ ≤ B) :
-    ‖correctedCompletedT S D Ψ W X‖ ≤ 32 * B := by
-  rw [correctedCompletedT_ray_expansion S D Ψ W hW X hX]
-  calc
-    _ ≤ ∑ χ : RayCharacter, ‖correctionCoeff χ *
-        markedCompletedT S D (rayMonoid χ * Ψ) W X‖ := norm_sum_le _ _
-    _ ≤ ∑ χ : RayCharacter, ‖correctionCoeff χ‖ * B := by
-      apply Finset.sum_le_sum
-      intro χ _
-      rw [norm_mul]
-      exact mul_le_mul_of_nonneg_left (hbound χ) (norm_nonneg _)
-    _ = (∑ χ : RayCharacter, ‖correctionCoeff χ‖) * B := (Finset.sum_mul ..).symm
-    _ ≤ 32 * B := mul_le_mul_of_nonneg_right correctionCoeff_sum_norm_le hB
 
 end SevenEighths.ProbeCompleted
 end

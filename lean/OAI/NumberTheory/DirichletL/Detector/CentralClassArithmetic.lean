@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CubeSlotExponent
 import OAI.NumberTheory.DirichletL.Detector.CentralDyadicWeight
-
 namespace OAI
 
 noncomputable section

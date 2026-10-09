@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.SectorCover
 import OAI.NumberTheory.DirichletL.Reflection.WholeRow
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

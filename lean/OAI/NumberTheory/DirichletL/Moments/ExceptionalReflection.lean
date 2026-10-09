@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.ExceptionalPair
-
 namespace OAI
 
 noncomputable section
@@ -43,14 +42,6 @@ theorem child_row_reflection (η : Character) (χ ξ : RayCharacter)
     ring
   · obtain ⟨hleft, hright⟩ := child_rows_zero_off_support η χ ξ m A z n hmLam hm2 hn
     rw [hleft, hright, zero_mul]
-
-theorem child_row_reflection_hom (η : Character) (χ ξ : RayCharacter)
-    (m A z : O) (hmLam : λ₀ ∣ m) (hm2 : (2 : O) ∣ m) :
-    rowTwist (elementHom (childCharacter η ξ)) m 1 (A*(-z)) =
-      rowTwist (elementHom (childCharacter η χ)) m 1 (A*z) *
-        elementHom (reflectionRatio χ ξ) := by
-  ext n
-  exact child_row_reflection η χ ξ m A z hmLam hm2 n
 
 theorem fixedInducingRow_reflected (η : Character) (χ ξ : RayCharacter)
     (Q : Ideal O) (hQ : Q ≤ Ideal.span {(72 : O)})

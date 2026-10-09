@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.DualShell
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve
@@ -46,26 +45,6 @@ def frequencyDyadicEquiv : {h : O // h ≠ 0} ≃ Σ j : ℕ, frequencyDyad j wh
     dsimp only
     subst j
     rfl
-
-theorem tsum_frequencyDyads (f : O → ℂ) (hf : Summable f) (hzero : f 0 = 0) :
-    (∑' h : O, f h) = ∑' j : ℕ, ∑ h : frequencyDyad j, f h.val := by
-  have he : (∑' h : O, f h) = ∑' h : {h : O // h ≠ 0}, f h.val := by
-    symm
-    exact tsum_subtype_eq_of_support_subset (fun h hh => by
-      change h ≠ 0
-      intro hz
-      exact hh (hz ▸ hzero))
-  rw [he]
-  let g := (fun h : {h : O // h ≠ 0} => f h.val) ∘ frequencyDyadicEquiv.symm
-  have hg : Summable g := frequencyDyadicEquiv.symm.summable_iff.mpr (hf.subtype _)
-  calc
-    _ = ∑' h, g h := (frequencyDyadicEquiv.symm.tsum_eq _).symm
-    _ = ∑' j, ∑' h, g ⟨j,h⟩ := Summable.tsum_sigma' (fun _ => (hasSum_fintype _).summable) hg
-    _ = _ := by
-      apply tsum_congr
-      intro j
-      rw [tsum_fintype]
-      rfl
 
 theorem tsum_frequencyDyads_with_zero (f : O → ℂ) (hf : Summable f) :
     (∑' h : O, f h) = f 0 + ∑' j : ℕ, ∑ h : frequencyDyad j, f h.val := by

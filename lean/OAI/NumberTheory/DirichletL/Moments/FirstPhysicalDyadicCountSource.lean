@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalDyadicCount
 import OAI.NumberTheory.DirichletL.Moments.SourceInputFirstTailScale
 import OAI.NumberTheory.DirichletL.Moments.ExceptionalAmplitudePair
-
 namespace OAI
 
 noncomputable section
@@ -93,12 +92,6 @@ theorem original_input_local_blocks_subpower {ι:Type*}[Fintype ι][DecidableEq 
   intro s hhi hb₁ hb₂ hH C D hC hD E K hK hV hKi
   exact hcount C D hC hD E K _ _ hK (volume_pos s.toData).le hH hV hKi
     (input_radius_cap hi b₁ b₂ B Z s hhi hb₁ hb₂ hZ hfixed hV)
-
-lemma input_radius_pos_of_live {ι:Type*}[Fintype ι][DecidableEq ι]
-    (s:Input ι)(R seed I:Ideal O)(hz₁:s.W₁ 0=0)(hz₂:s.W₂ 0=0)
-    (hlive:coefficient s R seed I≠0):0<sourceRadius s := by
-  obtain ⟨hI,hcap⟩:=original_column_norm s R seed I hz₁ hz₂ hlive
-  exact (CenteredMomentFirstScale.norm_pos I hI).trans_le hcap
 
 end SevenEighths.CenteredMomentFirstPhysicalDyadicCount
 

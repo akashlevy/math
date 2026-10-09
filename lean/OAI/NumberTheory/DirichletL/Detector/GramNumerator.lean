@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LowGramFixedCoefficient
 import OAI.NumberTheory.DirichletL.Detector.GramMean
-
 namespace OAI
 
 noncomputable section
@@ -12,20 +11,6 @@ local notation "λ₀" => ConcretePrimeRowBridge.goodLambda
 
 def numeratorExtension (u : Oˣ) (a b : ℕ) (r : O) (hr : Supported (Ideal.span {r})) : O→*ℂ :=
   numeratorBadTwist u a b r hr*movingNumeratorRow r hr
-
-lemma numeratorExtension_norm (u : Oˣ) (a b : ℕ) (r : O) (hr : Supported (Ideal.span {r})) (n : O) :
-    ‖numeratorExtension u a b r hr n‖≤1 := by
-  rw [numeratorExtension,MonoidHom.mul_apply,norm_mul]
-  exact (mul_le_of_le_one_left (norm_nonneg _) (numeratorBadTwist_norm _ _ _ _ _ _)).trans (movingNumeratorRow_norm _ _ _)
-
-lemma numeratorExtension_periodic (u : Oˣ) (a b : ℕ) (r : O) (hr : Supported (Ideal.span {r})) :
-    CanonicalCoefficientClass.FactorsModulo (Ideal.span {(72:O)}*Ideal.span {r})
-      (numeratorExtension u a b r hr) := by
-  intro x y hxy
-  change numeratorBadTwist u a b r hr x*movingNumeratorRow r hr x=
-    numeratorBadTwist u a b r hr y*movingNumeratorRow r hr y
-  rw [numeratorBadTwist_periodic _ _ _ _ _ x y (Ideal.mul_le_left hxy),
-    movingNumeratorRow_periodic _ _ x y (Ideal.mul_le_right hxy)]
 
 lemma numeratorExtension_primary (u : Oˣ) (a b : ℕ) (r k n : O)
     (hr : Supported (Ideal.span {r})) (hpr : λ₀^2∣r-1)

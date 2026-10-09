@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.GaussSum.CompletedDyadicRows
-
 namespace OAI
 
 noncomputable section
@@ -8,79 +7,24 @@ namespace InitialMeanSquare
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
 
-open scoped BigOperators Classical SchwartzMap ContDiff
-
 section
-open ActualEisensteinCubic SecondPassArithmetic SecondPassIntegration
+open SecondPassArithmetic SecondPassIntegration
 open FirstPassCubeLabels (normalizedColumn columnLog)
 open EisensteinSchwartzPoisson (paperRadialFourier)
 
@@ -131,7 +75,7 @@ theorem initial_normalized_diagonal
 end
 
 section
-open ActualEisensteinCubic SecondPassArithmetic SecondPassIntegration
+open SecondPassArithmetic SecondPassIntegration
 open FirstPassCubeLabels (normalizedColumn columnLog primeProductNorm)
 open ConcreteTraceCRT (eisEmbedding)
 
@@ -247,7 +191,7 @@ theorem initial_tail_fixed_profile (g W : 𝓢(ℝ,ℂ)) (M : ℝ)
 end
 
 section
-open ActualEisensteinCubic SecondPassArithmetic SecondPassIntegration
+open SecondPassArithmetic SecondPassIntegration
 open FirstPassCubeLabels (normalizedColumn columnLog)
 open ConcreteTraceCRT (eisEmbedding)
 
@@ -317,7 +261,7 @@ theorem initial_normalized_errors
 
 end
 
-open ActualEisensteinCubic ConcretePrimeRowBridge CanonicalQuadraticSieve SecondPassArithmetic
+open ConcretePrimeRowBridge CanonicalQuadraticSieve SecondPassArithmetic
 open FirstPassCubeLabels (normalizedColumn columnLog)
 
 theorem outside_mean_square_source_with_errors
@@ -377,8 +321,7 @@ end
 
 section
 
-open scoped BigOperators Classical SchwartzMap
-open ActualEisensteinCubic SecondPassArithmetic SecondPassIntegration
+open SecondPassArithmetic SecondPassIntegration
 open FirstPassCubeLabels (normalizedColumn columnLog)
 
 theorem initial_nonzero_source_norm_le_squarefree_bins
@@ -418,9 +361,7 @@ end
 
 section
 
-open MeasureTheory
-open scoped BigOperators Classical SchwartzMap ContDiff
-open ActualEisensteinCubic SecondPassArithmetic SecondPassIntegration JointLogSeparation
+open SecondPassArithmetic SecondPassIntegration JointLogSeparation
 open FirstPassCubeLabels (primeProductNorm normalizedColumn columnLog firstLogDensity)
 
 def initialSquarefreeBinCost {ι : Type*} [DecidableEq ι]
@@ -438,134 +379,9 @@ def initialSquarefreeBinCost {ι : Type*} [DecidableEq ι]
       sourceGeometricMean p hp hcop hg F (secondRayMinus Ψ ray) (secondRayPlus Ψ ray)
         (m*r) (s.image (sourceObservation p)) (windows 5) (windows 6) X X (t₁,t₂,t₃))
 
-theorem initial_nonzero_source_squarefree_transfer
-    (U : ℝ → ℂ) (hUc : HasCompactSupport U) (hUs : ContDiff ℝ ∞ U)
-    (g W : 𝓢(ℝ,ℂ)) (A : ℝ) (hA : 0 ≤ A)
-    (hU : ∀ t, g t ≠ 0 → U t=1) (hgA : ∀ t, g t ≠ 0 → |t| ≤ A)
-    (ε : ℝ) (hε : 0 < ε) (N J : ℕ) :
-    ∃ (windows : Fin 7 → ℝ → ℂ) (C Cₛ : ℝ), 0 ≤ C ∧ 0 ≤ Cₛ ∧
-      (∀ i, HasCompactSupport (windows i)) ∧ (∀ i, ContDiff ℝ ∞ (windows i)) ∧
-      ∀ {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-        [∀ i, (Ideal.span {p i}).IsMaximal]
-        (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-        (hg : ∀ i, lambda ∉ Ideal.span {p i})
-        (hinj : Function.Injective (fun i => Ideal.span {p i}))
-        (_hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-        (_hpr : ∀ i, lambda^2 ∣ p i-1)
-        (F : Finset ι) (Ψ : O →* ℂ) (m : O)
-        (K : Finset ι → Finset ι → Finset O) (Z H Kmax : ℝ),
-        0 < Z → 0 < H → (∀ a, ‖Ψ a‖ ≤ 1) →
-        (∀ R ∈ F.powerset, ∀ x ∈ secondSupportedSector p F K R Z A,
-          elementNorm (sourceObservation p x).1 ≤ Kmax) →
-        ∃ B : SecondRayIndex → Finset ι → SecondLogIndex → Frequency → ℝ,
-          (∀ ray R j q, 0 ≤ B ray R j q) ∧
-          (∀ ray R j q, (1+H*secondLogK j*(primeProductNorm p R)^2/Z^2)^N*B ray R j q ≤
-            Cₛ*firstLogDensity J q.1*firstLogDensity J q.2.1*firstLogDensity J q.2.2) ∧
-          ‖truncatedSecondSource p hp hg hinj F Ψ m 1 1
-            (fun V => normalizedColumn p (fun T => g (columnLog p Z T)) V)
-            W H (fun C E => (K C E).erase 0)‖ ≤
-            C*(∑ ray : SecondRayIndex, ∑ R ∈ boundedPrimeSupports p F (Z*Real.exp A),
-              ∑ j ∈ secondLogBinBox (Z*Real.exp A) Kmax,
-                initialSquarefreeBinCost p hp hcop hg F R Ψ m ray K Z H A ε j windows (B ray R j)) := by
-  obtain ⟨windows,C,Cₛ,hC,hCₛ,hwc,hws,ht⟩ :=
-    initial_subbin_transfer U hUc hUs g W A hA hU hgA ε hε N J
-  refine ⟨windows,C,Cₛ,hC,hCₛ,hwc,hws,?_⟩
-  intro ι _ p hp _ hcop hg hinj hc hpr F Ψ m K Z H Kmax hZ hH hΨ hK
-  let B : SecondRayIndex → Finset ι → SecondLogIndex → Frequency → ℝ :=
-    fun ray R j => Classical.choose
-      (ht p hp hcop hg hinj hc hpr F R Ψ m ray K Z H A j
-        (initialSquarefreeSector p (secondLogSector p ∅ F K R Z A j)) hZ hH hΨ
-        (Finset.filter_subset _ _))
-  have hB (ray : SecondRayIndex) (R : Finset ι) (j : SecondLogIndex) :=
-    Classical.choose_spec (ht p hp hcop hg hinj hc hpr F R Ψ m ray K Z H A j
-        (initialSquarefreeSector p (secondLogSector p ∅ F K R Z A j)) hZ hH hΨ
-        (Finset.filter_subset _ _))
-  refine ⟨B,fun ray R j => (hB ray R j).1,fun ray R j => (hB ray R j).2.1,?_⟩
-  apply (initial_nonzero_source_norm_le_squarefree_bins p hp hcop hg hinj hc hpr F Ψ m
-    g W Z H A Kmax hZ hgA K hK).trans
-  simp only [Finset.mul_sum]
-  apply Finset.sum_le_sum
-  intro ray hray
-  apply Finset.sum_le_sum
-  intro R hR
-  apply Finset.sum_le_sum
-  intro j hj
-  convert (hB ray R j).2.2 using 1 ; dsimp only [initialSquarefreeBinCost, B] ; ring
-
 end
 
-open MeasureTheory
-open scoped BigOperators Classical
-open ActualEisensteinCubic SecondPassArithmetic SecondPassIntegration JointLogSeparation
-open FirstPassCubeLabels
-
-theorem initialSquarefreeBinCost_of_canonical_bound {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (F R : Finset ι) (Ψ : O →* ℂ) (m : O) (ray : SecondRayIndex)
-    (K : Finset ι → Finset ι → Finset O) (Z H M ε Cₛ Cchild : ℝ)
-    (hZ : 0 < Z) (hH : 0 < H) (hCₛ : 0 ≤ Cₛ) (hCc : 0 ≤ Cchild)
-    (j : SecondLogIndex) (windows : Fin 7 → ℝ → ℂ) (B : Frequency → ℝ)
-    (J N : ℕ) (hB : ∀ q, 0 ≤ B q)
-    (hdec : ∀ q, (1+H*secondLogK j*(primeProductNorm p R)^2/Z^2)^N*B q ≤
-      Cₛ*firstLogDensity J q.1*firstLogDensity J q.2.1*firstLogDensity J q.2.2)
-    (hchild : ∀ q,
-      let s := initialSquarefreeSector p (secondLogSector p ∅ F K R Z M j)
-      let X := initialLogColumn Z (primeProductNorm p R) j
-      let r := primeSubsetGenerator (fun i => Ideal.span {p i}) R
-      childGeometricMean p hp hcop hg F (secondRayMinus Ψ ray) (secondRayPlus Ψ ray)
-        (m*r) (sourceIdealTarget (s.image (sourceObservation p))) (windows 5) (windows 6) X X q ≤
-        (Cchild*(X*initialLogLabel j)^2)*(1+‖q.1‖)^J*(1+‖q.2.1‖)^J*(1+‖q.2.2‖)^J) :
-    initialSquarefreeBinCost p hp hcop hg F R Ψ m ray K Z H M ε j windows B ≤
-      ((H/primeProductNorm p R)*Real.exp 4*Cchild*Cₛ*(∫ t : ℝ,firstLogDensity 0 t)^3)*
-        ‖secondRayCoefficient ray‖*(secondLogK j*Real.exp 2)^ε /
-        (1+H*secondLogK j*(primeProductNorm p R)^2/Z^2)^N := by
-  let s := initialSquarefreeSector p (secondLogSector p ∅ F K R Z M j)
-  let X := initialLogColumn Z (primeProductNorm p R) j
-  let r := primeSubsetGenerator (fun i => Ideal.span {p i}) R
-  let G := sourceGeometricMean p hp hcop hg F (secondRayMinus Ψ ray) (secondRayPlus Ψ ray)
-    (m*r) (s.image (sourceObservation p)) (windows 5) (windows 6) X X
-  let E := Cchild*(X*initialLogLabel j)^2
-  let S := (1+H*secondLogK j*(primeProductNorm p R)^2/Z^2)^N
-  have hpR : 0 < primeProductNorm p R := primeProductNorm_pos p hp R
-  have hX : 0 < X := div_pos hZ (mul_pos (mul_pos (normLogScale_pos _) (normLogScale_pos _)) hpR)
-  have hlabel : 0 < initialLogLabel j := by
-    unfold initialLogLabel secondLogE secondLogV
-    exact mul_pos (mul_pos (normLogScale_pos _) (normLogScale_pos _)) (Real.exp_pos _)
-  have hE : 0 ≤ E := mul_nonneg hCc (sq_nonneg _)
-  have hS : 0 < S := by
-    dsimp [S]
-    have hk : 0 < secondLogK j := normLogScale_pos _
-    positivity
-  have hG : ∀ q, 0 ≤ G q := fun q => mul_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
-  have henergy : ∀ q, G q ≤ E*(1+‖q.1‖)^J*(1+‖q.2.1‖)^J*(1+‖q.2.2‖)^J := by
-    intro q
-    exact (sourceGeometricMean_le_ideal p hp hcop hg F (secondRayMinus Ψ ray) (secondRayPlus Ψ ray)
-      (m*r) (s.image (sourceObservation p)) (windows 5) (windows 6) X X q).trans (hchild q)
-  have hb := polynomial_density_cost B G J S Cₛ E hS hCₛ hE hB hG hdec henergy
-  have hpref : 0 ≤ H*primeProductNorm p R/Z^2*‖secondRayCoefficient ray‖*
-      (secondLogK j*Real.exp 2)^ε := by
-    have hk : 0 < secondLogK j := normLogScale_pos _
-    positivity
-  calc
-    _ ≤ (H*primeProductNorm p R/Z^2*‖secondRayCoefficient ray‖*(secondLogK j*Real.exp 2)^ε)*
-        ((Cₛ*E/S)*(∫ t : ℝ,firstLogDensity 0 t)^3) := mul_le_mul_of_nonneg_left hb hpref
-    _ = _ := by
-      dsimp only [E,X,S]
-      rw [initial_log_mass Z (primeProductNorm p R) hpR.ne',
-        mul_pow (Z/primeProductNorm p R) (Real.exp 2) 2]
-      have he : (Real.exp 2)^2=Real.exp 4 := by
-        rw [pow_two,←Real.exp_add]
-        norm_num
-      rw [he]
-      have hz := hZ.ne'
-      have hr := hpR.ne'
-      field_simp
-
-open MeasureTheory
-open scoped BigOperators Classical
-open ActualEisensteinCubic SecondPassArithmetic SecondPassIntegration JointLogSeparation
+open SecondPassArithmetic SecondPassIntegration JointLogSeparation
 open FirstPassCubeLabels
 
 theorem positive_nested_density_transfer (f G : Frequency → ℝ) (J : ℕ)

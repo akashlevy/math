@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.CentralAllSlots
 import OAI.NumberTheory.DirichletL.PrimeRows.CentralTargetCost
-
 namespace OAI
 
 noncomputable section

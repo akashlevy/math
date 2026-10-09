@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.CommonLiveHeight
 import OAI.NumberTheory.DirichletL.Moments.SecondSupportedChildren
 import OAI.NumberTheory.DirichletL.Moments.SecondOriginalChildren
 import OAI.NumberTheory.DirichletL.Moments.SecondDivisorSupport
-
 namespace OAI
 
 noncomputable section

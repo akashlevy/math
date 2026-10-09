@@ -1,5 +1,4 @@
-import OAI.NumberTheory.DirichletL.Reflection.NormalizedEnergy
-
+import OAI.NumberTheory.DirichletL.Inversion.ReflectedNormalization
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -77,14 +76,6 @@ theorem extractedOutsideScalar_log_widths (F : PrimeFamily φ) (jF : φ→ℕ) (
   rw [Real.rpow_logb hz0 (ne_of_gt hZ) hr,Real.rpow_logb hz0 (ne_of_gt hZ) hU,
     Real.rpow_logb hz0 (ne_of_gt hZ) hB,Real.rpow_logb hz0 (ne_of_gt hZ) hR,
     Real.rpow_logb hz0 (ne_of_gt hZ) (hn 0),Real.rpow_logb hz0 (ne_of_gt hZ) (hn 2)]
-
-lemma extractedOutsideScalar_pos (F : PrimeFamily φ) (jF : φ→ℕ) (e : φ→Fin 3)
-    (r U B R : ℝ) (hr : 0<r) (hU : 0<U) (hB : 0<B) (hR : 0<R) :
-    0 < extractedOutsideScalar F jF e r U B R := by
-  have hn (v : Fin 3) : (0:ℝ)<Ideal.absNorm (frozenExtracted F jF e v) := by
-    exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr (frozenExtracted_ne_zero F jF e v))
-  exact div_pos (smallScalar_pos hR)
-    (mul_pos (mul_pos hr (Real.sqrt_pos.mpr (mul_pos (hn 1) hU))) (mul_pos (hn 2) hB))
 
 end
 end SevenEighths.InverseReflectedPhase

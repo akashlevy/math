@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Reflection.ActualSelected
 import OAI.NumberTheory.DirichletL.Reflection.OriginalWeights
 import OAI.NumberTheory.DirichletL.Reflection.WholePair
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

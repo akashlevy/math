@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.MarkedCompensation
 import OAI.NumberTheory.DirichletL.PrimeRows.Continuation
-
 namespace OAI
 
 noncomputable section

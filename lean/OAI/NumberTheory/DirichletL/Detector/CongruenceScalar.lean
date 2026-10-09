@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.Sextic
-
 namespace OAI
 
 noncomputable section

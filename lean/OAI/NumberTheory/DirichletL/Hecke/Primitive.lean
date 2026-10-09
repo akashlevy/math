@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Hecke.IdealBridge
 import OAI.NumberTheory.DirichletL.Hecke.MellinIdentity
 import OAI.NumberTheory.DirichletL.GaussianTheta
 import OAI.NumberTheory.DirichletL.PeriodicThetaRegularity
-
 namespace OAI
 
 noncomputable section

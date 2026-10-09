@@ -1,77 +1,25 @@
 import OAI.NumberTheory.DirichletL.Fourier.LogDensity
 import OAI.NumberTheory.DirichletL.CubicSieve.TwistedProfiles
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace CanonicalQuadraticSieve
 
 section
@@ -362,40 +310,6 @@ theorem firstCoreInputRow_smoothed_truncated
     inputConjugateRow_eq_truncated_add_tail p hp hg hinj hc]
   exact hY
 
-theorem firstCoreInputRow_finite_le_truncated_tail
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (F D B : Finset ι) (v : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (negative : Bool) (χ : RayCharacter) (Ψ : O →* ℂ) (m : O)
-    (g V : 𝓢(ℝ, ℂ)) (X : ℝ) (hX : 0 < X) (Y : ℝ) (hY : 0 < Y) (c d : O)
-    (r : FirstCoreIndex) (t : ℝ) (T : Finset O)
-    (hT : ∀ z ∈ T, (Ideal.absNorm (Ideal.span {z}) : ℝ) ≤ Y)
-    (hT0 : ∀ z ∈ T, z ≠ 0) (K : Finset ι → Finset ι → Finset O) :
-    let Hmode := normalizedColumn p (fun A => firstCoreModeProfile g V negative t
-      (columnLog p (X / primeProductNorm p D) A))
-    let Ψmode := firstCoreTwist negative χ Ψ r
-    let m' := m * b0Label p B v ε₁ ε₂
-    let c' := c * jLabel p B v ε₁ ε₂
-    (∑ z ∈ T, ‖firstCoreInputRow p hg F D B v ε₁ ε₂ negative χ Ψ m
-      (normalizedColumn p (fun A => g (columnLog p X A))) V (columnLog p X) c d r t z‖ ^ 2) +
-      ‖firstCoreTest (normalizedColumn p (fun A => g (columnLog p X A))) V (columnLog p X)
-        negative t D ∅‖ ^ 2 ≤
-      (primeProductNorm p D)⁻¹ *
-        (‖truncatedSecondSource p hp hg hinj (F\D) Ψmode m' c' d Hmode rowMajorant Y K‖ +
-          ‖secondSourceTail p hp hg hinj (F\D) Ψmode m' c' d Hmode rowMajorant Y K‖) := by
-  dsimp only
-  have h := firstCoreInputRow_finite_le_corrected_source p hg F D B v ε₁ ε₂ negative χ Ψ m
-    (normalizedColumn p (fun A => g (columnLog p X A))) V (columnLog p X) c d r t T Y hY hT hT0
-  have he := firstCoreInputRow_smoothed_truncated p hp hg hinj hc F D B v ε₁ ε₂ negative χ Ψ m
-    g V rowMajorant X hX Y hY c d r t K
-  rw [he] at h
-  simp only [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero,
-    Complex.add_re] at h
-  apply (le_sub_iff_add_le.mp h).trans
-  apply mul_le_mul_of_nonneg_left
-  · exact add_le_add (Complex.re_le_norm _) (Complex.re_le_norm _)
-  · exact inv_nonneg.mpr (FirstPassCubeLabels.primeProductNorm_pos p hp D).le
-
 end SecondPassArithmetic
 
 namespace SecondPassIntegration
@@ -474,7 +388,6 @@ theorem densityChildEnergy_polynomial_bound (F : Finset ι) (Ψ₁ Ψ₂ : O →
 
 end SecondPassIntegration
 
-open scoped BigOperators Classical SchwartzMap
 namespace SecondPassArithmetic
 
 section
@@ -528,71 +441,6 @@ def residualTailCost (F G : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ)
     ‖residualPairWeight p hg Ψ₁ Ψ₂ m c d H₁ H₂ S T‖ *
       ((Y/‖eisEmbedding n‖) * (P / ((min 1 scale)^2 * (1+H)^A)))
     else 0
-
-theorem residualSecondMode_tail_bound
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2) (A : ℕ) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-    ∀ (F G : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m c d : O) (H₁ H₂ : Finset ι → ℂ)
-      (e : O), e ≠ 0 → ∀ (W : 𝓢(ℝ, ℂ)) (Y H : ℝ), 0 < Y → 0 ≤ H → ∀ K : Finset O,
-      (∀ S ∈ (F\G).powerset, ∀ T ∈ (F\G).powerset, Disjoint S T →
-        residualPairWeight p hg Ψ₁ Ψ₂ m c d H₁ H₂ S T ≠ 0 →
-        ∀ k : O, k ∉ K →
-          H ≤ (Y / (‖eisEmbedding e‖^2 * ‖eisEmbedding (∏ i : activeSupport T S, p i.val)‖^2)) *
-            ‖eisEmbedding k‖^2) →
-      ‖∑' k : {k : O // k ∉ K}, residualSecondMode p hp hg hinj F G Ψ₁ Ψ₂ m c d H₁ H₂ e k.val W Y‖ ≤
-      residualTailCost p hg F G Ψ₁ Ψ₂ m c d H₁ H₂ e Y H A (C*s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W) := by
-  obtain ⟨s,C,hC,hb⟩ := secondPairRadialMode_remainder p hp hg hinj hc A
-  refine ⟨s,C,hC,?_⟩
-  intro F G Ψ₁ Ψ₂ m c d H₁ H₂ e he W Y H hY hH K hK
-  rw [residualSecondMode_tail_eq p hp hg hinj F G Ψ₁ Ψ₂ m c d H₁ H₂ e he W Y hY K]
-  unfold residualTailCost
-  apply (norm_sum_le _ _).trans
-  apply Finset.sum_le_sum
-  intro S hS
-  apply (norm_sum_le _ _).trans
-  apply Finset.sum_le_sum
-  intro T hT
-  by_cases hd : Disjoint S T
-  · simp only [ite_eq_left hd, norm_mul]
-    by_cases hw : residualPairWeight p hg Ψ₁ Ψ₂ m c d H₁ H₂ S T = 0
-    · simp only [hw, norm_zero, zero_mul, le_refl]
-    · exact mul_le_mul_of_nonneg_left (hb S T e he W Y H hY hH K (hK S hS T hT hd hw)) (norm_nonneg _)
-  · simp [hd]
-
-theorem secondSourceTail_bound
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2) (A : ℕ) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-    ∀ (F : Finset ι) (Ψ : O →* ℂ) (m c d : O) (Hcol : Finset ι → ℂ)
-      (W : 𝓢(ℝ, ℂ)) (Y H : ℝ), 0 < Y → 0 ≤ H →
-      ∀ K : Finset ι → Finset ι → Finset O,
-      (∀ G ∈ F.powerset, ∀ E : G.powerset,
-        ∀ S ∈ (F\G).powerset, ∀ T ∈ (F\G).powerset, Disjoint S T →
-        residualPairWeight p hg Ψ Ψ m c d (fun U => Hcol (G∪U)) (fun U => Hcol (G∪U)) S T ≠ 0 →
-        ∀ k : O, k ∉ K G E.val →
-          H ≤ (Y / (‖eisEmbedding (primeSubsetGenerator (fun i => Ideal.span {p i}) E.val)‖^2 *
-            ‖eisEmbedding (∏ i : activeSupport T S, p i.val)‖^2)) * ‖eisEmbedding k‖^2) →
-      ‖secondSourceTail p hp hg hinj F Ψ m c d Hcol W Y K‖ ≤
-      ∑ G ∈ F.powerset, ∑ E : G.powerset, ‖secondSourceCommonCoefficient p hg Ψ m c d G E.val‖ *
-        residualTailCost p hg F G Ψ Ψ m c d (fun U => Hcol (G∪U)) (fun U => Hcol (G∪U))
-          (primeSubsetGenerator (fun i => Ideal.span {p i}) E.val) Y H A
-          (C*s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W) := by
-  obtain ⟨s,C,hC,hb⟩ := residualSecondMode_tail_bound p hp hg hinj hc A
-  refine ⟨s,C,hC,?_⟩
-  intro F Ψ m c d Hcol W Y H hY hH K hK
-  unfold secondSourceTail
-  apply (norm_sum_le _ _).trans
-  apply Finset.sum_le_sum
-  intro G hG
-  apply (norm_sum_le _ _).trans
-  apply Finset.sum_le_sum
-  intro E hE
-  rw [norm_mul]
-  apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-  simp_rw [← residualSecondMode_eq_frequencyKernel p hp hg hinj F G E.val
-    (Finset.mem_powerset.mp E.property) Ψ Ψ m c d (fun U => Hcol (G∪U)) (fun U => Hcol (G∪U))]
-  exact hb F G Ψ Ψ m c d (fun U => Hcol (G∪U)) (fun U => Hcol (G∪U))
-    (primeSubsetGenerator (fun i => Ideal.span {p i}) E.val) (primeSubsetGenerator_ne_zero _ _)
-    W Y H hY hH (K G E.val) (hK G hG E)
 
 end
 

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.ThresholdError
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

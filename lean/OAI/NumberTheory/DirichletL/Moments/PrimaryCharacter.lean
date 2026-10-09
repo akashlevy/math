@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.FixedRay
-
 namespace OAI
 
 noncomputable section
@@ -89,22 +88,6 @@ theorem primaryCharacter_all (r : O) (hr : r≠0) (χ : MulChar (Residue r) ℂ)
     rw [← elementCoeff_unit_mul (primaryCharacter r hr χ) u n,
       ← maskedPrimaryHom_unit_mul r χ u n,primaryCharacter_primary r hr χ _ hp,
       maskedPrimaryHom_primary r χ _ hp]
-
-theorem primaryCharacter_ideal (r : O) (hr : r≠0) (χ : MulChar (Residue r) ℂ)
-    (I : Ideal O) (hI : Supported I) :
-    idealCoeff (primaryCharacter r hr χ) I=
-      χ (Ideal.Quotient.mk _ (CompletedGauss.primaryGenerator I)) := by
-  have hn := supported_primaryGenerator_ne_zero I hI
-  have hs := CompletedGauss.primaryGenerator_spec I hn
-  calc
-    _ = elementCoeff (primaryCharacter r hr χ) (CompletedGauss.primaryGenerator I) := by
-      rw [← idealCoeff_span _ hn,hs.1]
-    _ = _ := primaryCharacter_primary r hr χ _ hs.2
-
-theorem primaryCharacter_modulus_norm (r : O) (hr : r≠0) (χ : MulChar (Residue r) ℂ) :
-    (primaryCharacter r hr χ).modulus.absNorm=
-      (Ideal.span {(3:O)}).absNorm*(Ideal.span {r}).absNorm := by
-  rw [primaryCharacter_modulus,← Ideal.span_singleton_mul_span_singleton,map_mul]
 
 end SevenEighths.CenteredMomentPrimaryCharacter
 

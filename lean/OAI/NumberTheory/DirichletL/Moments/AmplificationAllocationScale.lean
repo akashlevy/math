@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.AmplificationAllocationCost
 import OAI.NumberTheory.DirichletL.Moments.CommonRawScale
-
 namespace OAI
 
 noncomputable section
@@ -51,12 +50,6 @@ variable {ι : Type*} [Fintype ι]
   unfold rawReduction plainNorm frozenScale
   simp only [allocation_slot_one S P hP k hslot B,ite_true,Finset.prod_const_one,mul_one]
   rw [← Nat.cast_mul,← map_mul,allocation_plain_product S P hP k hslot B,map_pow,Nat.cast_pow]
-
- theorem live_slot_card (S : (ι ⊕ Fin 2) → Finset (Ideal O))
-    (P : Ideal O) (hP : P≠0) (k : ℕ)
-    (hslot : ∀ i,∀ I∈S (Sum.inl i),I≠0 ∧ IsCoprime P I)
-    (B : actualAllocations S (P^k)) : Fintype.card (liveIndices (B : Tuple ι))=Fintype.card ι := by
-  rw [Fintype.card_coe,all_slots_live S P hP k hslot B,Finset.card_univ]
 
 theorem remainingRaw_exact (S : (ι ⊕ Fin 2) → Finset (Ideal O))
     (P : Ideal O) (hP : P≠0) (k : ℕ)

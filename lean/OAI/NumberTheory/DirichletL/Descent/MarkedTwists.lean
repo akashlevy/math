@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.MarkedFourier
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRawFiber
-
 namespace OAI
 
 noncomputable section

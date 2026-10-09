@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondMarkedEnergy
 import OAI.NumberTheory.DirichletL.Descent.SecondWeights
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

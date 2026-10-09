@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Dictionary.InverseUniformSource
 import OAI.NumberTheory.DirichletL.Descent.ClippedEnergy
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerClipping
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerUniform
-
 namespace OAI
 
 noncomputable section
@@ -45,10 +44,6 @@ theorem source_support (scaled reverse : Bool) (n : ℕ) (U tstar r σ t : ℝ) 
     rw [scaleCLM_apply]
     simp [scaleProfile, hz, hd]
 
-theorem source_zero_of_ratio (scaled reverse : Bool) (n : ℕ) (U tstar r σ t : ℝ)
-    (h : 4 ≤ U^r/U^tstar) : inverseSourceSchwartz scaled reverse n U tstar r σ t = 0 :=
-  inverseDetectorTest_zero_of_four_le scaled reverse n _ σ t h
-
 theorem exists_reference_window :
     ∃w : 𝓢(ℝ,ℂ), HasCompactSupport (w : ℝ→ℂ) ∧
       tsupport (w : ℝ→ℂ) ⊆ Set.Icc (1/18 : ℝ) (13/4) ∧
@@ -60,9 +55,6 @@ theorem exists_reference_window :
   norm_num
 
 def referenceWindow : 𝓢(ℝ,ℂ) := Classical.choose exists_reference_window
-
-theorem referenceWindow_compact : HasCompactSupport (referenceWindow : ℝ→ℂ) :=
-  (Classical.choose_spec exists_reference_window).1
 
 theorem referenceWindow_support : tsupport (referenceWindow : ℝ→ℂ) ⊆
     Set.Icc (1/18 : ℝ) (13/4) :=
@@ -111,12 +103,6 @@ theorem familyDensity_formula (scaled reverse : Bool) (n : ℕ) (U tstar r σ t 
 theorem familyDensity_norm (scaled reverse : Bool) (n : ℕ) (U tstar r σ t c v : ℝ) :
     ‖familyDensity scaled reverse n U tstar r σ t c v‖ =
       ‖(𝓕 (logSource scaled reverse n U tstar r σ t)) v‖ := density_norm _ _ _
-
-theorem familyDensity_integrable (J : ℕ) (scaled reverse : Bool) (n : ℕ)
-    (U tstar r σ t c : ℝ) :
-    Integrable (fun v : ℝ => (1+‖v‖)^J * ‖familyDensity scaled reverse n U tstar r σ t c v‖) := by
-  simp only [familyDensity_norm]
-  exact AnalyticBridge.schwartz_fourier_one_plus_integrable _ _
 
 theorem familyDensity_moment (J : ℕ) :
     ∃K : ℕ, ∃C : ℝ, 0<C ∧ ∀scaled reverse : Bool, ∀n : ℕ, n≤2 →
@@ -169,120 +155,8 @@ theorem familyDensity_moment (J : ℕ) :
   exact mul_le_mul_of_nonneg_right (by linarith) (by positivity)
 
 section Rows
-variable {ι ρ : Type*} [DecidableEq ι]
-  (p : ι→O) (hp : ∀i,p i≠0) [∀i,(Ideal.span {p i}).IsMaximal]
-  (hcop : Pairwise (Function.onFun IsCoprime (fun i=>Ideal.span {p i})))
-  (hg : ∀i,ConcretePrimeRowBridge.goodLambda∉Ideal.span {p i})
 
-theorem canonical_family_mode_integrable
-    (hpr : ∀i,ConcretePrimeRowBridge.goodLambda^2∣p i-1)
-    (pool : Finset ι) (Ψ : O→*ℂ) (m f k : O) (slots : Finset ρ)
-    (lists : ρ→Finset ι) (a : ρ→ι→ℂ)
-    (scaled reverse : Bool) (n : ℕ) (U tstar r σ t c θ X : ℝ) :
-    Integrable (fun v : ℝ => familyDensity scaled reverse n U tstar r σ t c v *
-      finiteCanonicalMarkedRow p hp hcop hg pool Ψ m f k slots lists a
-        (childLogTest referenceWindow (θ+v)) X) :=
-  canonical_clipped_mode_integrable p hp hcop hg hpr pool Ψ m f k slots lists a
-    (logSource scaled reverse n U tstar r σ t) referenceWindow c θ X
-
-theorem canonical_clipped_family_fourier
-    (hpr : ∀i,ConcretePrimeRowBridge.goodLambda^2∣p i-1)
-    (pool : Finset ι) (Ψ : O→*ℂ) (m f k : O) (slots : Finset ρ)
-    (lists : ρ→Finset ι) (a : ρ→ι→ℂ)
-    (scaled reverse : Bool) (n : ℕ) (U tstar r σ t c θ X : ℝ)
-    (hc : 1≤c) (hcb : c≤9/4) (hX : 0<X) :
-    finiteCanonicalMarkedRow p hp hcop hg pool Ψ m f k slots lists a
-      (clippedTest (inverseSourceSchwartz scaled reverse n U tstar r σ t) c θ) X =
-    ∫v : ℝ, familyDensity scaled reverse n U tstar r σ t c v *
-      finiteCanonicalMarkedRow p hp hcop hg pool Ψ m f k slots lists a
-        (childLogTest referenceWindow (θ+v)) X := by
-  simp only [familyDensity,logSource_eq_logSchwartz]
-  exact canonical_clipped_fourier p hp hcop hg hpr pool Ψ m f k slots lists a
-    (inverseSourceSchwartz scaled reverse n U tstar r σ t) (1/4) (9/4) (by norm_num)
-    (source_support scaled reverse n U tstar r σ t)
-    ((inverseSourceSchwartz scaled reverse n U tstar r σ t).smooth ⊤)
-    referenceWindow c θ X (zero_lt_one.trans_le hc) hX
-    (fun y hy=>referenceWindow_agrees scaled reverse n U tstar r σ t c y hc hcb hy)
 end Rows
-
-theorem canonical_clipped_family_energy (J : ℕ) :
-    ∃K : ℕ, ∃C : ℝ, 0<C ∧ ∀scaled reverse : Bool, ∀n : ℕ, n≤2 →
-    ∀U : ℝ, 0<U → ∀tstar r : ℝ, ∀σ∈Set.Icc (0 : ℝ) 1, ∀t : ℝ,
-    ∀{ι ρ : Type*} [DecidableEq ι] [DecidableEq ρ]
-    (p : ι→O) (hp : ∀i,p i≠0) [∀i,(Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i=>Ideal.span {p i})))
-    (hg : ∀i,ConcretePrimeRowBridge.goodLambda∉Ideal.span {p i})
-    (_hpr : ∀i,ConcretePrimeRowBridge.goodLambda^2∣p i-1)
-    (pool : Finset ι) (Ψ : O→*ℂ) (m : O) (slots : Finset ρ) (lists : ρ→Finset ι) (a : ρ→ι→ℂ)
-    (labels : Finset (Ideal O)) (rows : Finset O) (D : Ideal O→ℝ) (_hD : ∀f∈labels,0≤D f)
-    (c θ X Z F E : ℝ), 1≤c → c≤9/4 → 0<X → 0≤E →
-    (∀s, normalizedColumnEnergy p hp hcop hg pool Ψ m slots lists a labels rows D
-      (childLogTest referenceWindow s) X Z F ≤ E*(1+‖s‖)^(2*J)) →
-    normalizedColumnEnergy p hp hcop hg pool Ψ m slots lists a labels rows D
-      (clippedTest (inverseSourceSchwartz scaled reverse n U tstar r σ t) c θ) X Z F ≤
-        C*E*(1+‖t‖)^(2*K)*(1+‖θ‖)^(2*J) := by
-  obtain ⟨K,C,hC,hmass⟩ := familyDensity_moment J
-  refine ⟨K,C^2,by positivity,?_⟩
-  intro scaled reverse n hn U hU tstar r σ hσ t ι ρ _ _ p hp _ hcop hg hpr
-    pool Ψ m slots lists a labels rows D hD c θ X Z F E hc hcb hX hE he
-  have hb := canonical_clipped_energy p hp hcop hg hpr pool Ψ m slots lists a
-    labels rows D hD (inverseSourceSchwartz scaled reverse n U tstar r σ t)
-    (1/4) (9/4) (by norm_num) (source_support scaled reverse n U tstar r σ t)
-    ((inverseSourceSchwartz scaled reverse n U tstar r σ t).smooth ⊤)
-    referenceWindow c θ X Z F E J (zero_lt_one.trans_le hc) hX hE
-    (fun y hy=>referenceWindow_agrees scaled reverse n U tstar r σ t c y hc hcb hy) he
-  have hm := hmass scaled reverse n hn U hU tstar r σ hσ t c
-  simp only [familyDensity_norm,logSource_eq_logSchwartz] at hm
-  have hs := pow_le_pow_left₀
-    (integral_nonneg (fun v : ℝ => by positivity)) hm 2
-  apply hb.trans
-  calc
-    _ ≤ E*(1+‖θ‖)^(2*J)*(C*(1+‖t‖)^K)^2 :=
-      mul_le_mul_of_nonneg_left hs (by positivity)
-    _ = _ := by rw [mul_pow,←pow_mul]; ring_nf
-
-theorem initial_raw_family_energy (J : ℕ) :
-    ∃K : ℕ, ∃C : ℝ, 0<C ∧ ∀scaled reverse : Bool, ∀n : ℕ, n≤2 →
-    ∀U : ℝ, 0<U → ∀tstar r : ℝ, ∀σ∈Set.Icc (0 : ℝ) 1, ∀t : ℝ,
-    ∀{ι ρ : Type*} [DecidableEq ι] [DecidableEq ρ]
-    (p : ι→O) (hp : ∀i,p i≠0) [∀i,(Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i=>Ideal.span {p i})))
-    (hg : ∀i,ConcretePrimeRowBridge.goodLambda∉Ideal.span {p i})
-    (_hpr : ∀i,ConcretePrimeRowBridge.goodLambda^2∣p i-1)
-    (pool : Finset ι) (Ψ : O→*ℂ) (m : O) (slots : Finset ρ) (lists : ρ→Finset ι) (a : ρ→ι→ℂ)
-    (labels : Finset (Ideal O)) (rows : Finset O) (D : Ideal O→ℝ) (_hD : ∀f∈labels,0≤D f)
-    (Z N F E : ℝ) (z : JointLogSeparation.Frequency×(Fin 6→ℝ)) (h : ℝ), 1<Z → 0≤E →
-    (h = -InverseInitialClippedColumns.leftHeight z ∨ h = InverseInitialClippedColumns.rightHeight z) →
-    (∀s, normalizedColumnEnergy p hp hcop hg pool Ψ m slots lists a labels rows D
-      (childLogTest referenceWindow s) (Z^(max 0 N)) Z F ≤ E*(1+‖s‖)^(2*J)) →
-    normalizedColumnEnergy p hp hcop hg pool Ψ m slots lists a labels rows D
-      (childLogTest (inverseSourceSchwartz scaled reverse n U tstar r σ t) h) (Z^N) Z F ≤
-        C*E*(1+‖t‖)^(2*K)*
-          (InverseMoment.tripleHeight (4*J) z.1 * InverseMoment.coordinateHeight (4*J) z.2) := by
-  obtain ⟨K,C,hC,hbound⟩ := canonical_clipped_family_energy J
-  refine ⟨K,C,hC,?_⟩
-  intro scaled reverse n hn U hU tstar r σ hσ t ι ρ _ _ p hp _ hcop hg hpr
-    pool Ψ m slots lists a labels rows D hD Z N F E z h hZ hE hh he
-  let W := inverseSourceSchwartz scaled reverse n U tstar r σ t
-  by_cases hne : (freshColumns p pool W (Z^N)).Nonempty
-  · obtain ⟨hc,hcb⟩ := freshColumns_clipping_range p hp pool W (1/4) (9/4)
-      Z N hZ (by norm_num) (source_support scaled reverse n U tstar r σ t) hne
-    rw [InverseInitialEnergyCallerClipping.normalized_energy_clipping p hp hcop hg
-      pool Ψ m slots lists a labels rows D W (by linarith) N h F]
-    apply (hbound scaled reverse n hn U hU tstar r σ hσ t
-      p hp hcop hg hpr pool Ψ m slots lists a labels rows D hD
-      (Z^(max 0 N-N)) h (Z^(max 0 N)) Z F E hc hcb (by positivity) hE he).trans
-    exact mul_le_mul_of_nonneg_left
-      (InverseInitialEnergyCallerUniform.initial_height_bound J z h hh) (by positivity)
-  · have hz := Finset.not_nonempty_iff_eq_empty.mp hne
-    change normalizedColumnEnergy p hp hcop hg pool Ψ m slots lists a labels rows D
-      (childLogTest W h) (Z^N) Z F ≤ _
-    unfold normalizedColumnEnergy
-    simp_rw [canonical_row_zero_of_freshColumns_empty p hp hcop hg pool Ψ m _ _
-      slots lists a W (Z^N) h hz,mul_zero,norm_zero,zero_pow (by omega : (2 : ℕ)≠0),
-      Finset.sum_const_zero,mul_zero,Finset.sum_const_zero]
-    dsimp [InverseMoment.tripleHeight,InverseMoment.coordinateHeight]
-    positivity
 
 end SevenEighths.DetectorDictionaryInverseClippedUniform
 

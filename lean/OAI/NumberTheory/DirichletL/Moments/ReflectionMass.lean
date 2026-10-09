@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.ReflectionDeletion
-
 namespace OAI
 
 noncomputable section
@@ -192,10 +191,6 @@ lemma coefficient_summable_norm (η ηi : Character) (S : Finset (Ideal O))
     (fun _ => norm_nonneg _)
   exact fun H => coefficient_norm_le η ηi S D (fun P hP => hS P (hD hP)) H
 
-lemma coefficient_summable (η ηi : Character) (S : Finset (Ideal O))
-    (hS : ∀ P ∈ S,Prime P) (D : Finset (Ideal O)) (hD : D ⊆ S) :
-    Summable (coefficient η ηi S D) := (coefficient_summable_norm η ηi S hS D hD).of_norm
-
 lemma coefficient_mass_le_euler (η ηi : Character) (S : Finset (Ideal O))
     (hS : ∀ P ∈ S,Prime P) :
     (∑ D ∈ S.powerset, ∑' H : SmoothIdeal S, ‖coefficient η ηi S D H‖) ≤
@@ -235,15 +230,6 @@ def unitSmooth (S : Finset (Ideal O)) : SmoothIdeal S :=
     change (normalizedFactors (1 : Ideal O)).toFinset ⊆ S
     rw [normalizedFactors_one]
     exact Finset.empty_subset _⟩
-lemma coefficient_empty_unit (η ηi : Character) (S : Finset (Ideal O)) :
-    coefficient η ηi S ∅ (unitSmooth S) = 1 := by
-  have hm : (moebius (1 : Ideal O) : ℂ) = 1 := by
-    simpa only [Finset.prod_empty,Finset.card_empty,pow_zero] using
-      subset_product_moebius ∅ (by simp)
-  change (moebius (1 : Ideal O) : ℂ) * idealCoeff η 1 * idealCoeff ηi 1 /
-    (Real.sqrt ((Ideal.absNorm (1 : Ideal O) : ℝ) * (Ideal.absNorm (1 : Ideal O) : ℝ)) : ℂ) = 1
-  rw [hm,map_one,map_one,map_one]
-  norm_num
 
 lemma reflectedTerm_eq_coefficient (η ηi : Character) (S : Finset (Ideal O))
     (hS : ∀ P ∈ S,Prime P) (F : ℝ → ℂ) (X Q : ℝ)

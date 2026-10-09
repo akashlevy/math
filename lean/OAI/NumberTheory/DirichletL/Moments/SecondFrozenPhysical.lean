@@ -3,7 +3,6 @@ import OAI.NumberTheory.DirichletL.Moments.SecondNonexceptionalPhysical
 import OAI.NumberTheory.DirichletL.Moments.SecondSupportedChildren
 import OAI.NumberTheory.DirichletL.Moments.SecondPhysicalCost
 import OAI.NumberTheory.DirichletL.Moments.ExceptionalAmplitudePair
-
 namespace OAI
 
 noncomputable section
@@ -31,9 +30,9 @@ variable {ι:Type*} [Fintype ι] [DecidableEq ι]
 local instance : DecidableEq (ι⊕Fin 2) := Classical.decEq _
 
 open CenteredMomentSecondOriginalChildren CenteredMomentSecondSupportedChildren
-open CenteredMomentSecondPhysicalBlock CenteredMomentSecondCanonicalScalar
+open CenteredMomentSecondPhysicalBlock
 open CenteredMomentSecondPhysicalWindow CenteredMomentSecondWholeKernel
-open CenteredMomentSecondPhysicalCost CenteredMomentCommonRadialData CenteredMomentExceptionalAmplitudePair
+open CenteredMomentSecondPhysicalCost CenteredMomentExceptionalAmplitudePair
 theorem actual_physical_from_supported_children (lo hi:ι→ℝ) (W : 𝓢(ℝ,ℂ)) (decay J₁ J₂ : ℕ) (B δ:ℝ) (hB:0≤B) (hδ:0<δ) :
     ∃C0 Ce:ℝ,0<C0 ∧ 0<Ce ∧ ∀ᶠZ:ℝ in atTop,1<Z ∧ ∀Kphys:ℝ,0<Kphys → ∀n:Fin 4→ℤ,
       let r:=dyadicScale (n 0)*dyadicScale (n 1)/(dyadicScale (n 2)*dyadicScale (n 3))

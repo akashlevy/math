@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.Ideal
 import OAI.NumberTheory.DirichletL.CubicSieve.Initial
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

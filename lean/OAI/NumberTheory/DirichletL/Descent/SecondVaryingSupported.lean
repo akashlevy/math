@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondVaryingLists
 import OAI.NumberTheory.DirichletL.Descent.SecondPuncture
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstAmplificationChoice
 import OAI.NumberTheory.DirichletL.Moments.SmoothedWindowEnergy
-
 namespace OAI
 
 noncomputable section
@@ -71,28 +70,6 @@ lemma exponent_max (d K0 j c g : ℝ) :
   · rw [max_eq_left (le_of_not_ge h),max_eq_right (by linarith)]
     ring
 
-lemma rpow_exponent_max (Z a b : ℝ) (hZ : 1≤Z) :
-    Z^(max a b)=max (Z^a) (Z^b) := by
-  rcases le_total a b with h|h
-  · rw [max_eq_right h,max_eq_right (Real.rpow_le_rpow_of_exponent_le hZ h)]
-  · rw [max_eq_left h,max_eq_left (Real.rpow_le_rpow_of_exponent_le hZ h)]
-
-theorem main_radius_identity (Z d K0 j c sigma : ℝ) (hZ : 1≤Z) :
-    Z^(j+mainGain (d+K0-j) c sigma)=
-      max (Z^(j+2*sigma)) (Z^(d+K0-c+2*sigma)) := by
-  rw [mainGain,exponent_max,rpow_exponent_max Z _ _ hZ]
-
-theorem error_radius_identity (Z d K0 j c sigma : ℝ) (p : O) (k : ℕ) (hZ : 1≤Z) :
-    Z^(j+errorGain (d+K0-j) c sigma Z p k)=
-      max (Z^(j+sigma))
-        (Z^(d+K0-c-2*errorRemoval p Z k+errorMoving p Z k+sigma)) := by
-  have he := exponent_max d K0 j (c+2*errorRemoval p Z k-errorMoving p Z k) sigma
-  have hbase : j+errorGain (d+K0-j) c sigma Z p k=
-      max (j+sigma) (d+K0-c-2*errorRemoval p Z k+errorMoving p Z k+sigma) := by
-    unfold errorGain
-    convert he using 1 <;> ring_nf
-  rw [hbase,rpow_exponent_max Z _ _ hZ]
-
 lemma envelope_exponent (d K0 j c g δ : ℝ) (hδ : 0≤δ) (hj : j≤K0+δ) :
     j+(max (d+K0-j-c) 0+g)≤K0+max (d-c) 0+g+δ := by
   rw [exponent_max]
@@ -128,25 +105,6 @@ lemma doubled_radius_le (Z a b reserve : ℝ) (hZ : 1<Z) (hab : a≤b)
       rw [mul_comm (Z^b)]
       exact mul_le_mul_of_nonneg_right hreserve (Real.rpow_nonneg (zero_lt_one.trans hZ).le _)
 
-theorem unamplified_radius_identity (Z d K0 j c sigma : ℝ) (hZ : 1≤Z) :
-    Z^(j+(max (d+K0-j-c) 0+sigma))=
-      max (Z^(j+sigma)) (Z^(d+K0-c+sigma)) := by
-  rw [exponent_max,rpow_exponent_max Z _ _ hZ]
-
-theorem dyadic_to_common_ball {α : Type*} (S : Finset α) (a : α→O)
-    (ha : ∀i,Supported (Ideal.span {a i})) (coeff : α→ℂ)
-    (Z d K0 c sigma δ reserve : ℝ) (hZ : 1<Z) (hsigma : 0≤sigma) (hδ : 0≤δ)
-    (n : ℤ) (hn : Real.logb Z (dyadicScale n)≤K0+δ) (hreserve : 2≤Z^reserve) :
-    (∑' h : O,dyadicWeight n (normValue h)*‖gaussPolynomial S a ha coeff h‖^2)≤
-      (gaussEnergy S a ha coeff ballProfile (Z^(K0+max (d-c) 0+sigma+δ+reserve))).re := by
-  apply (dyadic_to_ball S a ha coeff Z sigma
-    (d+K0-Real.logb Z (dyadicScale n)) c hZ hsigma n).trans
-  apply gaussEnergy_radius_le _ _ _ _ _ _
-    (Real.rpow_pos_of_pos (zero_lt_one.trans hZ) _)
-    (Real.rpow_pos_of_pos (zero_lt_one.trans hZ) _)
-  exact doubled_radius_le Z _ _ reserve hZ
-    (envelope_exponent d K0 _ c sigma δ hδ hn) hreserve
-
 def mainCommonRadius (Z d K0 c sigma δ reserve : ℝ) : ℝ :=
   Z^(K0+max (d-c) 0+2*sigma+δ+reserve)
 
@@ -177,11 +135,6 @@ theorem child_energy_common {ι : Type*} [Fintype ι]
   exact doubled_radius_le Z _ _ reserve hZ
     (error_exponent_envelope d K0 j c sigma δ Z p (n+1) hδ hj) hreserve
 
-theorem errorCommonRadius_six (Z d K0 c sigma δ reserve : ℝ) (p : O) :
-    errorCommonRadius Z d K0 c sigma δ reserve p 6=
-      Z^(K0+max (d-c-2*errorRemoval p Z 6) 0+sigma+δ+reserve) := by
-  simp only [errorCommonRadius,errorMoving,ite_true,add_zero]
-
 open CenteredMomentFirstScale
 
 theorem retained_nominal_upper (I J E : Ideal O) (hE : E≠0)
@@ -194,94 +147,8 @@ theorem retained_nominal_upper (I J E : Ideal O) (hE : E≠0)
     (firstNominalScale_pos I J E hE K X hK hX)]
   exact hsec
 
-theorem actual_retained_radii (I J E : Ideal O) (hE : E≠0)
-    (K X Z Csec Tsec xi d c sigma reserve : ℝ)
-    (hK : 0<K) (hX : 0<X) (hZ : 1<Z) (hC : 1≤Csec) (hxi : 0≤xi)
-    (hsec : Tsec≤Csec*firstNominalScale I J E K X)
-    (n : ℤ) (hn : Retained (frequencyRadius Tsec Z xi) n) (hreserve : 2≤Z^reserve) :
-    let K0 := nominalLog I J E K X Z
-    let j := Real.logb Z (dyadicScale n)
-    let δ := frequencyLoss Z Csec xi
-    2*Z^(j+mainGain (d+K0-j) c sigma)≤mainCommonRadius Z d K0 c sigma δ reserve ∧
-      ∀(p:O)(k:ℕ),2*Z^(j+errorGain (d+K0-j) c sigma Z p k)≤
-        errorCommonRadius Z d K0 c sigma δ reserve p k := by
-  dsimp only
-  have hj := retained_nominal_upper I J E hE K X Z Csec Tsec xi hK hX hZ
-    (zero_lt_one.trans_le hC) hsec n hn
-  have hδ := frequencyLoss_nonneg Z Csec xi hZ hC hxi
-  constructor
-  · exact doubled_radius_le Z _ _ reserve hZ (main_exponent_envelope _ _ _ _ _ _ hδ hj) hreserve
-  · intro p k
-    exact doubled_radius_le Z _ _ reserve hZ (error_exponent_envelope _ _ _ _ _ _ Z p k hδ hj) hreserve
-
 open CenteredMomentPrimePool CenteredMomentPrimeElements
-open CenteredMomentAmplificationOriginalErrors CenteredMomentAmplificationGlobal
-
-theorem eventually_original_amplification_common {ι : Type*} [Fintype ι]
-    (M : Ideal O) [NeZero M] (H : Subgroup (O ⧸ M)ˣ)
-    (hH : RayOrthogonality.globalUnits M≤H)
-    (Sbad : Finset (Ideal O)) (hbad : fixedBadPrimes⊆Sbad)
-    (sigma loss BR Bs Mmax b eta Csec xi reserve : ℝ)
-    (hsigma : 0<sigma) (hloss : 0<loss) (hM : 0≤Mmax) (hb : 0≤b) (hgap : eta<sigma/6)
-    (hC : 1≤Csec) (hxi : 0≤xi) (hreserve : 0<reserve) :
-    ∀ᶠ Z : ℝ in atTop, 1<Z ∧
-      let P := primePool M H Sbad (1/2) 1 (Z^(sigma/3))
-      P.Nonempty ∧ Z^(sigma/3-loss)≤(P.card:ℝ) ∧
-      ∀ (η : Character) (m : O),m≠0 → ConcretePrimeRowBridge.goodLambda∣m → (2:O)∣m →
-      ∃ τ : (elementPool P) → Fin 3 → RayFourExpansion.RayCharacter → Character,
-        (∀ (p : elementPool P) i χ,(τ p i χ).modulus.absNorm≤
-          HeckeRowClosure.rowConductorBound (CenteredMomentChildRows.childCharacter η χ) m 1 (p.val^(2*CenteredMomentAmplificationActiveFactor.errorMovingExponent (errorIndex i)))) ∧
-        ∀ (D : OriginalData ι),
-          (∀ i,∀ I∈D.S i,I≠0) → (∀ i,∀ I∈D.S (Sum.inl i),Prime I) →
-          (∀ i,Function.support (D.slot i)⊆Set.Iic b) →
-          ∀ (z : ι→ℝ),(∀i,z i≤eta) → (∀i,D.lengths i=Z^(z i)) →
-          D.R≠0 → D.s≠0 → (Ideal.absNorm D.R:ℝ)≤Z^BR → (Ideal.absNorm D.s:ℝ)≤Z^Bs →
-          ∀ (t T d cLog : ℝ),0<T →
-          ∀ (I J E : Ideal O),E≠0 → ∀ (K X Tsec : ℝ),0<K → 0<X →
-          Tsec≤Csec*firstNominalScale I J E K X →
-          ∀ (j : ℤ),Retained (frequencyRadius Tsec Z xi) j →
-          Real.logb Z (dyadicScale j)≤Mmax →
-          (∑' h : O,dyadicWeight j (normValue h)*
-            ‖gaussPolynomial Finset.univ (sourceGenerator D.columns)
-              (sourceGenerator_supported D.columns) (D.coefficient η m t T) h‖^2)≤
-            (8/(P.card:ℝ))*
-              (((Mmax+2*sigma)/(sigma/6))*
-                (gaussEnergy Finset.univ (sourceGenerator D.columns)
-                  (sourceGenerator_supported D.columns) (D.coefficient η m t T) ballProfile
-                  (mainCommonRadius Z d (nominalLog I J E K X Z) cLog sigma
-                    (frequencyLoss Z Csec xi) reserve)).re+
-                ∑p : elementPool P,∑i : Fin 3,D.active.childEnergy (τ p i) p (errorIndex i) t T
-                  (errorCommonRadius Z d (nominalLog I J E K X Z) cLog sigma
-                    (frequencyLoss Z Csec xi) reserve p (errorIndex i+1))) := by
-  filter_upwards [eventually_original_amplification (ι:=ι) M H hH Sbad hbad
-    sigma loss BR Bs Mmax b eta hsigma hloss hM hb hgap,
-    eventually_support_reserve reserve hreserve] with Z hz hsupport
-  obtain ⟨hZ,hP,hcard,hfam⟩ := hz
-  refine ⟨hZ,hP,hcard,?_⟩
-  intro η m hm hmLam hm2
-  obtain ⟨τ,hN,henergy⟩ := hfam η m hm hmLam hm2
-  refine ⟨τ,hN,?_⟩
-  intro D hS hprime hsupp z hz hlen hR0 hs0 hR hs t T d cLog hT
-    I J E hE K X Tsec hK hX hsec j hj hMdyad
-  let K0 := nominalLog I J E K X Z
-  let kdyad := Real.logb Z (dyadicScale j)
-  have henclose : kdyad≤K0+frequencyLoss Z Csec xi :=
-    retained_nominal_upper I J E hE K X Z Csec Tsec xi hK hX hZ
-      (zero_lt_one.trans_le hC) hsec j hj
-  have hδ := frequencyLoss_nonneg Z Csec xi hZ hC hxi
-  have he := henergy D hS hprime hsupp z hz hlen hR0 hs0 hR hs t T
-    (d+K0-kdyad) cLog hT j hMdyad
-  apply he.trans
-  apply mul_le_mul_of_nonneg_left _ (by positivity)
-  apply add_le_add
-  · apply mul_le_mul_of_nonneg_left _ (by positivity)
-    exact main_energy_common _ _ _ _ Z d K0 kdyad cLog sigma _ reserve hZ hδ henclose hsupport.2
-  · apply Finset.sum_le_sum
-    intro p _
-    apply Finset.sum_le_sum
-    intro i _
-    exact child_energy_common D.active (τ p i) p (errorIndex i) t T Z d K0 kdyad cLog sigma
-      _ reserve hT.le hZ hδ henclose hsupport.2
+open CenteredMomentAmplificationGlobal
 
 end SevenEighths.CenteredMomentAmplifiedRetainedRadius
 

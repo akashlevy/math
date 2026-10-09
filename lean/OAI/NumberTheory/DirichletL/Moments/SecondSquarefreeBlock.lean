@@ -4,7 +4,6 @@ import OAI.NumberTheory.DirichletL.Moments.WholeDivisorShell
 import OAI.NumberTheory.DirichletL.Moments.SecondMaskedWindow
 import OAI.NumberTheory.DirichletL.Moments.SecondRadicalColumns
 import OAI.NumberTheory.DirichletL.Moments.SecondWindowBudget
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseUniformFamily
 import OAI.NumberTheory.DirichletL.Hecke.DetectorDyadicCutoff
-
 namespace OAI
 
 noncomputable section

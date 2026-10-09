@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.CommonRawScale
-
 namespace OAI
 
 noncomputable section

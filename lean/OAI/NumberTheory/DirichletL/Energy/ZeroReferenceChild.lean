@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.ReferenceLowChild
-
 namespace OAI
 
 noncomputable section

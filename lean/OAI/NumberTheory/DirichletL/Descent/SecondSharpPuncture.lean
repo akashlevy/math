@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondAdmissible
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

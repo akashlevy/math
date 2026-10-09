@@ -1,77 +1,23 @@
 import OAI.NumberTheory.DirichletL.Reciprocity.PrimaryCongruences
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 
@@ -177,11 +123,6 @@ lemma halfPrimary_not_negative (j:ℕ) : ¬ramLambda ∣ -(omega^j)-1 := by
 
 abbrev HalfPrimary := {b:Eis // ramLambda ∣ b-1}
 
-lemma halfPrimary_ne_zero (b:HalfPrimary) : b.val≠0 := by
-  intro h
-  apply halfPrimary_lambda_not_dvd_one
-  simpa only [h,zero_sub,dvd_neg] using b.2
-
 lemma halfPrimary_not_dvd (b:HalfPrimary) : ¬ramLambda∣b.val := by
   intro h
   apply halfPrimary_lambda_not_dvd_one
@@ -238,10 +179,6 @@ def halfPrimaryAssociateEquiv : Fin 3×PrimaryLower ≃ HalfPrimary :=
 lemma halfPrimaryAssociateEquiv_apply (j:Fin 3) (a:PrimaryLower) :
     (halfPrimaryAssociateEquiv (j,a)).val=omega^j.val*a.val:=rfl
 
-lemma halfPrimary_tsum (f:Eis→ℂ) :
-    (∑'b:HalfPrimary,f b.val)=∑'p:Fin 3×PrimaryLower,f (omega^p.1.val*p.2.val) :=
-  halfPrimaryAssociateEquiv.tsum_eq (fun b:HalfPrimary=>f b.val) |>.symm
-
 end
 
 open ActualEisensteinCubic CubicKubota ConcreteTraceCRT
@@ -278,14 +215,9 @@ lemma unitCuspUpper_section (b : Eis) (z : ℂ) (v : ℝ) (hv : 0<v) :
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
   ring
 
-lemma unitCuspDiagonal_norm (u : Eisˣ) :
-    ‖eisEmbedding (u:Eis)‖=1 ∧ ‖eisEmbedding (↑u⁻¹:Eis)‖=1 :=
-  ⟨GaussGeneratorTransport.norm_eisEmbedding_unit u,
-    GaussGeneratorTransport.norm_eisEmbedding_unit u⁻¹⟩
-
 end CubicEisenstein
 
-open scoped Classical MatrixGroups
+open scoped MatrixGroups
 namespace CubicEisenstein
 
 section
@@ -430,7 +362,6 @@ lemma cubeStrata_weighted_sum (p C:Eis) (hp:Prime p) (hprimary:lambda^2∣p-1)
 
 end CubicEisenstein
 
-open scoped Classical MatrixGroups
 namespace CubicKubota
 open ActualEisensteinCubic ConcreteTraceCRT CubicEisenstein CubicJacobiGlobal CubicRamified
 local notation "Eis" => ActualEisensteinCubic.O
@@ -544,7 +475,6 @@ lemma cubeCuspAffineEquiv_mk (p A C q:Eis) (hprimary:lambda^2∣p-1) (hC:IsCopri
 
 end CubicEisenstein
 
-open scoped Classical MatrixGroups BigOperators
 namespace CubicKubota
 open ActualEisensteinCubic ConcreteTraceCRT CubicEisenstein CubicJacobiGlobal
 local notation "Eis" => ActualEisensteinCubic.O

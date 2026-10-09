@@ -6,7 +6,6 @@ import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Deriv
 import Mathlib.Analysis.Normed.Module.Connected
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 import Mathlib.Analysis.Complex.ExponentialBounds
-
 namespace OAI
 
 noncomputable section
@@ -516,29 +515,6 @@ theorem same_height_mem_disk {a e t v x : ℝ} (hev : 8 * e ≤ v)
       ((x - 2 : ℝ) : ℂ) := by push_cast; ring
   rw [heq, Complex.norm_real, Real.norm_eq_abs, abs_of_nonpos (by linarith : x - 2 ≤ 0)]
   linarith
-
-theorem principal_regularizer_norm_le_one {s : ℂ} (hs : 0 ≤ s.re) :
-    ‖(s - 1) / (s + 1)‖ ≤ 1 := by
-  have hn : ‖s - 1‖ ≤ ‖s + 1‖ := by
-    rw [← sq_le_sq₀ (norm_nonneg _) (norm_nonneg _)]
-    simp only [Complex.sq_norm, Complex.normSq_apply, Complex.sub_re, Complex.one_re,
-      Complex.sub_im, Complex.one_im, sub_zero, Complex.add_re, Complex.add_im, add_zero]
-    nlinarith
-  rw [norm_div]
-  exact div_le_one_of_le₀ hn (norm_nonneg _)
-
-theorem principal_reciprocal_transfer {s Z L : ℂ} (hs : 0 ≤ s.re)
-    (hL : L = ((s - 1) / (s + 1)) * Z) (h0 : L ≠ 0) : ‖Z⁻¹‖ ≤ ‖L⁻¹‖ := by
-  have hf0 : (s - 1) / (s + 1) ≠ 0 := by
-    intro hf
-    apply h0
-    rw [hL, hf, zero_mul]
-  have heq : Z⁻¹ = ((s - 1) / (s + 1)) * L⁻¹ := by
-    rw [hL, mul_inv]
-    rw [← mul_assoc, mul_inv_cancel₀ hf0, one_mul]
-  rw [heq, norm_mul]
-  exact (mul_le_mul_of_nonneg_right (principal_regularizer_norm_le_one hs)
-    (norm_nonneg _)).trans_eq (one_mul _)
 
 end SevenEighths.LogarithmicControl
 

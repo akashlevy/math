@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.ReflectionMass
 import OAI.NumberTheory.DirichletL.Moments.ReflectedAnnuli
-
 namespace OAI
 
 noncomputable section
@@ -70,10 +69,6 @@ lemma signed_series_reindex (η ηi : Character) (S : Finset (Ideal O)) (B : ℕ
         coefficient η ηi S D.val H*(annularMass B n:ℂ)*f ((D,H),n) := by
   rw [hs.of_norm.tsum_prod,hs.of_norm.prod.tsum_prod,tsum_fintype]
   rfl
-
-lemma signedWeight_base (η ηi : Character) (S : Finset (Ideal O)) (B : ℕ) :
-    signedWeight η ηi S B (baseIndex S)=(annularMass B 0:ℂ) := by
-  simp only [signedWeight,baseIndex,coefficient_empty_unit,one_mul]
 
 theorem signed_mass_subpower (ε : ℝ) (hε : 0<ε) :
     ∃C : ℝ,0<C ∧ ∀(S : Finset (Ideal O)),(∀P∈S,Prime P) →
@@ -182,32 +177,6 @@ theorem weighted_selection_energy {ι : Type*} [Fintype ι] {α : ι→Type*}
     _ = M^2*∑i,v i := by simp only [mul_pow,Real.sq_sqrt (hv0 _),Finset.mul_sum]
     _ ≤ M^2*E := mul_le_mul_of_nonneg_left
       (sum_iSup_le_of_selection base (fun i a=>‖f i a‖^2) E hselection) (sq_nonneg M)
-
-theorem finite_weighted_selection_energy {ι : Type*} [Fintype ι] {α : ι→Type*}
-    (base : ∀i,α i) (s : ∀i,Finset (α i)) (w f : ∀i,α i→ℂ)
-    (M E : ℝ) (hM : 0≤M) (hm : ∀i,(∑a∈s i,‖w i a‖)≤M)
-    (hselection : ∀a : ∀i,α i,(∑i,‖f i (a i)‖^2)≤E) :
-    (∑i,‖∑a∈s i,w i a*f i a‖^2)≤M^2*E := by
-  let w' (i : ι) (a : α i) : ℂ := if a∈s i then w i a else 0
-  have hs (i : ι) : Summable (fun a=>‖w' i a‖) := by
-    apply summable_of_ne_finset_zero (s:=s i)
-    intro a ha
-    simp [w',ha]
-  have hmass (i : ι) : (∑'a,‖w' i a‖)≤M := by
-    rw [tsum_eq_sum (s:=s i) (fun a ha=>by simp [w',ha])]
-    calc
-      (∑a∈s i,‖w' i a‖) = ∑a∈s i,‖w i a‖ := by
-        apply Finset.sum_congr rfl
-        intro a ha
-        simp [w',ha]
-      _ ≤ M := hm i
-  have hh := (weighted_selection_energy base w' f M E hM hs hmass hselection).2
-  have he (i : ι) : (∑'a,w' i a*f i a)=∑a∈s i,w i a*f i a := by
-    rw [tsum_eq_sum (s:=s i) (fun a ha=>by simp [w',ha])]
-    apply Finset.sum_congr rfl
-    intro a ha
-    simp [w',ha]
-  simpa only [he] using hh
 
 lemma masked_signedWeight_summable_norm (η ηi : Character) (S : Finset (Ideal O))
     (hS : ∀P∈S,Prime P) (B : ℕ) (hB : 2≤B)

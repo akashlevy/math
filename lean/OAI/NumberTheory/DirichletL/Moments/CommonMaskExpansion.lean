@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.ReflectionMass
-
 namespace OAI
 
 noncomputable section
@@ -12,10 +11,6 @@ local notation "O" => HeckeFamily.O
 
 def naturalSlot (χ : Character) (pool : Finset (Ideal O)) (β : Ideal O→ℂ) (P : ℝ) : ℂ :=
   (Real.sqrt P:ℂ)⁻¹ * ∑ I∈pool,idealCoeff χ I*β I
-
-def profileSlot (χ : Character) (pool : Finset (Ideal O))
-    (ν : Ideal O→ℂ) (W : ℝ→ℂ) (P : ℝ) : ℂ :=
-  naturalSlot χ pool (fun I=>ν I*W ((I.absNorm:ℝ)/P)) P
 
 lemma outside_prime (R : Finset (Ideal O)) (hR : ∀ I∈R,Prime I)
     (I : Ideal O) (hI : Prime I) : outside R I ↔ I∉R := by
@@ -183,18 +178,6 @@ lemma euler_ge_one (R : Finset (Ideal O)) (hR : ∀I∈R,Prime I) :
     linarith [Finset.sum_nonneg (s:=R) (fun I _=>weight_nonneg I),one_add_sum_weight R]).trans
     (deletion_le_euler R hR)
 
-lemma one_add_slotMass (R pool : Finset (Ideal O)) (hR : ∀I∈R,Prime I)
-    (hp : ∀I∈pool,Prime I) (β : Ideal O→ℂ) (P b M : ℝ) (hP : 0<P) (hM : 0≤M)
-    (hβ : ∀I∈pool,‖β I‖≤M) (hs : ∀I∈pool,β I≠0 → (I.absNorm:ℝ)≤b*P) :
-    1+slotMass R pool β P≤max 1 (Real.sqrt (max 1 b)*M)*(∏I∈R,localMass I) := by
-  have ha:=slotMass_bound R pool hp β P b M hP hM hβ hs
-  have hb:1+∑I∈R,weight I≤∏I∈R,localMass I:=
-    (one_add_sum_weight R).trans (deletion_le_euler R hR)
-  have hc:=le_max_left 1 (Real.sqrt (max 1 b)*M)
-  have hd:=le_max_right 1 (Real.sqrt (max 1 b)*M)
-  have he:0≤∑I∈R,weight I:=Finset.sum_nonneg (fun I _=>weight_nonneg I)
-  nlinarith
-
 def coefficientMajorant (R D₁ D₂ : Finset (Ideal O)) (J : Finset α)
     (pool : α→Finset (Ideal O)) (β : α→Ideal O→ℂ) (P : α→ℝ) : ℝ :=
   weight (∏I∈D₁,I)*weight (∏I∈D₂,I)*∏i∈J,slotMass R (pool i) (β i) (P i)
@@ -211,18 +194,6 @@ lemma signedCoefficient_norm (χ : Character) (R : Finset (Ideal O)) (hR : ∀I�
   · exact Finset.prod_le_prod₀ (fun i _=>norm_nonneg _) (fun i _=>naturalSlot_norm χ R (pool i) (β i) (P i))
   · positivity
   · exact mul_nonneg (weight_nonneg _) (weight_nonneg _)
-
-omit [DecidableEq α] in
-lemma majorant_mass (R : Finset (Ideal O)) (F : Finset α)
-    (pool : α→Finset (Ideal O)) (β : α→Ideal O→ℂ) (P : α→ℝ) :
-    (∑D₁∈R.powerset,∑D₂∈R.powerset,∑J∈F.powerset,
-      coefficientMajorant R D₁ D₂ J pool β P)=
-      (∏I∈R,(1+weight I))^2*(∏i∈F,(1+slotMass R (pool i) (β i) (P i))) := by
-  simp only [coefficientMajorant,←Finset.mul_sum]
-  rw [←Finset.prod_one_add]
-  simp only [←Finset.sum_mul]
-  rw [←Finset.sum_mul_sum,deletion_mass]
-  ring
 
 def uniformMajorant (R D₁ D₂ : Finset (Ideal O)) (J : Finset α) (b M : α→ℝ) : ℝ :=
   weight (∏I∈D₁,I)*weight (∏I∈D₂,I)*
@@ -320,68 +291,6 @@ theorem uniform_mass_subpower (F : Finset α) (b M : α→ℝ) (hM : ∀i∈F,0�
     _≤A*(C₀*(Ideal.absNorm (∏I∈R,I):ℝ)^δ)^n:=
       mul_le_mul_of_nonneg_left (pow_le_pow_left₀ he (hbound R hR) n) hA.le
     _=_:=by rw [mul_pow,hpow];ring
-
-omit [DecidableEq α] in
-
-theorem signed_mass_subpower (F : Finset α) (b M : α→ℝ) (hM : ∀i∈F,0≤M i)
-    (ε : ℝ) (hε : 0<ε) :
-    ∃ C : ℝ,0<C ∧ ∀ (R : Finset (Ideal O)) (_hR : ∀I∈R,Prime I)
-      (χ : Character) (pool : α→Finset (Ideal O)) (β : α→Ideal O→ℂ) (P : α→ℝ),
-      (∀i∈F,∀I∈pool i,Prime I) → (∀i∈F,0<P i) →
-      (∀i∈F,∀I∈pool i,‖β i I‖≤M i) →
-      (∀i∈F,∀I∈pool i,β i I≠0 → (I.absNorm:ℝ)≤b i*P i) →
-      (∑D₁∈R.powerset,∑D₂∈R.powerset,∑J∈F.powerset,
-        ‖signedCoefficient χ R D₁ D₂ J pool β P‖)≤C*(Ideal.absNorm (∏I∈R,I):ℝ)^ε := by
-  obtain ⟨C,hC,hbound⟩:=uniform_mass_subpower F b M hM ε hε
-  refine ⟨C,hC,?_⟩
-  intro R hR χ pool β P hp hP hβ hs
-  apply le_trans _ (hbound R hR)
-  apply Finset.sum_le_sum
-  intro D₁ hD₁
-  apply Finset.sum_le_sum
-  intro D₂ hD₂
-  apply Finset.sum_le_sum
-  intro J hJ
-  have hj:=Finset.mem_powerset.mp hJ
-  exact signedCoefficient_uniform χ R hR D₁ D₂ (Finset.mem_powerset.mp hD₁)
-    (Finset.mem_powerset.mp hD₂) J pool β P b M
-    (fun i hi=>hp i (hj hi)) (fun i hi=>hP i (hj hi)) (fun i hi=>hM i (hj hi))
-    (fun i hi=>hβ i (hj hi)) (fun i hi=>hs i (hj hi))
-
-lemma profile_bounds (pool : Finset (Ideal O)) (ν : Ideal O→ℂ) (W : ℝ→ℂ)
-    (P b M : ℝ) (hP : 0<P) (hν : ∀I∈pool,‖ν I‖≤1)
-    (hW : ∀x,‖W x‖≤M) (hs : Function.support W⊆Set.Iic b) :
-    (∀I∈pool,‖ν I*W ((I.absNorm:ℝ)/P)‖≤M) ∧
-      (∀I∈pool,ν I*W ((I.absNorm:ℝ)/P)≠0 → (I.absNorm:ℝ)≤b*P) := by
-  constructor
-  · intro I hi
-    rw [norm_mul]
-    exact (mul_le_of_le_one_left (norm_nonneg _) (hν I hi)).trans (hW _)
-  · intro I hi hn
-    exact (div_le_iff₀ hP).mp (hs (right_ne_zero_of_mul hn))
-
-omit [DecidableEq α] in
-
-theorem profile_signed_mass_subpower (F : Finset α) (b M : α→ℝ)
-    (hM : ∀i∈F,0≤M i) (ε : ℝ) (hε : 0<ε) :
-    ∃ C : ℝ,0<C ∧ ∀ (R : Finset (Ideal O)) (_hR : ∀I∈R,Prime I)
-      (χ : Character) (pool : α→Finset (Ideal O)) (ν : α→Ideal O→ℂ)
-      (W : α→ℝ→ℂ) (P : α→ℝ),
-      (∀i∈F,∀I∈pool i,Prime I) → (∀i∈F,0<P i) →
-      (∀i∈F,∀I∈pool i,‖ν i I‖≤1) → (∀i∈F,∀x,‖W i x‖≤M i) →
-      (∀i∈F,Function.support (W i)⊆Set.Iic (b i)) →
-      (∑D₁∈R.powerset,∑D₂∈R.powerset,∑J∈F.powerset,
-        ‖signedCoefficient χ R D₁ D₂ J pool
-          (fun i I=>ν i I*W i ((I.absNorm:ℝ)/P i)) P‖)≤
-        C*(Ideal.absNorm (∏I∈R,I):ℝ)^ε := by
-  obtain ⟨C,hC,hbound⟩:=signed_mass_subpower F b M hM ε hε
-  refine ⟨C,hC,?_⟩
-  intro R hR χ pool ν W P hp hP hν hW hs
-  exact hbound R hR χ pool (fun i I=>ν i I*W i ((I.absNorm:ℝ)/P i)) P hp hP
-    (fun i hi=>(profile_bounds (pool i) (ν i) (W i) (P i) (b i) (M i)
-      (hP i hi) (hν i hi) (hW i hi) (hs i hi)).1)
-    (fun i hi=>(profile_bounds (pool i) (ν i) (W i) (P i) (b i) (M i)
-      (hP i hi) (hν i hi) (hW i hi) (hs i hi)).2)
 
 end SevenEighths.CenteredMomentCommonMaskExpansion
 

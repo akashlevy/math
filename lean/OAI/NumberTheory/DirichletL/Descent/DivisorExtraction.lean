@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.Quotients
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -34,26 +33,6 @@ theorem double_divisor_row_reindex {A : Type*} [AddCommMonoid A]
       simp only [hsel k hk]
     _ = ∑ k ∈ rows with R * r ∣ k, F k := (Finset.sum_filter _ _).symm
     _ = _ := sum_quotientSupport (R * r) rows F
-
-theorem double_column_divisor_reindex {A : Type*} [AddCommMonoid A]
-    (Pset cset : Finset (Ideal Eis)) (R r : Ideal Eis)
-    (F : Ideal Eis → Ideal Eis → A) :
-    (∑ P ∈ Pset, ∑ c ∈ cset, if R ∣ P ∧ r ∣ c then F P c else 0) =
-      ∑ P ∈ quotientSupport R Pset, ∑ c ∈ quotientSupport r cset, F (R * P) (r * c) := by
-  calc
-    _ = ∑ P ∈ Pset with R ∣ P, ∑ c ∈ cset with r ∣ c, F P c := by
-      simp only [Finset.sum_filter]
-      apply Finset.sum_congr rfl
-      intro P hP
-      by_cases hd : R ∣ P
-      · simp only [hd, true_and, ite_true]
-      · simp [hd]
-    _ = ∑ P ∈ quotientSupport R Pset, ∑ c ∈ cset with r ∣ c, F (R * P) c :=
-      sum_quotientSupport R Pset (fun P => ∑ c ∈ cset with r ∣ c, F P c)
-    _ = _ := by
-      apply Finset.sum_congr rfl
-      intro P hP
-      exact sum_quotientSupport r cset (F (R * P))
 
 end
 end SevenEighths.InverseMoment

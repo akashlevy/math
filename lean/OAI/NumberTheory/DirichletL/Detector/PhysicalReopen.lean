@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.SpectralSeparation
 import OAI.NumberTheory.DirichletL.Detector.PhysicalAnalytic
 import OAI.NumberTheory.DirichletL.Detector.Windows
-
 namespace OAI
 
 noncomputable section

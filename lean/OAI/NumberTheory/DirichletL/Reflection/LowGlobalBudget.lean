@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.LowFullBudget
 import OAI.NumberTheory.DirichletL.Reflection.GlobalEnergy
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

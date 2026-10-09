@@ -1,48 +1,23 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.NormFiberExtraction
 import OAI.NumberTheory.DirichletL.Mellin.FiniteEulerRestoration
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
 
-open Filter Asymptotics Ideal NumberField
 namespace FiniteSFactor
 
 private theorem fiber_card_natCard (n : ℕ) :
@@ -165,107 +140,6 @@ theorem outsideCoeff_LSeriesSummable_baseChange {q : ℕ} [NeZero q]
     simpa only [show ((2 : ℝ) - 1) = 1 by norm_num, Real.rpow_one] using
       outsideCoeff_baseChange_isBigO_linear χ S
   exact LSeriesSummable_of_isBigO_rpow hs hO
-
-theorem outsideCoeff_exp_summable_baseChange {q : ℕ} [NeZero q]
-    (χ : DirichletCharacter ℂ q) (S : Finset (Ideal O))
-    (t : ℝ) (ht : 0 < t) :
-    Summable (fun n : ℕ => outsideCoeff S
-      (ShortDraftHeckeBridge.baseChangeWeight χ) n * Real.exp (-(n : ℝ) * t)) := by
-  obtain ⟨C, hC⟩ := fiber_card_eventually_le_linear
-  have hexp : Summable (fun n : ℕ => (n : ℝ) * Real.exp (-(n : ℝ) * t)) := by
-    convert Real.summable_pow_mul_exp_neg_nat_mul 1 ht using 1
-    ext n
-    simp only [pow_one]
-    congr 1
-    ring_nf
-  apply (hexp.mul_left C).of_norm_bounded_eventually_nat
-  filter_upwards [hC] with n hn
-  have hcoeff := outsideCoeff_norm_le_card S
-    (ShortDraftHeckeBridge.baseChangeWeight χ)
-    (baseChangeWeight_norm_le_one χ) n
-  have hlin : ‖outsideCoeff S (ShortDraftHeckeBridge.baseChangeWeight χ) n‖ ≤
-      C * (n : ℝ) := hcoeff.trans hn
-  rw [norm_mul, Complex.norm_real, Real.norm_eq_abs,
-    abs_of_pos (Real.exp_pos _)]
-  simpa only [mul_assoc] using
-    (mul_le_mul_of_nonneg_right hlin (Real.exp_pos (-(n : ℝ) * t)).le)
-
-theorem outsideExpSum_restore_baseChange {q : ℕ} [NeZero q]
-    (χ : DirichletCharacter ℂ q)
-    (S : Finset (Ideal O)) (hS : ∀ Q ∈ S, Prime Q)
-    (P : Ideal O) (hP : Prime P) (hPnot : P ∉ S)
-    (t : ℝ) (ht : 0 < t) :
-    outsideExpSum S (ShortDraftHeckeBridge.baseChangeWeight χ) t =
-      outsideExpSum (insert P S) (ShortDraftHeckeBridge.baseChangeWeight χ) t +
-        ShortDraftHeckeBridge.baseChangeWeight χ P *
-          outsideExpSum (insert P S) (ShortDraftHeckeBridge.baseChangeWeight χ)
-            ((Ideal.absNorm P : ℝ) * t) := by
-  have hN : (0 : ℝ) < (Ideal.absNorm P : ℝ) := by
-    exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr hP.1)
-  exact outsideExpSum_restore_insert_prime S hS P hP hPnot
-    (ShortDraftHeckeBridge.baseChangeWeight χ)
-    (ShortDraftHeckeBridge.baseChangeWeight_zero_of_not_squarefree χ)
-    (ShortDraftHeckeBridge.baseChangeWeight_mul_of_isRelPrime χ)
-    t
-    (outsideCoeff_exp_summable_baseChange χ (insert P S) t ht)
-    (outsideCoeff_exp_summable_baseChange χ (insert P S)
-      ((Ideal.absNorm P : ℝ) * t) (mul_pos hN ht))
-
-theorem outsideExpSum_empty_eq_normFiberExpSum {q : ℕ}
-    (χ : DirichletCharacter ℂ q) (t : ℝ) :
-    outsideExpSum ∅ (ShortDraftHeckeBridge.baseChangeWeight χ) t =
-      ShortDraftHeckeBridge.normFiberExpSum
-        (ShortDraftHeckeBridge.baseChangeWeight χ) t := by
-  unfold outsideExpSum ShortDraftHeckeBridge.normFiberExpSum
-  congr 1
-
-theorem normFiberExpSum_restore_two_primes {q : ℕ} [NeZero q]
-    (χ : DirichletCharacter ℂ q)
-    (P Q : Ideal O) (hP : Prime P) (hQ : Prime Q) (hPQ : P ≠ Q)
-    (t : ℝ) (ht : 0 < t) :
-    ShortDraftHeckeBridge.normFiberExpSum
-      (ShortDraftHeckeBridge.baseChangeWeight χ) t =
-        outsideExpSum (insert Q {P}) (ShortDraftHeckeBridge.baseChangeWeight χ) t +
-        ShortDraftHeckeBridge.baseChangeWeight χ Q *
-          outsideExpSum (insert Q {P}) (ShortDraftHeckeBridge.baseChangeWeight χ)
-            ((Ideal.absNorm Q : ℝ) * t) +
-        ShortDraftHeckeBridge.baseChangeWeight χ P *
-          outsideExpSum (insert Q {P}) (ShortDraftHeckeBridge.baseChangeWeight χ)
-            ((Ideal.absNorm P : ℝ) * t) +
-        ShortDraftHeckeBridge.baseChangeWeight χ P *
-          ShortDraftHeckeBridge.baseChangeWeight χ Q *
-          outsideExpSum (insert Q {P}) (ShortDraftHeckeBridge.baseChangeWeight χ)
-            ((Ideal.absNorm Q : ℝ) * ((Ideal.absNorm P : ℝ) * t)) := by
-  have hPnot : P ∉ (∅ : Finset (Ideal O)) := by simp
-  have hQnot : Q ∉ ({P} : Finset (Ideal O)) := by simpa using hPQ.symm
-  have hSP : ∀ R ∈ ({P} : Finset (Ideal O)), Prime R := by
-    intro R hR
-    simp only [Finset.mem_singleton] at hR
-    subst R
-    exact hP
-  have hNP : (0 : ℝ) < (Ideal.absNorm P : ℝ) := by
-    exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr hP.1)
-  have h0 := outsideExpSum_restore_baseChange χ ∅ (by simp) P hP hPnot t ht
-  have h1 := outsideExpSum_restore_baseChange χ {P} hSP Q hQ hQnot t ht
-  have h2 := outsideExpSum_restore_baseChange χ {P} hSP Q hQ hQnot
-    ((Ideal.absNorm P : ℝ) * t) (mul_pos hNP ht)
-  rw [outsideExpSum_empty_eq_normFiberExpSum] at h0
-  simp only [Finset.insert_empty] at h0
-  rw [h1, h2] at h0
-  calc
-    ShortDraftHeckeBridge.normFiberExpSum
-        (ShortDraftHeckeBridge.baseChangeWeight χ) t =
-      outsideExpSum (insert Q {P}) (ShortDraftHeckeBridge.baseChangeWeight χ) t +
-      ShortDraftHeckeBridge.baseChangeWeight χ Q *
-        outsideExpSum (insert Q {P}) (ShortDraftHeckeBridge.baseChangeWeight χ)
-          ((Ideal.absNorm Q : ℝ) * t) +
-      ShortDraftHeckeBridge.baseChangeWeight χ P *
-        (outsideExpSum (insert Q {P}) (ShortDraftHeckeBridge.baseChangeWeight χ)
-          ((Ideal.absNorm P : ℝ) * t) +
-        ShortDraftHeckeBridge.baseChangeWeight χ Q *
-          outsideExpSum (insert Q {P}) (ShortDraftHeckeBridge.baseChangeWeight χ)
-            ((Ideal.absNorm Q : ℝ) * ((Ideal.absNorm P : ℝ) * t))) := h0
-    _ = _ := by ring
 
 private noncomputable def dirichletKernel (s : ℂ) (n : ℕ) : ℂ :=
   if n = 0 then 0 else (n : ℂ) ^ (-s)
@@ -419,13 +293,9 @@ theorem normFiberLSeries_finiteEuler_baseChange {q : ℕ} [NeZero q]
 
 end FiniteSFactor
 
-open Filter
-
 namespace CompactScaleBridge
 
 open ConcretePrimeRowBridge ShortDraftHeckeBridge
-
-abbrev O := ConcretePrimeRowBridge.O
 
 theorem idealsUpTo_card_le (N : ℕ) :
     (idealsUpTo N).card ≤ 64 * (N + 1) := by
@@ -454,203 +324,6 @@ theorem idealsUpTo_card_le (N : ℕ) :
         (ActualEisensteinCoordinates.coords (idealGenerator I))).toNat : ℤ) ≤ N := by
     exact_mod_cast hqNat
   simpa only [hcast] using hqInt
-
-theorem outsideIdealsUpTo_card_le (S : Finset (Ideal O)) (N : ℕ) :
-    (outsideIdealsUpTo S N).card ≤ 64 * (N + 1) := by
-  classical
-  calc
-    (outsideIdealsUpTo S N).card ≤ (idealsUpTo N).card := by
-      apply Finset.card_le_card
-      intro I hI
-      exact (Finset.mem_filter.mp hI).1
-    _ ≤ _ := idealsUpTo_card_le N
-
-theorem integer_fixed_test_identity
-    (S : Finset (Ideal O)) {q : ℕ}
-    (χ : DirichletCharacter ℂ q) (W : ℝ → ℂ) (m : ℕ) (hm : 0 < m) :
-    (∑ I ∈ outsideIdealsUpTo S (2 * m),
-      baseChangeWeight χ I * W ((Ideal.absNorm I : ℝ) / (m : ℝ))) =
-    ∑ n ∈ Finset.Icc 1 (2 * m),
-      FiniteSFactor.outsideCoeff S (baseChangeWeight χ) n *
-        (fun y : ℝ => W (2 * y)) ((n : ℝ) / (2 * m : ℕ)) := by
-  convert outsideIdealSum_eq_outsideCoeff_sum S (2 * m)
-    (baseChangeWeight χ) (fun n => W ((n : ℝ) / (m : ℝ))) using 1
-  simp only
-  apply Finset.sum_congr rfl
-  intro n hn
-  congr 1
-  have hm0 : (m : ℝ) ≠ 0 := by exact_mod_cast Nat.ne_of_gt hm
-  push_cast
-  field_simp
-
-theorem real_to_integer_compact_bound
-    {q : ℕ} (χ : DirichletCharacter ℂ q)
-    (S : Finset (Ideal O)) (W : ℝ → ℂ)
-    (LipC D : ℝ) (m : ℕ)
-    (hL : 0 ≤ LipC) (hLip : ∀ x y : ℝ, ‖W x - W y‖ ≤ LipC * |x - y|)
-    (hD : 1 ≤ D) (hmLower : D ≤ (m : ℝ))
-    (hmUpper : (m : ℝ) ≤ D + 1) :
-    ‖(∑ I ∈ outsideIdealsUpTo S (2 * m),
-        baseChangeWeight χ I * W ((Ideal.absNorm I : ℝ) / D)) -
-      (∑ I ∈ outsideIdealsUpTo S (2 * m),
-        baseChangeWeight χ I * W ((Ideal.absNorm I : ℝ) / (m : ℝ)))‖ ≤
-      640 * LipC := by
-  classical
-  let F := outsideIdealsUpTo S (2 * m)
-  have hDpos : 0 < D := by linarith
-  have hmpos : (0 : ℝ) < m := lt_of_lt_of_le hDpos hmLower
-  have hcardNat : F.card ≤ 64 * (2 * m + 1) :=
-    outsideIdealsUpTo_card_le S (2 * m)
-  have hcard : (F.card : ℝ) ≤ 320 * D := by
-    have hcardReal : (F.card : ℝ) ≤ 64 * (2 * (m : ℝ) + 1) := by
-      exact_mod_cast hcardNat
-    nlinarith
-  have hpoint (I : Ideal O) (hIF : I ∈ F) :
-      ‖baseChangeWeight χ I * W ((Ideal.absNorm I : ℝ) / D) -
-        baseChangeWeight χ I * W ((Ideal.absNorm I : ℝ) / (m : ℝ))‖ ≤
-      2 * LipC / D := by
-    let n : ℝ := Ideal.absNorm I
-    have hn0 : 0 ≤ n := by positivity
-    have hn : n ≤ 2 * (m : ℝ) := by
-      have hh : Ideal.absNorm I ≤ 2 * m :=
-        (mem_outsideIdealsUpTo.mp hIF).2.1
-      have hh' : (Ideal.absNorm I : ℝ) ≤ (2 * m : ℕ) := by
-        exact_mod_cast hh
-      simpa only [n, Nat.cast_mul, Nat.cast_ofNat] using hh'
-    have hgap : 0 ≤ (m : ℝ) - D := sub_nonneg.mpr hmLower
-    have hgap1 : (m : ℝ) - D ≤ 1 := by linarith
-    have hnum : n * ((m : ℝ) - D) ≤ 2 * (m : ℝ) := by
-      nlinarith [mul_nonneg (sub_nonneg.mpr hn) hgap,
-        mul_nonneg hn0 (sub_nonneg.mpr hgap1)]
-    have hxy : n / (m : ℝ) ≤ n / D := by
-      apply (div_le_div_iff₀ hmpos hDpos).2
-      nlinarith [mul_nonneg hn0 hgap]
-    have hdiff : n / D - n / (m : ℝ) ≤ 2 / D := by
-      have haux : n * ((m : ℝ) - D) / (D * (m : ℝ)) ≤ 2 / D := by
-        apply (div_le_div_iff₀ (mul_pos hDpos hmpos) hDpos).2
-        nlinarith [mul_le_mul_of_nonneg_right hnum hDpos.le]
-      have hfactor : n / D - n / (m : ℝ) =
-          n * ((m : ℝ) - D) / (D * (m : ℝ)) := by
-        field_simp
-      rw [hfactor]
-      exact haux
-    have habs : |n / D - n / (m : ℝ)| ≤ 2 / D := by
-      rwa [abs_of_nonneg (sub_nonneg.mpr hxy)]
-    have hW := hLip (n / D) (n / (m : ℝ))
-    have hwNorm := baseChangeWeight_norm_le_one χ I
-    calc
-      ‖baseChangeWeight χ I * W (n / D) -
-          baseChangeWeight χ I * W (n / (m : ℝ))‖ =
-          ‖baseChangeWeight χ I‖ *
-            ‖W (n / D) - W (n / (m : ℝ))‖ := by
-              rw [← mul_sub, norm_mul]
-      _ ≤ 1 * (LipC * |n / D - n / (m : ℝ)|) :=
-        mul_le_mul hwNorm hW (norm_nonneg _) (by positivity)
-      _ ≤ 1 * (LipC * (2 / D)) := by
-        gcongr
-      _ = 2 * LipC / D := by ring
-  calc
-    ‖(∑ I ∈ F, baseChangeWeight χ I * W ((Ideal.absNorm I : ℝ) / D)) -
-      (∑ I ∈ F, baseChangeWeight χ I * W ((Ideal.absNorm I : ℝ) / (m : ℝ)))‖ =
-        ‖∑ I ∈ F,
-          (baseChangeWeight χ I * W ((Ideal.absNorm I : ℝ) / D) -
-            baseChangeWeight χ I * W ((Ideal.absNorm I : ℝ) / (m : ℝ)))‖ := by
-          rw [Finset.sum_sub_distrib]
-    _ ≤ ∑ I ∈ F,
-          ‖baseChangeWeight χ I * W ((Ideal.absNorm I : ℝ) / D) -
-            baseChangeWeight χ I * W ((Ideal.absNorm I : ℝ) / (m : ℝ))‖ :=
-          norm_sum_le _ _
-    _ ≤ ∑ _I ∈ F, (2 * LipC / D) := by
-      apply Finset.sum_le_sum
-      exact hpoint
-    _ = (F.card : ℝ) * (2 * LipC / D) := by simp [mul_comm]
-    _ ≤ 640 * LipC := by
-      have hcoef : 0 ≤ 2 * LipC / D := by positivity
-      calc
-        (F.card : ℝ) * (2 * LipC / D) ≤
-            (320 * D) * (2 * LipC / D) :=
-          mul_le_mul_of_nonneg_right hcard hcoef
-        _ = 640 * LipC := by
-          field_simp
-          ring
-
-theorem smooth_supported_hasLipschitzConstant
-    (W : ℝ → ℂ) (hSmooth : ContDiff ℝ (↑(⊤ : ℕ∞)) W)
-    (hSupp : ∀ y : ℝ, y ≤ 1 ∨ 2 ≤ y → W y = 0) :
-    ∃ LipC : ℝ, 0 ≤ LipC ∧
-      ∀ x y : ℝ, ‖W x - W y‖ ≤ LipC * |x - y| := by
-  have hCompact : HasCompactSupport W := by
-    apply HasCompactSupport.of_support_subset_isCompact isCompact_Icc
-    intro x hx
-    constructor
-    · by_contra h
-      have hxle : x ≤ 1 := le_of_not_ge h
-      exact hx (hSupp x (Or.inl hxle))
-    · by_contra h
-      have hxge : 2 ≤ x := le_of_not_ge h
-      exact hx (hSupp x (Or.inr hxge))
-  obtain ⟨C, hC⟩ :=
-    ContDiff.lipschitzWith_of_hasCompactSupport hCompact hSmooth (by simp)
-  refine ⟨(C : ℝ), C.2, ?_⟩
-  intro x y
-  simpa only [dist_eq_norm, Real.norm_eq_abs] using hC.dist_le_mul x y
-
-noncomputable def fixedTestWeight (W : ℝ → ℂ) (m n : ℕ) : ℂ :=
-  W (2 * ((n : ℝ) / (2 * m : ℕ)))
-
-theorem fixedTestWeight_eq (W : ℝ → ℂ) {m : ℕ} (hm : 0 < m) (n : ℕ) :
-    fixedTestWeight W m n = W ((n : ℝ) / (m : ℝ)) := by
-  unfold fixedTestWeight
-  congr 1
-  have hm0 : (m : ℝ) ≠ 0 := by exact_mod_cast Nat.ne_of_gt hm
-  push_cast
-  field_simp
-
-structure FixedTestPrimeMS
-    {q : ℕ} (χ : DirichletCharacter ℂ q) (S : Finset (Ideal O))
-    (hSbad : ∀ P : Ideal O, P.IsMaximal → goodLambda ∈ P → P ∈ S)
-    (W : ℝ → ℂ) (m : ℕ) (ε : ℝ) where
-  H : ℕ
-  selected : Finset O
-  hp : ∀ p ∈ selected, p ≠ 0
-  hprime : ∀ p ∈ selected, (Ideal.span {p} : Ideal O).IsMaximal
-  hinj : Set.InjOn (fun p : O => (Ideal.span {p} : Ideal O)) (selected : Set O)
-  hnormlower : ∀ p ∈ selected,
-    ((2 * m : ℕ) : ℝ) ^ (11 / 60 : ℝ) / 2 ≤
-      (Ideal.absNorm (Ideal.span {p}) : ℝ)
-  hnormupper : ∀ p ∈ selected,
-    (Ideal.absNorm (Ideal.span {p}) : ℝ) ≤
-      ((2 * m : ℕ) : ℝ) ^ (11 / 60 : ℝ)
-  hH : Nat.floor (((2 * m : ℕ) : ℝ) ^ (11 / 10 : ℝ)) ≤ H
-  hcount : ((2 * m : ℕ) : ℝ) ^ ((11 / 60 : ℝ) - ε) ≤
-    (selected.card : ℝ)
-  hmean :
-    (∑ u ∈ rowNormDisk H,
-      ‖idealRowSum (outsideIdealsUpTo S (2 * m))
-          (outsideIdealsUpTo_ne_bot S (2 * m))
-          (outsideIdealsUpTo_good S (2 * m) hSbad)
-          χ (fixedTestWeight W m) u‖ ^ 2) ≤
-      ((2 * m : ℕ) : ℝ) ^ ((21 / 10 : ℝ) + ε)
-
-theorem FixedTestPrimeMS.bound
-    {q : ℕ} (χ : DirichletCharacter ℂ q) (S : Finset (Ideal O))
-    (hSbad : ∀ P : Ideal O, P.IsMaximal → goodLambda ∈ P → P ∈ S)
-    (W : ℝ → ℂ) (m : ℕ) (ε : ℝ)
-    (h : FixedTestPrimeMS χ S hSbad W m ε)
-    (hm : 0 < m) (hε : 0 ≤ ε) (hW : ∀ y : ℝ, ‖W y‖ ≤ 1) :
-    ‖∑ I ∈ outsideIdealsUpTo S (2 * m),
-      baseChangeWeight χ I * W ((Ideal.absNorm I : ℝ) / (m : ℝ))‖ ≤
-      384 * ((2 * m : ℕ) : ℝ) ^ ((23 / 24 : ℝ) + ε) := by
-  have hWeight : ∀ n : ℕ, ‖fixedTestWeight W m n‖ ≤ 1 := by
-    intro n
-    exact hW _
-  have hD : 1 ≤ 2 * m := by omega
-  have hbound := outsideCoeff_prime_extraction_from_MS χ
-    (fixedTestWeight W m) S hSbad hWeight h.selected (fun p : O => p)
-    (2 * m) h.H ε hD hε h.hp h.hprime h.hinj h.hnormlower
-    h.hnormupper h.hH h.hcount h.hmean
-  rw [← outsideIdealSum_eq_outsideCoeff_sum] at hbound
-  simpa only [fixedTestWeight_eq W hm] using hbound
 
 end CompactScaleBridge
 

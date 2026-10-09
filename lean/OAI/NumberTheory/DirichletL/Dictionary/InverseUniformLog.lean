@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.DetectorDictionaryUniformHeight
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationRowwise
-
 namespace OAI
 
 noncomputable section

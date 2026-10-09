@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Reflection.PuncturedMarks
 import OAI.NumberTheory.DirichletL.Reflection.SlotCoefficients
 import OAI.NumberTheory.DirichletL.Reflection.MarkedTuples
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

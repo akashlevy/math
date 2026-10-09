@@ -1,76 +1,24 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.CubeBlocks
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace InitialMeanSquare
 
 section
@@ -303,12 +251,10 @@ namespace CubicEisenstein
 
 section
 open Filter MeasureTheory LineDeriv
-open scoped BigOperators Classical Topology SchwartzMap LineDeriv
+open scoped BigOperators Classical Topology SchwartzMap
 
 abbrev EuclideanL2 := Lp ℂ 2 (volume : Measure EuclideanSpatial)
 abbrev EuclideanGradientL2 := PiLp 2 (fun _ : Fin 3 => EuclideanL2)
-example : InnerProductSpace ℂ EuclideanGradientL2 := inferInstance
-example : CompleteSpace EuclideanGradientL2 := inferInstance
 abbrev EuclideanDistributions := TemperedDistribution EuclideanSpatial ℂ
 
 def euclideanCoordinateVector (j : Fin 3) : EuclideanSpatial := WithLp.toLp 2 (Pi.single j 1)
@@ -346,16 +292,6 @@ lemma euclideanWeakGradientGraph_unique (x : EuclideanL2 × EuclideanGradientL2)
   apply euclideanL2Distribution_injective
   simpa only [hzero,map_zero,lineDerivOp_zero,WithLp.ofLp_zero,Pi.zero_apply] using (hh j).symm
 
-def euclideanWeakGradient : EuclideanL2 →ₗ.[ℂ] EuclideanGradientL2 :=
-  euclideanWeakGradientGraph.toLinearPMap
-
-lemma euclideanWeakGradient_graph : euclideanWeakGradient.graph=euclideanWeakGradientGraph :=
-  Submodule.toLinearPMap_graph_eq _ euclideanWeakGradientGraph_unique
-
-theorem euclideanWeakGradient_closed : euclideanWeakGradient.IsClosed := by
-  rw [LinearPMap.IsClosed,euclideanWeakGradient_graph]
-  exact euclideanGradientEquations.isClosed_ker
-
 lemma schwartz_mem_euclideanWeakGradientGraph (f : 𝓢(EuclideanSpatial,ℂ)) :
     (f.toLp 2 volume,WithLp.toLp 2 (fun j => (∂_{euclideanCoordinateVector j} f).toLp 2 volume))∈euclideanWeakGradientGraph := by
   apply (mem_euclideanWeakGradientGraph _ _).mpr
@@ -363,14 +299,6 @@ lemma schwartz_mem_euclideanWeakGradientGraph (f : 𝓢(EuclideanSpatial,ℂ)) :
   dsimp only [euclideanL2Distribution]
   simp only [Lp.toTemperedDistributionCLM_apply,Lp.toTemperedDistribution_toLp_eq]
   exact TemperedDistribution.lineDerivOp_toTemperedDistributionCLM_eq («μ» := volume) f _
-
-theorem euclideanWeakGradient_dense_domain : Dense (euclideanWeakGradient.domain : Set EuclideanL2) := by
-  apply (SchwartzMap.denseRange_toLpCLM (E := EuclideanSpatial) (F := ℂ) (p := 2)
-    («μ» := volume) (by norm_num)).mono
-  rintro _ ⟨f,rfl⟩
-  apply LinearPMap.mem_domain_of_mem_graph
-  rw [euclideanWeakGradient_graph]
-  exact schwartz_mem_euclideanWeakGradientGraph f
 
 end
 
@@ -391,8 +319,6 @@ abbrev EuclideanH1 := euclideanH1Submodule
 
 instance euclideanH1Complete : CompleteSpace EuclideanH1 :=
   euclideanH1Submodule_isClosed.completeSpace_coe
-example : InnerProductSpace ℂ EuclideanH1 := inferInstance
-
 def euclideanH1Embedding : EuclideanH1 →L[ℂ] EuclideanL2 :=
   (ContinuousLinearMap.fst ℂ EuclideanL2 EuclideanGradientL2).comp
     ((WithLp.prodContinuousLinearEquiv 2 ℂ EuclideanL2 EuclideanGradientL2).toContinuousLinearMap.comp
@@ -416,21 +342,12 @@ lemma euclideanH1Embedding_injective : Function.Injective euclideanH1Embedding :
   apply euclideanH1Embedding_eq_zero
   rw [map_sub,huv,sub_self]
 
-lemma euclideanH1Embedding_dense : DenseRange euclideanH1Embedding := by
-  apply euclideanWeakGradient_dense_domain.mono
-  intro f hf
-  obtain ⟨g,hg⟩ := LinearPMap.mem_domain_iff.mp hf
-  rw [euclideanWeakGradient_graph] at hg
-  refine ⟨⟨WithLp.toLp 2 (f,g),hg⟩,?_⟩
-  rfl
-
 lemma euclideanH1_norm_sq (u : EuclideanH1) :
     ‖u‖^2=‖euclideanH1Embedding u‖^2+‖euclideanH1Gradient u‖^2 :=
   WithLp.prod_norm_sq_eq_of_L2 u.1
 
 end CubicEisenstein
 
-open scoped BigOperators Classical
 namespace InitialMeanSquare
 open ActualEisensteinCubic ConcretePrimeRowBridge CanonicalQuadraticSieve
 open CompletedGauss FirstCauchyArithmetic ShortDraftHeckeBridge
@@ -514,8 +431,6 @@ theorem idealRowSum_eq_mobiusRow (F : Finset (Ideal O)) (hF : ∀I∈F,Admissibl
 
 end InitialMeanSquare
 
-open scoped BigOperators Classical SchwartzMap FourierTransform
-open MeasureTheory
 namespace InitialMeanSquare
 open ActualEisensteinCubic SecondPassArithmetic SecondPassIntegration JointLogSeparation
 

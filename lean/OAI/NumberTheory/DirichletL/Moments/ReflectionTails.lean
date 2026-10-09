@@ -1,13 +1,11 @@
 import OAI.NumberTheory.DirichletL.Moments.ComparisonReflection
 import OAI.NumberTheory.DirichletL.Moments.SectorLocalization
-
 namespace OAI
 
 noncomputable section
 open scoped Classical BigOperators SchwartzMap ContDiff
 namespace SevenEighths.CenteredMomentComparisonReflection
 open HeckeFamily EisensteinSchwartzPoisson
-local notation "O" => HeckeFamily.O
 local notation "NI" => UnrestrictedIdealReindex.NonzeroIdeal
 
 lemma ideal_norm_rpow_summable (B : ℕ) (hB : 2≤B) :
@@ -72,27 +70,6 @@ theorem plain_rapid_bound (B : ℕ) (hB : 2≤B) :
     _≤(Real.sqrt Y)⁻¹*(D*Y^B*C):=mul_le_mul_of_nonneg_left hb (by positivity)
     _=C*D*(Y^B/Real.sqrt Y):=by ring
 
-theorem actual_reflected_absolute_bound (a b : ℝ) (ha : 0<a) (B : ℕ) (hB : 2≤B) :
-    ∃n : ℕ,∀(W : ℝ→ℂ),∀_hs : Function.support W⊆Set.Icc a b,
-      ∀_hW : ContDiff ℝ ∞ W,∃C : ℝ,0<C ∧ ∀(η : Character)(t Y : ℝ),0<Y →
-      ‖HeckeDyadic.polynomial η false
-        (paperRadialFourier (CompletedHeight.normTwistedSource W t)) Y 0 0‖≤
-        C*(1+‖t‖)^n*(Y^B/Real.sqrt Y) := by
-  obtain ⟨n,hn⟩ := reflected_profile_height_control a b ha B 0
-  obtain ⟨K,hK,hKb⟩ := plain_rapid_bound B hB
-  refine ⟨n,?_⟩
-  intro W hs hW
-  obtain ⟨D,hD,hDb⟩ := hn W hs hW
-  refine ⟨K*D,mul_pos hK hD,?_⟩
-  intro η t Y hY
-  have hf : ∀x : ℝ,0<x → x^B*‖paperRadialFourier (CompletedHeight.normTwistedSource W t) x‖≤D*(1+‖t‖)^n := by
-    intro x hx
-    have hh := hDb t 0 (by omega) x hx.le
-    simp only [LocalLogFourier.eulerDeriv,iteratedDeriv_zero,Real.exp_zero,mul_one] at hh
-    exact (mul_le_mul_of_nonneg_right (pow_le_pow_left₀ hx.le (by linarith : x≤1+x) B)
-      (norm_nonneg _)).trans hh
-  exact (hKb η _ (D*(1+‖t‖)^n) Y (by positivity) hY hf).trans_eq (by ring)
-
 lemma discarded_rapid_control (F : ℝ→ℂ) (A B : ℕ) (D R : ℝ)
     (hD : 0≤D) (hR : 0<R) (hF : ∀x : ℝ,0<x → x^(B+A)*‖F x‖≤D) :
     ∀x : ℝ,0<x → x^B*‖(CenteredMomentSectorLocalization.discardedWeight R x:ℂ)*F x‖≤D/R^A := by
@@ -111,29 +88,6 @@ lemma discarded_rapid_control (F : ℝ→ℂ) (A B : ℕ) (D R : ℝ)
     _≤(x^B*‖F x‖)*x^A :=mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hR.le hRx A) (by positivity)
     _=x^(B+A)*‖F x‖ :=by rw [pow_add];ring
     _≤D :=hF x hx
-
-theorem actual_reflected_discarded_bound (a b : ℝ) (ha : 0<a) (A B : ℕ) (hB : 2≤B) :
-    ∃n : ℕ,∀(W : ℝ→ℂ),∀_hs : Function.support W⊆Set.Icc a b,
-      ∀_hW : ContDiff ℝ ∞ W,∃C : ℝ,0<C ∧ ∀(η : Character)(t Y R : ℝ),0<Y → 0<R →
-      ‖HeckeDyadic.polynomial η false
-        (fun x=>(CenteredMomentSectorLocalization.discardedWeight R x:ℂ)*
-          paperRadialFourier (CompletedHeight.normTwistedSource W t) x) Y 0 0‖≤
-        C*(1+‖t‖)^n*(Y^B/Real.sqrt Y)/R^A := by
-  obtain ⟨n,hn⟩ := reflected_profile_height_control a b ha (B+A) 0
-  obtain ⟨K,hK,hKb⟩ := plain_rapid_bound B hB
-  refine ⟨n,?_⟩
-  intro W hs hW
-  obtain ⟨D,hD,hDb⟩ := hn W hs hW
-  refine ⟨K*D,mul_pos hK hD,?_⟩
-  intro η t Y R hY hR
-  have hf : ∀x : ℝ,0<x → x^(B+A)*‖paperRadialFourier (CompletedHeight.normTwistedSource W t) x‖≤D*(1+‖t‖)^n := by
-    intro x hx
-    have hh := hDb t 0 (by omega) x hx.le
-    simp only [LocalLogFourier.eulerDeriv,iteratedDeriv_zero,Real.exp_zero,mul_one] at hh
-    exact (mul_le_mul_of_nonneg_right (pow_le_pow_left₀ hx.le (by linarith : x≤1+x) (B+A))
-      (norm_nonneg _)).trans hh
-  have hm := discarded_rapid_control _ A B (D*(1+‖t‖)^n) R (by positivity) hR hf
-  exact (hKb η _ ((D*(1+‖t‖)^n)/R^A) Y (by positivity) hY hm).trans_eq (by ring)
 
 end SevenEighths.CenteredMomentComparisonReflection
 

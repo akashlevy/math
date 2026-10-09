@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.Family
 import OAI.NumberTheory.DirichletL.Hecke.ThetaSeries
 import OAI.NumberTheory.DirichletL.Continuation
-
 namespace OAI
 
 noncomputable section

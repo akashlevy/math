@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseRawInitialGates
 import OAI.NumberTheory.DirichletL.Dictionary.InverseMarkedPadding
-
 namespace OAI
 
 noncomputable section
@@ -33,24 +32,6 @@ theorem marked_shift_eventually (data:RowData)(eta:ℝ)(heta:0<eta) :
     (Real.logb_le_iff_le_rpow hU hn0).mpr (hnB.trans ht)
   refine ⟨by dsimp [shiftedExponent];linarith,by dsimp [shiftedExponent];linarith,?_⟩
   rw [shiftedExponent,Real.rpow_sub hU0,Real.rpow_logb hU0 hU.ne' hn0]
-
-theorem shifted_padding_capacities (r r' ell ρ gap eta:ℝ)
-    (hr:0≤r)(hell:0≤ell)(hshift:r-eta≤r')(hshiftup:r'≤r)
-    (hfirst:r+2*ell<1)(hsecond:2*r+8*ell<3)
-    (hgap:2*gap≤ρ)(hgap₃:2*gap≤3*ρ) :
-    -eta≤r' ∧ r'+2*ell≤(1+ρ)-2*gap ∧
-      2*r'+8*ell≤3*(1+ρ)-2*gap ∧ r'+ell<1 := by
-  constructor
-  · linarith
-  constructor
-  · linarith
-  constructor <;> linarith
-
-theorem shifted_source_box (r r' ell G eta:ℝ)(hr:0≤r)(hell:0≤ell)
-    (_hG:0≤G)(hGell:G≤ell)(hshift:r-eta≤r')(hshiftup:r'≤r)
-    (hfirst:r+2*ell<1)(_heta:0≤eta)(hetaSmall:eta≤1/7) :
-    -2≤r'+ell-2*G ∧ r'+ell+7*eta≤2 := by
-  constructor <;> linarith
 
 end SevenEighths.DetectorDictionaryInverseMarkedReference
 

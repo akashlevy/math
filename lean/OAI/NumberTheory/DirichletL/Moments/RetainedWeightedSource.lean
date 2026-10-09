@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.OriginalReflectionApproximation
 import OAI.NumberTheory.DirichletL.Moments.ReflectedNormalization
 import OAI.NumberTheory.DirichletL.Moments.ReflectionWeightedEnergy
-
 namespace OAI
 
 noncomputable section
@@ -40,13 +39,6 @@ def retainedColumn (χ ψ : Character) (W : ℝ→ℂ) (X R t : ℝ) (hX : 0<X)
       (normalizedReflected CenteredMomentReflectedAnnuli.logWindow W B n (dyadicScale a.2) t)
       (dyadicScale a.2*dualScale χ ψ X a.1.1 a.1.2) 0 0 * P
   else 0
-
-lemma retainedColumn_zero (χ ψ : Character) (W : ℝ→ℂ) (X R t : ℝ) (hX : 0<X)
-    (B n : ℕ) (P : ℂ) (a : Index (sourcePrimes χ ψ))
-    (ha : a.2∉retainedAnnuli R (dualScale χ ψ X a.1.1 a.1.2)
-      (dualScale_pos χ ψ X hX a.1.1 a.1.2)) :
-    retainedColumn χ ψ W X R t hX B n P a=0 := by
-  simp only [retainedColumn,ite_eq_right ha]
 
 theorem finiteAnnularColumn_normalized (χ ψ : Character) (W : ℝ→ℂ)
     (X R t : ℝ) (hX : 0<X) (B n : ℕ) (P : ℂ)

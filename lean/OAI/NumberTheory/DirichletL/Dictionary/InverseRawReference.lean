@@ -3,7 +3,6 @@ import OAI.NumberTheory.DirichletL.Dictionary.InverseRawInitialEnergy
 import OAI.NumberTheory.DirichletL.Dictionary.InverseRawInput
 import OAI.NumberTheory.DirichletL.Dictionary.InverseRawRealRadial
 import OAI.NumberTheory.DirichletL.Dictionary.InverseRawCompact
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
-import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerPool
+import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerSelector
 import OAI.NumberTheory.DirichletL.Inversion.InitialRawDictionary
-
 namespace OAI
 
 noncomputable section
@@ -8,7 +7,7 @@ noncomputable section
 open scoped BigOperators Classical
 open ActualEisensteinCubic CompletedGauss CanonicalQuadraticSieve ConcretePrimeRowBridge
 open SevenEighths.InverseInitialOverlap SevenEighths.InverseInitialRayAttachment
-open SevenEighths.InverseInitialPoissonBridge SevenEighths.InverseInitialKernelBridge SevenEighths.InverseInitialEnergyCallerPool
+open SevenEighths.InverseInitialPoissonBridge SevenEighths.InverseInitialKernelBridge
 namespace SevenEighths.InverseInitialEnergyCallerWindow
 local notation "Eis" => ActualEisensteinCubic.O
 
@@ -42,29 +41,6 @@ theorem reconstructed_mem_originalSource
   refine ⟨InverseInitialRawDictionary.finite_source_cover W (Z^r) b
     (Real.rpow_pos_of_pos hZ r) hW _ hs.1 ?_,hs⟩
   rwa [residual_window_eq W hP.2.1 hj hPc Z r z G hZ] at hlive
-
-theorem original_selector_window
-    (W : ℝ→ℂ) (Z r z G b : ℝ) (hZ : 0<Z) (hW : ∀x,W x≠0→x≤b)
-    {P j : Ideal Eis} (hP : Admissible P) (hj : j∣P)
-    (hne : (columns (originalSource Z r b) P j).Nonempty)
-    (a : Ideal Eis→ℂ) (A : Finset (primePool (columns (originalSource Z r b) P j))) :
-    reconstructedSelector (originalSource Z r b) P j a A *
-      rowCoprimeMask (fun i : primePool (columns (originalSource Z r b) P j)=>i.val)
-        A (primaryGenerator j) *
-      residualOverlapWindow P j W Z z G (((∏ i∈A,i.val).absNorm:ℝ)/Z^(r+z-2*G)) =
-    a (reconstruct P j (∏ i∈A,i.val)) *
-      InverseMoment.primeMark (forcedSlots (originalSource Z r b) P j) (fun i=>{i})
-        (fun _ _=>(1:ℂ)) A *
-      rowCoprimeMask (fun i : primePool (columns (originalSource Z r b) P j)=>i.val)
-        A (primaryGenerator j) *
-      residualOverlapWindow P j W Z z G (((∏ i∈A,i.val).absNorm:ℝ)/Z^(r+z-2*G)) := by
-  have hF : ∀I∈columns (originalSource Z r b) P j,Admissible I :=
-    fun I hI=>columns_admissible _ hP hj (originalSource_supported Z r b) hI
-  have hA := InitialMeanSquare.poolProduct_admissible _ hF A
-  apply original_selector_forced_slots _ hP hj hne a
-    (fun c=>residualOverlapWindow P j W Z z G ((c.absNorm:ℝ)/Z^(r+z-2*G))) A hA.2.1
-  intro hPc hlive _
-  exact reconstructed_mem_originalSource W Z r z G b hZ hW hP hj hA hPc hlive
 
 end SevenEighths.InverseInitialEnergyCallerWindow
 

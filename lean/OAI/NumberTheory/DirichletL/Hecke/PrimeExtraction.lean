@@ -1,58 +1,22 @@
 import OAI.NumberTheory.DirichletL.Hecke.LocalEulerIdentities
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 
 namespace ShortDraftHeckeBridge
-
-theorem dirichletTarget_of_normFiber_prefix_power
-    (hprefix : ∀ (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q)
-      (ρ : ℂ), (23 / 24 : ℝ) < ρ.re → ρ.re < 1 →
-        ∃ σ C : ℝ, 0 < σ ∧ σ < ρ.re ∧ σ ≤ 1 ∧ 0 ≤ C ∧
-          ∀ n : ℕ,
-            ‖prefixCoeff (normFiberCoeff (baseChangeWeight χ)) n‖ ≤
-              C * (((n : ℝ) + 1) ^ σ)) :
-    ShortDraft.DirichletTarget := by
-  apply dirichletTarget_of_normFiber_exp_bound
-  intro q _ χ ρ h23 hρ
-  obtain ⟨σ, C, hσpos, hσρ, hσone, hC, hsum⟩ :=
-    hprefix q χ ρ h23 hρ
-  refine ⟨σ, hσpos, hσρ, ?_⟩
-  apply normFiberExpSum_isBigO_of_prefix_power χ (baseChangeChar χ)
-    (baseChangeWeight χ)
-    (normFiberCoeff_baseChange_eq_pairInverseCoeff χ)
-    (normFiberCoeff_baseChangeWeight_zero χ)
-    σ C hσpos.le hσone hC hsum
 
 end ShortDraftHeckeBridge
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
@@ -287,8 +251,6 @@ theorem restore_one_prime_all (P : Ideal O) (hP : Prime P)
     intro I hI
     simp [hnone I hI]
 
-open scoped Classical
-
 noncomputable def outsideCoeff (S : Finset (Ideal O))
     (w : Ideal O → ℂ) (n : ℕ) : ℂ :=
   ∑ I ∈ fiber n, outsideWeight S w I
@@ -365,20 +327,6 @@ theorem baseChangeWeight_mul_of_isRelPrime {q : ℕ}
   simp only [baseChangeWeight, map_mul, h.moebius_mul, Int.cast_mul, Nat.cast_mul]
   ring
 
-theorem baseChange_restore_insert_prime {q : ℕ}
-    (χ : DirichletCharacter ℂ q)
-    (S : Finset (Ideal O)) (hS : ∀ Q ∈ S, Prime Q)
-    (P : Ideal O) (hP : Prime P) (hPnot : P ∉ S) (n : ℕ) :
-    FiniteSFactor.outsideCoeff S (baseChangeWeight χ) n =
-      FiniteSFactor.outsideCoeff (insert P S) (baseChangeWeight χ) n +
-      (if Ideal.absNorm P ∣ n then
-        baseChangeWeight χ P *
-          FiniteSFactor.outsideCoeff (insert P S) (baseChangeWeight χ)
-            (n / Ideal.absNorm P) else 0) := by
-  exact FiniteSFactor.restore_insert_prime S hS P hP hPnot
-    (baseChangeWeight χ) (baseChangeWeight_zero_of_not_squarefree χ)
-    (baseChangeWeight_mul_of_isRelPrime χ) n
-
 end ShortDraftHeckeBridge
 
 namespace DyadicTransfer
@@ -416,173 +364,9 @@ theorem partial_partition (φ : ℝ → ℂ) (x : ℝ) (K : ℕ) :
       rw [hshift]
       ring
 
-theorem partition_nat (φ : ℝ → ℂ)
-    (hsmall : ∀ y : ℝ, y ≤ 1 → φ y = 1)
-    (hlarge : ∀ y : ℝ, 2 ≤ y → φ y = 0)
-    (n K : ℕ) (hn : 1 ≤ n) (hK : (n : ℝ) ≤ (2 : ℝ) ^ K) :
-    (∑ k ∈ Finset.range (K + 1),
-      annularCutoff φ ((n : ℝ) / (2 : ℝ) ^ k)) = 1 := by
-  rw [partial_partition]
-  have hpow : 0 < (2 : ℝ) ^ K := by positivity
-  have hnsmall : (n : ℝ) / (2 : ℝ) ^ K ≤ 1 :=
-    (div_le_iff₀ hpow).mpr (by simpa using hK)
-  rw [hsmall _ hnsmall, hlarge]
-  · ring
-  · exact_mod_cast (show (2 : ℕ) ≤ 2 * n by omega)
-
-noncomputable def expAnnularTest (φ : ℝ → ℂ) (D : ℝ) (k : ℕ) (y : ℝ) : ℂ :=
-  annularCutoff φ y * Real.exp (-((2 : ℝ) ^ k / D) * y)
-
-theorem expAnnularTest_eq_zero_of_le_half (φ : ℝ → ℂ)
-    (hsmall : ∀ y : ℝ, y ≤ 1 → φ y = 1)
-    (D : ℝ) (k : ℕ) {y : ℝ} (hy : y ≤ 1 / 2) :
-    expAnnularTest φ D k y = 0 := by
-  simp [expAnnularTest, annularCutoff_eq_zero_of_le_half φ hsmall hy]
-
-theorem expAnnularTest_eq_zero_of_two_le (φ : ℝ → ℂ)
-    (hlarge : ∀ y : ℝ, 2 ≤ y → φ y = 0)
-    (D : ℝ) (k : ℕ) {y : ℝ} (hy : 2 ≤ y) :
-    expAnnularTest φ D k y = 0 := by
-  simp [expAnnularTest, annularCutoff_eq_zero_of_two_le φ hlarge hy]
-
-theorem expAnnularTest_norm_le (φ : ℝ → ℂ) (D : ℝ) (k : ℕ)
-    (hD : 0 < D) (M : ℝ) (hM : ∀ y : ℝ, ‖annularCutoff φ y‖ ≤ M)
-    {y : ℝ} (hy : 1 / 2 ≤ y) :
-    ‖expAnnularTest φ D k y‖ ≤
-      M * Real.exp (-((2 : ℝ) ^ k / D) / 2) := by
-  let t : ℝ := (2 : ℝ) ^ k / D
-  have ht : 0 ≤ t := div_nonneg (by positivity) hD.le
-  have harg : -(t * y) ≤ -t / 2 := by
-    nlinarith [mul_nonneg ht (sub_nonneg.mpr hy)]
-  have hexp : Real.exp (-(t * y)) ≤ Real.exp (-t / 2) :=
-    Real.exp_le_exp.mpr harg
-  have hM0 : 0 ≤ M := le_trans (norm_nonneg _) (hM y)
-  calc
-    ‖expAnnularTest φ D k y‖ = ‖annularCutoff φ y‖ * Real.exp (-(t * y)) := by
-      rw [expAnnularTest, norm_mul, Complex.norm_real, Real.norm_eq_abs,
-        abs_of_pos (Real.exp_pos _)]
-      simp [t]
-    _ ≤ M * Real.exp (-(t * y)) :=
-      mul_le_mul_of_nonneg_right (hM y) (Real.exp_pos _).le
-    _ ≤ M * Real.exp (-t / 2) := mul_le_mul_of_nonneg_left hexp hM0
-    _ = M * Real.exp (-((2 : ℝ) ^ k / D) / 2) := rfl
-
-theorem finite_exp_reassembly (a : ℕ → ℂ) (φ : ℝ → ℂ)
-    (ha0 : a 0 = 0)
-    (hsmall : ∀ y : ℝ, y ≤ 1 → φ y = 1)
-    (hlarge : ∀ y : ℝ, 2 ≤ y → φ y = 0)
-    (D : ℝ) (N K : ℕ)
-    (hK : ∀ n ∈ Finset.range N, 1 ≤ n → (n : ℝ) ≤ (2 : ℝ) ^ K) :
-    (∑ n ∈ Finset.range N, a n * Real.exp (-(n : ℝ) / D)) =
-      ∑ k ∈ Finset.range (K + 1),
-        ∑ n ∈ Finset.range N,
-          a n * expAnnularTest φ D k ((n : ℝ) / (2 : ℝ) ^ k) := by
-  rw [Finset.sum_comm]
-  apply Finset.sum_congr rfl
-  intro n hn
-  by_cases hn0 : n = 0
-  · subst n
-    simp [ha0, expAnnularTest, annularCutoff]
-  · have hn1 : 1 ≤ n := Nat.one_le_iff_ne_zero.mpr hn0
-    have hpart := partition_nat φ hsmall hlarge n K hn1 (hK n hn hn1)
-    simp_rw [expAnnularTest]
-    have hexp (k : ℕ) :
-        Real.exp (-((2 : ℝ) ^ k / D) * ((n : ℝ) / (2 : ℝ) ^ k)) =
-          Real.exp (-(n : ℝ) / D) := by
-      congr 1
-      have hpow : (2 : ℝ) ^ k ≠ 0 := by positivity
-      field_simp
-    simp_rw [hexp]
-    rw [← Finset.mul_sum]
-    rw [← Finset.sum_mul, hpart]
-    simp
-
-theorem finite_dyadic_piece_bound
-    (F : ℕ → ℂ) (C r : ℝ) (hC : 0 ≤ C) (hr : 1 < r)
-    (b : ℕ → ℝ) (hb : Summable b) (hb0 : ∀ m, 0 ≤ b m)
-    (N M : ℕ)
-    (hlow : ∀ k ≤ N, ‖F k‖ ≤ C * r ^ k)
-    (hhigh : ∀ m, ‖F (N + 1 + m)‖ ≤ C * r ^ N * b m) :
-    ‖∑ k ∈ Finset.range (N + 1 + M), F k‖ ≤
-      C * (r ^ (N + 1) / (r - 1) + r ^ N * ∑' m, b m) := by
-  have hr0 : 0 ≤ r := by linarith
-  have hrden : 0 < r - 1 := by linarith
-  have hlowSum :
-      ‖∑ k ∈ Finset.range (N + 1), F k‖ ≤
-        C * (r ^ (N + 1) / (r - 1)) := by
-    calc
-      ‖∑ k ∈ Finset.range (N + 1), F k‖ ≤
-          ∑ k ∈ Finset.range (N + 1), ‖F k‖ := norm_sum_le _ _
-      _ ≤ ∑ k ∈ Finset.range (N + 1), C * r ^ k := by
-        apply Finset.sum_le_sum
-        intro k hk
-        exact hlow k (Nat.le_of_lt_succ (Finset.mem_range.mp hk))
-      _ = C * ((r ^ (N + 1) - 1) / (r - 1)) := by
-        rw [← Finset.mul_sum, geom_sum_eq (ne_of_gt hr)]
-      _ ≤ C * (r ^ (N + 1) / (r - 1)) := by
-        apply mul_le_mul_of_nonneg_left _ hC
-        exact div_le_div_of_nonneg_right (by linarith) hrden.le
-  have hhighSum :
-      ‖∑ m ∈ Finset.range M, F (N + 1 + m)‖ ≤
-        C * r ^ N * ∑' m, b m := by
-    calc
-      ‖∑ m ∈ Finset.range M, F (N + 1 + m)‖ ≤
-          ∑ m ∈ Finset.range M, ‖F (N + 1 + m)‖ := norm_sum_le _ _
-      _ ≤ ∑ m ∈ Finset.range M, C * r ^ N * b m := by
-        apply Finset.sum_le_sum
-        intro m _
-        exact hhigh m
-      _ = C * r ^ N * ∑ m ∈ Finset.range M, b m := by
-        rw [← Finset.mul_sum]
-      _ ≤ C * r ^ N * ∑' m, b m := by
-        apply mul_le_mul_of_nonneg_left _ (mul_nonneg hC (pow_nonneg hr0 N))
-        exact hb.sum_le_tsum _ (fun m _ => hb0 m)
-  rw [Finset.sum_range_add]
-  calc
-    ‖(∑ k ∈ Finset.range (N + 1), F k) +
-      ∑ m ∈ Finset.range M, F (N + 1 + m)‖ ≤
-        ‖∑ k ∈ Finset.range (N + 1), F k‖ +
-          ‖∑ m ∈ Finset.range M, F (N + 1 + m)‖ := norm_add_le _ _
-    _ ≤ C * (r ^ (N + 1) / (r - 1)) + C * r ^ N * ∑' m, b m :=
-      add_le_add hlowSum hhighSum
-    _ = C * (r ^ (N + 1) / (r - 1) + r ^ N * ∑' m, b m) := by ring
-
 end DyadicTransfer
 
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-
 namespace FiniteSFactor
-
-theorem restore_two_primes (P Q : Ideal O) (hP : Prime P) (hQ : Prime Q)
-    (hne : P ≠ Q) (w : Ideal O → ℂ)
-    (hzero : ∀ I, ¬Squarefree I → w I = 0)
-    (hmul : ∀ I J, IsRelPrime I J → w (I * J) = w I * w J)
-    (n : ℕ) :
-    outsideCoeff ∅ w n =
-      (outsideCoeff (insert Q {P}) w n +
-        (if Ideal.absNorm Q ∣ n then
-          w Q * outsideCoeff (insert Q {P}) w (n / Ideal.absNorm Q) else 0)) +
-      (if Ideal.absNorm P ∣ n then
-        w P *
-          (outsideCoeff (insert Q {P}) w (n / Ideal.absNorm P) +
-            (if Ideal.absNorm Q ∣ n / Ideal.absNorm P then
-              w Q * outsideCoeff (insert Q {P}) w
-                ((n / Ideal.absNorm P) / Ideal.absNorm Q) else 0))
-        else 0) := by
-  classical
-  have hPnot : P ∉ (∅ : Finset (Ideal O)) := by simp
-  have hSprime : ∀ R ∈ ({P} : Finset (Ideal O)), Prime R := by
-    intro R hR
-    have heq : R = P := Finset.mem_singleton.mp hR
-    exact heq ▸ hP
-  have hQnot : Q ∉ ({P} : Finset (Ideal O)) := by simpa using hne.symm
-  have hfirst := restore_insert_prime ∅ (by simp) P hP hPnot w hzero hmul n
-  have hsecond := restore_insert_prime {P} hSprime Q hQ hQnot w hzero hmul n
-  have hthird := restore_insert_prime {P} hSprime Q hQ hQnot w hzero hmul
-    (n / Ideal.absNorm P)
-  simp only [Finset.insert_empty] at hfirst
-  rw [hsecond, hthird] at hfirst
-  exact hfirst
 
 end FiniteSFactor
 

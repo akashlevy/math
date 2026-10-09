@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondSourceEncoding
 import OAI.NumberTheory.DirichletL.Descent.SecondCauchy
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

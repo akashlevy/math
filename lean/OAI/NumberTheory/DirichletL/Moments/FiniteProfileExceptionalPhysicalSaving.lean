@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalPhysicalBudget
 import OAI.NumberTheory.DirichletL.Moments.SecondExceptionalPhysicalSaving
 import OAI.NumberTheory.DirichletL.Moments.FirstCanonicalAllowance
-
 namespace OAI
 
 noncomputable section

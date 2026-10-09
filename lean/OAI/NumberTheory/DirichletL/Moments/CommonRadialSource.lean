@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.CommonRadialData
-
 namespace OAI
 
 noncomputable section
@@ -28,11 +27,6 @@ local instance : DecidableEq (ι⊕Fin 2) := Classical.decEq _
   ((actualAllocations s.pools C).card:ℝ)*
     (((∏i,s.M i)^2*(max 1 s.upper)^Fintype.card ι)/(Ideal.absNorm C:ℝ))
 
-omit [DecidableEq ι] in
-lemma commonCost_nonneg (s:Input ι) (C:Ideal O) : 0≤commonCost s C := by
-  unfold commonCost
-  positivity
-
  theorem live_source_eq (s:Input ι) (r:Radial) (C R L:Ideal O) (B:actualAllocations s.pools C) :
     sourceRestrictedEnergy r.keep
       (finiteColumns (liveBox s.pools B.val (alloc_ne s C B)))
@@ -56,26 +50,6 @@ lemma commonCost_nonneg (s:Input ι) (C:Ideal O) : 0≤commonCost s C := by
   · simp only [maskedLiveProfile,commonData,one_mul,Input.pools,Sum.elim_inl]
   · dsimp only [remainingRaw,plainNorm,commonData]
     ring
-
- theorem original_source_common_bound (s:Input ι) (r:Radial) (C:Ideal O) (hC:Supported C)
-    (R seed L:Ideal O) (hseed:seed∣C) :
-    sourceEnergy s r C hC R seed L≤commonCost s C*
-      ∑B:actualAllocations s.pools C,energy (commonData s C R B) r L := by
-  have hh:=CenteredMomentSecondSourceCost.source_divisor_common_saving (ι:=ι) s.η s.pools s.pools_ne
-    (fun i I hI=>s.prime i I hI) C R seed hC hseed s.ν s.W s.P s.W₁ s.W₂
-    s.X₁ s.X₂ s.Y₁ s.Y₂ 1 1 L s.t (s.X₁*s.X₂) (mul_pos s.X₁_pos s.X₂_pos)
-    s.P_pos s.M s.ν_bound s.W_bound s.M_ge_one s.lower s.upper s.lower_pos s.slot_support
-    r.keep r.profile r.scale r.scale_pos r.nonneg
-  have hsum:(∑B:actualAllocations s.pools C,
-      sourceRestrictedEnergy r.keep
-        (finiteColumns (liveBox s.pools B.val (alloc_ne s C B)))
-        (finiteColumnCoefficient (liveBox s.pools B.val (alloc_ne s C B))
-          (maskedLiveProfile B.val C R L s.ν s.W s.P s.W₁ s.W₂ s.X₁ s.X₂ s.Y₁ s.Y₂ 1 1))
-        (heightCoeff s.η s.t) r.profile r.scale/remainingRaw B.val (s.X₁*s.X₂) s.P)=
-      ∑B:actualAllocations s.pools C,energy (commonData s C R B) r L:=
-    Finset.sum_congr rfl (fun B _=>live_source_eq s r C R L B)
-  rw [hsum] at hh
-  exact hh
 
 end SevenEighths.CenteredMomentCommonRadialSource
 

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.CommonSupport
 import OAI.NumberTheory.DirichletL.Moments.Mask
-
 namespace OAI
 
 noncomputable section
@@ -158,26 +157,6 @@ theorem actual_complete_common_support (D E a b : O)
   let : Fintype (Residue (D * a)) := Fintype.ofFinite _
   let : Fintype (Residue (E * b)) := Fintype.ofFinite _
   exact supported_complete_common_support D E a b hD hE ha hb hpD hpE hpa hpb hcopA hcopB hab j
-
-theorem actual_complete_support_mobius (D E a b : O)
-    (hD : Supported (Ideal.span {D})) (hE : Supported (Ideal.span {E}))
-    (ha : Supported (Ideal.span {a})) (hb : Supported (Ideal.span {b}))
-    (hpD : ConcretePrimeRowBridge.goodLambda ^ 2 ∣ D - 1)
-    (hpE : ConcretePrimeRowBridge.goodLambda ^ 2 ∣ E - 1)
-    (hpa : ConcretePrimeRowBridge.goodLambda ^ 2 ∣ a - 1)
-    (hpb : ConcretePrimeRowBridge.goodLambda ^ 2 ∣ b - 1)
-    (hcopA : IsCoprime (D * E) a) (hcopB : IsCoprime (D * E) b) (j : O) :
-    (if IsCoprime a b then actualCorrelation (D * a) (E * b)
-      (supported_mul_elements D a hD ha) (supported_mul_elements E b hE hb) j else 0) =
-      completeSupportExtension D E hD hE j a b *
-        ∑ T ∈ IdealMobiusDivisorSum.idealDivisors (Ideal.span {b}),
-          if T ∣ Ideal.span {a} then (UniqueFactorizationMonoid.moebius T : ℂ) else 0 := by
-  rw [← CenteredMomentMask.ideal_coprime_mobius (Ideal.span {a}) (Ideal.span {b}) hb.1,
-    Ideal.isCoprime_span_singleton_iff]
-  by_cases hab : IsCoprime a b
-  · rw [ite_eq_left hab, ite_eq_left hab, mul_one]
-    exact actual_complete_common_support D E a b hD hE ha hb hpD hpE hpa hpb hcopA hcopB hab j
-  · simp only [hab, ite_false, mul_zero]
 
 end SevenEighths.CenteredMomentSupportedCorrelation
 end

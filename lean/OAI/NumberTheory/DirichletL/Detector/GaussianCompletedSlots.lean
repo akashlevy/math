@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GaussianSlots
 import OAI.NumberTheory.DirichletL.Detector.GaussianDecomposition
-
 namespace OAI
 
 noncomputable section

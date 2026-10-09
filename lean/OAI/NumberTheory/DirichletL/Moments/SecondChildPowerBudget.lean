@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstChildProfileControl
 import OAI.NumberTheory.DirichletL.Moments.SourceInputTailUniform
-
 namespace OAI
 
 noncomputable section
@@ -83,19 +82,6 @@ def coefficients {wlo whi : ℝ} (N : ℕ) (b b₁ b₂ A : ℝ)
     a 3*(SchwartzMap.seminorm ℝ 0 0 (p.profile 0)*
       SchwartzMap.seminorm ℝ 0 0 (p.profile 1))^2]
 
-lemma coefficients_nonneg {wlo whi : ℝ} (N : ℕ) (b b₁ b₂ A : ℝ)
-    (S : Finset (ℕ×ℕ)) (p : Profiles wlo whi) (J : ℕ) (Q : Ideal O)
-    (K t ε seedNorm : ℝ) (a : Fin 4→ℝ)
-    (hb : 0≤b) (h₁ : 0≤b₁) (h₂ : 0≤b₂) (hK : 0≤K)
-    (hs : 0≤seedNorm) (ha : ∀j,0≤a j) :
-    ∀j,0≤coefficients N b b₁ b₂ A S p J Q K t ε seedNorm a j := by
-  have h0:=ha 0
-  have h1:=ha 1
-  have h2:=ha 2
-  have h3:=ha 3
-  intro j
-  fin_cases j <;> dsimp [coefficients,exceptionalConstant] <;> positivity
-
 def sourceCost {wlo whi : ℝ} (s : Input ι) (S : Finset (ℕ×ℕ))
     (p : Profiles wlo whi) (J : ℕ) (Q : Ideal O) (K ε seedNorm : ℝ)
     (a : Fin 4→ℝ) : ℝ :=
@@ -135,32 +121,6 @@ theorem source_rhs {wlo whi : ℝ} (s : Input ι) (N : ℕ) (b b₁ b₂ A : ℝ
     (try simp only [coefficients,powers,Fin.sum_univ_succ,Fin.sum_univ_zero,
       Matrix.cons_val_zero,Matrix.cons_val_succ,
       Real.rpow_one,Real.rpow_zero]) <;> ring
-
-omit [DecidableEq ι] in
-theorem twice_source_rhs {wlo whi : ℝ} (s : Input ι) (N : ℕ) (b b₁ b₂ : ℝ)
-    (hb : 1≤b) (h₁ : 1≤b₁) (h₂ : 1≤b₂) (hu : s.upper≤b)
-    (hc : Fintype.card ι≤N) (hhi : ∀i,0≤s.hi i)
-    (hs₁ : 0≤s.b₁) (hs₂ : 0≤s.b₂) (hb₁ : s.b₁≤b₁) (hb₂ : s.b₂≤b₂)
-    (C R : Ideal O) (B : CenteredMomentCommonAllocationSum.actualAllocations s.pools C)
-    (τ : Character) (t : ℝ) (P : Ideal O) (k : ℕ)
-    (Bp : CenteredMomentCommonAllocationSum.actualAllocations
-      (CenteredMomentAmplificationChildInput.child s C R B τ t).pools (P^k))
-    (υ : Character) (v : ℝ)
-    (S : Finset (ℕ×ℕ)) (p : Profiles wlo whi) (J : ℕ) (Q : Ideal O)
-    (K ε seedNorm : ℝ) (hK : 0≤K) (hε : 0≤ε) (hs : 0≤seedNorm)
-    (a : Fin 4→ℝ) (ha : ∀j,0≤a j) :
-    let d:=CenteredMomentAmplificationChildSourceCaps.twiceChild s C R B τ t P k Bp υ v;
-    sourceCost d S p J Q K ε seedNorm a≤
-      (∑j,coefficients N b b₁ b₂ (mass s) S p J Q K v ε seedNorm a j*
-        (CenteredMomentAmplificationChildInput.volume d)^(powers ε j))*mass d^2 := by
-  let d:=CenteredMomentAmplificationChildSourceCaps.twiceChild s C R B τ t P k Bp υ v
-  have hm : mass d≤mass s :=
-    (child_mass (CenteredMomentAmplificationChildInput.child s C R B τ t) (P^k) (R*C) Bp υ v).trans
-      (child_mass s C R B τ t)
-  have hn : Fintype.card (CenteredMomentCommonProfile.liveIndices Bp.val)≤N :=
-    (child_card Bp.val).trans ((child_card B.val).trans hc)
-  exact source_rhs d N b b₁ b₂ (mass s) hb h₁ h₂ hu hn
-    (fun i=>hhi i.val.val) hs₁ hs₂ hb₁ hb₂ hm S p J Q K ε seedNorm hK hε hs a ha
 
 end SevenEighths.CenteredMomentSecondChildPowerBudget
 

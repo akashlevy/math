@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowTruePeriodPuncture
-
 namespace OAI
 
 noncomputable section
@@ -58,13 +57,6 @@ lemma lowPrimeIdealList_norm (T : Finset PrimeIdeal) (H : ℝ)
     (Ideal.absNorm I:ℝ)≤H := by
   obtain ⟨P,hP,rfl⟩ := Finset.mem_image.mp hI
   exact hT P hP
-
-lemma lowPrimeIdealList_coprime (η : HeckeFamily.Character) (S : Finset Id)
-    (hS : ∀P∈S,P.IsMaximal) (T : Finset PrimeIdeal)
-    (I : Id) (hI : I∈lowPrimeIdealList (lowPeriodPrimeList η S hS T)) :
-    IsCoprime I (lowPeriodIdeal η S hS) := by
-  obtain ⟨P,hP,rfl⟩ := Finset.mem_image.mp hI
-  exact lowPeriodPrimeList_coprime η S hS T P hP
 
 theorem low_actual_ideal_polynomial {ι : Type*} [Fintype ι]
     (η : HeckeFamily.Character) (S : Finset Id) (hS : ∀P∈S,P.IsMaximal)

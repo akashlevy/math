@@ -1,10 +1,10 @@
 import OAI.NumberTheory.DirichletL.Energy.CanonicalAmplifiedUniform
 import OAI.NumberTheory.DirichletL.Moments.FirstAmplifiedPowerBudget
 import OAI.NumberTheory.DirichletL.Moments.FirstCommonReferencePower
-import OAI.NumberTheory.DirichletL.Moments.FirstMixedMainError
+import OAI.NumberTheory.DirichletL.Moments.FirstMixedNormalizationActual
+import OAI.NumberTheory.DirichletL.Moments.FirstSourceConductorCaps
 import OAI.NumberTheory.DirichletL.Energy.FirstLiveAdmission
 import OAI.NumberTheory.DirichletL.Energy.FirstAnnularAdmission
-
 namespace OAI
 
 noncomputable section

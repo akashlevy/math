@@ -5,7 +5,6 @@ import OAI.NumberTheory.DirichletL.Energy.StageMonotonicity
 import OAI.NumberTheory.DirichletL.Energy.PositiveBalancedAdmission
 import OAI.NumberTheory.DirichletL.Energy.PositiveLowBandSource
 import OAI.NumberTheory.DirichletL.Energy.FirstSourceParameters
-
 namespace OAI
 
 noncomputable section

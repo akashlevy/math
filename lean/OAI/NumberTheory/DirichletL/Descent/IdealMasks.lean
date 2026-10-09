@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Foundation
 import OAI.NumberTheory.DirichletL.Descent.Marks
 import OAI.NumberTheory.DirichletL.Descent.Overlap
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -10,63 +9,6 @@ noncomputable section
 
 open scoped BigOperators Classical
 open ActualEisensteinCubic UniqueFactorizationMonoid IdealMobiusDivisorSum
-
-theorem prime_mem_support_iff_dvd (P A : Ideal ActualEisensteinCubic.O)
-    (hP : Prime P) (hA : A ≠ 0) :
-    P ∈ IdealMobiusDivisorSum.primeSupport A ↔ P ∣ A := by
-  simp only [IdealMobiusDivisorSum.primeSupport, Multiset.mem_toFinset,
-    UniqueFactorizationMonoid.mem_normalizedFactors_iff hA, hP, true_and]
-
-theorem ideal_primeMark_eq_divisibility {σ : Type*} [DecidableEq σ]
-    (I : Finset σ) (L : σ → Finset (Ideal ActualEisensteinCubic.O))
-    (a : σ → Ideal ActualEisensteinCubic.O → ℂ)
-    (hL : ∀ i ∈ I, ∀ P ∈ L i, Prime P)
-    (A : Ideal ActualEisensteinCubic.O) (hA : A ≠ 0) :
-    primeMark I L a (IdealMobiusDivisorSum.primeSupport A) =
-      ∏ i ∈ I, ∑ P ∈ L i, if P ∣ A then a i P else 0 := by
-  unfold primeMark primeSlot
-  apply Finset.prod_congr rfl
-  intro i hi
-  apply Finset.sum_congr rfl
-  intro P hP
-  simp only [prime_mem_support_iff_dvd P A (hL i hi P hP) hA]
-
-theorem ideal_primeSupport_mul_cube (n b : Ideal ActualEisensteinCubic.O)
-    (hn : n ≠ 0) (hb : b ≠ 0) :
-    IdealMobiusDivisorSum.primeSupport (n * b ^ 3) =
-      IdealMobiusDivisorSum.primeSupport n ∪ IdealMobiusDivisorSum.primeSupport b := by
-  simp only [IdealMobiusDivisorSum.primeSupport,
-    normalizedFactors_mul hn (pow_ne_zero 3 hb), normalizedFactors_pow,
-    Multiset.toFinset_add]
-  congr 1
-  ext P
-  simp
-
-theorem ideal_whole_mark_priority {σ : Type*} [DecidableEq σ]
-    (I : Finset σ) (L : σ → Finset (Ideal ActualEisensteinCubic.O))
-    (a : σ → Ideal ActualEisensteinCubic.O → ℂ)
-    (n b : Ideal ActualEisensteinCubic.O) (hn : n ≠ 0) (hb : b ≠ 0) :
-    primeMark I L a (IdealMobiusDivisorSum.primeSupport (n * b ^ 3)) =
-      ∑ J ∈ I.powerset,
-        primeMark J L a (IdealMobiusDivisorSum.primeSupport n) *
-        primeMark (I \ J) L a
-          (IdealMobiusDivisorSum.primeSupport b \ IdealMobiusDivisorSum.primeSupport n) := by
-  rw [ideal_primeSupport_mul_cube n b hn hb]
-  exact primeMark_priority _ _ _ _ _
-
-theorem ideal_primeMark_small_power (ε : ℝ) (hε : 0 < ε) :
-    ∃ C : ℝ, 0 < C ∧ ∀ {σ : Type*} [DecidableEq σ]
-      (I : Finset σ) (L : σ → Finset (Ideal ActualEisensteinCubic.O))
-      (a : σ → Ideal ActualEisensteinCubic.O → ℂ),
-      (I : Set σ).PairwiseDisjoint L →
-      (∀ i ∈ I, ∀ P ∈ L i, ‖a i P‖ ≤ 1) →
-      ∀ A : Ideal ActualEisensteinCubic.O, A ≠ 0 →
-        ‖primeMark I L a (IdealMobiusDivisorSum.primeSupport A)‖ ≤
-          C * (Ideal.absNorm A : ℝ) ^ ε := by
-  obtain ⟨C, hC, hb⟩ := SquarefreeDivisorBound.prime_support_subsets_bound ε hε
-  refine ⟨C, hC, ?_⟩
-  intro σ _ I L a hL ha A hA
-  exact (primeMark_norm_le_divisor_count I L a _ hL ha).trans (hb A hA)
 
 theorem ideal_coprime_mobius (K P : Ideal ActualEisensteinCubic.O) (hK : K ≠ 0) :
     (if IsCoprime K P then (1 : ℂ) else 0) =
@@ -152,12 +94,6 @@ theorem hybrid_column_decomposition
     (CanonicalQuadraticSieve.gcd_eq_iff_quotient_coprime c n g hc hcn hcg).mp rfl
   exact ⟨c, m, h, t, hnm, by rw [hbgt, hgh], hcs, hms, hhs, hcm, hch, hmh,
     QuadraticSquarefreeKernel.squarePart_ne_zero hb⟩
-
-theorem ideal_product_fiber_card
-    (s t : Finset (Ideal ActualEisensteinCubic.O))
-    (J : Ideal ActualEisensteinCubic.O) (hJ : J ≠ 0) :
-    (((s ×ˢ t).filter (fun p => p.1 * p.2 = J)).card) ≤ (idealDivisors J).card :=
-  CanonicalQuadraticSieve.product_fiber_card (s ×ˢ t) J hJ
 
 theorem scaled_product_fiber_card
     (pairs : Finset (Ideal ActualEisensteinCubic.O × Ideal ActualEisensteinCubic.O))

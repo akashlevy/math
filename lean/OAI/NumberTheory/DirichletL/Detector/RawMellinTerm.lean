@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.InitialSubseries
 import OAI.NumberTheory.DirichletL.Detector.ContourShear
-
 namespace OAI
 
 noncomputable section

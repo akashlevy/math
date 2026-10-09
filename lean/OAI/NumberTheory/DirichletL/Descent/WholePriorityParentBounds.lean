@@ -1,5 +1,4 @@
-import OAI.NumberTheory.DirichletL.Descent.WholePriorityMass
-
+import OAI.NumberTheory.DirichletL.Descent.WholePriorityBranches
 namespace OAI
 
 noncomputable section

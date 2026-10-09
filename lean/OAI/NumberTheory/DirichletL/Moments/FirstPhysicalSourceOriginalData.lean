@@ -4,7 +4,6 @@ import OAI.NumberTheory.DirichletL.Moments.SourceAllocationEnergy
 import OAI.NumberTheory.DirichletL.Moments.LiveDomain
 import OAI.NumberTheory.DirichletL.Moments.CommonPuncture
 import OAI.NumberTheory.DirichletL.Moments.SecondHeightFamily
-
 namespace OAI
 
 noncomputable section
@@ -100,23 +99,6 @@ theorem common_gauss_allocation (D:OriginalData ι)
   rw [allocated_profile,maskedLiveProfile,column_mask]
   dsimp only [liveProfile]
   rw [allocated_pools]
-  ring
-
-theorem normalized_common_gauss_allocation (D:OriginalData ι)
-    (hS:∀i,∀I∈D.S i,I≠0)(hp:∀i,∀I∈D.S (Sum.inl i),Prime I)
-    (C:Ideal O)(hC:Supported C)(hseed:D.s∣C)(τ:Character)(t T:ℝ)(L:Ideal O)(z:O):
-    (Real.sqrt T:ℂ)⁻¹*commonGauss D C hC τ t L z=
-      ∑B:actualAllocations D.S C,frozenCoefficient B.val C D.R D.nu D.slot D.lengths*
-        gaussPolynomial Finset.univ (sourceGenerator (allocatedData D C L B).columns)
-          (sourceGenerator_supported (allocatedData D C L B).columns)
-          ((allocatedData D C L B).coefficient τ fixedBadMask t T) z:=by
-  rw [common_gauss_allocation D hS hp C hC hseed τ t L z,Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro B hB
-  simp only [OriginalData.coefficient,gaussPolynomial,Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro I hI
-  rw [heightCoeff_eq_fixed_rowWeight τ t I (Finset.mem_filter.mp I.property).2]
   ring
 
 end SevenEighths.CenteredMomentFirstPhysicalSource

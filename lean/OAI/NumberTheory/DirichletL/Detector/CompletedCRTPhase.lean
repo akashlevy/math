@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.PairPhase
-
 namespace OAI
 
 noncomputable section
@@ -10,25 +9,6 @@ local notation "O" => ActualEisensteinCubic.O
 
 lemma reciprocitySign_star (a b : O) : star (reciprocitySign a b)=reciprocitySign a b := by
   simp only [reciprocitySign, star_intCast]
-
-theorem completed_cubic_pair_cancel (p q : O) (hp : Prime p) (hq : Prime q)
-    (hprimaryP : goodLambda^2∣p-1) (hprimaryQ : goodLambda^2∣q-1)
-    (hsP : Supported (Ideal.span {p})) (hsQ : Supported (Ideal.span {q}))
-    (hcop : IsCoprime (Ideal.span {p} : Ideal O) (Ideal.span {q}))
-    (e f l k : ℕ) :
-    sexticPair p q ^ ((e+3*l)*(f+3*k)) * sexticPair p q ^ (2*e*f) *
-      star (reciprocitySign (p^(e+3*l)) (q^(f+3*k))) = 1 := by
-  have hpodd := supported_residue_odd p hsP
-  have hqodd := supported_residue_odd q hsQ
-  have h3 := sexticPair_cube p q hp hq hprimaryP hprimaryQ hsP hsQ hcop
-  have h2 := reciprocitySign_sq p q hpodd hqodd
-  rw [reciprocitySign_star, reciprocitySign_pow_left p _ (odd_residue_pow q hqodd _) _,
-    reciprocitySign_pow_right p q hpodd, ← pow_mul, ← pow_add]
-  have hexp : (e+3*l)*(f+3*k)+2*e*f = 3*(e*f+e*k+f*l+3*l*k) := by ring
-  rw [hexp, pow_mul, h3, ← pow_add]
-  have hsum : e*f+e*k+f*l+3*l*k+(f+3*k)*(e+3*l) =
-      2*(e*f+2*e*k+2*f*l+6*l*k) := by ring
-  rw [hsum, pow_mul, h2, one_pow]
 
 lemma sexticPair_mul_left (a b c : O) :
     sexticPair (a*b) c = sexticPair a c * sexticPair b c := by

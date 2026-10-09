@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.PrimeRay
 import OAI.NumberTheory.DirichletL.Hecke.DetectorSlotSelection
-
 namespace OAI
 
 noncomputable section
@@ -114,27 +113,6 @@ theorem squared_spike (U w cap mesh : ℝ) (Q : ℂ) (hU : 1<U) (hw : 0<w)
     ←Real.rpow_mul (by linarith : (0 : ℝ)≤U)]
   congr 1
   ring
-
-theorem product_upper {ι : Type*} (slots : Finset ι) (w : ι→ℝ) (Q : ι→ℂ)
-    (U cap mesh : ℝ) (hU : 1<U) (hm : 0<mesh)
-    (hw : ∀ i∈slots, 0<w i)
-    (hQ : ∀ i∈slots, ‖Q i‖≤(U^(w i))^(cap+mesh)) :
-    ‖∏ i∈slots, Q i‖≤U^((∑ i∈slots, w i*amplitude (U^(w i)) cap mesh (Q i))+
-      mesh*(∑ i∈slots,w i)) := by
-  rw [norm_prod]
-  calc
-    _ ≤ ∏ i∈slots, (U^(w i))^(amplitude (U^(w i)) cap mesh (Q i)+mesh) :=
-      Finset.prod_le_prod₀ (fun i _ => norm_nonneg _) (fun i hi =>
-        amplitude_upper _ cap mesh (Q i) (Real.one_lt_rpow hU (hw i hi)) hm (hQ i hi))
-    _ = ∏ i∈slots, U^(w i*(amplitude (U^(w i)) cap mesh (Q i)+mesh)) := by
-      apply Finset.prod_congr rfl
-      intro i hi
-      exact (Real.rpow_mul (by linarith : (0 : ℝ)≤U) _ _).symm
-    _ = _ := by
-      rw [←Real.rpow_sum_of_pos (by linarith : 0<U)]
-      congr 1
-      simp_rw [mul_add]
-      rw [Finset.sum_add_distrib,←Finset.sum_mul, mul_comm mesh]
 
 theorem common_bin_selection {ι : Type*} (slots : Finset ι) (w g : ι→ℝ)
     (U δ mesh binWidth q z : ℝ) (hU : 1<U) (hδ : 0≤δ) (hmesh : 0≤mesh)

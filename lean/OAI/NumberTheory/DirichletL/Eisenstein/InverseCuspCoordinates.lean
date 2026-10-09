@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.BesselDerivatives
-
 namespace OAI
 
 noncomputable section
@@ -8,76 +7,22 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ComplexConjugate MatrixGroups Matrix
+open scoped ComplexConjugate MatrixGroups Matrix
 
 def inverseCuspCoordinates (c d : ℂ) (v : ℝ) (z : ℂ) : ℂ×ℝ :=
   (-d/c-star z/(c^2*((v^2+‖z‖^2:ℝ):ℂ)),v/(‖c‖^2*(v^2+‖z‖^2)))
@@ -140,8 +85,7 @@ theorem inverse_cusp_action (g : SL(2,ℂ)) (hc : g 1 0≠0)
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ComplexConjugate
+open scoped ComplexConjugate
 
 lemma real_linear_horizontal_decompose (A : (ℂ×ℝ)→L[ℝ]ℂ) (z : ℂ) :
     A (z,0)=(z.re:ℂ)*A (1,0)+(z.im:ℂ)*A (Complex.I,0) := by
@@ -207,20 +151,9 @@ lemma horizontalWirtingerZ_eq_fderiv (F : ℂ×ℝ→ℂ) (A : (ℂ×ℝ)→L[�
   simp only [mul_one] at h1
   rw [horizontalWirtingerZ,h1,hI]
 
-theorem inverse_cusp_wirtinger_rule (c d : ℂ) (v : ℝ) (hc : c≠0) (hv : 0<v)
-    (F : ℂ×ℝ→ℂ) (A : (ℂ×ℝ)→L[ℝ]ℂ)
-    (hF : HasFDerivAt F A (-d/c,1/(‖c‖^2*v))) :
-    horizontalWirtingerBar (fun z=>F (inverseCuspCoordinates c d v z)) 0=
-      (-1/(c^2*(v:ℂ)^2))*
-        horizontalWirtingerZ (fun z=>F (z,1/(‖c‖^2*v))) (-d/c) := by
-  rw [horizontalWirtingerZ_eq_fderiv F A _ _ hF]
-  exact inverse_cusp_wirtingerBar c d v hc hv F A hF
-
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
 
 section
 
@@ -249,10 +182,6 @@ theorem cusp_mellin_reflection_of_identity (f g : ℝ→ℂ) (A s : ℂ)
   rw [hfg v hv]
 
 end
-
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
-open Finset AddChar MulChar EisensteinEmbedding
 
 local notation "O" => ActualEisensteinCubic.O
 
@@ -339,9 +268,6 @@ end SubexponentialBesselCoefficients
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
-open Finset AddChar MulChar EisensteinEmbedding
 
 section
 local notation "O" => ActualEisensteinCubic.O
@@ -488,14 +414,6 @@ lemma summable_one_add_norm_exp_neg_cuspFrequency (a : ℝ) (ha : 0<a) :
 namespace SubexponentialBesselCoefficients
 variable (coeff : SubexponentialBesselCoefficients)
 
-lemma termFDeriv_summable (p : ℝ × ℂ) (hp : 0<p.1) :
-    Summable (fun h : ActualEisensteinCubic.O => coeff.termFDeriv h p) := by
-  obtain ⟨C,hC,hbound⟩ := coeff.termFDeriv_slab_bound p.1 p.1 hp le_rfl
-  apply Summable.of_norm
-  exact Summable.of_nonneg_of_le (fun h => norm_nonneg _)
-    (fun h => hbound h p ⟨le_rfl,le_rfl⟩)
-    ((summable_one_add_norm_exp_neg_cuspFrequency (Real.pi*p.1) (mul_pos Real.pi_pos hp)).mul_left C)
-
 lemma series_hasFDerivAt (p : ℝ × ℂ) (hp : 0<p.1) :
     HasFDerivAt coeff.series (∑'h : ActualEisensteinCubic.O,coeff.termFDeriv h p) p := by
   let a := p.1/2
@@ -537,18 +455,8 @@ lemma fullFunction_cusp_differentiableAt (constant : ℂ) (p : ℝ × ℂ) (hp :
   filter_upwards [continuousAt_fst.tendsto.eventually (Ioi_mem_nhds hp)] with q hq
   exact coeff.fullFunction_cusp_eq constant q hq
 
-lemma fullFunction_split_differentiableAt (constant : ℂ) (p : ℂ × ℝ) (hp : 0<p.2) :
-    DifferentiableAt ℝ
-      (fun q : ℂ × ℝ => coeff.fullFunction constant (cuspCoordinateLift (q.2,q.1))) p := by
-  have hswap : DifferentiableAt ℝ (fun q : ℂ × ℝ => (q.2,q.1)) p :=
-    differentiableAt_snd.prodMk differentiableAt_fst
-  exact (coeff.fullFunction_cusp_differentiableAt constant (p.2,p.1) hp).comp p hswap
-
 end SubexponentialBesselCoefficients
 end
-
-open Filter MeasureTheory Asymptotics
-open scoped BigOperators Classical Topology
 
 def truncatedCuspProfile (c : ℝ) (f : ℝ→ℂ) (x : ℝ) : ℂ :=
   if c<x then f x else 0

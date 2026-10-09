@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerBranch
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerMass
-
 namespace OAI
 
 noncomputable section

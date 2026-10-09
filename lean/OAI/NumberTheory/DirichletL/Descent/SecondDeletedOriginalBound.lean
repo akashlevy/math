@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondModeIntegral
 import OAI.NumberTheory.DirichletL.Descent.SecondDeletedModeEnergy
 import OAI.NumberTheory.DirichletL.Descent.SecondWholeMass
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

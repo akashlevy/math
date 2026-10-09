@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.TuplePrincipal
-
 namespace OAI
 
 noncomputable section
@@ -53,24 +52,6 @@ theorem compensatedTuple_eq_row_triple {K : ℕ} (η : HeckeFamily.Character)
       compensatedRowTripleIntegral η S (calibrationForSet S hS) W0 W1 p X Y Z := by
   rw [compensatedTuple_eq_source_triple η S hS hpS hbad hSne W0 W1 a0 b0 a1 b1 ha0 ha1 hW0 hW1
     p hp X Y Z hX hY hZ,tupleSourceTripleIntegral_eq_rows η S _ W0 W1 p hp]
-
-theorem compensatedPhysicalProbe_eq_row_triples {K : ℕ} (η : HeckeFamily.Character)
-    (S : Finset Id) (hS : ∀P∈S,P.IsMaximal) (hpS : ∀P∈S,Prime P)
-    (hbad : fixedBadPrimes⊆S) (hSne : S.Nonempty) (W0 W1 : SchwartzMap ℝ ℂ)
-    (a0 b0 a1 b1 : ℝ) (ha0 : 0<a0) (ha1 : 0<a1)
-    (hW0 : Function.support W0⊆Set.Icc a0 b0) (hW1 : Function.support W1⊆Set.Icc a1 b1)
-    (slotPrimes : Fin K→Finset O) (hp : ∀i a,a∈slotPrimes i→a≠0)
-    (slotWindow : Fin K→ℝ→ℂ) (slotScale : Fin K→ℝ)
-    (X Y Z : ℝ) (hX : 0<X) (hY : 0<Y) (hZ : 0<Z) :
-    compensatedPhysicalProbe η (calibrationForSet S hS) W0 W1 slotPrimes slotWindow slotScale X Y Z=
-      ∑p : ((i : Fin K)→{a : O // a∈slotPrimes i}),
-        (∏i,slotWindow i (elementNorm (p i).val/slotScale i))*
-        compensatedRowTripleIntegral η S (calibrationForSet S hS) W0 W1 (fun i=>(p i).val) X Y Z := by
-  unfold compensatedPhysicalProbe
-  apply Finset.sum_congr rfl
-  intro p _
-  rw [compensatedTuple_eq_row_triple η S hS hpS hbad hSne W0 W1 a0 b0 a1 b1 ha0 ha1 hW0 hW1
-    (fun i=>(p i).val) (fun i=>hp i (p i).val (p i).property) X Y Z hX hY hZ]
 
 end SevenEighths.ProbePhysical
 end

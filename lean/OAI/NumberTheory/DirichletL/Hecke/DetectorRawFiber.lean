@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Hecke.DetectorNoSlotInverseCount
 import OAI.NumberTheory.DirichletL.Hecke.DetectorNoSlotPlainCount
 import OAI.NumberTheory.DirichletL.Hecke.DetectorSupportedWitness
 import OAI.NumberTheory.DirichletL.Hecke.DetectorBranchBudget
-
 namespace OAI
 
 noncomputable section

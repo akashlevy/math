@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.PrimePhase
-
 namespace OAI
 
 noncomputable section
@@ -24,37 +23,6 @@ lemma actualSextic_neg_one_sq (P : Ideal O) [P.IsMaximal]
     (hg : goodLambda ∉ P) : actualSextic P hg (-1)^2 = 1 := by
   rw [← map_pow]
   norm_num
-
-theorem localGamma_inverse_pair (p : O) (hp : p ≠ 0)
-    [(Ideal.span {p} : Ideal O).IsMaximal]
-    (hg : goodLambda ∉ Ideal.span {p}) (hc : ringChar (O ⧸ Ideal.span {p}) ≠ 2)
-    (r : ℕ) (hr : r ≠ 0) (hr6 : r < 6) :
-    localGamma p hp hg r * localGamma p hp hg (6-r) =
-      actualSextic (Ideal.span {p}) hg (-1)^r := by
-  let : Field (O ⧸ Ideal.span {p}) := Ideal.Quotient.field _
-  let : Fintype (O ⧸ Ideal.span {p}) := Fintype.ofFinite _
-  let χ := actualSextic (Ideal.span {p}) hg
-  have hχ : χ^r ≠ 1 := by
-    intro he
-    have hd := (actualSextic_pow_eq_one_iff _ hg hc r).mp he
-    exact (Nat.not_dvd_of_pos_of_lt (Nat.pos_of_ne_zero hr) hr6) hd
-  have hinv : (χ^r)⁻¹ = χ^(6-r) := by
-    apply inv_eq_of_mul_eq_one_right
-    rw [← pow_add, Nat.add_sub_of_le hr6.le]
-    exact actualSextic_six _ hg hc
-  have hψ : (quotientTrace p hp).IsPrimitive :=
-    GeneralPrimitiveTrace.eisTraceModChar_breveE_primitive p hp
-  have he := ProbeGauss.normalizedGauss_inverse_pair (χ^r) (quotientTrace p hp) hχ hψ
-  rw [hinv] at he
-  simp only [localGamma, ProbePhase.normalizedTraceGauss_eq_normalizedGauss]
-  simpa only [MulChar.pow_apply' _ hr] using he
-
-lemma localGamma_two_four (p : O) (hp : p ≠ 0)
-    [(Ideal.span {p} : Ideal O).IsMaximal]
-    (hg : goodLambda ∉ Ideal.span {p}) (hc : ringChar (O ⧸ Ideal.span {p}) ≠ 2) :
-    localGamma p hp hg 2 * localGamma p hp hg 4 = 1 := by
-  have he := localGamma_inverse_pair p hp hg hc 2 (by decide) (by decide)
-  simpa only [show 6-2=4 from rfl, actualSextic_neg_one_sq] using he
 
 theorem localGamma_one_two_signal (p : O) (hp : p ≠ 0)
     [(Ideal.span {p} : Ideal O).IsMaximal]

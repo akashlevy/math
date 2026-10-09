@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRowwisePolynomial
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRowwiseChain
-
 namespace OAI
 
 noncomputable section

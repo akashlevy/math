@@ -3,7 +3,6 @@ import OAI.NumberTheory.DirichletL.Moments.AllocatedNaturalRadial
 import OAI.NumberTheory.DirichletL.Moments.NaturalFixedRaySourceFiber
 import OAI.NumberTheory.DirichletL.Moments.DetectorDictionaryUniformTests
 import OAI.NumberTheory.DirichletL.Moments.RayMaskedFloorSlots
-
 namespace OAI
 
 noncomputable section

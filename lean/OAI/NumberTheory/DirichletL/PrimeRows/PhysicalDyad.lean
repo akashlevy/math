@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.SourceTransport
 import OAI.NumberTheory.DirichletL.PrimeRows.SmallDyad
-
 namespace OAI
 
 noncomputable section

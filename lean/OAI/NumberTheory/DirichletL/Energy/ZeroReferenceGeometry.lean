@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.ReferenceDivisors
 import OAI.NumberTheory.DirichletL.Energy.ReferenceLowBands
-
 namespace OAI
 
 noncomputable section

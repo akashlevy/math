@@ -7,7 +7,7 @@
 \usepackage{array,booktabs,tabularx,longtable}
 \usepackage[expansion=false]{microtype}
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue,hypertexnames=false]{hyperref}
-\hypersetup{pdftitle={The Quasi-Riemann Hypothesis},pdfauthor={OpenAI},pdfsubject={A cubic theta argument with a fixed ray class character}}
+\hypersetup{pdftitle={The Quasi-Riemann Hypothesis: the half-plane Re s > 23/24 for Dirichlet L-functions},pdfsubject={A cubic theta argument, matched to a Lean formalization}}
 \allowdisplaybreaks[2]
 \setlength{\emergencystretch}{3em}
 \setcounter{tocdepth}{1}
@@ -37,14 +37,14 @@
 \newcommand{\precbd}{\preccurlyeq}
 
 
-\title{The Quasi-Riemann Hypothesis}
-\author{OpenAI}
-\date{October 5, 2026}
+\title{The Quasi-Riemann Hypothesis:\\ a zero-free half-plane $\Rea s>23/24$ for Dirichlet $L$-functions}
+\author{Adapted from OpenAI, \emph{The Quasi-Riemann Hypothesis} (October 5, 2026)}
+\date{October 9, 2026}
 
 \begin{document}
 \maketitle
 \begin{abstract}
-We establish the quasi-Riemann hypothesis by proving that every Dirichlet $L$-function, including Riemann's zeta function, has no zeros in the half-plane $\Rea s>11/12$. More generally, we prove the same zero-free half-plane for every finite-order Hecke $L$-function over $K=\Q(\sqrt{-3})$. In particular, this rules out the existence of Landau--Siegel zeros.
+We prove that every Dirichlet $L$-function, including the Riemann zeta function, has no zeros in the half-plane $\Rea s>23/24$. This is a special case of OpenAI's \emph{The Quasi-Riemann Hypothesis}, which proves the half-plane $\Rea s>11/12$ for every finite-order Hecke $L$-function over $K=\Q(\sqrt{-3})$: the case of the Hecke characters that come from Dirichlet characters, at a fixed value of its parameter. We keep its text and remove what this case does not need. The top level of the argument is rearranged to match a Lean~4 formalization, which proves the theorem using only the standard axioms.
 \end{abstract}
 
 \tableofcontents
@@ -71,14 +71,22 @@ $\chi$, independently of both conductor and height.
 Let $K=\Q(\sqrt{-3})$. The main result of this paper is the following.
 
 \begin{theorem}\label{thm:main}
-Every finite-order Hecke $L$-function over $K$ has no zeros in the half-plane $\Rea s>11/12$. Thus every Dirichlet $L$-function, including $\zeta(s)$, has no zeros for $\Rea s>11/12$.
+Every Dirichlet $L$-function, including $\zeta(s)$, has no zeros in the half-plane $\Rea s>23/24$.
 \end{theorem}
 
 Section~\ref{sec:reduction} proves the theorem assuming
 Proposition~\ref{thm:ms}, whose proof is completed in
 Section~\ref{sec:completion}.
 
-Theorem~\ref{thm:main} is a natural intermediate step toward the stronger zero-free region $\Rea s>7/8$ established in \cite[Theorem~1.1]{OpenAI26}. For simplicity, we have isolated Theorem~\ref{thm:main} and its proof here.
+Theorem~\ref{thm:main} is a special case of \cite[Theorem~1.1]{OpenAI26b}, which proves that every finite-order Hecke $L$-function over $K$, and hence every Dirichlet $L$-function, has no zeros in the half-plane $\Rea s>11/12$. That theorem is in turn a natural intermediate step toward the stronger zero-free region $\Rea s>7/8$ established in \cite[Theorem~1.1]{OpenAI26}.
+
+This paper is \cite{OpenAI26b} specialized to Dirichlet $L$-functions and to a fixed exponent. Most of the text is taken from \cite{OpenAI26b} unchanged; what concerns only the limit that gives $11/12$, or extraction along prime rows, is removed. There are three changes to the argument. The first and third do not affect the exponent; the second weakens it.
+\begin{enumerate}
+\item We treat only the Hecke characters $\nu=\chi\circ\NK$ of $K$ that come from Dirichlet characters $\chi$. Their $L$-functions factor as $L_K(s,\nu)=L(s,\chi)L(s,\chi\chi_{-3})$, where $\chi_{-3}$ is the nontrivial character modulo $3$, so no continuation of Hecke $L$-functions is needed. The Riemann zeta function is the case $\chi=1$.
+\item We fix the parameter $\vartheta=1/10$ that measures how far the row range of the basic mean square exceeds the column range. The argument of \cite{OpenAI26b} gives the exponent $11/12+5\vartheta/12$ for every $0<\vartheta\le1/10$ and then lets $\vartheta\to0$; our fixed choice gives $23/24$.
+\item We extract the M\"obius sum from the mean square using all rows $u=b^6$, $b\in\OO$, rather than the rows $u=p^6$ with $p$ prime. This avoids the prime ideal theorem. The price is a weight $\varphi(\mathfrak n)/\NK(\mathfrak n)$ in the M\"obius sum, which changes its Dirichlet series only by an Euler product that is holomorphic in $\Rea s>0$.
+\end{enumerate}
+
 By a standard explicit-formula argument (see \cite[Chapters~19--20]{Dav00}), Theorem~\ref{thm:main} gives the following quantitative form of the prime number theorem in arithmetic progressions.
 
 \begin{corollary}\label{cor:primes-ap}
@@ -89,7 +97,7 @@ For $x\ge2$,
  \sup_{\substack{1\le q\le x\\(a,q)=1}}
  \biggl|\pi(x;q,a)-\frac1{\varphi(q)}
                   \int_2^x\frac{\dd t}{\log t}\biggr|
- \ll x^{11/12}\log x,
+ \ll x^{23/24}\log x,
 \]
 where the implied constant is absolute and effective.
 \end{corollary}
@@ -165,6 +173,26 @@ conjecture by Heath-Brown and Patterson \cite{HBP79}, Heath-Brown
 The recursive large-sieve arguments also build on Heath-Brown's proof of
 the quadratic large sieve inequality \cite{HB95}.
 
+\subsection{The formalization}\label{sec:formal}
+Theorem~\ref{thm:main} has been formally verified in Lean~4 with Mathlib, using only the
+standard axioms. The formal proof is the module \texttt{OAI.NumberTheory.\allowbreak DirichletL.\allowbreak QRH} of the
+Lean library of \cite{OpenAI26}. It uses the infrastructure of that library, but none of the
+argument specific to \cite{OpenAI26}, and it is organized like this paper:
+\begin{itemize}
+\item every numbered result of Section~\ref{sec:reduction} is a Lean theorem with the same
+statement, and the formal proof of Theorem~\ref{thm:main} is the same three-line composition as
+in Section~\ref{sec:reduction};
+\item the main results of Sections~\ref{sec:initialization}--\ref{sec:transfer-proof} are
+theorems of the formalization, which proves them with somewhat different bookkeeping
+(Remarks~\ref{rem:formal-dual} and~\ref{rem:formal-descent}).
+\end{itemize}
+Appendix~\ref{app:lean} lists the correspondence. The formalization also proves the facts that
+this paper cites: the arithmetic identities of Lemma~\ref{lem:arithmetic}, Patterson's
+coefficients and the transformation law of the cubic theta function (constructed as the residue
+of a cubic metaplectic Eisenstein series), the quadratic large sieve of Lemma~\ref{lem:quadratic},
+and the factorization $L_K(s,\chi\circ\NK)=L(s,\chi)L(s,\chi\chi_{-3})$. Only the analytic facts
+about Dirichlet $L$-functions (continuation, and nonvanishing on $\Rea s\ge1$) come from Mathlib.
+
 \subsection{Organization}
 
 Section~\ref{sec:outline} gives a high-level outline of the argument.
@@ -179,7 +207,8 @@ Sections~\ref{sec:reflection} and~\ref{sec:transfer-proof} prove the
 completed estimate and the bounds for the remaining cube-divisor sums, respectively.
 Appendix~\ref{sec:arithmetic} supplies the arithmetic identities and
 the detailed theta calculation. Appendix~\ref{app:weights} records the smooth
-separation lemma used throughout.
+separation lemma used throughout, and Appendix~\ref{app:lean} the correspondence with
+the formal proof.
 
 \subsection{Notation}
 
@@ -212,7 +241,7 @@ The precise statements appear in Sections~\ref{sec:reduction}--\ref{sec:transfer
 \subsection{Step 1: Reduction to power-saving estimates for twisted M\"obius sums}
 
 
-Fix a finite-order Hecke character $\nu$ of $K$. Let $L_K(s, \nu)$ be the corresponding Hecke $L$-function. We extend $\nu$ by zero to ideals not coprime to its conductor. We will deduce Theorem~\ref{thm:main} from a power-saving estimate for $\nu$-twisted M\"obius sums.
+Fix a Dirichlet character $\chi$, and let $\nu=\chi\circ\NK$ be the corresponding finite-order Hecke character of $K$. Its Hecke $L$-function is $L_K(s,\nu)=L(s,\chi)L(s,\chi\chi_{-3})$, where $\chi_{-3}$ is the nontrivial character modulo $3$. We extend $\nu$ by zero to ideals not coprime to its conductor. We will deduce Theorem~\ref{thm:main} from a power-saving estimate for $\nu$-twisted M\"obius sums.
 
 Let $\mu$ denote the ideal M\"obius function on $K$. All original ideal sums
 run over nonzero integral ideals.
@@ -234,7 +263,8 @@ sums and zero-free regions. In the zeta-function case, the equivalence
 between the Riemann Hypothesis and the bound
 $\sum_{n\le x}\mu(n)\ll_\varepsilon x^{1/2+\varepsilon}$ is due to
 Littlewood \cite{Lit12}; see also \cite[\S1]{MM09}.
-Section~\ref{sec:reduction} gives the complete argument needed here.
+Section~\ref{sec:reduction} gives the complete argument needed here, for a variant of
+$A_1(D)$ with an additional weight $\varphi(\mathfrak n)/\NK(\mathfrak n)$ (see Step~2).
 
 \subsection{Step 2: Embedding the sum in a family}
 
@@ -268,7 +298,7 @@ The family is
    W(\NK(\mathfrak n)/D).
 \end{equation}
 
-Fix $0<\vartheta\le1/10$. The crucial estimate, Proposition~\ref{thm:ms}, is that
+Fix $\vartheta=1/10$. The crucial estimate, Proposition~\ref{thm:ms}, is that
 \begin{equation}\label{eq:intro-ms}
  \sum_{0<\NK(u)\le H}|A_u(D)|^2
        \ll_{\nu,W,\vartheta,\varepsilon}D^{1+\varepsilon}H,
@@ -281,22 +311,24 @@ Up to the factor of $D^\varepsilon$, \eqref{eq:intro-ms} can be thought of as sa
 
 
 
-The mean-square estimate \eqref{eq:intro-ms} gives the desired power saving for $A_1(D)$ because $A_{p^6}(D)\approx A_1(D)$ for many primes $p$. For a primary prime $p$ with $Y/2<\NK(p)\le Y$, the identity $\chi_n(p^6)=\ind_{p\nmid n}$ leaves only $O_W(D/Y)$ differing terms and hence gives
-\begin{equation}\label{eq:A_u-vs-A_1}
- A_{p^6}(D)=A_1(D)+O_W(D/Y).
+The mean-square estimate \eqref{eq:intro-ms} gives a power saving because $A_{b^6}(D)$ is, on average over $b\in\OO$, close to a $\nu$-twisted M\"obius sum. Indeed, the identity $\chi_n(b^6)=\ind_{(b,n)=1}$ shows that averaging $A_{b^6}(D)$ over $\NK(b)\le Y$ against a smooth bump $V$ counts, for each $n$, the $b$ prime to $n$, of which there are about $Y\varphi(n)/\NK(n)$. Poisson summation in $b$ makes this precise:
+\begin{equation}\label{eq:intro-average}
+ \sum_{b\in\OO}V\Bigl(\frac{\NK(b)}{Y}\Bigr)A_{b^6}(D)=Y\widehat V(0)A^\varphi(D)+O_{W,V,\varepsilon}(D^{1+\varepsilon}),
 \end{equation}
-By Landau's prime ideal theorem \cite{Lan03}
-(see \cite[Theorem~5.33]{IK04}), there are $\asymp Y/\log Y$ choices of such $p$. Taking $Y=H^{1/6}$, considering the contribution of such terms to \eqref{eq:intro-ms} and using \eqref{eq:A_u-vs-A_1} gives
+where $\widehat V(0)\ne0$ and
+\[
+ A^\varphi(D)=\sum_{\mathfrak n}\mu(\mathfrak n)\nu(\mathfrak n)\frac{\varphi(\mathfrak n)}{\NK(\mathfrak n)}W(\NK(\mathfrak n)/D),
+ \qquad
+ \frac{\varphi(\mathfrak n)}{\NK(\mathfrak n)}=\prod_{\mathfrak p\mid\mathfrak n}\Bigl(1-\frac1{\NK(\mathfrak p)}\Bigr).
+\]
+Taking $Y=H^{1/6}$, so that the rows $b^6$ have norm at most $H$, and applying Cauchy--Schwarz and \eqref{eq:intro-ms} to the left side gives
 \begin{equation}\label{eq:intro-extraction}
-|A_1(D)|^2
-\ll D^{1+\varepsilon}H^{5/6}+D^2H^{-1/3}.
+|A^\varphi(D)|^2
+\ll D^{1+\varepsilon}H^{5/6}+D^{2+2\varepsilon}H^{-1/3}.
 \end{equation}
 With $H=D^{1+\vartheta}$, this gives
-$A_1(D)\ll D^{11/12+5\vartheta/12+\varepsilon}$ for every fixed
-$0<\vartheta\le1/10$. Choosing $\vartheta$
-sufficiently small for each requested exponent loss yields
-$A_1(D)\ll_{\nu,W,\varepsilon}D^{11/12+\varepsilon}$.
-Therefore it remains to establish \eqref{eq:intro-ms}.
+$A^\varphi(D)\ll D^{11/12+5\vartheta/12+\varepsilon}=D^{23/24+\varepsilon}$, the same exponent that the rows $p^6$ give in \cite{OpenAI26b}. The weight $\varphi(\mathfrak n)/\NK(\mathfrak n)$ changes the Dirichlet series of the M\"obius sum only by an Euler product that converges absolutely in $\Rea s>0$, so this saving serves as well as \eqref{eq:power-savings}.
+Therefore it remains to establish \eqref{eq:intro-ms}. A smaller $\vartheta$ would give a better exponent; we take $\vartheta=1/10$ because the formal proof of \eqref{eq:intro-ms} needs $\vartheta>1/20$ (Remark~\ref{rem:formal-descent}).
 
 \subsection{Step 3: Poisson summation}
 
@@ -660,11 +692,12 @@ following the admissible-exponent method of Heath-Brown
 \section{From the mean-square estimate to the zero-free region}\label{sec:reduction}
 
 We first carry out Steps~1 and~2 of the outline: extract
-cancellation in $A_1(D)$ from a mean-square estimate for the family,
+cancellation in a M\"obius sum from a mean-square estimate for the family,
 then use a Mellin transform to deduce nonvanishing.
-Fix a finite-order Hecke character $\nu$ of $K$ and a finite set $S$
+Fix a Dirichlet character $\chi$ of modulus $q$, put $\nu=\chi\circ\NK$, and fix a finite set $S$
 of prime ideals that contains all prime ideals above $2$ or $3$, as
 well as all prime ideals dividing the conductor of $\nu$.
+(In the formalization, $S$ consists of the prime ideals dividing $2592q$, where $2592=2^5\cdot3^4$.)
 For an ideal or element $a$, write $(a,S)=1$ if no prime ideal in $S$
 divides $a$.
 An ideal is supported on $S$ if all its prime factors belong to $S$.
@@ -672,17 +705,23 @@ For $W\in C_c^\infty((0,\infty);\mathbb C)$, recall the family
 \[
  A_u(D):=\sum_{(n,S)=1}\mu(n)\nu(n)\chi_n(u)W(\NK(n)/D),
 \]
-introduced in \eqref{eq:intro-family}. Here and throughout the
+introduced in \eqref{eq:intro-family}, and the weighted M\"obius sum
+\begin{equation}\label{eq:A-phi}
+ A^\varphi(D):=\sum_{(n,S)=1}\mu(n)\nu(n)\frac{\varphi(n)}{\NK(n)}W(\NK(n)/D),
+ \qquad
+ \frac{\varphi(n)}{\NK(n)}=\prod_{\mathfrak p\mid n}\Bigl(1-\frac1{\NK(\mathfrak p)}\Bigr).
+\end{equation}
+Here and throughout the
 original family, $n$ runs over ideals prime to $S$, represented by
-their primary generators. The key estimate is the following. 
+their primary generators. The key estimate is the following.
 
 \begin{proposition}\label{thm:ms}
-For every fixed $0<\vartheta\le1/10$ and $\varepsilon>0$, there exists an integer $k=k(\vartheta,\varepsilon)\ge1$
+Let $\vartheta=1/10$. For every fixed $\varepsilon>0$, there exists an integer $k=k(\varepsilon)\ge1$
 such that, for every compact interval $I\subset(0,\infty)$,
 all smooth $W$ supported in $I$, and $D\ge2$,
 \begin{equation}\label{eq:ms}
  \sum_{0<\NK(u)\le D^{1+\vartheta}}|A_u(D)|^2
-       \ll_{\nu,S,I,\vartheta,\varepsilon}
+       \ll_{\nu,S,I,\varepsilon}
        \Bigl(\max_{0\le j\le k}\|W^{(j)}\|_\infty\Bigr)^2
        D^{2+\vartheta+\varepsilon}.
 \end{equation}
@@ -690,42 +729,97 @@ all smooth $W$ supported in $I$, and $D\ge2$,
 
 We first deduce Theorem~\ref{thm:main} assuming Proposition~\ref{thm:ms}.
 The proof of the proposition is completed in Section~\ref{sec:completion}.
+The deduction uses \eqref{eq:ms} only for one $W$ at a time, with an implied constant that may
+depend on $W$; this is the form that the formalization proves.
 
-\begin{proof}[Proof of Theorem~\ref{thm:main} from Proposition~\ref{thm:ms}]
-Fix $0<\vartheta\le1/10$, and put $H=D^{1+\vartheta}$ and
-$Y=H^{1/6}=D^{(1+\vartheta)/6}$. For prime ideals
-$Y/2<\NK(\mathfrak p)\le Y$, $\mathfrak p\notin S$, let $p$ be their
-primary generators, chosen with $p\equiv1\pmod3$. Then
-$\chi_n(p^6)=\ind_{\mathfrak p\nmid n}$ and therefore
+\subsection{Extraction}
+\begin{proposition}\label{prop:extraction}
+Let $I\subset(0,\infty)$ be a compact interval, let $W$ be smooth and supported in $I$, and let
+$\varepsilon>0$. Suppose that \eqref{eq:ms} holds for $W$ with $2\varepsilon$ in place of
+$\varepsilon$. Then, for $D\ge2$,
+\begin{equation}\label{eq:mobius-saving}
+ A^\varphi(D)\ll_{\nu,S,W,\varepsilon}D^{23/24+\varepsilon}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Put $H=D^{1+\vartheta}$ and
+$Y=H^{1/6}=D^{(1+\vartheta)/6}=D^{11/60}$. For $b\in\OO$ and a prime
+$\mathfrak p\notin S$, the character $\chi_{\mathfrak p}$ has order six, so
+\begin{equation}\label{eq:sixth-power-rows}
+ \chi_n(b^6)=\ind_{(b,n)=1}.
+\end{equation}
+Fix a smooth $V:\R\to\C$ supported in $[1/2,1]$, with $|V|\le1$ and
 \[
- |A_1(D)-A_{p^6}(D)|
- \le\|W\|_\infty
-       \#\{n:(n,S)=1,\ \mathfrak p\mid n,\ \NK(n)\asymp D\}
- \ll_W D/Y.
+ \widehat V(0):=\frac2{\sqrt3}\int_{\C}V(|z|^2)\dd x\dd y\ne0,
 \]
-For this fixed field, Landau's prime ideal theorem \cite{Lan03}
-(see \cite[Theorem~5.33]{IK04}) gives
-$J\asymp Y/\log Y$ such primes. Their sixth powers are
-distinct rows of norm at most $H$. Apply \eqref{eq:ms} with loss
-$\varepsilon/2$ and use $\log Y\ll_\varepsilon D^{\varepsilon/2}$ to obtain
+the value at $0$ of the radial Fourier transform of Lemma~\ref{lem:poisson}, and consider
+\[
+ \mathcal V(D):=\sum_{b\in\OO}V\Bigl(\frac{\NK(b)}Y\Bigr)A_{b^6}(D)
+ =\sum_{(n,S)=1}\mu(n)\nu(n)W(\NK(n)/D)
+ \sum_{\substack{b\in\OO\\(b,n)=1}}V\Bigl(\frac{\NK(b)}Y\Bigr),
+\]
+where the second expression follows from \eqref{eq:sixth-power-rows}.
+For squarefree $n$, inclusion--exclusion over $\mathfrak d\mid n$ writes the
+inner sum as
+\[
+ \sum_{\mathfrak d\mid n}\mu(\mathfrak d)\sum_{c\in\OO}V\bigl(\NK(\mathfrak d)\NK(c)/Y\bigr).
+\]
+By Poisson summation (Lemma~\ref{lem:poisson}), the sum over $c$ is
+$(Y/\NK(\mathfrak d))\widehat V(0)+O_V(1)$: the zero frequency gives the main term, the other
+frequencies are $O_V(1)$ by the rapid decay of $\widehat V$, and when $\NK(\mathfrak d)>Y$ only
+$c=0$ is in the support, where $V(0)=0$. Summing over $\mathfrak d$, and using
+$2^{\omega(n)}\ll_\varepsilon\NK(n)^\varepsilon$ and $\NK(n)\ll_W D$, gives
+\begin{equation}\label{eq:extraction-evaluation}
+ \mathcal V(D)=Y\widehat V(0)A^\varphi(D)+O_{W,V,\varepsilon}(D^{1+\varepsilon}).
+\end{equation}
+The $b$ in the support of $V(\NK(b)/Y)$ satisfy $Y/2\le\NK(b)\le Y$; there are $O(Y)$ of them,
+and their sixth powers are rows of norm at most $H$, each taken at most six times. Apply
+\eqref{eq:ms} with loss $2\varepsilon$ and Cauchy--Schwarz to obtain
 \begin{align}
- |A_1(D)|^2
- &\le \frac2J\sum_{\substack{Y/2<\NK(p)\le Y\\(p,S)=1}}|A_{p^6}(D)|^2+O_W(D^2/Y^2)\nonumber\\
- &\ll_{\nu,S,W,\vartheta,\varepsilon}D^{2+\vartheta+\varepsilon}/Y+D^2/Y^2
-   =D^{11/6+5\vartheta/6+\varepsilon}+D^{5/3-\vartheta/3}.
+ |A^\varphi(D)|^2
+ &\ll \frac1{Y^2}\Bigl(Y\sum_{0<\NK(u)\le H}|A_u(D)|^2+D^{2+2\varepsilon}\Bigr)\nonumber\\
+ &\ll_{\nu,S,W,\varepsilon}D^{2+\vartheta+2\varepsilon}/Y+D^{2+2\varepsilon}/Y^2
+   =D^{23/12+2\varepsilon}+D^{49/30+2\varepsilon}.
                                                         \label{eq:prime-extract}
 \end{align}
-Thus $A_1(D)\ll_{\nu,S,W,\vartheta,\varepsilon}
-D^{11/12+5\vartheta/12+\varepsilon}$. Given any requested exponent loss,
-choose $\vartheta>0$ and then the loss in Proposition~\ref{thm:ms}
-sufficiently small. Renaming the resulting loss $\varepsilon$, we obtain
-\begin{equation}\label{eq:mobius-saving}
-                 A_1(D)\ll_{\nu,S,W,\varepsilon}D^{11/12+\varepsilon}.
-\end{equation}
+Thus $A^\varphi(D)\ll_{\nu,S,W,\varepsilon}D^{23/24+\varepsilon}$.
+\end{proof}
 
-We now use
-\eqref{eq:mobius-saving} to rule out a zero of $L_K(s,\nu)$ in
-$\Rea s>11/12$. Suppose such a zero $\varrho$ exists.
+\subsection{The Mellin transform}
+For $\Rea s>0$ put
+\[
+ E_\varphi(s,\nu):=\prod_{\mathfrak p\notin S}
+ \frac{1-\nu(\mathfrak p)\NK(\mathfrak p)^{-s}}{1-\nu(\mathfrak p)\NK(\mathfrak p)^{-s}(1-\NK(\mathfrak p)^{-1})},
+ \qquad
+ P_S(s,\nu):=\prod_{\mathfrak p\in S}\bigl(1-\nu(\mathfrak p)\NK(\mathfrak p)^{-s}\bigr).
+\]
+Every prime $\mathfrak p\notin S$ has $\NK(\mathfrak p)\ge7$, and $|\nu(\mathfrak p)|\le1$, so for
+$\sigma=\Rea s>0$ each factor of $E_\varphi$ is $1+O_\sigma(\NK(\mathfrak p)^{-1-\sigma})$ uniformly
+in $\mathfrak p$, with a denominator of absolute value at least $1-7^{-\sigma}$. So the product
+converges absolutely, and $E_\varphi(\cdot,\nu)$ is holomorphic on $\Rea s>0$. For $\Rea s>1$,
+comparing Euler products gives
+\begin{equation}\label{eq:weighted-euler}
+ \sum_{(n,S)=1}\frac{\mu(n)\nu(n)\varphi(n)}{\NK(n)^{1+s}}
+ =\prod_{\mathfrak p\notin S}\Bigl(1-\frac{\nu(\mathfrak p)}{\NK(\mathfrak p)^{s}}\Bigl(1-\frac1{\NK(\mathfrak p)}\Bigr)\Bigr)
+ =\frac1{L_K(s,\nu)P_S(s,\nu)E_\varphi(s,\nu)},
+\end{equation}
+where $L_K(s,\nu)=L(s,\chi)L(s,\chi\chi_{-3})$. Indeed, a rational prime $p$ that splits in $K$
+contributes $(1-\chi(p)p^{-s})^{-2}$ to $L_K(s,\nu)$, an inert one contributes
+$(1-\chi(p)^2p^{-2s})^{-1}$, and the ramified prime $3$ contributes $(1-\chi(3)3^{-s})^{-1}$;
+these are the Euler factors of $L(s,\chi)L(s,\chi\chi_{-3})$, since $\chi_{-3}(p)=1,-1,0$ in the
+three cases.
+
+\begin{proposition}\label{prop:mellin}
+Suppose that $A^\varphi(D)\ll_{W,\varepsilon}D^{23/24+\varepsilon}$ for every $\varepsilon>0$ and
+every smooth $W:\R\to\C$ that vanishes outside $(1,2)$. Then $L(s,\chi)\ne0$ for
+$\Rea s>23/24$, except at the pole $s=1$ when $\chi$ is principal.
+\end{proposition}
+
+\begin{proof}
+We use the hypothesis to rule out a zero of $L(s,\chi)$ in
+$\Rea s>23/24$. Suppose such a zero $\varrho$ exists. Since $L(s,\chi)\ne0$ on $\Rea s\ge1$,
+apart from the pole (see \cite[Chapters~13 and~14]{Dav00}), we have $\Rea\varrho<1$.
 Choose $0\ne\phi\in C_c^\infty((1,2))$, $\phi\ge0$, and
 $W(y)=y^{-\varrho}\phi(y)$.
 With the Mellin convention
@@ -733,41 +827,31 @@ $\widehat W(s)=\int_0^\infty W(y)y^s\dd y/y$, we have
 $\widehat W(\varrho)=\int\phi(y)\dd y/y>0$.
 The function
 \[
- \mathcal M_W(s)=\int_0^\infty A_1(D)D^{-s}\frac{\dd D}{D}
+ \mathcal M_W(s)=\int_0^\infty A^\varphi(D)D^{-s}\frac{\dd D}{D}
 \]
-is holomorphic on $\Rea s>11/12$: the estimate
-\eqref{eq:mobius-saving} controls the integral at infinity, and
-the compact support of $W$ makes $A_1(D)$ vanish for sufficiently
-small $D$. Termwise integration for $\Rea s>1$ gives
+is holomorphic on $\Rea s>23/24$: the hypothesis
+controls the integral at infinity, and
+the compact support of $W$ makes $A^\varphi(D)$ vanish for sufficiently
+small $D$. Termwise integration for $\Rea s>1$ and \eqref{eq:weighted-euler} give
 \[
  \mathcal M_W(s)
- =\widehat W(s)\sum_{(n,S)=1}\frac{\mu(n)\nu(n)}{\NK(n)^s}
- =\frac{\widehat W(s)}{L_K^S(s,\nu)},
+ =\widehat W(s)\sum_{(n,S)=1}\frac{\mu(n)\nu(n)\varphi(n)}{\NK(n)^{1+s}}
+ =\frac{\widehat W(s)}{L(s,\chi)L(s,\chi\chi_{-3})P_S(s,\nu)E_\varphi(s,\nu)}.
 \]
-where $L_K^S$ is the Euler product outside $S$:
-\[
- L_K^S(s,\nu):=L_K(s,\nu)
- \prod_{\mathfrak p\in S}(1-\nu(\mathfrak p)\NK(\mathfrak p)^{-s}).
-\]
-By Hecke's meromorphic continuation theorem \cite{Hec20}
-(see \cite[\S5.10]{IK04}) and the identity theorem, the identity
-$L_K^S(s,\nu)\mathcal M_W(s)=\widehat W(s)$ holds on
-$\Rea s>11/12$.
-The omitted Euler factors are nonzero here, so evaluation at
-$s=\varrho$ gives $0=\widehat W(\varrho)>0$, a contradiction.
+Dirichlet $L$-functions continue meromorphically to $\C$, with at most a simple pole at $s=1$,
+which occurs only for principal characters (see \cite[Chapters~8 and~9]{Dav00}); at most one of
+$\chi$ and $\chi\chi_{-3}$ is principal. The identity theorem therefore shows that
+$L(s,\chi)L(s,\chi\chi_{-3})P_S(s,\nu)E_\varphi(s,\nu)\mathcal M_W(s)=\widehat W(s)$ holds on
+$\Rea s>23/24$, $s\ne1$.
+Evaluation at $s=\varrho$ gives $0=\widehat W(\varrho)>0$, a contradiction.
+\end{proof}
 
-To deduce the assertion for Dirichlet $L$-functions in
-Theorem~\ref{thm:main}, let $\chi_{-3}$ be the nontrivial character modulo $3$.
-For any Dirichlet character $\chi$, quadratic base change gives, up to
-Euler factors nonzero in $\Rea s>0$,
-\[
- L_K(s,\chi\circ\NK)
-       =L(s,\chi)L(s,\chi\chi_{-3}).
-\]
-The Hecke conclusion excludes zeros of either factor away from $s=1$.
-At $s=1$, the only possible pole--zero cancellation is ruled out by
-Dirichlet's nonvanishing theorem, which gives
-$L(1,\chi_{-3})>0$ (see \cite[Chapters~4 and~6]{Dav00}).
+\begin{proof}[Proof of Theorem~\ref{thm:main} from Proposition~\ref{thm:ms}]
+Let $\chi$ be a Dirichlet character, let $W$ be smooth and vanish outside $(1,2)$, and let
+$\varepsilon>0$. Proposition~\ref{thm:ms}, applied with $I=[1,2]$ and loss $2\varepsilon$, and
+Proposition~\ref{prop:extraction} give $A^\varphi(D)\ll_{W,\varepsilon}D^{23/24+\varepsilon}$.
+Proposition~\ref{prop:mellin} concludes. For $\zeta$, take $\chi=1$ of modulus $1$; at $s=1$,
+where the proposition does not apply, $\zeta(1)$ is a pole, not a zero.
 \end{proof}
 
 \section{Poisson summation and the dual mean square}\label{sec:initialization}
@@ -998,7 +1082,7 @@ The following proposition gives the dual estimate sufficient for
 original M\"obius sums.
 
 \begin{proposition}\label{prop:poisson-reduction}
-Fix $0<\vartheta\le1/10$ and put $H=D^{1+\vartheta}$.
+Let $\vartheta=1/10$ and put $H=D^{1+\vartheta}$.
 For each fixed $C\ge1$ and all real $B,F\ge1$, consider the ranges
 \begin{equation}\label{eq:initial-scales}
  X=\frac D{BF},\qquad 0<\mathcal{H}\le\frac{CD^2}{HB^2},\qquad
@@ -1250,6 +1334,19 @@ include $Z$, and restore the factor $D$ to obtain \eqref{eq:ms}.
 The required derivative order depends only on $\vartheta,\varepsilon$.
 
 \end{proof}
+
+\begin{remark}\label{rem:formal-dual}
+The formal proof organizes the dual mean squares slightly differently. The excluded primes are
+not removed by Lemma~\ref{lem:remove-exclusions}. Instead, an exclusion mask $m$ is carried
+inside the dual mean square, through the twist $\chi_n(m^6)=\ind_{(n,m)=1}$. Test functions are
+written as profiles $V(\log(\NK(n)/X))$ with compact support and expanded once and for all in
+the height twists $\NK(n)^{\mathrm i\theta}$, with bounds polynomial in $\theta$. This is the
+expansion behind Lemma~\ref{lem:smooth-mean-square}, built into the definition. Finally, the
+rows are weighted by a compactly supported smooth majorant, whose Fourier transform is not
+compactly supported but decays rapidly, instead of a weight $\Phi$ with compactly supported
+$\widehat\Phi$; the resulting frequency tails are estimated separately. None of these changes
+affects the exponents.
+\end{remark}
 
 \section[Iteration of the dual mean-square estimate]{\texorpdfstring{Iteration of the dual mean-square estimate}{Iteration of the dual mean-square estimate}}\label{sec:descent}
 
@@ -1608,10 +1705,24 @@ The hypothesis $\mathcal H\le\Sigma\le D^{C_0}$ ensures
 $\mathcal H\le D^{j\kappa}$, so the induction gives the proposition.
 \end{proof}
 
-\subsection{The original mean square and the exponent $11/12$}
+\begin{remark}\label{rem:formal-descent}
+The formal proof runs the same descent with fixed parameters. At $\kappa=1/20$ (the value used in
+Section~\ref{sec:completion}) it removes, at each level, the cubes of norm greater than a fixed
+cutoff $D^{1/1000}$, instead of the adaptive cutoff $H_c$ of \eqref{eq:cube-cutoff}. Each level
+therefore lowers the row norm by a factor of at least $D^{1/1000}$ (in fact $D^{3/1000}$), so the
+rank $\lceil1000\log\mathcal H/\log D\rceil$ drops at each level. Since $\mathcal H\le D^3$ in all
+states, at most $3000$ levels occur, and the induction is on this rank rather than on $j$. The losses
+are tracked additively: each level costs a factor $D^{57\eta}$, and the gap $1/20$ is reduced
+by $\eta$ per level, with $3000\eta\le1/80$, instead of re-quantifying $\varepsilon$ at each
+level. The short cubes then contribute $D^{7\varepsilon-1/40}\Sigma$: the saving $D^{-1/40}$,
+half the gap, absorbs the loss $D^{7\varepsilon}$. Because the margin starts at $1/20$, the
+formal mean square requires $\vartheta>1/20$, which $\vartheta=1/10$ satisfies.
+\end{remark}
+
+\subsection{The original mean square}
 \label{sec:completion}
 \begin{proof}[Proof of Proposition~\ref{thm:ms}]
-Fix $0<\vartheta\le1/10$ and put $H=D^{1+\vartheta}$.
+Let $\vartheta=1/10$ and put $H=D^{1+\vartheta}$.
 The ranges in \eqref{eq:initial-scales} give
 \begin{equation}\label{eq:initial-positive-gap}
  \mathcal H\le\frac{CD^{1-\vartheta}}{B^2},\qquad
@@ -3649,6 +3760,78 @@ Multiply by $w_r$ and sum over $r$ to obtain
 place of integrals proves the finite version.
 \end{proof}
 
+\section{Correspondence with the formal proof}\label{app:lean}
+
+The formal proof is part of the Lean library of \cite{OpenAI26} (Lean~4.34.1 with Mathlib). The
+statement checked by Comparator is
+\begin{center}
+\small
+\texttt{theorem OAI.DirichletCharacter.}\\
+\texttt{\ \ LFunction\_ne\_zero\_of\_twenty\_three\_twenty\_fourths\_lt\_re}\\
+\texttt{\ \ \{q :\ }$\mathbb N$\texttt{\} [NeZero q] (}$\chi$\texttt{ :\ DirichletCharacter }$\mathbb C$\texttt{ q)}\\
+\texttt{\ \ \{s :\ }$\mathbb C$\texttt{\}}
+\texttt{ (hs :\ (23 / 24 :\ }$\mathbb R$\texttt{) < s.re) (hpole :\ }$\neg$\texttt{(}$\chi$\texttt{ = 1 }$\wedge$\texttt{ s = 1)) :}\\
+\texttt{\ \ DirichletCharacter.LFunction }$\chi$\texttt{ s }$\ne$\texttt{ 0}\\[3pt]
+(Comparator configuration \texttt{ComparatorChallenges/\allowbreak DirichletTwentyThreeTwentyFourths.json}),
+\end{center}
+together with its corollary for $\zeta$, which has no $s\ne1$ hypothesis:
+\texttt{OAI.riemannZeta\_ne\_zero\_of\_\allowbreak twenty\_\allowbreak three\_\allowbreak twenty\_\allowbreak fourths\_\allowbreak lt\_\allowbreak re}
+(configuration \texttt{Quasi\allowbreak Riemann\allowbreak Twenty\allowbreak Three\allowbreak Twenty\allowbreak Fourths.json}).
+Their only axioms are \texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound}. The
+modules \texttt{OAI.NumberTheory.\allowbreak DirichletL.\allowbreak QRH.*} state the steps of this paper as Lean theorems
+in the notation used here: the scale is $D$, and $M\ge bD$ is a cutoff beyond the support of $W$
+that makes every sum finite. (Inside the underlying library the roles are reversed: there $Z$ is
+the scale and $D\in\mathbb N$ the cutoff.) The main theorem is proved by composing these steps
+exactly as in Section~\ref{sec:reduction}, and Proposition~\ref{thm:ms} is proved as
+Proposition~\ref{prop:poisson-reduction} applied to Proposition~\ref{prop:canonical}. Names below
+are in the namespace \texttt{OAI.QRH}, in the module named in parentheses.
+
+\medskip
+{\small\raggedright
+\begin{tabular}{@{}p{0.34\textwidth}p{0.62\textwidth}@{}}
+\toprule
+This paper & Lean\\
+\midrule
+$A_u(D)$, $A^\varphi(D)$, $S$ & \texttt{A }$\chi$\texttt{ W D M u}, \texttt{weightedSum }$\chi$\texttt{ W D M}, \texttt{S q} (\texttt{Setup})\\
+Theorem~\ref{thm:main} & the theorem above (module \texttt{OAI.NumberTheory.\allowbreak DirichletL.\allowbreak QRH})\\
+Proposition~\ref{thm:ms} & \texttt{meanSquare} (\texttt{MeanSquare})\\
+Proposition~\ref{prop:extraction} & \texttt{saving\_of\_meanSquare} (\texttt{Extraction})\\
+Proposition~\ref{prop:mellin} & \texttt{LFunction\_ne\_zero\_of\_saving} (\texttt{ZeroFree})\\
+Lemma~\ref{lem:arithmetic} & \texttt{gauss\_jacobi}, \texttt{gauss\_two\_cube}, \texttt{mobius\_absorption} (\texttt{Milestones})\\
+Lemma~\ref{lem:poisson} & \texttt{poisson\_with\_exclusions}\\
+Proposition~\ref{prop:poisson-reduction} & \texttt{poissonReduction} (\texttt{MeanSquare})\\
+Proposition~\ref{prop:canonical} & \texttt{dualBound} (\texttt{MeanSquare}); \texttt{descent\_bound}, \texttt{descent\_by\_rank}\\
+Proposition~\ref{prop:R} & \texttt{completed\_mean\_square}\\
+Lemma~\ref{lem:cube-reduction} & \texttt{cube\_inversion}, \texttt{short\_cubes}, \texttt{descent\_step}\\
+Proposition~\ref{prop:transfer} & \texttt{transfer}; Lemma~\ref{lem:arithmetic-poisson}: \texttt{second\_poisson}\\
+Proposition~\ref{lem:reflection} & \texttt{theta\_reflection}; \texttt{thetaModels} (\texttt{MeanSquare})\\
+Lemma~\ref{lem:theta-bounds} & \texttt{theta\_cusp\_bounds}\\
+Lemma~\ref{lem:quadratic} & \texttt{quadratic\_large\_sieve}\\
+Patterson's coefficients \eqref{eq:intro-theta-coefficients}, automorphy of $\theta$ & \texttt{theta\_coefficients}, \texttt{theta\_automorphy}\\
+$E_\varphi(s)$, $P_S(s)$, \eqref{eq:weighted-euler} & \texttt{OAI.SmoothMobiusCorrection.\allowbreak eulerCorrection}, \texttt{OAI.CompactMellinBridge.\allowbreak finiteEulerFactor}\\
+\bottomrule
+\end{tabular}\par}
+
+\medskip
+Names without a module are aliases in \texttt{Milestones}, whose documentation gives the
+library theorem behind each. The formal proof of
+Sections~\ref{sec:initialization}--\ref{sec:transfer-proof} follows the same strategy as the
+text: Poisson summation in $u$, completed sums, theta reflection, the quadratic large sieve, cube
+inversion, and the transfer by two Poisson summations. It differs in four points of
+bookkeeping, recorded in Remarks~\ref{rem:formal-dual} and~\ref{rem:formal-descent}:
+\begin{itemize}
+\item test functions are expanded in height twists $\NK(\mathfrak n)^{\mathrm i\theta}$ once and
+for all, rather than controlled by $C^J$-norms;
+\item excluded primes are carried in the dual mean square as a mask, rather than removed by
+Lemma~\ref{lem:remove-exclusions};
+\item rows are weighted by a compactly supported smooth majorant, whose Fourier transform only
+decays rapidly, rather than by a weight with compactly supported Fourier transform;
+\item the descent uses a fixed cube cutoff and an explicit loss budget.
+\end{itemize}
+The import closure of \texttt{OAI.NumberTheory.\allowbreak DirichletL.\allowbreak QRH} contains none of the modules of
+the argument of \cite{OpenAI26} (its probe, detector and moment inductions), and no
+\texttt{sorry}.
+
 \begin{thebibliography}{99}
 \bibitem{AKS04}
 M.~Agrawal, N.~Kayal, and N.~Saxena,
@@ -3716,13 +3899,6 @@ S.~D.~Galbraith,
 \emph{Mathematics of Public Key Cryptography},
 Cambridge University Press, 2012.
 
-\bibitem{GZ23}
-P.~Gao and L.~Zhao,
-Mean squares of quadratic twists of the M\"obius function,
-\emph{J. Number Theory} \textbf{247} (2023), 1--14.
-\href{https://doi.org/10.1016/j.jnt.2022.12.007}
-{doi:10.1016/j.jnt.2022.12.007}.
-
 \bibitem{GL}
 L.~Goldmakher and B.~Louvel,
 A quadratic large sieve inequality over number fields,
@@ -3778,13 +3954,6 @@ The distribution of Kummer sums at prime arguments,
 \href{https://doi.org/10.1515/crll.1979.310.111}
 {doi:10.1515/crll.1979.310.111}.
 
-\bibitem{Hec20}
-E.~Hecke,
-Eine neue Art von Zetafunktionen und ihre Beziehungen zur Verteilung
-der Primzahlen, I, II,
-\emph{Math. Z.} \textbf{1} (1918), 357--376;
-\textbf{6} (1920), 11--51.
-
 \bibitem{IK04}
 H.~Iwaniec and E.~Kowalski,
 \emph{Analytic Number Theory},
@@ -3818,12 +3987,6 @@ Lectures in Mathematics, Department of Mathematics, Kyoto University,
 No.~2, Kinokuniya Book-Store, Tokyo, 1969.
 \href{https://hdl.handle.net/2433/84907}{Kyoto University repository}.
 
-\bibitem{Lan03}
-E.~Landau,
-Neuer Beweis des Primzahlsatzes und Beweis des Primidealsatzes,
-\emph{Math. Ann.} \textbf{56} (1903), 645--670.
-\href{https://doi.org/10.1007/BF01444310}{doi:10.1007/BF01444310}.
-
 \bibitem{Lit12}
 J.~E.~Littlewood,
 Quelques cons\'equences de l'hypoth\`ese que la fonction $\zeta(s)$ de
@@ -3835,12 +3998,6 @@ J.~E.~Littlewood,
 On the class-number of the corpus $P(\sqrt{-k})$,
 \emph{Proc. London Math. Soc.} (2) \textbf{27} (1928),
 no.~1, 358--372.
-
-\bibitem{LZZ26}
-R.~F.~Lu, A.~Zaman, and H.~Zhao,
-Numerical computations concerning Landau--Siegel zeros,
-preprint, 2026.
-\href{https://arxiv.org/abs/2602.03626}{arXiv:2602.03626}.
 
 \bibitem{MM09}
 H.~Maier and H.~L.~Montgomery,
@@ -3872,19 +4029,19 @@ NIST Digital Library of Mathematical Functions,
 \href{https://dlmf.nist.gov/10.43.E19}{https://dlmf.nist.gov/10.43.E19}.
 \par}
 
+\bibitem{OpenAI26b}
+OpenAI,
+The Quasi-Riemann Hypothesis,
+OpenAI Math Release preprint
+\href{https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/preprints/The-Quasi-Riemann-Hypothesis-October-5-2026/paper2.pdf}{OAI:The-Quasi-Riemann-Hypothesis-October-5-2026},
+2026.
+
 \bibitem{OpenAI26}
 OpenAI,
 The Quasi-Riemann Hypothesis: A Zero-Free Half-Plane $\mathrm{Re}(s)>7/8$,
 OpenAI Math Release preprint
 \href{https://github.com/openai/math/blob/main/preprints/The-Quasi-Riemann-Hypothesis-September-30-2026/paper.pdf}{OAI:The-Quasi-Riemann-Hypothesis-September-30-2026},
 2026.
-
-\bibitem{Page35}
-A.~Page,
-On the number of primes in an arithmetic progression,
-\emph{Proc. London Math. Soc.} (2) \textbf{39} (1935), 116--141.
-\href{https://doi.org/10.1112/plms/s2-39.1.116}
-{doi:10.1112/plms/s2-39.1.116}.
 
 \bibitem{Pat77}
 S.~J.~Patterson,
@@ -3918,22 +4075,6 @@ K.~A.~Rodosski\u{\i},
 On non-residues and zeros of $L$-functions,
 \emph{Izv. Akad. Nauk SSSR Ser. Mat.} \textbf{20} (1956),
 no.~3, 303--306 (Russian).
-
-\bibitem{Sie35}
-C.~L.~Siegel,
-\"Uber die Classenzahl quadratischer Zahlk\"orper,
-\emph{Acta Arith.} \textbf{1} (1935), 83--86.
-\href{https://doi.org/10.4064/aa-1-1-83-86}
-{doi:10.4064/aa-1-1-83-86}.
-
-\bibitem{Tat51}
-{\raggedright
-T.~Tatuzawa,
-On a theorem of Siegel,
-\emph{Japan. J. Math.} \textbf{21} (1951), 163--178.
-\href{https://doi.org/10.4099/jjm1924.21.0_163}
-{doi:10.4099/jjm1924.21.0\_163}.
-\par}
 
 \bibitem{Tit30}
 E.~C.~Titchmarsh,

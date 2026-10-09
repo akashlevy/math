@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.LiteralNormalized
 import OAI.NumberTheory.DirichletL.Reflection.SectorNormalizedUniformDegree
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

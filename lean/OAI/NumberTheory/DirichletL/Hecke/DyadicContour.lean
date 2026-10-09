@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DyadicMellin
-
 namespace OAI
 
 noncomputable section

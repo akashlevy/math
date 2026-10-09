@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowActualEnergies
-
 namespace OAI
 
 noncomputable section

@@ -1,76 +1,24 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.DirichletForm
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace InitialMeanSquare
 open ActualEisensteinCubic ConcretePrimeRowBridge CanonicalQuadraticSieve
 open FirstPassCubeLabels (primeProductNorm normalizedColumn columnLog)
@@ -103,51 +51,8 @@ theorem poolPrimary_norm (F : Finset (Ideal O)) (hF : ∀ I ∈ F, Admissible I)
   intro i hi
   exact poolPrimary_span F hF i
 
-theorem selectedIdealTest_full_range (W : ℝ → ℂ) (b Z X : ℝ) (hZ : 0 < Z)
-    (hs : ∀ t, W t ≠ 0 → t ≤ b) (hX : b*Z ≤ X)
-    (S : Finset (primePool (idealRange X))) :
-    selectedIdealTest (idealRange X) (fun n => W (n/Z)) S =
-      W (primeProductNorm (poolPrimary (idealRange X)) S/Z) := by
-  have hF : ∀ I ∈ idealRange X, Admissible I := fun I hI => (mem_idealRange.mp hI).1
-  rw [poolPrimary_norm (idealRange X) hF S]
-  unfold selectedIdealTest
-  by_cases hw : W ((Ideal.absNorm (∏ i ∈ S,i.val) : ℝ)/Z)=0
-  · simp only [hw, ite_self]
-  · rw [ite_eq_left]
-    apply mem_idealRange.mpr
-    refine ⟨poolProduct_admissible (idealRange X) hF S, ?_⟩
-    exact ((div_le_iff₀ hZ).mp (hs _ hw)).trans hX
-
-theorem idealRowSum_initial_energy {q : ℕ} (χ : DirichletCharacter ℂ q)
-    (W : ℝ → ℂ) (a b Z X : ℝ) (ha : 0 < a) (hZ : 0 < Z)
-    (hs : Function.support W ⊆ Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    (hX : b*Z ≤ X) (z : O) :
-    let F := idealRange X
-    let hF := fun I (hI : I ∈ F) => (mem_idealRange.mp hI).1
-    letI : ∀ i : primePool F, (Ideal.span {poolPrimary F i}).IsMaximal :=
-      fun i => by rw [poolPrimary_span F hF i]; infer_instance
-    ‖idealRowSum F (fun I hI => (hF I hI).1)
-      (fun I hI P hP => ((hF I hI).2.2 P hP).1) χ (fun n => W (n/Z)) z‖^2/Z =
-    ‖mobiusRow (poolPrimary F) (poolPrimary_good F hF) Finset.univ (normCharacter χ) 1
-      (normalizedColumn (poolPrimary F)
-        (fun T => initialLogProfile W a b ha hs hW (columnLog (poolPrimary F) Z T))) z‖^2 := by
-  dsimp only
-  let F := idealRange X
-  have hF : ∀ I ∈ F, Admissible I := fun I hI => (mem_idealRange.mp hI).1
-  let : ∀ i : primePool F, (Ideal.span {poolPrimary F i}).IsMaximal :=
-    fun i => by rw [poolPrimary_span F hF i]; infer_instance
-  rw [idealRowSum_eq_mobiusRow F hF]
-  have ht : selectedIdealTest F (fun n => W (n/Z)) =
-      fun T => W (primeProductNorm (poolPrimary F) T/Z) := by
-    funext T
-    exact selectedIdealTest_full_range W b Z X hZ (fun t ht => (hs ht).2) hX T
-  rw [ht]
-  exact (mobiusRow_initial_energy (poolPrimary F) (poolPrimary_good F hF)
-    (poolPrimary_ne_zero F hF) Finset.univ (normCharacter χ) 1 z Z hZ W a b ha hs hW).symm
-
 end InitialMeanSquare
 
-open scoped BigOperators Classical SchwartzMap
 namespace SecondPassArithmetic
 
 section
@@ -398,8 +303,6 @@ theorem globalFirstTailCost_parent_bound (ε : ℝ) (hε : 0<ε) :
 
 end SecondPassArithmetic
 
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 open FirstPassCubeLabels (primeProduct firstLogDensity)
@@ -494,8 +397,6 @@ theorem globalFirstCoreRows_quantitative_transfer
 
 end SecondPassArithmetic
 
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 open FirstPassCubeLabels (primeProduct primeProductNorm firstLogDensity)

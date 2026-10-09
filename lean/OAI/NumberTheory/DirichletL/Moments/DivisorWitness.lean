@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.DivisorRawEnergy
 import OAI.NumberTheory.DirichletL.Moments.SlotRatios
-
 namespace OAI
 
 noncomputable section

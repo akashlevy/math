@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondMovingSupport
 import OAI.NumberTheory.DirichletL.Moments.FixedRowMask
-
 namespace OAI
 
 noncomputable section

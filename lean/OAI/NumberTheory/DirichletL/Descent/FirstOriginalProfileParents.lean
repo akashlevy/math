@@ -1,6 +1,7 @@
-import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileCellEnergy
+import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfilePhysical
+import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileAssembly
+import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileWindows
 import OAI.NumberTheory.DirichletL.Inversion.FirstGlobalCaps
-
 namespace OAI
 
 noncomputable section
@@ -21,19 +22,6 @@ lemma originalOuterCell_eq_caps (pool : Finset ι) (Q : Finset (ι→₀ℕ)) (k
   unfold originalOuterCell InverseFirstGlobalCaps.outerCell InverseFirstGlobalCaps.outerGate
   ext x
   simp only [Finset.mem_filter,originalNorms_eq_caps,InverseFirstGlobalCaps.originalNorms_outer]
-
-lemma originalChildEnergy_eq_caps (hp : ∀i,p i≠0)
-    (hg : ∀i,ConcretePrimeRowBridge.goodLambda∉Ideal.span {p i})
-    (hinj : Function.Injective (fun i=>Ideal.span {p i}))
-    (pool : Finset ι) (Q : Finset (ι→₀ℕ)) (k : SourceIndex) (l : ℕ)
-    (negative : Bool) (Ψ : O→*ℂ) (m : O) (mark : (ι→₀ℕ)→Finset ι→ℂ)
-    (omega : ℝ→ℂ) (T t Y : ℝ) :
-    originalChildEnergy p hp hg hinj pool Q k l negative Ψ m mark omega T t Y=
-      ∑x∈InverseFirstGlobalCaps.outerCell p pool Q k,
-        firstCanonicalSecondEnergy p hp hg hinj pool x.1 x.2.1 negative Ψ m (divisorElement p x)
-          (mark (if negative then x.1.rightExponent else x.1.leftExponent))
-          (commonSelector p (fun _=>1) l) omega T t Y := by
-  rw [originalChildEnergy,originalOuterCell_eq_caps]
 
 end SevenEighths.InverseMomentFirstOriginalProfile
 end

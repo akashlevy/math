@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Energy.FirstActualFrequencyBudget
 import OAI.NumberTheory.DirichletL.Energy.FirstLiveAdmission
 import OAI.NumberTheory.DirichletL.Energy.WidthRanges
 import OAI.NumberTheory.DirichletL.Energy.StageMargins
-
 namespace OAI
 
 noncomputable section
@@ -93,20 +92,6 @@ theorem eventually_actual_four_fit (M A P B κ ε:ℝ)
   unfold columnLoss
   dsimp only [sourceEpsilon,maskEpsilon] at hmono hfit ⊢
   linarith only [hmono,hfit]
-
-theorem ready_budget_final (M Bmask L ε A P:ℝ)(hM:0≤M)(hB:0≤Bmask)
-    (hA:A≤2*CenteredMomentEnergyWidthRanges.range M Bmask L (count M ε)+M+1)
-    (hP:P≤Bmask):
-    readyBudget A P≤CenteredMomentEnergyWidthRanges.finalSourceCap M Bmask L ε:=by
-  have hn:1≤count M ε:=by
-    unfold count CenteredMomentFirstSecondLossParameters.depth
-    omega
-  have hm:=CenteredMomentEnergyWidthRanges.range_mono M Bmask L hM hB hn
-  have hr:20≤CenteredMomentEnergyWidthRanges.range M Bmask L (count M ε):=by
-    simp only [CenteredMomentEnergyWidthRanges.range,CenteredMomentEnergyWidthRanges.step] at hm
-    linarith [le_max_left (1:ℝ) L]
-  unfold readyBudget CenteredMomentEnergyWidthRanges.finalSourceCap CenteredMomentEnergyWidthRanges.sourceCap
-  linarith
 
 end SevenEighths.CenteredMomentEnergyFirstSourceParameters
 

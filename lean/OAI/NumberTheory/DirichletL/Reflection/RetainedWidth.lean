@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.FamilyTail
 import OAI.NumberTheory.DirichletL.Reflection.UpperThreshold
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

@@ -1,182 +1,27 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.GreenIntegrals
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 open Filter MeasureTheory
 open scoped BigOperators Classical Topology
-
-def greenWronskian (f g : ℝ → ℂ) (x : ℝ) : ℂ :=
-  deriv f x*star (g x)-f x*star (deriv g x)
-
-def greenSecondTerm (f g : ℝ → ℂ) (x : ℝ) : ℂ :=
-  deriv (deriv f) x*star (g x)-f x*star (deriv (deriv g) x)
-
-lemma hasDerivAt_greenWronskian (f g : ℝ → ℂ) (x : ℝ)
-    (hf : DifferentiableAt ℝ f x) (hg : DifferentiableAt ℝ g x)
-    (hdf : DifferentiableAt ℝ (deriv f) x) (hdg : DifferentiableAt ℝ (deriv g) x) :
-    HasDerivAt (greenWronskian f g) (greenSecondTerm f g x) x := by
-  convert ((hdf.hasDerivAt.mul hg.hasDerivAt.star).sub
-    (hf.hasDerivAt.mul hdg.hasDerivAt.star)) using 1
-  · rfl
-  · dsimp [greenSecondTerm]
-    ring
-
-lemma weighted_vertical_green (f g : ℝ → ℂ) (a b : ℝ)
-    (hpos : ∀x∈Set.uIcc a b,0<x)
-    (hf : ∀x∈Set.uIcc a b,DifferentiableAt ℝ f x)
-    (hg : ∀x∈Set.uIcc a b,DifferentiableAt ℝ g x)
-    (hdf : ∀x∈Set.uIcc a b,DifferentiableAt ℝ (deriv f) x)
-    (hdg : ∀x∈Set.uIcc a b,DifferentiableAt ℝ (deriv g) x)
-    (hif : IntervalIntegrable (deriv (deriv f)) volume a b)
-    (hig : IntervalIntegrable (deriv (deriv g)) volume a b) :
-    (∫x in a..b, greenSecondTerm f g x/(x:ℂ)-greenWronskian f g x/(x:ℂ)^2) =
-      greenWronskian f g b/(b:ℂ)-greenWronskian f g a/(a:ℂ) := by
-  have hfc : ContinuousOn f (Set.uIcc a b) := fun x hx => (hf x hx).continuousAt.continuousWithinAt
-  have hgc : ContinuousOn g (Set.uIcc a b) := fun x hx => (hg x hx).continuousAt.continuousWithinAt
-  have hdfc : ContinuousOn (deriv f) (Set.uIcc a b) := fun x hx => (hdf x hx).continuousAt.continuousWithinAt
-  have hdgc : ContinuousOn (deriv g) (Set.uIcc a b) := fun x hx => (hdg x hx).continuousAt.continuousWithinAt
-  have hW : ContinuousOn (greenWronskian f g) (Set.uIcc a b) :=
-    (hdfc.mul hgc.star).sub (hfc.mul hdgc.star)
-  have hne : ∀x∈Set.uIcc a b,(x:ℂ)≠0 := fun x hx => Complex.ofReal_ne_zero.mpr (hpos x hx).ne'
-  have hstar : IntervalIntegrable (fun x => star (deriv (deriv g) x)) volume a b := by
-    apply hig.mono_fun ((aestronglyMeasurable_deriv (deriv g) _).star)
-    exact Filter.Eventually.of_forall (fun x => by simp only [Pi.star_apply,norm_star,le_refl])
-  have hG : IntervalIntegrable (greenSecondTerm f g) volume a b :=
-    (hif.mul_continuousOn hgc.star).sub (hstar.continuousOn_mul hfc)
-  apply intervalIntegral.integral_eq_sub_of_hasDerivAt
-  · intro x hx
-    have h := (hasDerivAt_greenWronskian f g x (hf x hx) (hg x hx) (hdf x hx) (hdg x hx)).div
-      ((hasDerivAt_id x).ofReal_comp) (hne x hx)
-    convert h using 1
-    · rfl
-    · simp only [id_eq,Complex.ofReal_one,mul_one]
-      field_simp [hne x hx]
-
-  · have hi₁ := hG.mul_continuousOn (Complex.continuous_ofReal.continuousOn.inv₀ hne)
-    have hi₂ : IntervalIntegrable (fun x : ℝ => greenWronskian f g x/(x:ℂ)^2) volume a b :=
-      (hW.div (Complex.continuous_ofReal.continuousOn.pow 2)
-        (fun x hx => pow_ne_zero 2 (hne x hx))).intervalIntegrable
-    simpa only [div_eq_mul_inv,Pi.inv_apply] using hi₁.sub hi₂
-
-theorem actual_eisenstein_vertical_green (s t : ℂ) (hs : 2<s.re) (ht : 2<t.re)
-    (p : SpatialCoordinates) (a b : ℝ) (ha : 0<a) (hb : 0<b) :
-    (∫v in a..b,
-      greenSecondTerm (axisSlice (upperEisensteinField s) p 2)
-        (axisSlice (upperEisensteinField t) p 2) v/(v:ℂ) -
-      greenWronskian (axisSlice (upperEisensteinField s) p 2)
-        (axisSlice (upperEisensteinField t) p 2) v/(v:ℂ)^2) =
-      greenWronskian (axisSlice (upperEisensteinField s) p 2)
-        (axisSlice (upperEisensteinField t) p 2) b/(b:ℂ) -
-      greenWronskian (axisSlice (upperEisensteinField s) p 2)
-        (axisSlice (upperEisensteinField t) p 2) a/(a:ℂ) := by
-  have hpos (x : ℝ) (hx : x∈Set.uIcc a b) : 0<x :=
-    lt_of_lt_of_le (lt_min ha hb) hx.1
-  have hsafe (x : ℝ) (hx : x∈Set.uIcc a b) : 0<(Function.update p 2 x) 2 := by
-    simpa only [Function.update_self] using hpos x hx
-  apply weighted_vertical_green _ _ a b hpos
-  · exact fun x hx => (actual_axis_differentiable_at s hs p 2 x (hsafe x hx)).1
-  · exact fun x hx => (actual_axis_differentiable_at t ht p 2 x (hsafe x hx)).1
-  · exact fun x hx => (actual_axis_differentiable_at s hs p 2 x (hsafe x hx)).2
-  · exact fun x hx => (actual_axis_differentiable_at t ht p 2 x (hsafe x hx)).2
-  · apply (intervalIntegrable_iff' (by finiteness)).mpr
-    exact (actual_axis_second_locallyIntegrable s hs p 2).integrableOn_compact_subset hsafe isCompact_uIcc
-  · apply (intervalIntegrable_iff' (by finiteness)).mpr
-    exact (actual_axis_second_locallyIntegrable t ht p 2).integrableOn_compact_subset hsafe isCompact_uIcc
-
-lemma axisSlice_self (f : SpatialCoordinates → ℂ) (p : SpatialCoordinates) (j : Fin 3) :
-    axisSlice f p j (p j)=f p := by
-  simp only [axisSlice,Function.update_eq_self]
-
-theorem actual_eisenstein_green_density (s t : ℂ) (hs : 2<s.re) (ht : 2<t.re)
-    (p : SpatialCoordinates) (hv : 0<p 2) :
-    (∑j : Fin 3,greenSecondTerm (axisSlice (upperEisensteinField s) p j)
-      (axisSlice (upperEisensteinField t) p j) (p j)) / (p 2:ℂ) -
-      greenWronskian (axisSlice (upperEisensteinField s) p 2)
-        (axisSlice (upperEisensteinField t) p 2) (p 2) / (p 2:ℂ)^2 =
-    (s*(s-2)-star (t*(t-2))) * upperEisensteinField s p * star (upperEisensteinField t p) /
-      (p 2:ℂ)^3 := by
-  have hne : (p 2:ℂ)≠0 := Complex.ofReal_ne_zero.mpr hv.ne'
-  calc
-    _ = (axisLaplacian (upperEisensteinField s) p * star (upperEisensteinField t p) -
-        upperEisensteinField s p * star (axisLaplacian (upperEisensteinField t) p)) / (p 2:ℂ)^3 := by
-      simp only [greenSecondTerm,greenWronskian,axisSlice_self,axisLaplacian,
-        Finset.sum_sub_distrib,← Finset.sum_mul,← Finset.mul_sum,map_sub,map_mul,map_pow,
-        map_sum,Complex.star_def,Complex.conj_ofReal]
-      field_simp [hne]
-      ; ring
-    _ = _ := by
-      rw [upperEisenstein_eigenfunction s hs p hv,upperEisenstein_eigenfunction t ht p hv]
-      simp only [star_mul]
-      ring
 
 end CubicEisenstein
 
@@ -258,7 +103,6 @@ theorem symmetric_truncation_scalar_bound (m : ℕ) (X₀ X T : ℝ) (hX₀ : 0 
 
 end CanonicalQuadraticSieve
 
-open scoped BigOperators Classical SchwartzMap
 namespace SecondPassArithmetic
 
 section
@@ -398,16 +242,6 @@ def secondLogIndex (D : Finset ι) (x : SecondExpansionData ι) : SecondLogIndex
   (normLogBin (primeProductNorm p x.divisor), normLogBin (primeProductNorm p x.overlap),
     normLogBin (‖eisEmbedding (actualSecondRow p D x.divisor x.frequency)‖^2))
 
-def secondLogX (R : Finset ι) (X : ℝ) (j : SecondLogIndex) : ℝ :=
-  X / (secondLogE j * secondLogV j * primeProductNorm p R)
-
-include hp in
-omit [DecidableEq ι] [∀ (i : ι), (span {p i}).IsMaximal] in
-lemma secondLogX_pos (R : Finset ι) (X : ℝ) (hX : 0 < X) (j : SecondLogIndex) :
-    0 < secondLogX p R X j := by
-  exact div_pos hX (mul_pos (mul_pos (normLogScale_pos _) (normLogScale_pos _))
-    (FirstPassCubeLabels.primeProductNorm_pos p hp R))
-
 omit [DecidableEq ι] in
 lemma actualSecondRow_ne_zero (D E : Finset ι) (k : O) (hk : k ≠ 0) :
     actualSecondRow p D E k ≠ 0 :=
@@ -418,69 +252,6 @@ lemma element_norm_ge_one (a : O) (ha : a ≠ 0) : 1 ≤ ‖eisEmbedding a‖^2 
   exact_mod_cast Nat.one_le_iff_ne_zero.mpr (show Ideal.absNorm (Ideal.span {a}) ≠ 0 by
     rw [ne_eq, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]
     exact ha)
-
-include hp in
-
-omit [DecidableEq ι] in
-theorem secondLogIndex_coordinates (C D R : Finset ι) (X : ℝ) (hX : 0 < X)
-    (x : SecondExpansionData ι) (hk : x.frequency ≠ 0) :
-    let j := secondLogIndex p D x
-    let y := expansionSupportData C D x
-    |secondSectorZ p (secondExpansionScale p X
-      (primeSubsetGenerator (fun i => Ideal.span {p i}) R) y) (secondLogX p R X j) y| ≤ 2 ∧
-    |secondSectorUd p (primeProductNorm p D) y| ≤ 2 ∧
-    |secondSectorUe p (secondLogE j) y| ≤ 2 ∧
-    |secondSectorUv p (secondLogV j) y| ≤ 2 ∧
-    |secondSectorKap p (secondLogK j) y| ≤ 2 := by
-  dsimp only
-  have hE := normLogBin_error (primeProductNorm p x.divisor) (primeProductNorm_ge_one p hp _)
-  have hV := normLogBin_error (primeProductNorm p x.overlap) (primeProductNorm_ge_one p hp _)
-  have hK := normLogBin_error (‖eisEmbedding (actualSecondRow p D x.divisor x.frequency)‖^2)
-    (element_norm_ge_one _ (actualSecondRow_ne_zero p D x.divisor x.frequency hk))
-  have hR := (FirstPassCubeLabels.primeProductNorm_pos p hp R).ne'
-  have hX0 := hX.ne'
-  have hNE := (FirstPassCubeLabels.primeProductNorm_pos p hp x.divisor).ne'
-  have he := (normLogScale_pos (normLogBin (primeProductNorm p x.divisor))).ne'
-  have hv := (normLogScale_pos (normLogBin (primeProductNorm p x.overlap))).ne'
-  have hratio :
-      primeProductNorm p x.overlap * secondLogX p R X (secondLogIndex p D x) /
-        secondExpansionScale p X (primeSubsetGenerator (fun i => Ideal.span {p i}) R)
-          (expansionSupportData C D x) =
-      (primeProductNorm p x.divisor / normLogScale (normLogBin (primeProductNorm p x.divisor))) *
-        (primeProductNorm p x.overlap / normLogScale (normLogBin (primeProductNorm p x.overlap))) := by
-    simp only [secondLogX, secondExpansionScale, expansionSupportData, secondLogIndex,
-      secondLogE, secondLogV, primeSubsetGenerator_norm_eq_productNorm]
-    field_simp
-
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · change |Real.log (primeProductNorm p x.overlap * _ / _)| ≤ 2
-    rw [hratio, Real.log_mul (div_ne_zero hNE he)
-      (div_ne_zero (FirstPassCubeLabels.primeProductNorm_pos p hp x.overlap).ne' hv)]
-    rw [abs_of_nonneg (add_nonneg hE.1 hV.1)]
-    linarith [hE.2,hV.2]
-  · simp only [secondSectorUd, expansionSupportData, primeSubsetGenerator_norm_eq_productNorm,
-      div_self (FirstPassCubeLabels.primeProductNorm_pos p hp D).ne', Real.log_one, abs_zero]
-    norm_num
-  · change |Real.log (‖eisEmbedding _‖^2 / _)| ≤ 2
-    rw [primeSubsetGenerator_norm_eq_productNorm]
-    change |Real.log (primeProductNorm p x.divisor / normLogScale (normLogBin (primeProductNorm p x.divisor)))| ≤ 2
-    rw [abs_of_nonneg hE.1]
-    linarith [hE.2]
-  · change |Real.log (primeProductNorm p x.overlap / normLogScale (normLogBin (primeProductNorm p x.overlap)))| ≤ 2
-    rw [abs_of_nonneg hV.1]
-    linarith [hV.2]
-  · change |Real.log (‖eisEmbedding (actualSecondRow p D x.divisor x.frequency)‖^2 /
-      normLogScale (normLogBin (‖eisEmbedding (actualSecondRow p D x.divisor x.frequency)‖^2)))| ≤ 2
-    rw [abs_of_nonneg hK.1]
-    linarith [hK.2]
-
-omit [DecidableEq ι] [∀ (i : ι), (span {p i}).IsMaximal] in
-theorem secondLogX_radial_scale (D R : Finset ι) (X Y : ℝ) (hX : X ≠ 0) (j : SecondLogIndex) :
-    Y * secondLogK j / (primeProductNorm p D * (secondLogE j)^2 *
-      (secondLogV j)^2 * (secondLogX p R X j)^2) =
-    Y * secondLogK j * (primeProductNorm p R)^2 / (primeProductNorm p D * X^2) := by
-  unfold secondLogX secondLogE secondLogV secondLogK normLogScale
-  field_simp
 
 end
 section
@@ -522,57 +293,6 @@ lemma secondSupportNewLabel_ne_bot (B C D : Finset ι) (v₁ v₂ : ι → ℕ) 
   rw [← secondSupportLabel_span, ne_eq, Ideal.span_singleton_eq_bot]
   exact mul_ne_zero (mul_ne_zero (secondBaseLabel_ne_zero p hp B C v₁ v₂ ε₁ ε₂)
     (primeSubsetGenerator_ne_zero _ _)) (Finset.prod_ne_zero_iff.mpr (fun i hi => hp i))
-
-def secondLogLabelBound (B C : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (j : SecondLogIndex) : ℝ :=
-  ‖eisEmbedding (secondBaseLabel p B C v₁ v₂ ε₁ ε₂)‖^2 * secondLogE j * secondLogV j * Real.exp 2
-
-include hp in
-omit [DecidableEq ι] in
-lemma secondLogLabelBound_ge_one (B C : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (j : SecondLogIndex) : 1 ≤ secondLogLabelBound p B C v₁ v₂ ε₁ ε₂ j := by
-  exact one_le_mul_of_one_le_of_one_le
-    (one_le_mul_of_one_le_of_one_le
-      (one_le_mul_of_one_le_of_one_le
-        (element_norm_ge_one _ (secondBaseLabel_ne_zero p hp B C v₁ v₂ ε₁ ε₂))
-        (normLogScale_ge_one _)) (normLogScale_ge_one _))
-    (Real.one_le_exp (by norm_num))
-
-include hp in
-
-omit [DecidableEq ι] in
-theorem secondLogIndex_target_bounds (B C D : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (x : SecondExpansionData ι) (hk : x.frequency ≠ 0) :
-    (Ideal.absNorm (secondSupportNewLabel p B v₁ v₂ ε₁ ε₂ (expansionSupportData C D x)) : ℝ) ≤
-        secondLogLabelBound p B C v₁ v₂ ε₁ ε₂ (secondLogIndex p D x) ∧
-    ‖eisEmbedding (secondSupportRow p (expansionSupportData C D x))‖^2 ≤
-        secondLogK (secondLogIndex p D x) * Real.exp 1 := by
-  have hE := (normLogBin_scale_bounds (primeProductNorm p x.divisor) (primeProductNorm_ge_one p hp _)).2
-  have hV := (normLogBin_scale_bounds (primeProductNorm p x.overlap) (primeProductNorm_ge_one p hp _)).2
-  have hK := (normLogBin_scale_bounds (‖eisEmbedding (actualSecondRow p D x.divisor x.frequency)‖^2)
-    (element_norm_ge_one _ (actualSecondRow_ne_zero p D x.divisor x.frequency hk))).2
-  refine ⟨?_, hK⟩
-  rw [secondSupportNewLabel_norm]
-  calc
-    _ ≤ ‖eisEmbedding (secondBaseLabel p B C v₁ v₂ ε₁ ε₂)‖^2 *
-        (normLogScale (normLogBin (primeProductNorm p x.divisor))*Real.exp 1) *
-        (normLogScale (normLogBin (primeProductNorm p x.overlap))*Real.exp 1) := by
-      exact mul_le_mul (mul_le_mul_of_nonneg_left hE (sq_nonneg _)) hV
-        (FirstPassCubeLabels.primeProductNorm_pos p hp _).le
-        (mul_nonneg (sq_nonneg _) (mul_pos (normLogScale_pos _) (Real.exp_pos _)).le)
-    _ = _ := by
-      simp only [secondLogLabelBound, secondLogIndex, secondLogE, secondLogV]
-      rw [show (2:ℝ)=1+1 by norm_num, Real.exp_add]
-      ring
-
-omit [DecidableEq ι] [∀ (i : ι), (span {p i}).IsMaximal] in
-theorem secondLogX_label_cost (B C R : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (X : ℝ) (j : SecondLogIndex) :
-    secondLogX p R X j * secondLogLabelBound p B C v₁ v₂ ε₁ ε₂ j =
-      X * ‖eisEmbedding (secondBaseLabel p B C v₁ v₂ ε₁ ε₂)‖^2 * Real.exp 2 /
-        primeProductNorm p R := by
-  unfold secondLogX secondLogLabelBound secondLogE secondLogV normLogScale
-  field_simp
 
 end
 
@@ -665,34 +385,6 @@ theorem sum_secondLogSector (D F : Finset ι) (K : Finset ι → Finset ι → F
   · simp
   · intro j hj hne
     simp [Ne.symm hne]
-
-include hp in
-
-omit [∀ (i : ι), (span {p i}).IsMaximal] in
-theorem secondLogX_lower (D F R : Finset ι) (K : Finset ι → Finset ι → Finset O)
-    (X M : ℝ) (hX : 0 < X) (x : SecondExpansionData ι)
-    (hx : x ∈ secondSupportedSector p F K R X M) :
-    Real.exp (-M) ≤ secondLogX p R X (secondLogIndex p D x) := by
-  obtain ⟨hG,hE,hV,hk0,hk,hr,hs⟩ := secondSupportedSector_mem p F K R X M x hx
-  have he := (normLogBin_scale_bounds (primeProductNorm p x.divisor) (primeProductNorm_ge_one p hp _)).1
-  have hv := (normLogBin_scale_bounds (primeProductNorm p x.overlap) (primeProductNorm_ge_one p hp _)).1
-  have hGR : primeProductNorm p x.sourceCommon = primeProductNorm p x.divisor * primeProductNorm p R := by
-    rw [← hr, ← FirstPassCubeLabels.primeProductNorm_union p x.divisor (x.sourceCommon\x.divisor) Finset.disjoint_sdiff,
-      Finset.union_sdiff_of_subset hE]
-  have hprod : secondLogE (secondLogIndex p D x) * secondLogV (secondLogIndex p D x) * primeProductNorm p R ≤ X*Real.exp M := by
-    calc
-      _ ≤ primeProductNorm p x.divisor * primeProductNorm p x.overlap * primeProductNorm p R := by
-        exact mul_le_mul_of_nonneg_right (mul_le_mul he hv (normLogScale_pos _).le
-          (FirstPassCubeLabels.primeProductNorm_pos p hp _).le)
-          (FirstPassCubeLabels.primeProductNorm_pos p hp _).le
-      _ = primeProductNorm p x.sourceCommon * primeProductNorm p x.overlap := by rw [hGR]; ring
-      _ ≤ _ := hs.2
-  unfold secondLogX
-  apply (le_div_iff₀ (mul_pos (mul_pos (normLogScale_pos _) (normLogScale_pos _))
-    (FirstPassCubeLabels.primeProductNorm_pos p hp R))).mpr
-  calc
-    _ ≤ Real.exp (-M) * (X*Real.exp M) := mul_le_mul_of_nonneg_left hprod (Real.exp_pos _).le
-    _ = X := by rw [Real.exp_neg]; field_simp
 
 end SecondPassArithmetic
 

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorFourierActual
-
 namespace OAI
 
 namespace SevenEighths.HeckeDetectorProfiles

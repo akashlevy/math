@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.IdealMasks
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

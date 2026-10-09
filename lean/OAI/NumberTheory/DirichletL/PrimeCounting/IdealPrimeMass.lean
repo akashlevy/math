@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.IdealMangoldt
 import OAI.NumberTheory.DirichletL.PrimeCounting.PrimeMass
-
 namespace OAI
 
 namespace SevenEighths.PNT.IdealPrimeMass
@@ -125,11 +124,6 @@ def primeIdealsBelow (C : Set (Ideal O)) (N : ℕ) : Finset (Ideal O) :=
   simp only [primeIdealsBelow, Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
   exact ⟨fun h => h.2, fun h => ⟨h.2.2.le, h⟩⟩
 
-theorem zero_not_mem_primeIdealsBelow (C : Set (Ideal O)) (N : ℕ) :
-    (0 : Ideal O) ∉ primeIdealsBelow C N := by
-  intro h
-  exact ((mem_primeIdealsBelow C N 0).mp h).2.1.ne_zero rfl
-
 def primeLogMass (C : Set (Ideal O)) (N : ℕ) : ℝ :=
   ∑ P ∈ primeIdealsBelow C N, Real.log (Ideal.absNorm P)
 
@@ -153,11 +147,6 @@ theorem primeLogMass_eq_cumsum (C : Set (Ideal O)) (N : ℕ) :
       exact ⟨⟨hC, hP, heq ▸ Finset.mem_range.mp hn⟩, heq⟩
   · intro P hP
     rfl
-
-theorem primeLogMass_ratio_tendsto (C : Set (Ideal O)) {A : ℝ}
-    (h : Tendsto (fun N : ℕ => cumsum (classCoeff C) N / N) atTop (𝓝 A)) :
-    Tendsto (fun N : ℕ => primeLogMass C N / N) atTop (𝓝 A) := by
-  simpa only [primeLogMass_eq_cumsum] using primeClassCoeff_ratio_tendsto C h
 
 end
 

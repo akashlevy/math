@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.SourceCoefficient
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.DetectorPlainExceptional
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GaussianCompletedSlots
 import OAI.NumberTheory.DirichletL.Detector.LowCompletion
-
 namespace OAI
 
 noncomputable section
@@ -54,44 +53,9 @@ lemma gaussian_selected_scale {ι : Type*} [Fintype ι]
   have hp : (∏i,P i)≠0 := ne_of_gt (Finset.prod_pos (fun i _=>hP i))
   field_simp
 
-theorem gaussian_selected_tuple_family {ι α : Type*} [Fintype ι]
-    (W : ι→ℝ→ℂ) (M : ι→ℝ) (hM : ∀i,0≤M i)
-    (hwindow : ∀i y,W i (Real.exp y)≠0→|y|≤M i) :
-    ∃V : SchwartzMap ℝ ℂ,∃hV : HasCompactSupport (V:ℝ→ℂ),
-      (∀A : ℝ,∀J : ℕ,∃C : ℝ,0<C ∧ ∀R : ℝ,0<R→
-        Integrable (fun t : ℝ=>(1+‖t‖)^J*‖gaussianJointDensity V hV R t‖) ∧
-        (∫t : ℝ,(1+‖t‖)^J*‖gaussianJointDensity V hV R t‖)≤C*R^(-A)) ∧
-      (∀F : Finset α,∀a : α→ℂ,∀S : Finset Id,∀D : α→Id,∀Ψ : α→O→*ℂ,
-        ∀Z : ℝ,0<Z→∀j : ℕ,∀q : α→ι→ℝ,(∀k∈F,∀i,0<q k i)→
-        (∑k∈F,a k*(∏i,W i (q k i))*correctedCompletedT S (D k) (Ψ k)
-          (gaussianDyadicProfile (Z*∏i,q k i) j) ((2:ℝ)^j))=
-          ∫t : ℝ,(∑k∈F,a k*correctedCompletedT S (D k) (Ψ k)
-            (CompletedHeight.normTwistedSource gaussianFixedWindow t) ((2:ℝ)^j)*
-            (∏i,W i (q k i)*logPhase (-t) (Real.log (q k i))))*
-              gaussianJointDensity V hV ((2:ℝ)^j/Z) t) := by
-  obtain ⟨V,hV,hsep,hbound⟩ := gaussian_selected_slot_family W M hM hwindow
-  exact ⟨V,hV,hbound,fun F a S D Ψ Z hZ j q hq=>
-    gaussian_selected_tuple_sum W V hV hsep F a S D Ψ Z hZ j q hq⟩
-
 lemma gaussianFixedWindow_twist_compact (t : ℝ) :
     HasCompactSupport (CompletedHeight.normTwistedSource gaussianFixedWindow t) := by
   exact gaussianFixedWindow_compact.mul_left
-
-theorem gaussian_twisted_physical_row_inverse (η : HeckeFamily.Character)
-    (S : Finset Id) (hS : ∀P∈S,P.IsMaximal) (hbad : fixedBadPrimes⊆S)
-    (s : O) (hs : Supported (Ideal.span {s})) (z : O) (D : Id) (j : ℕ) (t : ℝ) :
-    correctedCompletedT S D (rowCoefficient η (calibrationForSet S hS).Xi s hs z)
-      (CompletedHeight.normTwistedSource gaussianFixedWindow t) ((2:ℝ)^j)=
-      ∑χ : RayCharacter,correctionCoeff χ*
-        InverseMoment.markedCompletedT
-          (CanonicalRowCompletion.rowTwist
-            (lowPeriodicBase η (calibrationForSet S hS) (calibrationForSet S hS).generator
-              (calibrationLowData S hS) s hs χ)
-            (calibrationForSet S hS).generator 1 z)
-          (CompletedHeight.normTwistedSource gaussianFixedWindow t) ((2:ℝ)^j)
-          (fun A=>if D∣A then (1:ℂ) else 0) := by
-  exact correctedPhysicalRow_eq_periodic_inverse η S hS hbad s hs z D _
-    (gaussianFixedWindow_twist_compact t) _ (by positivity) (calibrationLowData S hS)
 
 lemma correctedGaussian_dyadic_summable (S : Finset Id) (D : Id) (Ψ : O→*ℂ)
     (hΨ : ∀n,‖Ψ n‖≤1) (Z : ℝ) (hZ : 0<Z) :

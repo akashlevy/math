@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.MarkedSubset
 import OAI.NumberTheory.DirichletL.PrimeRows.FiniteNormalization
-
 namespace OAI
 
 noncomputable section
@@ -45,27 +44,6 @@ theorem spectralCompensatedRow_original_L_factorization
   rw [←spectralCompensatedRow_eq_product S hS T hT η u.val x w z B q hx hw hz] at hn
   rw [←hn,globalNormalization]
   field_simp
-
-theorem indexedCompensatedHigh_original_L_factorization {K : ℕ}
-    (S : Finset (Ideal O)) (hS : SourceExclusions S)
-    (P : Fin K→PrimeIdeal) (hP : Function.Injective P) (hPS : ∀i,(P i).val∉S)
-    (η : Character) (u : FreeRow) (x w z : ℂ)
-    (hx : 3/2<x.re) (hw : 2<w.re) (hz : 1/6<z.re) :
-    indexedCompensatedHigh η S (fun i=>CompletedGauss.primaryGenerator (P i).val) u.val x w z=
-      (LFunction (fixedSourcePrincipal S hS.prime) (6*z)*LFunction (rowCharacter S hS.prime u) w/
-        LFunction ((targetRow η u).excludePrimes S hS.prime) x)*
-      (globalCorrection (markExclusions S (Finset.univ.image P)) η u x w z*
-        ∏i,compensatedLocalCorrection η u (P i) x w z
-          (star (idealCoeff η (P i).val)*((P i).val.absNorm:ℂ)^x)
-          (((P i).val.absNorm:ℂ)^(-w))) := by
-  have hs (i : Fin K) := outside_prime_supported S hS.bad (P i) (hPS i)
-  rw [indexedCompensatedHigh_eq_spectral η S P hP hs u.val x w z]
-  have ht : ∀Q∈Finset.univ.image P,Q.val∉S := by
-    intro Q hQ
-    obtain ⟨i,_,rfl⟩ := Finset.mem_image.mp hQ
-    exact hPS i
-  rw [spectralCompensatedRow_original_L_factorization S hS.prime hS.bad
-    (Finset.univ.image P) ht η u x w z _ _ hx hw hz,Finset.prod_image hP.injOn]
 
 end SevenEighths.ProbeHighRowFamily
 

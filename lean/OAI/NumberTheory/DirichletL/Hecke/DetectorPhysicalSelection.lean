@@ -1,6 +1,9 @@
-import OAI.NumberTheory.DirichletL.Hecke.DetectorPhysicalBins
+import OAI.NumberTheory.DirichletL.Hecke.PrimeNonprincipal
+import OAI.NumberTheory.DirichletL.Hecke.PrimeScale
+import OAI.NumberTheory.DirichletL.Hecke.DetectorZeros
+import OAI.NumberTheory.DirichletL.Hecke.Conjugation
+import OAI.NumberTheory.DirichletL.Hecke.PrimeAmplitudeActual
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRelativePrime
-
 namespace OAI
 
 noncomputable section

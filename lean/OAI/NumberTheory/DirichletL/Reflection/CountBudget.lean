@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.BranchCount
 import OAI.NumberTheory.DirichletL.Reflection.TruncatedSource
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -44,26 +43,6 @@ theorem retained_count_budget (ε δ Lscale : ℝ) (hε : 0<ε) (hδL : 0≤δ+L
     _ = (C*16^α)*Z^((δ+Lscale)*α) := by rw [Real.mul_rpow (by norm_num) (Real.rpow_nonneg hz.le _),←Real.rpow_mul hz.le];ring
     _ ≤ _ := mul_le_mul_of_nonneg_left (Real.rpow_le_rpow_of_exponent_le hZ (by nlinarith)) (by positivity)
 
-theorem surviving_count_budget (ε Lpool : ℝ) (hε : 0<ε) (hLpool : 0≤Lpool) :
-    ∃ C : ℝ, 0<C ∧ ∀ {φ : Type*} [Fintype φ] (F : PrimeFamily φ),
-      Pairwise (Function.onFun IsCoprime F.ideal) →
-      ∀ (jF : φ→ℕ) (column : Ideal ActualEisensteinCubic.O→Ideal ActualEisensteinCubic.O→ℂ) (nset bset : Finset (Ideal ActualEisensteinCubic.O))
-        (Z : ℝ), 1≤Z → (Ideal.absNorm (∏ i,F.ideal i):ℝ)≤Z^Lpool →
-      ((survivingFrozenBranches F jF column nset bset).card:ℝ)^2≤C*Z^ε := by
-  let α := ε/(1+Lpool)
-  have ha : 0<α := div_pos hε (by linarith)
-  obtain ⟨C,hC,hcount⟩ := surviving_branch_count_small_power α ha
-  refine ⟨C,hC,?_⟩
-  intro φ _ F hF jF column nset bset Z hZ hpool
-  have hz : 0<Z := lt_of_lt_of_le zero_lt_one hZ
-  have hpow : Lpool*α≤ε := by
-    have he : α*(1+Lpool)=ε := by dsimp [α];field_simp
-    nlinarith
-  calc
-    _ ≤ C*(Ideal.absNorm (∏ i,F.ideal i):ℝ)^α := hcount F hF jF column nset bset
-    _ ≤ C*(Z^Lpool)^α := mul_le_mul_of_nonneg_left (Real.rpow_le_rpow (Nat.cast_nonneg _) hpool ha.le) hC.le
-    _ = C*Z^(Lpool*α) := by rw [←Real.rpow_mul hz.le]
-    _ ≤ _ := mul_le_mul_of_nonneg_left (Real.rpow_le_rpow_of_exponent_le hZ hpow) hC.le
 end
 end SevenEighths.InverseReflectedPhase
 

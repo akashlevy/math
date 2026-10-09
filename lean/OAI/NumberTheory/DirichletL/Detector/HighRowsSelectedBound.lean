@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsSelectedTerms
-
 namespace OAI
 
 noncomputable section

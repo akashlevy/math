@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondSupportedEnergy
-
 namespace OAI
 
 noncomputable section

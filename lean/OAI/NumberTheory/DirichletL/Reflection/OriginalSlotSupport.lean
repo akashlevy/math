@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.SlotCoefficients
 import OAI.NumberTheory.DirichletL.Reflection.OriginalMask
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

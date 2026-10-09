@@ -1,6 +1,6 @@
-import OAI.NumberTheory.DirichletL.PrimeRows.NonfloorNormalized
+import OAI.NumberTheory.DirichletL.PrimeRows.NonfloorArithmetic
+import OAI.NumberTheory.DirichletL.PrimeRows.CubeNormalizer
 import OAI.NumberTheory.DirichletL.Detector.FinalAssemblyIntegral
-
 namespace OAI
 
 noncomputable section

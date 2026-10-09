@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.FirstProduct
 import OAI.NumberTheory.DirichletL.PrimeRows.Agreement
 import OAI.NumberTheory.DirichletL.PrimeRows.MarkedExclusions
-
 namespace OAI
 
 noncomputable section
@@ -71,20 +70,6 @@ theorem continuedCorrection_restore (eps : ℝ) (S : Finset (Ideal O))
   · simp [hp,hT P hp]
   · simp [hp]
 
-theorem continuedCorrection_restore_quotients (eps : ℝ) (S : Finset (Ideal O))
-    (hS : SourceExclusions S) (htail : FirstTail eps S)
-    (T : Finset PrimeIdeal) (hT : ∀P∈T,P.val∉S)
-    (η : Character) (u : FreeRow) (x w z : ℂ)
-    (hx : (51/100:ℝ)≤x.re) (hz : (17/50:ℝ)≤z.re)
-    (hw : -(1/100:ℝ)≤w.re) (hxw : 1+eps≤x.re+w.re)
-    (G : PrimeIdeal→ℂ) (hne : ∀P∈T,supportedCorrection η u P x w z≠0) :
-    continuedCorrection (markExclusions S T) (markedSourceExclusions S hS T) η u x w z*
-      ∏P∈T,G P=continuedCorrection S hS η u x w z*
-      ∏P∈T,G P/supportedCorrection η u P x w z := by
-  rw [continuedCorrection_restore eps S hS htail T hT η u x w z hx hz hw hxw,
-    Finset.prod_div_distrib]
-  have hn : (∏P∈T,supportedCorrection η u P x w z)≠0 := Finset.prod_ne_zero_iff.mpr hne
-  field_simp
 end SevenEighths.ProbeHighRowFamily
 end
 

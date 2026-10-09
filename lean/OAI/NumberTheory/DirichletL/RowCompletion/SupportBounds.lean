@@ -1,85 +1,30 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.CompactEnergyFamilies
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace CanonicalRowCompletion
 
 section
 open ActualEisensteinCubic
 open CompletedGauss hiding O
-open ConcretePrimeRowBridge hiding O columnWeight
+open ConcretePrimeRowBridge hiding O
 
 theorem localRowValue_zero_of_mem (x : ActualEisensteinCubic.O) (P : Ideal ActualEisensteinCubic.O) (hx : x∈P) :
     localRowValue x P = 0 := by
@@ -224,19 +169,11 @@ theorem idealRowHom_prime_powers {ι : Type*} (P : ι → Ideal ActualEisenstein
   intro i hi
   rw [idealRowHom_prime z (P i) (hg i)]
 
-theorem cubeWeight_prime_powers {ι : Type*} (P : ι → Ideal ActualEisensteinCubic.O)
-    [∀i,(P i).IsMaximal] (hg : ∀i,lambda∉P i) (pool : Finset ι)
-    (v : ι → ℕ) (Ψ : ActualEisensteinCubic.O →* ℂ) (m f z : ActualEisensteinCubic.O) :
-    cubeWeight (rowTwist Ψ m f z) (∏i∈pool,(P i)^v i) =
-      cubeWeight (rowTwist Ψ m f 1) (∏i∈pool,(P i)^v i) *
-        multiplicityRow P hg pool v z^3 := by
-  rw [cubeWeight_row_factor,idealRowHom_prime_powers P hg pool v z]
-
 end
 
 section
 open ActualEisensteinCubic
-open ConcretePrimeRowBridge hiding O columnWeight
+open ConcretePrimeRowBridge hiding O
 open CanonicalQuadraticSieve hiding O
 open SecondPassArithmetic hiding O
 
@@ -295,7 +232,7 @@ end
 section
 open ActualEisensteinCubic
 open CompletedGauss hiding O
-open ConcretePrimeRowBridge hiding O columnWeight
+open ConcretePrimeRowBridge hiding O
 open CanonicalQuadraticSieve hiding O
 open SecondPassArithmetic hiding O
 open FirstPassCubeLabels hiding O
@@ -338,18 +275,6 @@ theorem outsideCanonicalRow_eq_global (S : Finset (Ideal ActualEisensteinCubic.O
   rw [ht]
   ring
 
-theorem outsideCanonicalRow_cube_inverse (S : Finset (Ideal ActualEisensteinCubic.O)) (D : ℕ)
-    (hbad : fixedBadPrimes ⊆ S) (hSp : ∀P∈S,Prime P)
-    (Ψ : ActualEisensteinCubic.O →* ℂ) (m f z : ActualEisensteinCubic.O) (W : ℝ → ℂ) (hWc : HasCompactSupport W)
-    (b X : ℝ) (hX : 0<X) (hW : ∀t,W t≠0 → t≤b) (hD : b*X ≤ D) :
-    (Real.sqrt X:ℂ)⁻¹ * outsideCanonicalRow S D hbad Ψ m f z W X =
-      ∑'H:Ideal ActualEisensteinCubic.O,(UniqueFactorizationMonoid.moebius H:ℂ)*
-        cubeWeight (rowTwist Ψ (m*excludedGenerator S) f z) H *
-        completedT (rowTwist Ψ (m*excludedGenerator S) f z) W
-          (X/(Ideal.absNorm H:ℝ)^3) := by
-  rw [outsideCanonicalRow_eq_global S D hbad hSp Ψ m f z W b X hX hW hD]
-  exact completed_cube_inverse _ W hWc X hX
-
 theorem outsideCanonicalRow_cube_split (S : Finset (Ideal ActualEisensteinCubic.O)) (D : ℕ)
     (hbad : fixedBadPrimes ⊆ S) (hSp : ∀P∈S,Prime P)
     (Ψ : ActualEisensteinCubic.O →* ℂ) (m f z : ActualEisensteinCubic.O) (W : ℝ → ℂ) (hWc : HasCompactSupport W)
@@ -364,7 +289,7 @@ theorem outsideCanonicalRow_cube_split (S : Finset (Ideal ActualEisensteinCubic.
 end
 
 open ActualEisensteinCubic
-open ConcretePrimeRowBridge hiding O columnWeight
+open ConcretePrimeRowBridge hiding O
 open CanonicalQuadraticSieve hiding O
 open CompletedGauss hiding O
 
@@ -426,61 +351,13 @@ theorem cubeIdeal_ne_zero (F : Finset (Ideal ActualEisensteinCubic.O)) (v : prim
   unfold cubeIdeal
   exact Finset.prod_ne_zero_iff.mpr (fun i _=>pow_ne_zero _ (NeZero.ne i.val))
 
-theorem cubeIdeal_primaryGenerator (F : Finset (Ideal ActualEisensteinCubic.O))
-    (v : primePool F →₀ ℕ) :
-    primaryGenerator (cubeIdeal F v) =
-      FirstPassCubeLabels.primeProduct (poolPrimary F) Finset.univ v := by
-  change primaryGeneratorHom (∏i:primePool F,i.val^v i) = _
-  rw [map_prod]
-  simp only [map_pow]
-  unfold FirstPassCubeLabels.primeProduct
-  apply Finset.prod_congr rfl
-  intro i hi
-  change primaryGenerator i.val^v i = poolPrimary F i^v i
-  rw [←primaryPrime_eq_primaryGenerator i.val]
-  rfl
-
 end CanonicalRowCompletion
 
 namespace SecondPassIntegration
 open ActualEisensteinCubic SecondPassArithmetic
 
-theorem densityChildEnergy_canonical_terminal
-    {ι : Type*} [DecidableEq ι]
-    (p : ι → ActualEisensteinCubic.O) (hp : ∀ i,p i ≠ 0) [∀ i,(Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i,lambda ∉ Ideal.span {p i})
-    (hc : ∀ i,ringChar (ActualEisensteinCubic.O ⧸ Ideal.span {p i}) ≠ 2)
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (pool : Finset ι) (Ψ₁ Ψ₂ : ActualEisensteinCubic.O →* ℂ)
-    (hΨ₁ : ∀ a,‖Ψ₁ a‖ ≤ 1) (hΨ₂ : ∀ a,‖Ψ₂ a‖ ≤ 1)
-    (m : ActualEisensteinCubic.O) (T : Finset (Ideal ActualEisensteinCubic.O × ActualEisensteinCubic.O)) (V₁ V₂ : ℝ → ℂ)
-    (X F K A M : ℝ) (J : ℕ) (hX : 0 < X) (hF : 1 ≤ F) (hK : 1 ≤ K)
-    (hKF : K ≤ F) (hA : 0 ≤ A) (hM : 0 ≤ M)
-    (hV₁ : ∀ s,‖V₁ s‖ ≤ M) (hV₂ : ∀ s,‖V₂ s‖ ≤ M)
-    (hVs₁ : ∀ s,V₁ s ≠ 0 → |s| ≤ A) (hVs₂ : ∀ s,V₂ s ≠ 0 → |s| ≤ A)
-    (hT : ∀ z∈T,z.1 ≠ ⊥ ∧ (Ideal.absNorm z.1 : ℝ) ≤ F ∧
-      ‖ConcreteTraceCRT.eisEmbedding z.2‖^2 ≤ K) :
-    densityChildEnergy p hp hcop hg pool Ψ₁ Ψ₂ m T V₁ V₂ X X (2*J) ≤
-      globalTerminalConstant A M*(X*F)^2 := by
-  have hXF : 0 < X*F := mul_pos hX (zero_lt_one.trans_le hF)
-  have he := childDensity_elementary_all_scales p hp hcop hg hc hinj pool Ψ₁ Ψ₂ hΨ₁ hΨ₂
-    m T V₁ V₂ X F K A M J hX hF hK hA hM hV₁ hV₂ hVs₁ hVs₂ hT
-  change _ ≤ globalTerminalConstant A M*K*X at he
-  have hc0 := globalTerminalConstant_nonneg A M
-  have he' : densityChildEnergy p hp hcop hg pool Ψ₁ Ψ₂ m T V₁ V₂ X X (2*J)/(X*F) ≤
-      globalTerminalConstant A M*(X*F) := by
-    calc
-      _ ≤ globalTerminalConstant A M*K*X := he
-      _ ≤ globalTerminalConstant A M*F*X :=
-        mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hKF hc0) hX.le
-      _ = globalTerminalConstant A M*(X*F) := by ring
-  convert (div_le_iff₀ hXF).mp he' using 1 ; ring
-
 end SecondPassIntegration
 
-open scoped BigOperators Classical
-open MeasureTheory
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 open FirstPassCubeLabels (primeProduct primeProductNorm firstLogDensity)

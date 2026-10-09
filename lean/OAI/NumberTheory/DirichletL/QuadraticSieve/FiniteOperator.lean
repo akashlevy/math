@@ -1,75 +1,24 @@
 import OAI.NumberTheory.DirichletL.Arithmetic.SquarefreeDivisors
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
-open scoped BigOperators
 namespace FiniteSieveOperator
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
@@ -185,7 +134,6 @@ theorem energy_bound (A : Matrix m n ℂ) (u : n → ℂ) :
 end FiniteSieveOperator
 
 section
-open scoped BigOperators Classical
 namespace QuadraticInitialBound
 open ActualEisensteinCubic ConcreteTraceCRT RayFourExpansion
 
@@ -201,15 +149,6 @@ def quadraticSieveNorm {ι m n : Type*} [Fintype m] [Fintype n]
     (hg : ∀ i, lambda ∉ Ideal.span {p i})
     (rows : m → Finset ι) (cols : n → Finset ι) : ℝ :=
   ‖FiniteSieveOperator.operator (quadraticMatrix p hg rows cols)‖ ^ 2
-
-theorem quadraticSieveNorm_energy {ι m n : Type*} [Fintype m] [Fintype n]
-    [DecidableEq m] [DecidableEq n]
-    (p : ι → O) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (rows : m → Finset ι) (cols : n → Finset ι) (a : n → ℂ) :
-    (∑ i, ‖∑ j, quadraticSymbol p hg (cols j) (rows i) * a j‖ ^ 2) ≤
-      quadraticSieveNorm p hg rows cols * ∑ j, ‖a j‖ ^ 2 :=
-  FiniteSieveOperator.energy_bound (quadraticMatrix p hg rows cols) a
 
 theorem quadratic_matrix_norm_reverse_le
     {ι m n : Type*} [Fintype ι] [DecidableEq ι]
@@ -272,8 +211,7 @@ theorem quadraticSieveNorm_reverse_le
 
 end QuadraticInitialBound
 
-open scoped BigOperators Classical
-open Filter IdealMobiusDivisorSum UniqueFactorizationMonoid
+open IdealMobiusDivisorSum
 
 namespace IdealDivisorBound
 abbrev O := ActualEisensteinCubic.O
@@ -593,7 +531,6 @@ theorem second_energy_pushforward (ε : ℝ) (hε : 0 < ε) :
 
 end SecondPassFiber
 
-open scoped BigOperators Classical
 namespace FirstPassCubeLabels
 open ActualEisensteinCubic
 
@@ -656,16 +593,6 @@ def cubeConductorSupport {κ : Type*} (B : Finset κ) (v₁ v₂ : κ → ℕ)
 def cubePrincipalSupport {κ : Type*} (B : Finset κ) (v₁ v₂ : κ → ℕ)
     (ε₁ ε₂ : κ → Bool) : Finset κ :=
   B.filter (fun j => conductorExponent (parity (v₁ j + v₂ j)) (ε₁ j) (ε₂ j) = 0)
-
-theorem cubeConductorExponent_ne_zero {κ : Type*} (B : Finset κ)
-    (v₁ v₂ : κ → ℕ) (ε₁ ε₂ : κ → Bool) (j : cubeConductorSupport B v₁ v₂ ε₁ ε₂) :
-    (conductorExponent (parity (v₁ j.val + v₂ j.val)) (ε₁ j.val) (ε₂ j.val)).val ≠ 0 := by
-  exact (ZMod.val_eq_zero _).not.mpr (Finset.mem_filter.mp j.property).2
-
-theorem cubeConductorExponent_lt_six {κ : Type*} (B : Finset κ)
-    (v₁ v₂ : κ → ℕ) (ε₁ ε₂ : κ → Bool) (j : cubeConductorSupport B v₁ v₂ ε₁ ε₂) :
-    (conductorExponent (parity (v₁ j.val + v₂ j.val)) (ε₁ j.val) (ε₂ j.val)).val < 6 :=
-  ZMod.val_lt _
 
 def multiplicityRow {κ : Type*} (P : κ → Ideal O) [∀ j, (P j).IsMaximal]
     (hg : ∀ j, lambda ∉ P j) (B : Finset κ) (v : κ → ℕ) (z : O) : ℂ :=
@@ -745,56 +672,9 @@ theorem cubePairRow_conductor_selection {κ : Type*}
   congr 1
   exact (Finset.prod_coe_sort (s := cubeConductorSupport B v₁ v₂ ε₁ ε₂) (f := f)).symm
 
-theorem cubeConductorPrimes_pairwise_coprime {κ : Type*}
-    (P : κ → Ideal O) [∀ j, (P j).IsMaximal] (hinj : Function.Injective P)
-    (B : Finset κ) (v₁ v₂ : κ → ℕ) (ε₁ ε₂ : κ → Bool) :
-    Pairwise (Function.onFun IsCoprime
-      (fun j : cubeConductorSupport B v₁ v₂ ε₁ ε₂ => P j.val)) := by
-  intro i j hij
-  apply Ideal.isCoprime_of_isMaximal
-  exact fun he => hij (Subtype.ext (hinj he))
-
 open scoped SchwartzMap ContDiff
 open ConcreteTraceCRT
 open EisensteinSchwartzPoisson (paperRadialFourier)
-
-def cubePairPoissonKernel {κ : Type*} [DecidableEq κ]
-    (P : κ → Ideal O) [∀ j, (P j).IsMaximal] (hinj : Function.Injective P)
-    (hg : ∀ j, lambda ∉ P j) (B : Finset κ) (v₁ v₂ : κ → ℕ)
-    (ε₁ ε₂ : κ → Bool) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) : ℂ :=
-  let Q := fun j : cubeConductorSupport B v₁ v₂ ε₁ ε₂ => P j.val
-  let hQ := cubeConductorPrimes_pairwise_coprime P hinj B v₁ v₂ ε₁ ε₂
-  let eg := fun j : cubeConductorSupport B v₁ v₂ ε₁ ε₂ =>
-    (conductorExponent (parity (v₁ j.val + v₂ j.val)) (ε₁ j.val) (ε₂ j.val)).val
-  let row := finiteSexticRow Q (fun j => hg j.val) eg
-  let c := finitePrimeModulus Q
-  ((scale : ℂ) * canonicalNormalizedGauss Q hQ (fun j => hg j.val) eg /
-    (‖eisEmbedding c‖ : ℂ)) *
-    ∑ E ∈ (cubePrincipalSupport B v₁ v₂ ε₁ ε₂).powerset,
-      let d := primeSubsetGenerator P E
-      ((UniqueFactorizationMonoid.moebius (∏ j ∈ E, P j) : ℂ) * row d /
-        (‖eisEmbedding d‖ ^ 2 : ℝ)) *
-        ∑' h : O, star (row h) * paperRadialFourier W
-          (scale * ‖eisEmbedding h‖ ^ 2 / (‖eisEmbedding d‖ ^ 2 * ‖eisEmbedding c‖ ^ 2))
-
-theorem cubePairRow_radial_poisson {κ : Type*} [DecidableEq κ]
-    (P : κ → Ideal O) [∀ j, (P j).IsMaximal] (hinj : Function.Injective P)
-    (hg : ∀ j, lambda ∉ P j) (hc : ∀ j, ringChar (O ⧸ P j) ≠ 2)
-    (B : Finset κ) (v₁ v₂ : κ → ℕ) (ε₁ ε₂ : κ → Bool)
-    (hcover : ∀ j ∈ B, 0 < v₁ j + v₂ j + bit (ε₁ j) + bit (ε₂ j))
-    (W : 𝓢(ℝ, ℂ)) (scale : ℝ) (hscale : 0 < scale) :
-    (∑' z : O, cubePairRow P hg B v₁ v₂ ε₁ ε₂ z *
-      W (‖eisEmbedding z‖ ^ 2 / scale)) =
-      cubePairPoissonKernel P hinj hg B v₁ v₂ ε₁ ε₂ W scale := by
-  simp_rw [cubePairRow_conductor_selection P hg B v₁ v₂ ε₁ ε₂ hcover]
-  exact canonical_masked_radial_poisson_collected P hinj
-    (cubePrincipalSupport B v₁ v₂ ε₁ ε₂)
-    (fun j : cubeConductorSupport B v₁ v₂ ε₁ ε₂ => P j.val)
-    (cubeConductorPrimes_pairwise_coprime P hinj B v₁ v₂ ε₁ ε₂)
-    (fun j => hg j.val) (fun j => hc j.val)
-    (fun j => (conductorExponent (parity (v₁ j.val + v₂ j.val)) (ε₁ j.val) (ε₂ j.val)).val)
-    (cubeConductorExponent_ne_zero B v₁ v₂ ε₁ ε₂)
-    (cubeConductorExponent_lt_six B v₁ v₂ ε₁ ε₂) W scale hscale
 
 end FirstPassCubeLabels
 

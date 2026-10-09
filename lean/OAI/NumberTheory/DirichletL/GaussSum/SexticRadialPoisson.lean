@@ -1,81 +1,24 @@
 import OAI.NumberTheory.DirichletL.Poisson.EisensteinLattice
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
+open scoped ContDiff
 
 namespace ActualEisensteinCubic
-
-theorem canonical_finite_prime_gauss_transform
-    {ι : Type*} [Fintype ι]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hc : Pairwise (Function.onFun IsCoprime P))
-    [Fintype (O ⧸ ∏ i, P i)] [∀ i, Fintype (O ⧸ P i)]
-    (hgood : ∀ i, lambda ∉ P i)
-    (hchar : ∀ i, ringChar (O ⧸ P i) ≠ 2)
-    (j : ι → ℕ) (hj0 : ∀ i, j i ≠ 0) (hj6 : ∀ i, j i < 6)
-    (ψ : AddChar (O ⧸ ∏ i, P i) ℂ) (h : O ⧸ ∏ i, P i) :
-    (∑ x : O ⧸ ∏ i, P i,
-      (∏ i, (canonicalSextic (P i) (hgood i) ^ j i)
-        (IdealGaussCRT.quotientProdEquivPi P hc x i)) * ψ (h * x)) =
-      ∏ i, if IdealGaussCRT.quotientProdEquivPi P hc h i = 0 then 0 else
-        ((canonicalSextic (P i) (hgood i) ^ j i)
-          (IdealGaussCRT.quotientProdEquivPi P hc h i))⁻¹ *
-          gaussSum (canonicalSextic (P i) (hgood i) ^ j i)
-            (IdealGaussCRT.coordinateAddChar (fun i => O ⧸ P i)
-              (IdealGaussCRT.quotientProdEquivPi P hc) ψ i) := by
-  exact IdealGaussCRT.gauss_transform_finite_ideal_crt P hc
-    (fun i => canonicalSextic (P i) (hgood i) ^ j i) ψ
-    (fun i => canonicalSextic_pow_ne_one (P i) (hgood i) (hchar i) (hj0 i) (hj6 i)) h
 
 noncomputable def finiteSexticQuotientRow
     {ι : Type*} [Fintype ι]
@@ -85,31 +28,6 @@ noncomputable def finiteSexticQuotientRow
     (x : O ⧸ ∏ i, P i) : ℂ :=
   ∏ i, (canonicalSextic (P i) (hgood i) ^ j i)
     (IdealGaussCRT.quotientProdEquivPi P hc x i)
-
-theorem finiteSexticQuotientRow_one_mk
-    {ι : Type*} [Fintype ι]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hc : Pairwise (Function.onFun IsCoprime P))
-    (hgood : ∀ i, lambda ∉ P i) (a : O) :
-    finiteSexticQuotientRow P hc hgood (fun _ => 1)
-      (Ideal.Quotient.mk (∏ i, P i) a) =
-      finiteSquarefreeRow P hgood Finset.univ a := by
-  simp only [finiteSexticQuotientRow, IdealGaussCRT.quotientProdEquivPi_mk, pow_one]
-  rfl
-
-theorem finiteSexticQuotientRow_mk_eq_zero_iff
-    {ι : Type*} [Fintype ι]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hc : Pairwise (Function.onFun IsCoprime P))
-    (hgood : ∀ i, lambda ∉ P i) (j : ι → ℕ) (a : O) :
-    finiteSexticQuotientRow P hc hgood j
-      (Ideal.Quotient.mk (∏ i, P i) a) = 0 ↔ ∃ i, a ∈ P i := by
-  classical
-  let (i : ι) : Field (O ⧸ P i) := Ideal.Quotient.field (P i)
-  simp only [finiteSexticQuotientRow, IdealGaussCRT.quotientProdEquivPi_mk,
-    Finset.prod_eq_zero_iff, Finset.mem_univ, true_and,
-    MulChar.apply_eq_zero_iff, isUnit_iff_ne_zero, not_not,
-    Ideal.Quotient.eq_zero_iff_mem]
 
 theorem canonical_finite_prime_gauss_transform_scalar
     {ι : Type*} [Fintype ι]
@@ -159,68 +77,6 @@ theorem canonical_finite_prime_gauss_transform_conj
         ∑ x : O ⧸ ∏ i, P i, finiteSexticQuotientRow P hc hgood j x * ψ x := by
   rw [canonical_finite_prime_gauss_transform_scalar P hc hgood hchar j hj0 hj6 ψ,
     finiteSexticQuotientRow_inv_eq_star]
-
-theorem canonical_finite_prime_gauss_transform_vanishes
-    {ι : Type*} [Fintype ι]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hc : Pairwise (Function.onFun IsCoprime P))
-    [Fintype (O ⧸ ∏ i, P i)] [∀ i, Fintype (O ⧸ P i)]
-    (hgood : ∀ i, lambda ∉ P i)
-    (hchar : ∀ i, ringChar (O ⧸ P i) ≠ 2)
-    (j : ι → ℕ) (hj0 : ∀ i, j i ≠ 0) (hj6 : ∀ i, j i < 6)
-    (ψ : AddChar (O ⧸ ∏ i, P i) ℂ) (a : O)
-    (ha : ∃ i, a ∈ P i) :
-    (∑ x : O ⧸ ∏ i, P i, finiteSexticQuotientRow P hc hgood j x *
-      ψ (Ideal.Quotient.mk (∏ i, P i) a * x)) = 0 := by
-  rw [canonical_finite_prime_gauss_transform_scalar P hc hgood hchar j hj0 hj6 ψ,
-    (finiteSexticQuotientRow_mk_eq_zero_iff P hc hgood j a).2 ha,
-    inv_zero, zero_mul]
-
-theorem finiteSexticQuotientRow_disjoint_pair_mk
-    {ι : Type*} [Fintype ι]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hc : Pairwise (Function.onFun IsCoprime P))
-    (hgood : ∀ i, lambda ∉ P i) (S : Finset ι) (a : O) :
-    finiteSexticQuotientRow P hc hgood (fun i => if i ∈ S then 1 else 5)
-      (Ideal.Quotient.mk (∏ i, P i) a) =
-      finiteSquarefreeRow P hgood S a *
-        star (finiteSquarefreeRow P hgood (Finset.univ \ S) a) := by
-  classical
-  have hpow5 (i : ι) :
-      (canonicalSextic (P i) (hgood i) ^ 5) (Ideal.Quotient.mk (P i) a) =
-        star (canonicalSextic (P i) (hgood i) (Ideal.Quotient.mk (P i) a)) := by
-    rw [MulChar.pow_apply' _ (by decide : (5 : ℕ) ≠ 0)]
-    rw [canonicalSextic_conj_as_row_label]
-    ring
-  have hterm (i : ι) :
-      (canonicalSextic (P i) (hgood i) ^ (if i ∈ S then 1 else 5))
-          (Ideal.Quotient.mk (P i) a) =
-        if i ∈ S then canonicalSextic (P i) (hgood i) (Ideal.Quotient.mk (P i) a)
-        else star (canonicalSextic (P i) (hgood i) (Ideal.Quotient.mk (P i) a)) := by
-    split_ifs <;> simp only [pow_one, hpow5]
-  simp only [finiteSexticQuotientRow, IdealGaussCRT.quotientProdEquivPi_mk]
-  simp_rw [hterm]
-  rw [Finset.prod_ite, Finset.filter_mem_eq_inter, Finset.univ_inter,
-    ← Finset.sdiff_eq_filter]
-  simp only [finiteSquarefreeRow, star_prod]
-
-theorem canonical_disjoint_pair_gauss_transform
-    {ι : Type*} [Fintype ι]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hc : Pairwise (Function.onFun IsCoprime P))
-    [Fintype (O ⧸ ∏ i, P i)] [∀ i, Fintype (O ⧸ P i)]
-    (hgood : ∀ i, lambda ∉ P i)
-    (hchar : ∀ i, ringChar (O ⧸ P i) ≠ 2)
-    (S : Finset ι) (ψ : AddChar (O ⧸ ∏ i, P i) ℂ)
-    (h : O ⧸ ∏ i, P i) :
-    let row := finiteSexticQuotientRow P hc hgood (fun i => if i ∈ S then 1 else 5)
-    (∑ x : O ⧸ ∏ i, P i, row x * ψ (h * x)) =
-      (row h)⁻¹ * ∑ x : O ⧸ ∏ i, P i, row x * ψ x := by
-  classical
-  exact canonical_finite_prime_gauss_transform_scalar P hc hgood hchar
-    (fun i => if i ∈ S then 1 else 5)
-    (fun i => by split_ifs <;> decide)
-    (fun i => by split_ifs <;> decide) ψ h
 
 end ActualEisensteinCubic
 
@@ -400,8 +256,7 @@ theorem actual_eisenstein_paper_poisson_trace (f : 𝓢(ℂ, ℂ)) (c : O) (hc :
   let : Fintype (O ⧸ Ideal.span {c}) := Fintype.ofFinite _
   simpa only [eisTraceModChar_frequency] using actual_eisenstein_paper_poisson f c hc P
 
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic MeasureTheory
-open scoped FourierTransform SchwartzMap RealInnerProductSpace ContDiff
+open scoped ContDiff
 
 theorem paperFourier_comp_mul (f : ℂ → ℂ) (a : ℂ) (ha : a ≠ 0) (u : ℂ) :
     paperFourier (fun z => f (a * z)) u =
@@ -553,8 +408,6 @@ theorem actual_compact_radial_paper_poisson_trace (W : ℝ → ℂ)
   exact actual_radial_paper_poisson_trace (hWc.toSchwartzMap hWs) K hK c hc P
 
 end EisensteinSchwartzPoisson
-
-open scoped BigOperators Classical SchwartzMap ContDiff
 
 namespace ActualEisensteinCubic
 open ConcreteTraceCRT EisensteinSchwartzPoisson
@@ -770,22 +623,6 @@ theorem canonical_radial_poisson_normalized {ι : Type*} [Fintype ι]
   push_cast
   field_simp
 
-theorem canonical_compact_radial_poisson_normalized {ι : Type*} [Fintype ι]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime P))
-    (hgood : ∀ i, lambda ∉ P i)
-    (hchar : ∀ i, ringChar (O ⧸ P i) ≠ 2)
-    (j : ι → ℕ) (hj0 : ∀ i, j i ≠ 0) (hj6 : ∀ i, j i < 6)
-    (W : ℝ → ℂ) (hWc : HasCompactSupport W) (hWs : ContDiff ℝ ∞ W)
-    (scale : ℝ) (hscale : 0 < scale) :
-    let c := finitePrimeModulus P
-    (∑' z : O, finiteSexticRow P hgood j z * W (‖eisEmbedding z‖ ^ 2 / scale)) =
-      ((scale : ℂ) * canonicalNormalizedGauss P hcop hgood j / (‖eisEmbedding c‖ : ℂ)) *
-        ∑' h : O, star (finiteSexticRow P hgood j h) *
-          paperRadialFourier W (scale * ‖eisEmbedding h‖ ^ 2 / ‖eisEmbedding c‖ ^ 2) := by
-  exact canonical_radial_poisson_normalized P hcop hgood hchar j hj0 hj6
-    (hWc.toSchwartzMap hWs) scale hscale
-
 theorem finiteSexticRow_eq_zero_iff {ι : Type*} [Fintype ι]
     (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
     (hgood : ∀ i, lambda ∉ P i) (j : ι → ℕ) (a : O) :
@@ -817,37 +654,6 @@ theorem finiteSexticRow_radial_summable {ι : Type*} [Fintype ι]
     (Ideal.Quotient.mk (Ideal.span {c}))
     (principalSexticRow P hcop hgood j c (span_finitePrimeModulus P))
   simpa only [principalSexticRow_mk, scaledRadialTest_apply] using hs
-
-theorem finiteSexticRow_disjoint_pair {ι : Type*} [Fintype ι]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime P))
-    (hgood : ∀ i, lambda ∉ P i) (S : Finset ι) (a : O) :
-    finiteSexticRow P hgood (fun i => if i ∈ S then 1 else 5) a =
-      finiteSquarefreeRow P hgood S a *
-        star (finiteSquarefreeRow P hgood (Finset.univ \ S) a) := by
-  simpa only [finiteSexticQuotientRow, IdealGaussCRT.quotientProdEquivPi_mk,
-    finiteSexticRow] using finiteSexticQuotientRow_disjoint_pair_mk P hcop hgood S a
-
-theorem canonical_disjoint_pair_radial_poisson {ι : Type*} [Fintype ι]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime P))
-    (hgood : ∀ i, lambda ∉ P i)
-    (hchar : ∀ i, ringChar (O ⧸ P i) ≠ 2)
-    (S : Finset ι) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) (hscale : 0 < scale) :
-    let c := finitePrimeModulus P
-    let row := fun a => finiteSquarefreeRow P hgood S a *
-      star (finiteSquarefreeRow P hgood (Finset.univ \ S) a)
-    (∑' z : O, row z * W (‖eisEmbedding z‖ ^ 2 / scale)) =
-      ((scale : ℂ) * canonicalNormalizedGauss P hcop hgood
-        (fun i => if i ∈ S then 1 else 5) / (‖eisEmbedding c‖ : ℂ)) *
-        ∑' h : O, star (row h) *
-          paperRadialFourier W (scale * ‖eisEmbedding h‖ ^ 2 / ‖eisEmbedding c‖ ^ 2) := by
-  classical
-  have hp := canonical_radial_poisson_normalized P hcop hgood hchar
-    (fun i => if i ∈ S then 1 else 5)
-    (fun i => by split_ifs <;> decide) (fun i => by split_ifs <;> decide)
-    W scale hscale
-  simpa only [finiteSexticRow_disjoint_pair P hcop hgood S] using hp
 
 end ActualEisensteinCubic
 

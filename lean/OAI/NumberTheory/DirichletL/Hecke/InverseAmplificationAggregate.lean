@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationFamily
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationScaleSup
-
 namespace OAI
 
 noncomputable section

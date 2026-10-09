@@ -1,76 +1,24 @@
 import OAI.NumberTheory.DirichletL.MeanSquare.OutsideIdeals
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace InitialMeanSquare
 
 section
@@ -176,67 +124,8 @@ theorem initial_sector_coordinates (hp : ∀ i, p i ≠ 0)
 
 end
 
-theorem initial_bin_transfer
-    (U : ℝ → ℂ) (hUc : HasCompactSupport U) (hUs : ContDiff ℝ ∞ U)
-    (g W : 𝓢(ℝ,ℂ)) (A : ℝ) (hA : 0 ≤ A)
-    (hU : ∀ t, g t ≠ 0 → U t=1) (hgA : ∀ t, g t ≠ 0 → |t| ≤ A)
-    (ε : ℝ) (hε : 0 < ε) (N J : ℕ) :
-    ∃ (windows : Fin 7 → ℝ → ℂ) (C Cₛ : ℝ), 0 ≤ C ∧ 0 ≤ Cₛ ∧
-      (∀ i, HasCompactSupport (windows i)) ∧ (∀ i, ContDiff ℝ ∞ (windows i)) ∧
-      ∀ {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-        [∀ i, (Ideal.span {p i}).IsMaximal]
-        (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-        (hg : ∀ i, lambda ∉ Ideal.span {p i})
-        (_hinj : Function.Injective (fun i => Ideal.span {p i}))
-        (_hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-        (_hpr : ∀ i, lambda^2 ∣ p i-1)
-        (F R : Finset ι) (Ψ : O →* ℂ) (m : O) (ray : SecondRayIndex)
-        (K : Finset ι → Finset ι → Finset O) (Z H M : ℝ) (j : SecondLogIndex),
-        0 < Z → 0 < H → (∀ a, ‖Ψ a‖ ≤ 1) →
-        let s := secondLogSector p ∅ F K R Z M j
-        let X := initialLogColumn Z (primeProductNorm p R) j
-        let r := primeSubsetGenerator (fun i => Ideal.span {p i}) R
-        ∃ B : Frequency → ℝ,
-          (∀ q, 0 ≤ B q) ∧
-          (∀ q, (1+H*secondLogK j*(primeProductNorm p R)^2/Z^2)^N*B q ≤
-            Cₛ*firstLogDensity J q.1*firstLogDensity J q.2.1*firstLogDensity J q.2.2) ∧
-          ‖secondExpansionSource p hp hcop hg F Ψ m 1 1 ray s
-            (fun V => normalizedColumn p (fun T => g (columnLog p Z T)) V)
-            (fun V => normalizedColumn p (fun T => g (columnLog p Z T)) V) W H‖ ≤
-          (C*H*primeProductNorm p R/Z^2*‖secondRayCoefficient ray‖*(secondLogK j*Real.exp 2)^ε)*
-            (∫ t₁ : ℝ, ∫ t₂ : ℝ, ∫ t₃ : ℝ, B (t₁,t₂,t₃)*
-              sourceGeometricMean p hp hcop hg F (secondRayMinus Ψ ray) (secondRayPlus Ψ ray)
-                (m*r) (s.image (sourceObservation p)) (windows 5) (windows 6) X X (t₁,t₂,t₃)) := by
-  obtain ⟨windows,C,Cₛ,hC,hCₛ,hwc,hws,ht⟩ :=
-    initial_sector_transfer U hUc hUs g W A hA hU hgA ε hε N J
-  refine ⟨windows,C,Cₛ,hC,hCₛ,hwc,hws,?_⟩
-  intro ι _ p hp _ hcop hg hinj hc hpr F R Ψ m ray K Z H M j hZ hH hΨ
-  dsimp only
-  let s := secondLogSector p ∅ F K R Z M j
-  let r := primeSubsetGenerator (fun i => Ideal.span {p i}) R
-  let X := initialLogColumn Z (primeProductNorm p R) j
-  have hR : 0 < primeProductNorm p R := FirstPassCubeLabels.primeProductNorm_pos p hp R
-  have hX : 0 < X := div_pos hZ (mul_pos (mul_pos (normLogScale_pos _) (normLogScale_pos _)) hR)
-  have hs : ∀ x ∈ s, InSecondQuotientSector p r x := by
-    intro x hx
-    exact secondExpansionSector_valid p F (fun G E => (K G E).erase 0) R x
-      (secondLogSector_subset p ∅ F K R Z M j hx)
-  have hk : ∀ x ∈ s, x.frequency ≠ 0 := by
-    intro x hx
-    exact (secondSupportedSector_mem p F K R Z M x (Finset.mem_filter.mp hx).1).2.2.2.1
-  have hcoords := initial_sector_coordinates p hp F R K Z M hZ j
-  obtain ⟨B,hB,hdec,hbound⟩ := ht p hp hcop hg hinj hc hpr F Ψ m r ray s Z H
-    (secondLogE j) (secondLogV j) X (secondLogK j) hZ hH
-    (normLogScale_pos _) (normLogScale_pos _) hX (normLogScale_pos _) hΨ hs hk
-    (fun x hx => (hcoords x hx).1) (fun x hx => (hcoords x hx).2.1)
-    (fun x hx => (hcoords x hx).2.2.1) (fun x hx => (hcoords x hx).2.2.2)
-  refine ⟨B,hB,?_,?_⟩
-  · simpa only [X, initial_log_radial Z H (primeProductNorm p R) hZ.ne' hR.ne'] using hdec
-  · simpa only [r, elementNorm, primeSubsetGenerator_norm_eq_productNorm] using hbound
-
 end InitialMeanSquare
 
-open scoped BigOperators
 namespace FiniteOverlapDecomposition
 variable {ι : Type*} [DecidableEq ι]
 
@@ -294,7 +183,6 @@ theorem sum_pair_split_cube {β : Type*} [AddCommMonoid β]
 
 end FiniteOverlapDecomposition
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 open MixedCrossSeparation (columnCoefficient)
@@ -405,7 +293,6 @@ theorem canonicalSourceCoefficient_cube_split
 
 end SecondPassArithmetic
 
-open scoped BigOperators Classical SchwartzMap
 namespace FirstPassCubeLabels
 open ActualEisensteinCubic
 open ConcreteTraceCRT (eisEmbedding eisEmbedding_ne_zero)
@@ -571,7 +458,6 @@ theorem disjointCanonicalSource_poisson
 
 end FirstPassCubeLabels
 
-open scoped BigOperators Classical SchwartzMap
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 open FirstPassCubeLabels

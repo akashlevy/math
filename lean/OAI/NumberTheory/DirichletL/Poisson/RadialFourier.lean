@@ -1,65 +1,23 @@
 import OAI.NumberTheory.DirichletL.GaussSum.SexticRadialPoisson
 import OAI.NumberTheory.DirichletL.Fourier.PositiveLogProfiles
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
+open scoped ContDiff
 
 namespace EisensteinSchwartzPoisson
 
@@ -157,17 +115,6 @@ theorem paperRadialFourier_source_weighted_bound (A : ℕ) :
     mul_le_mul_of_nonneg_left (hbound W)
       (show 0 ≤ (2 / Real.sqrt 3) * 2 ^ (2 * A) by positivity)
 
-theorem paperRadialFourier_source_decay (A : ℕ) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-      ∀ (W : 𝓢(ℝ, ℂ)) (t : ℝ), 0 ≤ t →
-        ‖paperRadialFourier W t‖ ≤
-          (C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W) / (1 + t) ^ A := by
-  obtain ⟨s, C, hC, hbound⟩ := paperRadialFourier_source_weighted_bound A
-  refine ⟨s, C, hC, ?_⟩
-  intro W t ht
-  apply (le_div_iff₀ (by positivity : 0 < (1 + t) ^ A)).mpr
-  simpa only [mul_comm] using hbound W t ht
-
 end
 
 section
@@ -232,15 +179,6 @@ theorem contDiffOn_sqrt_profile (g : 𝓢(ℝ, ℂ)) :
   exact ((g.smooth ⊤).contDiffAt.comp x
     (Real.contDiffAt_sqrt (ne_of_gt hx))).contDiffWithinAt
 
-theorem contDiff_sqrt_profile_log (g : 𝓢(ℝ, ℂ)) (x : ℝ) (hx : 0 ≤ x) :
-    ContDiff ℝ ∞ (fun t : ℝ => g (Real.sqrt (x * Real.exp t))) := by
-  have heq : (fun t : ℝ => g (Real.sqrt (x * Real.exp t))) =
-      fun t : ℝ => g (Real.sqrt x * Real.exp (t / 2)) := by
-    funext t
-    rw [Real.sqrt_mul hx, sqrt_exp_half]
-  rw [heq]
-  exact (g.smooth ⊤).comp (by fun_prop)
-
 theorem sqrt_profile_rapid_bound (g : 𝓢(ℝ, ℂ)) (A : ℕ) (x : ℝ) (hx : 0 ≤ x) :
     (1 + x) ^ A * ‖g (Real.sqrt x)‖ ≤
       2 ^ A * (SchwartzMap.seminorm ℝ 0 0 g +
@@ -265,16 +203,6 @@ theorem sqrt_profile_rapid_bound (g : 𝓢(ℝ, ℂ)) (A : ℕ) (x : ℝ) (hx : 
       _ = 2 ^ A * (x ^ A * ‖g (Real.sqrt x)‖) := by rw [mul_pow]; ring
       _ ≤ 2 ^ A * SchwartzMap.seminorm ℝ (2 * A) 0 g := by gcongr
       _ ≤ _ := by gcongr; linarith
-
-theorem eulerDeriv_sqrt_profile_rapid_bound (g : 𝓢(ℝ, ℂ)) (A j : ℕ)
-    (x : ℝ) (hx : 0 ≤ x) :
-    (1 + x) ^ A * ‖LocalLogFourier.eulerDeriv (fun s => g (Real.sqrt s)) j x‖ ≤
-      2 ^ A * (SchwartzMap.seminorm ℝ 0 0
-          ((halfEulerCLM : 𝓢(ℝ, ℂ) → 𝓢(ℝ, ℂ))^[j] g) +
-        SchwartzMap.seminorm ℝ (2 * A) 0
-          ((halfEulerCLM : 𝓢(ℝ, ℂ) → 𝓢(ℝ, ℂ))^[j] g)) := by
-  rw [eulerDeriv_sqrt_profile g j x hx]
-  exact sqrt_profile_rapid_bound _ A x hx
 
 theorem paperFrequency_real_temperate :
     (fun s : ℝ => paperFrequency (s : ℂ)).HasTemperateGrowth := by
@@ -342,11 +270,6 @@ theorem paperRadialFourier_contDiffOn (W : 𝓢(ℝ, ℂ)) :
   rw [paperRadialFourier_eq_ray]
   exact contDiffOn_sqrt_profile _
 
-theorem paperRadialFourier_log_contDiff (W : 𝓢(ℝ, ℂ)) (x : ℝ) (hx : 0 ≤ x) :
-    ContDiff ℝ ∞ (fun t : ℝ => paperRadialFourier W (x * Real.exp t)) := by
-  rw [paperRadialFourier_eq_ray]
-  exact contDiff_sqrt_profile_log _ x hx
-
 theorem paperRadialFourier_euler_weighted_bound (W : 𝓢(ℝ, ℂ)) (A j : ℕ)
     (x : ℝ) (hx : 0 ≤ x) :
     (1 + x) ^ A * ‖LocalLogFourier.eulerDeriv (paperRadialFourier W) j x‖ ≤
@@ -404,17 +327,6 @@ theorem paperRadialFourier_euler_source_weighted_bound (A K : ℕ) :
   simpa only [mul_assoc] using
     mul_le_mul_of_nonneg_left (hbound W j hj) (show 0 ≤ (2 : ℝ) ^ A by positivity)
 
-theorem paperRadialFourier_euler_source_decay (A K : ℕ) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-      ∀ (W : 𝓢(ℝ, ℂ)) (j : ℕ), j ≤ K → ∀ (x : ℝ), 0 ≤ x →
-        ‖LocalLogFourier.eulerDeriv (paperRadialFourier W) j x‖ ≤
-          (C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W) / (1 + x) ^ A := by
-  obtain ⟨s, C, hC, hbound⟩ := paperRadialFourier_euler_source_weighted_bound A K
-  refine ⟨s, C, hC, ?_⟩
-  intro W j hj x hx
-  apply (le_div_iff₀ (by positivity : 0 < (1 + x) ^ A)).mpr
-  simpa only [mul_comm] using hbound W j hj x hx
-
 theorem paperRadialFourier_euler_bound (W : 𝓢(ℝ, ℂ)) (A K : ℕ) :
     ∃ CF : ℝ, 0 ≤ CF ∧ ∀ j ≤ K, ∀ x : ℝ, 0 < x →
       (1 + x) ^ A * ‖LocalLogFourier.eulerDeriv (paperRadialFourier W) j x‖ ≤ CF := by
@@ -422,36 +334,6 @@ theorem paperRadialFourier_euler_bound (W : 𝓢(ℝ, ℂ)) (A K : ℕ) :
   refine ⟨C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W, by positivity, ?_⟩
   intro j hj x hx
   exact hbound W j hj x hx.le
-
-theorem compact_paperRadialFourier_regular
-    (W : ℝ → ℂ) (hWc : HasCompactSupport W) (hWs : ContDiff ℝ ∞ W)
-    (A K : ℕ) :
-    ContDiffOn ℝ ∞ (paperRadialFourier W) (Set.Ioi 0) ∧
-      ∃ CF : ℝ, 0 ≤ CF ∧ ∀ j ≤ K, ∀ x : ℝ, 0 < x →
-        (1 + x) ^ A * ‖LocalLogFourier.eulerDeriv (paperRadialFourier W) j x‖ ≤ CF := by
-  exact ⟨paperRadialFourier_contDiffOn (hWc.toSchwartzMap hWs),
-    paperRadialFourier_euler_bound (hWc.toSchwartzMap hWs) A K⟩
-
-theorem paperRadialFourier_log_separation
-    {ι : Type*} [Fintype ι]
-    (W : 𝓢(ℝ, ℂ)) (V : ι → ℝ → ℂ) (a M : ι → ℝ)
-    (hM : ∀ j, 0 ≤ M j)
-    (hVwindow : ∀ j z, V j z ≠ 0 → |z| ≤ M j)
-    (A J : ℕ) :
-    ∃ C : ℝ, 0 ≤ C ∧ ∀ R : ℝ, 0 < R →
-      ∃ b : ℝ → ℂ,
-        (∀ y : ι → ℝ,
-          (∏ j : ι, V j (y j)) *
-            paperRadialFourier W (R * Real.exp (∑ j : ι, a j * y j)) =
-          ∫ t : ℝ,
-            (∏ j : ι, V j (y j) *
-              FourierBridge.logPhase t (a j * y j)) * b t) ∧
-        (1 + R) ^ A *
-          (∫ t : ℝ, (1 + ‖t‖) ^ J * ‖b t‖) ≤ C := by
-  obtain ⟨CF, hCF, hEuler⟩ := paperRadialFourier_euler_bound W A
-    (J + (MeasureTheory.volume : MeasureTheory.Measure ℝ).integrablePower)
-  exact LocalLogFourier.coupled_positive_log_separation_uniform V (paperRadialFourier W)
-    a M hM hVwindow (paperRadialFourier_contDiffOn W) A J CF hCF hEuler
 
 end
 
@@ -583,8 +465,6 @@ theorem paperRadialFourier_lattice_tail (A : ℕ) :
 
 end EisensteinSchwartzPoisson
 
-open scoped BigOperators Classical SchwartzMap ContDiff
-
 namespace ConcretePrimeRowBridge
 open ActualEisensteinCubic ShortDraftHeckeBridge
 
@@ -611,12 +491,6 @@ theorem idealSupport_injective_on_squarefree
       exact (mem_idealSupport_iff F I p).mp hp
   rw [← Ideal.prod_normalizedFactors_eq_self hsI.ne_zero,
     ← Ideal.prod_normalizedFactors_eq_self hsJ.ne_zero, hfac]
-
-theorem baseChangeWeight_eq_zero_of_not_squarefree
-    {q : ℕ} (χ : DirichletCharacter ℂ q) {I : Ideal O} (hI : ¬ Squarefree I) :
-    baseChangeWeight χ I = 0 := by
-  simp only [baseChangeWeight, UniqueFactorizationMonoid.moebius_of_not_squarefree hI,
-    Int.cast_zero, zero_mul]
 
 end ConcretePrimeRowBridge
 

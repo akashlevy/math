@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.KernelTransfer
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

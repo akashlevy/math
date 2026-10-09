@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LowPeriod
 import OAI.NumberTheory.DirichletL.Detector.CalibrationSupport
-
 namespace OAI
 
 noncomputable section

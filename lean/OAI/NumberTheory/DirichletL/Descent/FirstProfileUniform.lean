@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.SecondProfileUniform
-
 namespace OAI
 
 noncomputable section
@@ -75,19 +74,6 @@ theorem density_norm (g : Fin 9 → 𝓢(ℝ, ℂ)) (g₁ g₂ b₃ : 𝓢(ℝ, 
     abs_of_pos (Real.exp_pos _), twistedFullDensity, fullProfileDensity,
     tripleCoefficient, coordinateDensity, fourier_twist]
   ring
-
-theorem density_joint_measurable (g : Fin 9 → 𝓢(ℝ, ℂ)) (g₁ g₂ b₃ : 𝓢(ℝ, ℂ)) :
-    StronglyMeasurable (fun z : ((Fin 9 → ℝ) × (ℝ × ℝ) × (ℝ × ℝ) × ℝ) × Ambient (Fin 9) =>
-      density g g₁ g₂ b₃ z.1.1 z.1.2.1.1 z.1.2.1.2 z.1.2.2.1.1 z.1.2.2.1.2 z.1.2.2.2 z.2) := by
-  simp_rw [density_formula]
-  apply Measurable.stronglyMeasurable
-  unfold normalization sourceDensity logPhase
-  have h1 := (𝓕 g₁ : 𝓢(ℝ, ℂ)).continuous.measurable
-  have h2 := (𝓕 g₂ : 𝓢(ℝ, ℂ)).continuous.measurable
-  have h3 := b₃.continuous.measurable
-  have hu (i : Fin 9) := (𝓕 (g i) : 𝓢(ℝ, ℂ)).continuous.measurable
-  have he := Complex.continuous_exp.measurable
-  fun_prop
 
 theorem normalization_bound (B : Fin 9 → ℝ) (b : ℝ)
     (ρ : Fin 9 → ℝ) (c₁ c₂ L : ℝ) (hρ : ∀ i, |ρ i| ≤ B i)
@@ -192,8 +178,6 @@ def profile (g : Fin 9 → 𝓢(ℝ, ℂ)) (g₁ g₂ Φ : 𝓢(ℝ, ℂ))
       clippedTwist g₂ c₂ θ₂ (∑ i, firstRightSlope i*y i) *
       paperRadialFourier Φ (R*Real.exp (∑ i, firstKernelSlope i*y i)))
 
-def requiredOuterOrder (J : ℕ) : ℕ := J+2*InverseClippingProfiles.momentOrder J
-
 theorem common_measure (g : Fin 9 → 𝓢(ℝ, ℂ)) (g₁ g₂ Φ : 𝓢(ℝ, ℂ))
     (M B : Fin 9 → ℝ) (b : ℝ)
     (hM : ∀ i, 0 ≤ M i) (hB : ∀ i, 0 ≤ B i)
@@ -266,15 +250,6 @@ theorem balanced_exponential_identity (ρ y : Fin 9 → ℝ) (c₁ c₂ L : ℝ)
 
 def positiveSource (g : 𝓢(ℝ, ℂ)) (c θ x : ℝ) : ℂ :=
   logPhase θ (Real.log x)*g (Real.log x+Real.log c)
-
-theorem positiveSource_logSchwartz (W : ℝ → ℂ) (a b : ℝ) (ha : 0 < a)
-    (hs : Function.support W ⊆ Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    {c x : ℝ} (hc : 0 < c) (hx : 0 < x) (θ : ℝ) :
-    positiveSource (CubicReflectionKernel.logSchwartz W a b ha hs hW) c θ x =
-      clippedSource W c θ x := by
-  simp only [positiveSource, CubicReflectionKernel.logSchwartz_apply,
-    Real.exp_add, Real.exp_log hc, Real.exp_log hx, clippedSource]
-  rw [mul_comm x c]
 
 theorem balanced_profile_identity
     (U : Fin 9 → 𝓢(ℝ, ℂ)) (g₁ g₂ Φ : 𝓢(ℝ, ℂ))

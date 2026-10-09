@@ -1,77 +1,23 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.SquarefreeCoefficients
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 open Filter MeasureTheory
@@ -113,14 +59,6 @@ theorem exists_source_coefficient_not_three :
   obtain ⟨z,v,hv,rfl⟩:=upperPoint_surjective w
   rw [complexTranslation_action]
   exact source_period_of_three_supported hs a z v hv
-
-theorem exists_sourceArithmeticResidue_not_three :
-    ∃h:Eis,¬(3:Eis)∣h ∧ sourceArithmeticResidue h≠0 := by
-  obtain ⟨h,hh,ht⟩:=exists_source_coefficient_not_three
-  refine ⟨h,hh,?_⟩
-  intro hz
-  apply ht
-  simp only [sourceResidualFourierCoefficient,hz,mul_zero]
 
 end CubicEisenstein
 
@@ -252,9 +190,6 @@ theorem weightedMellin_inversion {α : Type*} [Countable α]
   exact Filter.Eventually.of_forall (fun t=>by dsimp only [M];ring)
 
 end CompletedGauss
-
-open Filter MeasureTheory
-open scoped Classical BigOperators Topology
 
 namespace CompletedGauss
 
@@ -462,58 +397,6 @@ end
 
 section
 open ActualEisensteinCubic CubicEisenstein
-local notation "O" => ActualEisensteinCubic.O
-
-lemma nat_sqrt_cpow_half (a : ℕ) :
-    (Real.sqrt (a:ℝ):ℂ)=(a:ℂ)^(1/2:ℂ) := by
-  simpa only [Real.sqrt_eq_rpow,Complex.ofReal_natCast,Complex.ofReal_div,
-    Complex.ofReal_one,Complex.ofReal_ofNat] using
-    (Complex.ofReal_cpow (Nat.cast_nonneg a) (1/2:ℝ))
-
-lemma nat_half_shift_product (a b : ℕ) (ha : a≠0) (hb : b≠0) (C D s : ℂ) :
-    (C/(Real.sqrt (a:ℝ):ℂ)*(D/(b:ℂ)))*((a:ℂ)*(b:ℂ)^3)^(1/2-s)=
-      C*D*(b:ℂ)^(1/2-3*s)*(a:ℂ)^(-s) := by
-  have ha0 : (a:ℂ)≠0 := Nat.cast_ne_zero.mpr ha
-  have hb0 : (b:ℂ)≠0 := Nat.cast_ne_zero.mpr hb
-  have hhalf : (a:ℂ)^(1/2:ℂ)≠0 := (Complex.cpow_ne_zero_iff).mpr (Or.inl ha0)
-  rw [nat_sqrt_cpow_half]
-  have hmul : ((a:ℂ)*(b:ℂ)^3)^(1/2-s)=
-      (a:ℂ)^(1/2-s)*(b:ℂ)^(3*(1/2-s)) := by
-    rw [←Nat.cast_pow,Complex.natCast_mul_natCast_cpow,Nat.cast_pow,
-      ←Complex.natCast_cpow_natCast_mul]
-    norm_num
-  rw [hmul]
-  have hA : (a:ℂ)^(1/2-s)=(a:ℂ)^(1/2:ℂ)*(a:ℂ)^(-s) := by
-    rw [sub_eq_add_neg,Complex.cpow_add _ _ ha0]
-  have hB : (b:ℂ)^(3*(1/2-s))=(b:ℂ)*(b:ℂ)^(1/2-3*s) := by
-    rw [show (3:ℂ)*(1/2-s)=1+(1/2-3*s) by ring,
-      Complex.cpow_add _ _ hb0,Complex.cpow_one]
-  rw [hA,hB]
-  field_simp
-
-lemma completedDirichletTerm_expanded (Ψ : ActualEisensteinCubic.O→*ℂ) (s : ℂ) (p : CompletedMellinIndex) :
-    completedMellinCoefficient Ψ p*(completedMellinLength p:ℂ)^(1/2-s)=
-      columnWeight Ψ p.1.1*star (FiniteGaussPhase.angularFactor (primaryGenerator p.2.1))^3*
-      Ψ (primaryGenerator p.2.1)^3*(Ideal.absNorm p.2.1:ℂ)^(1/2-3*s)*
-      (Ideal.absNorm p.1.1:ℂ)^(-s) := by
-  have ha : Ideal.absNorm p.1.1≠0 := fun h=>p.1.2 (Ideal.absNorm_eq_zero_iff.mp h)
-  have hb : Ideal.absNorm p.2.1≠0 := fun h=>p.2.2 (Ideal.absNorm_eq_zero_iff.mp h)
-  unfold completedMellinCoefficient completedMellinLength
-  change (columnWeight Ψ p.1.1/(Real.sqrt (Ideal.absNorm p.1.1:ℝ):ℂ)*
-    (star (FiniteGaussPhase.angularFactor (primaryGenerator p.2.1))^3*
-      Ψ (primaryGenerator p.2.1)^3/(Ideal.absNorm p.2.1:ℂ)))*
-    (((Ideal.absNorm p.1.1:ℝ)*(Ideal.absNorm p.2.1:ℝ)^3:ℝ):ℂ)^(1/2-s)=_
-  rw [Complex.ofReal_mul,Complex.ofReal_pow,Complex.ofReal_natCast,Complex.ofReal_natCast]
-  rw [nat_half_shift_product _ _ ha hb]
-  ring
-
-theorem completedDirichletSeries_expanded (Ψ : ActualEisensteinCubic.O→*ℂ) (s : ℂ) :
-    completedDirichletSeries Ψ s=∑'p : CompletedMellinIndex,
-      columnWeight Ψ p.1.1*star (FiniteGaussPhase.angularFactor (primaryGenerator p.2.1))^3*
-      Ψ (primaryGenerator p.2.1)^3*(Ideal.absNorm p.2.1:ℂ)^(1/2-3*s)*
-      (Ideal.absNorm p.1.1:ℂ)^(-s) := by
-  unfold completedDirichletSeries
-  exact tsum_congr (completedDirichletTerm_expanded Ψ s)
 
 end
 
@@ -569,9 +452,6 @@ theorem completedT_initial_mellin_integrable (Ψ : ActualEisensteinCubic.O→*�
     mul_comm (mellin (Vstar W) _)] using hi
 
 end CompletedGauss
-
-open scoped BigOperators Classical
-open Finset AddChar MulChar EisensteinEmbedding
 
 namespace CompletedGauss
 local notation "Eis" => ActualEisensteinCubic.O

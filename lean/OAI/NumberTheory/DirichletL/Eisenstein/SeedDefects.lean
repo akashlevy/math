@@ -1,75 +1,24 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.DualMiddleExpansion
 import OAI.NumberTheory.DirichletL.Eisenstein.SmoothCuspCutoffs
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 open Filter
@@ -148,43 +97,8 @@ theorem actual_smoothCuspSeed_laplace_defect (a b : ℝ) (s : ℂ) (ha : 1<a) (h
     smoothCuspSeedField_eq a b s ha hab p hp,smoothCuspSeedDefectField_eq a b s ha hab p hp]
   exact heightPoincare_cuspSeed_laplace_defect a b s ha hab p hp
 
-lemma cuspSeedProfile_entire (a b v : ℝ) : Differentiable ℂ (fun s => cuspSeedProfile a b s v) := by
-  unfold cuspSeedProfile positiveHeightPower logRatioPower
-  fun_prop
-lemma cuspSeedDefectProfile_entire (a b v : ℝ) : Differentiable ℂ (fun s => cuspSeedDefectProfile a b s v) := by
-  unfold cuspSeedDefectProfile positiveHeightPower logRatioPower
-  fun_prop
-
-lemma cuspCutoffCorrection_parameter_entire (F : ℂ → ℝ → ℂ)
-    (hF : ∀v,Differentiable ℂ (fun s => F s v)) (w : HyperbolicSpace) :
-    Differentiable ℂ (fun s => cuspCutoffCorrection 1 (F s) w) := by
-  let S := (high_cosets_finite 1 le_rfl w).toFinset
-  have heq : (fun s => cuspCutoffCorrection 1 (F s) w)=
-      (fun s => ∑r∈S,cuspCutoffTerm 1 (F s) r w) := by
-    funext s
-    apply tsum_eq_sum
-    intro r hr
-    have hh : ¬1<cosetHeight r w := by simpa only [S,Set.Finite.mem_toFinset,Set.mem_ofPred_eq] using hr
-    simp [cuspCutoffTerm,hh]
-  rw [heq]
-  apply Differentiable.fun_sum
-  intro r hr
-  unfold cuspCutoffTerm
-  split_ifs
-  · exact (differentiable_const _).mul (hF _)
-  · exact differentiable_const _
-
-theorem smoothCuspSeed_entire (a b : ℝ) (w : HyperbolicSpace) :
-    Differentiable ℂ (fun s => smoothCuspSeed a b s w) :=
-  cuspCutoffCorrection_parameter_entire _ (cuspSeedProfile_entire a b) w
-
-theorem smoothCuspSeedDefect_entire (a b : ℝ) (w : HyperbolicSpace) :
-    Differentiable ℂ (fun s => smoothCuspSeedDefect a b s w) :=
-  cuspCutoffCorrection_parameter_entire _ (cuspSeedDefectProfile_entire a b) w
-
 end CubicEisenstein
 
-open scoped BigOperators Classical SchwartzMap
 namespace CanonicalQuadraticSieve
 
 section
@@ -497,7 +411,6 @@ theorem HasSieveExponent.unrestricted_dual_truncated_middle {α : ℝ} (hexp : H
 
 end CanonicalQuadraticSieve
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 
@@ -529,30 +442,6 @@ end SecondPassArithmetic
 namespace SecondPassIntegration
 open ActualEisensteinCubic SecondPassArithmetic
 section
-variable {ι : Type*} [DecidableEq ι]
-  (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-  (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-  (hg : ∀ i, lambda ∉ Ideal.span {p i})
-  (hinj : Function.Injective (fun i => Ideal.span {p i}))
-include hinj
-
-theorem childEnergy_fixed_pool (F A : Finset ι) (Ψ : O →* ℂ) (m : O)
-    (T : Finset (Ideal O × O)) (V : ℝ → ℂ) (X : ℝ) (negative rowNegative : Bool) (a b : ℝ) :
-    childEnergy p hp hcop hg (F\A) Ψ m T V X negative rowNegative a b =
-      childEnergy p hp hcop hg F Ψ (m*∏ i ∈ A,p i) T V X negative rowNegative a b := by
-  simp only [childEnergy,idealChildRow,fixedChildRow_fixed_pool p hp hcop hg hinj]
-
-theorem childGeometricMean_fixed_pool (F A : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m : O)
-    (T : Finset (Ideal O × O)) (V₁ V₂ : ℝ → ℂ) (X₁ X₂ : ℝ) (q : JointLogSeparation.Frequency) :
-    childGeometricMean p hp hcop hg (F\A) Ψ₁ Ψ₂ m T V₁ V₂ X₁ X₂ q =
-      childGeometricMean p hp hcop hg F Ψ₁ Ψ₂ (m*∏ i ∈ A,p i) T V₁ V₂ X₁ X₂ q := by
-  simp only [childGeometricMean,childEnergy_fixed_pool p hp hcop hg hinj]
-
-theorem densityChildEnergy_fixed_pool (F A : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m : O)
-    (T : Finset (Ideal O × O)) (V₁ V₂ : ℝ → ℂ) (X₁ X₂ : ℝ) (J : ℕ) :
-    densityChildEnergy p hp hcop hg (F\A) Ψ₁ Ψ₂ m T V₁ V₂ X₁ X₂ J =
-      densityChildEnergy p hp hcop hg F Ψ₁ Ψ₂ (m*∏ i ∈ A,p i) T V₁ V₂ X₁ X₂ J := by
-  simp only [densityChildEnergy,childGeometricMean_fixed_pool p hp hcop hg hinj]
 
 end
 
@@ -569,11 +458,9 @@ theorem restored_child_mask_norm {ι : Type*} [DecidableEq ι]
 
 end SecondPassIntegration
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
-open FirstPassCubeLabels (primeProduct primeProductNorm squarefreeLabel jLabel j2Label b0Label
-  bit parity conductorExponent cubeActiveSupport)
+open FirstPassCubeLabels (primeProduct primeProductNorm squarefreeLabel jLabel j2Label b0Label bit parity conductorExponent cubeActiveSupport)
 open ConcreteTraceCRT (eisEmbedding)
 
 lemma element_norm_le_of_dvd {a b : O} (hb : b ≠ 0) (h : a ∣ b) :

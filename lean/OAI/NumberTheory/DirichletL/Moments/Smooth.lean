@@ -1,6 +1,6 @@
-import OAI.NumberTheory.DirichletL.Moments.Initial
+import OAI.NumberTheory.DirichletL.Moments.FirstPoisson
+import OAI.NumberTheory.DirichletL.Moments.Primitive
 import OAI.NumberTheory.DirichletL.Moments.Extraction
-
 namespace OAI
 
 noncomputable section
@@ -155,41 +155,6 @@ theorem logPhase_norm_ratio (q X θ : ℝ) (hq : 0 < q) (hX : 0 < X) :
   ring
 
 open CenteredMomentRectangle
-local notation "O" => ActualEisensteinCubic.O
-
-theorem idealWeight_height_add (c : O) (χ : MulChar (O ⧸ Ideal.span {c}) ℂ)
-    (R I : Ideal O) (hI : I ≠ 0) (t v : ℝ) :
-    idealWeight c χ R (t + v) I =
-      idealWeight c χ R t I * (Ideal.absNorm I : ℂ) ^ (Complex.I * v) := by
-  have hn : (Ideal.absNorm I : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr (Ideal.absNorm_eq_zero_iff.not.mpr hI)
-  simp only [idealWeight, Complex.ofReal_add, mul_add, Complex.cpow_add _ _ hn]
-  ring
-
-theorem idealWeight_whole_phase (c : O) (χ : MulChar (O ⧸ Ideal.span {c}) ℂ)
-    (R I : Ideal O) (hI : I ≠ 0) (t θ X : ℝ) (hX : 0 < X) :
-    idealWeight c χ R t I * logPhase θ (-Real.log ((Ideal.absNorm I : ℝ) / X)) =
-      logPhase θ (Real.log X) * idealWeight c χ R (t - 2 * Real.pi * θ) I := by
-  have hn : (0 : ℝ) < Ideal.absNorm I := by
-    exact_mod_cast (Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr hI))
-  rw [logPhase_norm_ratio _ X θ hn hX, sub_eq_add_neg, idealWeight_height_add c χ R I hI]
-  push_cast
-  ring
-
-theorem centered_whole_phase (c : O) (χ : MulChar (O ⧸ Ideal.span {c}) ℂ)
-    (R Qslot I J : Ideal O) (hQslot : Qslot ≠ 0) (hI : I ≠ 0) (hJ : J ≠ 0)
-    (W₁ W₂ : ℝ → ℂ) (X₁ X₂ Y₁ Y₂ t θ X : ℝ) (hX : 0 < X) :
-    (idealWeight c χ R t (Qslot * I * J) * idealRectangle W₁ W₂ X₁ X₂ Y₁ Y₂ I J) *
-      logPhase θ (-Real.log ((Ideal.absNorm (Qslot * I * J) : ℝ) / X)) =
-      logPhase θ (Real.log X) *
-        (idealWeight c χ R (t - 2 * Real.pi * θ) (Qslot * I * J) *
-          idealRectangle W₁ W₂ X₁ X₂ Y₁ Y₂ I J) := by
-  calc
-    _ = (idealWeight c χ R t (Qslot * I * J) *
-        logPhase θ (-Real.log ((Ideal.absNorm (Qslot * I * J) : ℝ) / X))) *
-        idealRectangle W₁ W₂ X₁ X₂ Y₁ Y₂ I J := by ring
-    _ = _ := by
-      rw [idealWeight_whole_phase c χ R (Qslot * I * J) (mul_ne_zero (mul_ne_zero hQslot hI) hJ) t θ X hX]
-      ring
 
 end SevenEighths.CenteredMomentSmooth
 end

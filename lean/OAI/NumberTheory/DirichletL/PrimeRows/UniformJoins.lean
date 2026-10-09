@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.HorizontalIntegral
 import OAI.NumberTheory.DirichletL.PrimeRows.UniformSlices
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CubeFixedPrimes
 import OAI.NumberTheory.DirichletL.Hecke.DetectorPhysicalSelection
-
 namespace OAI
 
 noncomputable section
@@ -33,12 +32,6 @@ lemma source_slot_product {Slot : Type*} (slots : Finset Slot) (ell g : Slot→�
   simp_rw [mul_add,Finset.sum_add_distrib]
   rw [←Finset.sum_mul,←Finset.sum_mul,hell]
   ring
-
-lemma source_slot_spike_scale (Z d ell g : ℝ) (hZ : 0≤Z) (hd : d≠0) :
-    (Z^d)^(2*(ell/d)*g)=Z^(2*ell*g) := by
-  rw [←Real.rpow_mul hZ]
-  congr 1
-  field_simp
 
 end SevenEighths.ProbeHighRowFamily
 

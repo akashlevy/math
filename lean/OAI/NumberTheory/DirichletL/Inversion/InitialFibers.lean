@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Foundation
-
 namespace OAI
 
 namespace SevenEighths.InverseInitialFibers
@@ -23,16 +22,6 @@ structure Valid {J : ℕ} (x : InitialTuple J) (t f : Ideal O) (k : O) : Prop wh
   divisor_good : primaryGenerator x.divisor ≠ 0
   row_eq : primaryGenerator x.divisor * x.frequency = k
   assigned_dvd : ∀ i, (x.assigned i).val ∣ t * f
-
-theorem Valid.of_reconstruction {J : ℕ} (x : InitialTuple J) (t f : Ideal O) (k : O)
-    (hf : primaryGenerator f ≠ 0) (hC : t*x.divisor = x.common)
-    (hlabel : x.divisor*x.residual = f)
-    (hrow : primaryGenerator x.divisor*x.frequency = k)
-    (hslots : ∀ i, (x.assigned i).val ∣ t*f) : Valid x t f k := by
-  refine ⟨hC, hlabel, ?_, hrow, hslots⟩
-  intro hz
-  apply hf
-  rw [← hlabel, primaryGenerator_mul, hz, zero_mul]
 
 lemma divisor_dvd {J : ℕ} {x : InitialTuple J} {t f : Ideal O} {k : O}
     (hx : Valid x t f k) : x.divisor ∣ f := ⟨x.residual, hx.label_eq.symm⟩
@@ -109,107 +98,9 @@ theorem valid_tuple_card_le_separated {J : ℕ} (T : Finset (InitialTuple J))
       Nat.mul_le_mul_left _ (Nat.pow_le_pow_left (divisor_card_mul_le t f ht hf) J)
     _ = _ := by rw [mul_pow, pow_succ]; ring
 
-lemma valid_label_squarefree {J : ℕ} {x : InitialTuple J} {t f : Ideal O} {k : O}
-    (hx : Valid x t f k) (hC : Squarefree x.common) (hs : Squarefree x.residual)
-    (hmask : IsCoprime x.residual x.common) : Squarefree f := by
-  have hdC : x.divisor ∣ x.common := by rw [← hx.common_eq]; exact dvd_mul_left _ _
-  have hds : IsCoprime x.divisor x.residual := (hmask.of_isCoprime_of_dvd_right hdC).symm
-  rw [← hx.label_eq]
-  exact squarefree_mul_iff.mpr ⟨hds.isRelPrime, hC.squarefree_of_dvd hdC, hs⟩
-
 lemma divisor_card_pos (I : Ideal O) (hI : I ≠ 0) : 1 ≤ (idealDivisors I).card := by
   apply Finset.one_le_card.mpr
   exact ⟨1, (mem_idealDivisors hI).mpr (one_dvd I)⟩
-
-theorem valid_tuple_card_le_slot_cap {J : ℕ} (T : Finset (InitialTuple J))
-    (t f : Ideal O) (k : O) (ht : t ≠ 0) (hf : f ≠ 0)
-    (hT : ∀ x ∈ T, Valid x t f k) (K : ℕ) (hJ : J ≤ 2*K) :
-    T.card ≤ (idealDivisors f).card^(1+2*K) * (idealDivisors t).card^(2*K) := by
-  apply (valid_tuple_card_le_separated T t f k ht hf hT).trans
-  exact Nat.mul_le_mul
-    (pow_le_pow_right₀ (divisor_card_pos f hf) (by omega))
-    (pow_le_pow_right₀ (divisor_card_pos t ht) hJ)
-
-theorem valid_tuple_small_power (J : ℕ) (ε : ℝ) (hε : 0 < ε) :
-    ∃ C : ℝ, 0 < C ∧ ∀ (T : Finset (InitialTuple J)) (t f : Ideal O) (k : O),
-      t ≠ 0 → f ≠ 0 → (∀ x ∈ T, Valid x t f k) →
-      (T.card : ℝ) ≤ C * ((Ideal.absNorm t : ℝ) * Ideal.absNorm f)^ε := by
-  have hJr : 0 < (J+1 : ℝ) := by positivity
-  obtain ⟨C, hC, hb⟩ := IdealDivisorBound.ideal_divisor_small_power
-    (ε/(J+1)) (div_pos hε hJr)
-  refine ⟨C^(J+1), by positivity, ?_⟩
-  intro T t f k ht hf hT
-  have htf : t*f ≠ 0 := mul_ne_zero ht hf
-  have hsub : idealDivisors f ⊆ idealDivisors (t*f) := by
-    intro D hD
-    exact (mem_idealDivisors htf).mpr
-      (((mem_idealDivisors hf).mp hD).trans (dvd_mul_left _ _))
-  have hcard : T.card ≤ (idealDivisors (t*f)).card^(J+1) := by
-    apply (valid_tuple_card_le T t f k ht hf hT).trans
-    calc
-      _ ≤ (idealDivisors (t*f)).card * (idealDivisors (t*f)).card^J :=
-        Nat.mul_le_mul_right _ (Finset.card_le_card hsub)
-      _ = _ := by rw [pow_succ]; ring
-  have hh := pow_le_pow_left₀ (by positivity : 0 ≤ ((idealDivisors (t*f)).card : ℝ))
-    (hb (t*f) htf) (J+1)
-  apply (show (T.card : ℝ) ≤ ((idealDivisors (t*f)).card : ℝ)^(J+1) by
-    exact_mod_cast hcard).trans (hh.trans_eq ?_)
-  rw [mul_pow]
-  congr 1
-  rw [← Real.rpow_natCast, ← Real.rpow_mul (by positivity), map_mul, Nat.cast_mul]
-  congr 1
-  push_cast
-  field_simp
-
-def initialFiber {J : ℕ} (source : Finset (InitialTuple J))
-    (lists : Fin J → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (keep : InitialTuple J → Prop) (t f : Ideal O) (k : O) : Finset (InitialTuple J) :=
-  source.filter (fun x => Valid x t f k ∧ (∀ i, x.assigned i ∈ lists i) ∧ keep x)
-
-theorem initialFiber_card_le {J : ℕ} (source : Finset (InitialTuple J))
-    (lists : Fin J → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (keep : InitialTuple J → Prop) (t f : Ideal O) (k : O)
-    (ht : t ≠ 0) (hf : f ≠ 0) :
-    (initialFiber source lists keep t f k).card ≤
-      (idealDivisors f).card^(J+1) * (idealDivisors t).card^J :=
-  valid_tuple_card_le_separated _ t f k ht hf
-    (fun _x hx => (Finset.mem_filter.mp hx).2.1)
-
-theorem initialFiber_card_le_slot_cap {J : ℕ} (source : Finset (InitialTuple J))
-    (lists : Fin J → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (keep : InitialTuple J → Prop) (t f : Ideal O) (k : O)
-    (ht : t ≠ 0) (hf : f ≠ 0) (K : ℕ) (hJ : J ≤ 2*K) :
-    (initialFiber source lists keep t f k).card ≤
-      (idealDivisors f).card^(1+2*K) * (idealDivisors t).card^(2*K) :=
-  valid_tuple_card_le_slot_cap _ t f k ht hf
-    (fun _x hx => (Finset.mem_filter.mp hx).2.1) K hJ
-
-theorem initialFiber_small_power (J : ℕ) (ε : ℝ) (hε : 0 < ε) :
-    ∃ C : ℝ, 0 < C ∧ ∀ (source : Finset (InitialTuple J))
-      (lists : Fin J → Finset SmoothMobiusCorrection.PrimeIdeal)
-      (keep : InitialTuple J → Prop) (t f : Ideal O) (k : O),
-      t ≠ 0 → f ≠ 0 →
-      ((initialFiber source lists keep t f k).card : ℝ) ≤
-        C * ((Ideal.absNorm t : ℝ) * Ideal.absNorm f)^ε := by
-  obtain ⟨C, hC, hbound⟩ := valid_tuple_small_power J ε hε
-  refine ⟨C, hC, ?_⟩
-  intro source lists keep t f k ht hf
-  exact hbound _ t f k ht hf (fun _x hx => (Finset.mem_filter.mp hx).2.1)
-
-theorem initialFiber_weight_bound {J : ℕ} (source : Finset (InitialTuple J))
-    (lists : Fin J → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (keep : InitialTuple J → Prop) (t f : Ideal O) (k : O)
-    (ht : t ≠ 0) (hf : f ≠ 0) (w : InitialTuple J → ℂ) (C : ℝ) (hC : 0 ≤ C)
-    (hw : ∀ x ∈ initialFiber source lists keep t f k, ‖w x‖ ≤ C) :
-    (∑ x ∈ initialFiber source lists keep t f k, ‖w x‖) ≤
-      C * ((idealDivisors f).card : ℝ)^(J+1) * ((idealDivisors t).card : ℝ)^J := by
-  calc
-    _ ≤ ∑ _x ∈ initialFiber source lists keep t f k, C :=
-      Finset.sum_le_sum hw
-    _ = ((initialFiber source lists keep t f k).card : ℝ) * C := by simp
-    _ ≤ ((idealDivisors f).card^(J+1) * (idealDivisors t).card^J : ℕ) * C :=
-      mul_le_mul_of_nonneg_right (by exact_mod_cast initialFiber_card_le source lists keep t f k ht hf) hC
-    _ = _ := by push_cast; ring
 
 end
 end SevenEighths.InverseInitialFibers

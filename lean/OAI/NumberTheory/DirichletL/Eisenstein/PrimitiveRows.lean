@@ -1,73 +1,23 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.Rows
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 open scoped BigOperators Classical MatrixGroups Matrix
@@ -147,7 +97,7 @@ lemma cosetPrimitiveRow_bijective : Function.Bijective cosetPrimitiveRow := by
 
 def primitiveRowEquiv : CuspCosets ≃ PrimitiveRow := Equiv.ofBijective _ cosetPrimitiveRow_bijective
 
-open ActualEisensteinCubic CubicKubota ConcreteTraceCRT CubicJacobiGlobal
+open CubicJacobiGlobal
 
 lemma inverse_character_eq_row_symbol (M : levelThree) :
     (complexCharacter M)⁻¹ = eisEmbedding (symbol (row M 0) (row M 1)) := by
@@ -181,45 +131,14 @@ lemma inverse_cosetCharacter_eq_row_symbol (x : CuspCosets) :
     (cosetCharacter x)⁻¹ = eisEmbedding (symbol (cosetRow x 0) (cosetRow x 1)) := by
   induction x using Quotient.inductionOn with | _ M => exact inverse_character_eq_row_symbol M
 
-def primitiveRowPhase (v : PrimitiveRow) : ℂ :=
-  eisEmbedding (symbol (v.1 0) (v.1 1))
-
 lemma primitiveRowEquiv_val (x : CuspCosets) : (primitiveRowEquiv x).1 = cosetRow x := rfl
 
 lemma primitiveRowEquiv_symm_row (v : PrimitiveRow) :
     cosetRow (primitiveRowEquiv.symm v) = v.1 := by
   exact congrArg Subtype.val (primitiveRowEquiv.apply_symm_apply v)
 
-theorem upperEisenstein_eq_primitive_rows (z : ℂ) (v : ℝ) (hv : 0 < v) (s : ℂ) :
-    upperEisenstein z v hv s = ∑' row : PrimitiveRow,
-      primitiveRowPhase row *
-        ((v / (‖eisEmbedding (row.1 0)*z+eisEmbedding (row.1 1)‖^2 +
-          ‖eisEmbedding (row.1 0)‖^2*v^2) : ℝ) : ℂ)^s := by
-  rw [upperEisenstein_eq_source_series]
-  rw [← primitiveRowEquiv.symm.tsum_eq]
-  apply tsum_congr
-  intro r
-  rw [inverse_cosetCharacter_eq_row_symbol, primitiveRowEquiv_symm_row]
-  simp only [primitiveRowPhase, transformedHeight, heightDenominator, embeddedRow,
-    Function.comp_apply, primitiveRowEquiv_symm_row]
-
-theorem primitive_rows_summable_norm (z : ℂ) (v : ℝ) (hv : 0 < v) (s : ℂ) (hs : 2 < s.re) :
-    Summable (fun row : PrimitiveRow => ‖primitiveRowPhase row *
-      ((v / (‖eisEmbedding (row.1 0)*z+eisEmbedding (row.1 1)‖^2 +
-        ‖eisEmbedding (row.1 0)‖^2*v^2) : ℝ) : ℂ)^s‖) := by
-  apply primitiveRowEquiv.summable_iff.mp
-  apply (summable_norm_summand (upperSection z v hv) s hs).congr
-  intro x
-  rw [summand_upperSection, inverse_cosetCharacter_eq_row_symbol]
-  rfl
-
-lemma primitiveRow_zero_left (row : PrimitiveRow) (hc : row.1 0 = 0) : row.1 1 = 1 := by
-  have hu : IsUnit (row.1 1) := by simpa only [hc, isCoprime_zero_left] using row.2.1
-  exact A3_primary_unit_eq_one _ hu (lambda_sq_dvd_three.trans row.2.2.2)
-
 end CubicEisenstein
 
-open scoped BigOperators Classical SchwartzMap
 namespace TruncatedPrincipalPoisson
 
 section
@@ -494,7 +413,6 @@ theorem radial_source_nonzero_lattice_decay (A : ℕ) :
 
 end EisensteinSchwartzPoisson
 
-open scoped BigOperators Classical SchwartzMap
 namespace TruncatedPrincipalPoisson
 local notation "O" => ActualEisensteinCubic.O
 open ActualEisensteinCubic ConcreteTraceCRT EisensteinSchwartzPoisson

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Foundation
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -72,28 +71,6 @@ theorem descent_profile_identity {ι : Type*} [Fintype ι]
   dsimp only [P, x₁, x₂, xk]
   ring
 
-theorem descent_profile_separation {ι : Type*} [Fintype ι]
-    (g₁ g₂ W : 𝓢(ℝ, ℂ)) (V : ι → ℝ → ℂ) (a₁ a₂ ak M : ι → ℝ)
-    (hM : ∀ i, 0 ≤ M i) (hV : ∀ i y, V i y ≠ 0 → |y| ≤ M i)
-    (A J : ℕ) :
-    ∃ C : ℝ, 0 ≤ C ∧ ∀ R : ℝ, 0 < R → ∃ b : 𝓢(ℝ, ℂ),
-      (∀ y : ι → ℝ,
-        (∏ i, V i (y i)) * g₁ (∑ i, a₁ i * y i) * g₂ (∑ i, a₂ i * y i) *
-          paperRadialFourier W (R * Real.exp (∑ i, ak i * y i)) =
-        ∫ t₁ : ℝ, ∫ t₂ : ℝ, ∫ t₃ : ℝ,
-          tripleCoefficient (𝓕 g₁) (𝓕 g₂) b (t₁, t₂, t₃) *
-            (∏ i, V i (y i) * logPhase t₁ (a₁ i * y i) *
-              logPhase t₂ (a₂ i * y i) * logPhase t₃ (ak i * y i))) ∧
-      Integrable (fun t : ℝ => (1 + ‖t‖) ^ J * ‖b t‖) ∧
-      (1 + R) ^ A * (∫ t : ℝ, (1 + ‖t‖) ^ J * ‖b t‖) ≤ C ∧
-      (∀ t : ℝ, (1 + R) ^ A * (1 + ‖t‖) ^ J * ‖b t‖ ≤ C) := by
-  obtain ⟨C, hC, hk⟩ := paperRadialFourier_log_separation_envelope W V ak M hM hV A J
-  refine ⟨C, hC, ?_⟩
-  intro R hR
-  obtain ⟨b, he, hi, hb, hp⟩ := hk R hR
-  refine ⟨b, ?_, hi, hb, hp⟩
-  exact descent_profile_identity g₁ g₂ W V a₁ a₂ ak R b he
-
 theorem tripleCoefficient_weighted_integrable (b₁ b₂ b₃ : 𝓢(ℝ, ℂ)) (J : ℕ) :
     Integrable (fun t : Frequency =>
       ((1 + ‖t.1‖)^J * (1 + ‖t.2.1‖)^J * (1 + ‖t.2.2‖)^J) *
@@ -128,44 +105,6 @@ theorem tripleCoefficient_weighted_integral (b₁ b₂ b₃ : 𝓢(ℝ, ℂ)) (J
   rw [MeasureTheory.integral_prod_mul
     (fun t : ℝ => (1 + ‖t‖)^J * ‖b₂ t‖) (fun t : ℝ => (1 + ‖t‖)^J * ‖b₃ t‖)]
   ring
-
-theorem source_descent_profile_separation {ι : Type*} [Fintype ι]
-    (W₁ W₂ : ℝ → ℂ) (a b : ℝ) (ha : 0 < a)
-    (hs₁ : Function.support W₁ ⊆ Set.Icc a b) (hs₂ : Function.support W₂ ⊆ Set.Icc a b)
-    (hW₁ : ContDiff ℝ ∞ W₁) (hW₂ : ContDiff ℝ ∞ W₂)
-    (Φ : 𝓢(ℝ, ℂ)) (V : ι → ℝ → ℂ) (a₁ a₂ ak M : ι → ℝ)
-    (hM : ∀ i, 0 ≤ M i) (hV : ∀ i y, V i y ≠ 0 → |y| ≤ M i)
-    (A J : ℕ) :
-    ∃ (b₁ b₂ : 𝓢(ℝ, ℂ)) (C : ℝ), 0 ≤ C ∧
-      ∀ R : ℝ, 0 < R → ∃ b₃ : 𝓢(ℝ, ℂ),
-      (∀ y : ι → ℝ,
-        (∏ i, V i (y i)) * W₁ (Real.exp (∑ i, a₁ i * y i)) *
-          W₂ (Real.exp (∑ i, a₂ i * y i)) * paperRadialFourier Φ (R * Real.exp (∑ i, ak i * y i)) =
-        ∫ t₁ : ℝ, ∫ t₂ : ℝ, ∫ t₃ : ℝ,
-          tripleCoefficient b₁ b₂ b₃ (t₁, t₂, t₃) *
-            (∏ i, V i (y i) * logPhase t₁ (a₁ i * y i) *
-              logPhase t₂ (a₂ i * y i) * logPhase t₃ (ak i * y i))) ∧
-      Integrable (fun t : Frequency =>
-        ((1 + ‖t.1‖)^J * (1 + ‖t.2.1‖)^J * (1 + ‖t.2.2‖)^J) *
-          ‖tripleCoefficient b₁ b₂ b₃ t‖) ∧
-      (1 + R)^A * (∫ t : Frequency,
-        ((1 + ‖t.1‖)^J * (1 + ‖t.2.1‖)^J * (1 + ‖t.2.2‖)^J) *
-          ‖tripleCoefficient b₁ b₂ b₃ t‖) ≤ C := by
-  let g₁ := CubicReflectionKernel.logSchwartz W₁ a b ha hs₁ hW₁
-  let g₂ := CubicReflectionKernel.logSchwartz W₂ a b ha hs₂ hW₂
-  obtain ⟨C, hC, hsep⟩ := descent_profile_separation g₁ g₂ Φ V a₁ a₂ ak M hM hV A J
-  let I₁ := ∫ t : ℝ, (1 + ‖t‖)^J * ‖(𝓕 g₁) t‖
-  let I₂ := ∫ t : ℝ, (1 + ‖t‖)^J * ‖(𝓕 g₂) t‖
-  have hI₁ : 0 ≤ I₁ := integral_nonneg (fun t => by positivity)
-  have hI₂ : 0 ≤ I₂ := integral_nonneg (fun t => by positivity)
-  refine ⟨𝓕 g₁, 𝓕 g₂, I₁ * I₂ * C, by positivity, ?_⟩
-  intro R hR
-  obtain ⟨b₃, heq, hi, hb, hp⟩ := hsep R hR
-  refine ⟨b₃, ?_, tripleCoefficient_weighted_integrable _ _ _ J, ?_⟩
-  · simpa only [g₁, g₂, CubicReflectionKernel.logSchwartz_apply] using heq
-  · rw [tripleCoefficient_weighted_integral]
-    have hh := mul_le_mul_of_nonneg_left hb (mul_nonneg hI₁ hI₂)
-    convert hh using 1 ; dsimp only [I₁, I₂] ; ring
 
 end
 end SevenEighths.InverseMoment

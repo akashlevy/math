@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.B2Growth
 import OAI.NumberTheory.DirichletL.CubicSieve.DescendantBounds
 import OAI.NumberTheory.DirichletL.CubicDyadicDecay
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

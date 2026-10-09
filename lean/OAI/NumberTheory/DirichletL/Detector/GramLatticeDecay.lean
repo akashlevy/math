@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Foundation
-
 namespace OAI
 
 noncomputable section
@@ -271,27 +270,6 @@ theorem dual_fourier_lattice_bound (A : ℕ) (hA : 2 < A) :
 theorem sourceControl_mono {S T : Finset (ℕ × ℕ)} (hST : S ⊆ T)
     (W : 𝓢(Joint, ℂ)) : sourceControl S W ≤ sourceControl T W :=
   Seminorm.le_def.mp (Finset.sup_mono hST) W
-
-theorem joint_lattice_bounds (A : ℕ) (hA : 2 < A) :
-    ∃ (S : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-      (∀ (W : 𝓢(Joint, ℂ)) (N : ℝ), 1 ≤ N →
-        (∑' m : O × O, ‖W (physicalPoint N m)‖) ≤ C * sourceControl S W * N^2) ∧
-      (∀ (W : 𝓢(Joint, ℂ)) (L : ℝ), 1 ≤ L → ∀ (u : ℂ), ‖u‖ = 1 →
-        (∑' p : {p : DualIndex // p ≠ 0}, ‖(𝓕 W) (scaledDualPoint L u p.val)‖) ≤
-          C * sourceControl S W * L^(-((2*A:ℕ):ℝ))) := by
-  obtain ⟨S₁,C₁,hC₁,h₁⟩ := physical_lattice_bound
-  obtain ⟨S₂,C₂,hC₂,h₂⟩ := dual_fourier_lattice_bound A hA
-  refine ⟨S₁∪S₂,C₁+C₂,add_pos hC₁ hC₂,?_,?_⟩
-  · intro W N hN
-    apply (h₁ W N hN).trans
-    apply mul_le_mul_of_nonneg_right _ (sq_nonneg _)
-    exact mul_le_mul (le_add_of_nonneg_right hC₂.le)
-      (sourceControl_mono Finset.subset_union_left W) (sourceControl_nonneg _ _) (by positivity)
-  · intro W L hL u hu
-    apply (h₂ W L hL u hu).trans
-    apply mul_le_mul_of_nonneg_right _ (Real.rpow_nonneg (by linarith) _)
-    exact mul_le_mul (le_add_of_nonneg_left hC₁.le)
-      (sourceControl_mono Finset.subset_union_right W) (sourceControl_nonneg _ _) (by positivity)
 
 end ProbeGramLatticeDecay
 

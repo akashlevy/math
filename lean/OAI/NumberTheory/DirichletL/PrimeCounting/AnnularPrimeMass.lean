@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.PrimeCounting.IdealPrimeMass
 import Mathlib.NumberTheory.AbelSummation
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 import Mathlib.MeasureTheory.Function.Floor
-
 namespace OAI
 
 namespace SevenEighths.PNT.AnnularPrimeMass
@@ -408,14 +407,6 @@ theorem weightedPrimeAnnularSum_tendsto (C : Set (Ideal O)) {A a b : ℝ}
   filter_upwards [eventually_gt_atTop (0 : ℝ)] with x hx
   exact (weightedPrimeAnnularSum_normalization C W a b hx).symm
 
-theorem weightedPrimeAnnularSum_nat_tendsto (C : Set (Ideal O)) {A a b : ℝ}
-    (hmass : Tendsto (fun N : ℕ => cumsum (classCoeff C) N / N) atTop (𝓝 A))
-    (W : ℝ → ℝ) (hW : ContDiff ℝ ∞ W)
-    (ha : 0 < a) (hab : a ≤ b) (hsupp : Function.support W ⊆ Set.Ioo a b) :
-    Tendsto (fun N : ℕ => Real.log N / (N : ℝ) ^ (1 / 6 : ℝ) *
-      weightedPrimeAnnularSum C W a b N) atTop (𝓝 (A * ∫ y : ℝ, W y * y ^ (-5 / 6 : ℝ))) :=
-  (weightedPrimeAnnularSum_tendsto C hmass W hW ha hab hsupp).comp tendsto_natCast_atTop_atTop
-
 theorem exists_positive_support_annulus (W : ℝ → ℝ) (hc : HasCompactSupport W)
     (hp : tsupport W ⊆ Set.Ioi 0) :
     ∃ a b : ℝ, 0 < a ∧ a < b ∧ Function.support W ⊆ Set.Ioo a b := by
@@ -467,13 +458,6 @@ theorem primeWeightTerm_support_subset (C : Set (Ideal O)) (W : ℝ → ℝ)
       (left_ne_zero_of_mul hP)
   · exact (hP rfl).elim
 
-theorem primeWeightTerm_hasFiniteSupport (C : Set (Ideal O)) (W : ℝ → ℝ)
-    (hc : HasCompactSupport W) (hp : tsupport W ⊆ Set.Ioi 0) {x : ℝ} (hx : 0 < x) :
-    (Function.support (primeWeightTerm C W x)).Finite := by
-  obtain ⟨a, b, ha, hab, hsupp⟩ := exists_positive_support_annulus W hc hp
-  exact (annularPrimeIdeals C a b x).finite_toSet.subset
-    (primeWeightTerm_support_subset C W ha hab.le hsupp hx)
-
 theorem weightedPrimeSum_eq_annular (C : Set (Ideal O)) (W : ℝ → ℝ)
     {a b x : ℝ} (ha : 0 < a) (hab : a ≤ b)
     (hsupp : Function.support W ⊆ Set.Ioo a b) (hx : 0 < x) :
@@ -524,12 +508,6 @@ theorem fixed_prime_deletion_eventually_eq (C : Set (Ideal O)) (S : Finset (Idea
   by_cases hP : P ∈ S
   · simp only [hP, ite_true, hx P hP]
   · simp only [hP, ite_false]
-
-theorem finite_prime_deleted_mass_eventually_zero (C : Set (Ideal O)) (S : Finset (Ideal O))
-    (W : ℝ → ℝ) (hp : tsupport W ⊆ Set.Ioi 0) :
-    ∀ᶠ x : ℝ in atTop, (∑ P ∈ S, primeWeightTerm C W x P) = 0 := by
-  filter_upwards [finite_prime_weights_eventually_zero C S W hp] with x hx
-  exact Finset.sum_eq_zero hx
 
 theorem weightedPrimeSumDeleted_tendsto (C : Set (Ideal O)) (S : Finset (Ideal O)) {A : ℝ}
     (hmass : Tendsto (fun N : ℕ => cumsum (classCoeff C) N / N) atTop (𝓝 A))
@@ -613,14 +591,6 @@ theorem weightedPrimeSumDeleted_eventually_pos (C : Set (Ideal O))
   filter_upwards [he, eventually_gt_atTop (1 : ℝ)] with x hx hx1
   exact (div_pos (mul_pos hc0 (Real.rpow_pos_of_pos (zero_lt_one.trans hx1) _))
     (Real.log_pos hx1)).trans_le hx
-
-theorem weightedPrimeSum_nat_tendsto (C : Set (Ideal O)) {A : ℝ}
-    (hmass : Tendsto (fun N : ℕ => cumsum (classCoeff C) N / N) atTop (𝓝 A))
-    (W : ℝ → ℝ) (hW : ContDiff ℝ ∞ W) (hc : HasCompactSupport W)
-    (hp : tsupport W ⊆ Set.Ioi 0) :
-    Tendsto (fun N : ℕ => Real.log N / (N : ℝ) ^ (1 / 6 : ℝ) * weightedPrimeSum C W N)
-      atTop (𝓝 (A * ∫ y : ℝ, W y * y ^ (-5 / 6 : ℝ))) :=
-  (weightedPrimeSum_tendsto C hmass W hW hc hp).comp tendsto_natCast_atTop_atTop
 
 end
 

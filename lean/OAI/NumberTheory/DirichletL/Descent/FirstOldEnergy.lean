@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstBlockEnergy
 import OAI.NumberTheory.DirichletL.Descent.FirstFreshEnergy
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

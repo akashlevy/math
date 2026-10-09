@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.Cross
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

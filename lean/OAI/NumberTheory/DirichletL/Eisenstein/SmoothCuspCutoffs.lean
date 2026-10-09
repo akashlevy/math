@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.LogarithmicTargets
-
 namespace OAI
 
 noncomputable section
@@ -8,73 +7,21 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ContDiff
 
 def cuspTransition (a b v : ℝ) : ℝ := Real.smoothTransition ((v-a)/(b-a))
 
@@ -314,11 +261,6 @@ lemma cuspSeedDefectProfile_continuous (a b : ℝ) (s : ℂ) (ha : 0<a) (hab : a
     exact continuousAt_const.congr heq.symm
   · exact (cuspSeedDefectProfile_contDiffAt a b s v (lt_of_lt_of_le ha (le_of_not_gt hv))).continuousAt
 
-lemma cuspSeedDefectProfile_integrable (a b : ℝ) (s : ℂ) (ha : 0<a) (hab : a<b) :
-    Integrable (cuspSeedDefectProfile a b s) volume :=
-  (cuspSeedDefectProfile_continuous a b s ha hab).integrable_of_hasCompactSupport
-    (cuspSeedDefectProfile_hasCompactSupport a b s hab)
-
 def smoothCuspSeed (a b : ℝ) (s : ℂ) : HyperbolicSpace → ℂ :=
   cuspCutoffCorrection 1 (cuspSeedProfile a b s)
 
@@ -350,25 +292,6 @@ lemma smoothCuspSeed_contDiffAt (a b : ℝ) (s : ℂ) (ha : 1<a) (hab : a<b)
     ContDiffAt ℝ ∞ (heightPoincareField (cuspSeedProfile a b s)) p :=
   heightPoincareField_contDiffAt _ (fun v hv => cuspSeedProfile_zero a b s v hab (hv.trans ha.le))
     (cuspSeedProfile_contDiffAt a b s) p hp
-lemma smoothCuspSeedDefect_contDiffAt (a b : ℝ) (s : ℂ) (ha : 1<a) (hab : a<b)
-    (p : SpatialCoordinates) (hp : 0<p 2) :
-    ContDiffAt ℝ ∞ (heightPoincareField (cuspSeedDefectProfile a b s)) p :=
-  heightPoincareField_contDiffAt _
-    (fun v hv => cuspSeedDefectProfile_zero a b s v hab (Or.inl (lt_of_le_of_lt hv ha)))
-    (cuspSeedDefectProfile_contDiffAt a b s) p hp
-
-lemma cuspCutoffCorrection_upperPoint (F : ℝ → ℂ) (z : ℂ) (v : ℝ) (hv : 0<v) (h1v : 1<v) :
-    cuspCutoffCorrection 1 F (upperPoint z v hv)=F v := by
-  have hh : cosetHeight (cosetOf 1) (upperPoint z v hv)=v := by
-    rw [cosetHeight_cosetOf,map_one,one_smul,hyperbolicHeight_upperPoint]
-  rw [cuspCutoffCorrection_eq 1 le_rfl _ _ (cosetOf 1) (hh.symm ▸ h1v),hh,
-    cosetCharacter_cosetOf,map_one,inv_one,one_mul]
-
-lemma smoothCuspSeed_incoming (a b : ℝ) (s : ℂ) (ha : 1<a) (hab : a<b)
-    (z : ℂ) (v : ℝ) (hv : 0<v) (hbv : b≤v) :
-    smoothCuspSeed a b s (upperPoint z v hv)=(v:ℂ)^s := by
-  rw [smoothCuspSeed,cuspCutoffCorrection_upperPoint _ z v hv (lt_of_lt_of_le (ha.trans hab) hbv)]
-  exact cuspSeedProfile_incoming a b s v hab hbv hv
 
 lemma smoothCuspSeedDefect_support (a b : ℝ) (s : ℂ) (hab : a<b) (w : HyperbolicSpace)
     (hw : smoothCuspSeedDefect a b s w≠0) :
@@ -387,9 +310,6 @@ lemma smoothCuspSeedDefect_support (a b : ℝ) (s : ℂ) (hab : a<b) (w : Hyperb
     _ = 0 := tsum_zero
 
 end
-
-open Filter
-open scoped BigOperators Classical Topology ContDiff
 
 def rowLogHeight (u : Fin 2 → ℂ) (p : SpatialCoordinates) : ℝ :=
   Real.log (p 2)-Real.log (quadraticHeightDenominator (Complex.normSq (u 0))
@@ -573,9 +493,6 @@ theorem rowProfile_laplacian (F : ℝ → ℂ) (hF : ∀v,0<v→ContDiffAt ℝ �
     (deriv (deriv F) (rowHeight u p)*(rowHeight u p:ℂ)^2+
       deriv F (rowHeight u p)*(rowHeight u p:ℂ))*hE+
     (deriv F (rowHeight u p)*(rowHeight u p:ℂ))*hD
-
-open Filter
-open scoped BigOperators Classical Topology ContDiff
 
 lemma axisLaplacian_congr_eventuallyEq (f g : SpatialCoordinates → ℂ) (p : SpatialCoordinates)
     (heq : f =ᶠ[𝓝 p] g) : axisLaplacian f p=axisLaplacian g p := by

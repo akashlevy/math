@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorInverseFiberCount
-
 namespace OAI
 
 noncomputable section

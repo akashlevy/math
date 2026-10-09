@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialKernelBridge
-
 namespace OAI
 
 noncomputable section
@@ -23,10 +22,6 @@ theorem elementCharacter_product {ι : Type*} (η : Ideal O →* ℂ)
     elementCharacter η (∏ i ∈ A,p i) = η (∏ i ∈ A,Ideal.span {p i}) := by
   change η (Ideal.span {∏ i ∈ A,p i}) = _
   rw [FiniteGaussPhase.span_finset_prod]
-
-def reconstructedSelector (S : Finset (Ideal O)) (P j : Ideal O)
-    (a : Ideal O → ℂ) (A : Finset (primePool (columns S P j))) : ℂ :=
-  if (∏ i ∈ A,i.val) ∈ columns S P j then a (reconstruct P j (∏ i ∈ A,i.val)) else 0
 
 theorem poolPrimary_injective (F : Finset (Ideal O)) (hF : ∀ I ∈ F,Admissible I) :
     Function.Injective (fun i : primePool F => Ideal.span {poolPrimary F i}) := by
@@ -83,43 +78,6 @@ theorem selected_conjugate_row (F : Finset (Ideal O))
     simp only [supportMobius,idealSexticRow,InitialMeanSquare.pool_support_product]
     ring
   · simp only [hAF,ite_false,mul_zero,zero_mul]
-
-theorem residual_eq_input (S : Finset (Ideal O)) {P j : Ideal O}
-    (hP : Admissible P) (hj : j ∣ P)
-    (hS : ∀ n ∈ S,Squarefree n → Supported n)
-    (η : Ideal O →* ℂ) (a : Ideal O → ℂ) (W : ℝ → ℂ)
-    (Z r z G : ℝ) (u : O) :
-    let F := columns S P j
-    let hF : ∀ I ∈ F,Admissible I := fun I hI => columns_admissible S hP hj hS hI
-    let : ∀ i : primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-      fun i => by rw [poolPrimary_span F hF i]; infer_instance
-    residualNormalizedPolynomial S P j η a W Z r z G u =
-      (Z^(-(r+z-2*G)/2) : ℝ)*
-        inputConjugateRow (poolPrimary F) (poolPrimary_good F hF) Finset.univ
-          (elementCharacter η) (primaryGenerator j) 1 1
-          (fun A => reconstructedSelector S P j a A *
-            residualOverlapWindow P j W Z z G
-              ((Ideal.absNorm (∏ i ∈ A,i.val) : ℝ)/Z^(r+z-2*G))) u := by
-  intro F hF
-  let : ∀ i : primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-    fun i => by rw [poolPrimary_span F hF i]; infer_instance
-  unfold residualNormalizedPolynomial
-  congr 1
-  have hc : ∀ I ∈ F,IsCoprime I j := fun I hI => ((mem_columns hP.2.1 hj).mp hI).2.1
-  have ht := selected_conjugate_row F hF j (admissible_of_dvd hP hj) hc η
-    (fun I => a (reconstruct P j I)*residualOverlapWindow P j W Z z G
-      ((Ideal.absNorm I : ℝ)/Z^(r+z-2*G))) u
-  convert ht using 1
-  · apply Finset.sum_congr rfl
-    intro I hI
-    rw [overlapCoefficient_residual]
-    unfold bareOverlapCoefficient
-    ring
-  · congr 1
-    funext A
-    unfold reconstructedSelector
-    dsimp only [F]
-    split_ifs <;> simp only [zero_mul]
 
 section RayModes
 variable {ι : Type*} [DecidableEq ι]
@@ -317,120 +275,7 @@ theorem initialPhysicalMode_summable
   unfold secondPairRadialMode
   ring
 
-theorem initialPhysicalMode_zero_split
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hc : ∀ i,ringChar (O ⧸ Ideal.span {p i})≠2)
-    (hpr : ∀ i,goodLambda^2∣p i-1)
-    (Ψ : O →* ℂ) (j : O) (σ : Finset ι → ℂ)
-    (V : ℝ → ℂ) (Φ : 𝓢(ℝ,ℂ)) {Z : ℝ} (hZ : 0<Z) (D m : ℝ)
-    (G U T E : Finset ι) (hGU : Disjoint G U) (hGT : Disjoint G T)
-    (hUT : Disjoint U T) :
-    (∑' h : O,initialPhysicalMode p hp hcop hg Ψ j σ V Φ Z D m G U T E h) =
-      initialPhysicalMode p hp hcop hg Ψ j σ V Φ Z D m G U T E 0 +
-      ∑' h : O,if h=0 then 0 else
-        initialPhysicalMode p hp hcop hg Ψ j σ V Φ Z D m G U T E h :=
-  (initialPhysicalMode_summable p hp hcop hg hinj hc hpr Ψ j σ V Φ hZ D m
-    G U T E hGU hGT hUT).tsum_eq_add_tsum_ite 0
-
 end RayModes
-
-theorem poolPrimary_norm (F : Finset (Ideal O)) (hF : ∀ I ∈ F,Admissible I)
-    (A : Finset (primePool F)) :
-    FirstPassCubeLabels.primeProductNorm (poolPrimary F) A = (Ideal.absNorm (∏ i ∈ A,i.val) : ℝ) := by
-  unfold FirstPassCubeLabels.primeProductNorm
-  rw [eisEmbedding_norm_sq_eq_absNorm_span,FiniteGaussPhase.span_finset_prod]
-  simp only [poolPrimary_span F hF]
-
-theorem reconstructedSelector_support (S : Finset (Ideal O)) (P j : Ideal O)
-    (a : Ideal O → ℂ) (A : Finset (primePool (columns S P j)))
-    (hA : reconstructedSelector S P j a A≠0) : (∏ i ∈ A,i.val)∈columns S P j := by
-  by_contra h
-  exact hA (by simp only [reconstructedSelector,h,ite_false])
-
-theorem reconstructedSelector_original (S : Finset (Ideal O)) {P j : Ideal O}
-    (hP : Squarefree P) (hj : j∣P) (a : Ideal O → ℂ)
-    (A : Finset (primePool (columns S P j)))
-    (hA : reconstructedSelector S P j a A≠0) :
-    Squarefree (∏ i ∈ A,i.val) ∧ IsCoprime (∏ i ∈ A,i.val) j ∧
-      residual P j ∣ (∏ i ∈ A,i.val) ∧ reconstruct P j (∏ i ∈ A,i.val)∈S :=
-  (mem_columns hP hj).mp (reconstructedSelector_support S P j a A hA)
-
-theorem reconstructedSelector_empty (S : Finset (Ideal O)) (P j : Ideal O)
-    (a : Ideal O → ℂ) (h : columns S P j=∅) (A : Finset (primePool (columns S P j))) :
-    reconstructedSelector S P j a A=0 := by simp only [reconstructedSelector,h,Finset.notMem_empty,ite_false]
-
-theorem residual_empty (S : Finset (Ideal O)) (P j : Ideal O)
-    (η : Ideal O →* ℂ) (a : Ideal O → ℂ) (W : ℝ → ℂ) (Z r z G : ℝ)
-    (h : columns S P j=∅) (u : O) :
-    residualNormalizedPolynomial S P j η a W Z r z G u=0 := by
-  simp only [residualNormalizedPolynomial,h,Finset.sum_empty,mul_zero]
-
-theorem residual_eq_initialTest (S : Finset (Ideal O)) {P j : Ideal O}
-    (hP : Admissible P) (hj : j∣P)
-    (hS : ∀ n∈S,Squarefree n → Supported n)
-    (η : Ideal O →* ℂ) (a : Ideal O → ℂ) (W : ℝ → ℂ) (Z r z G : ℝ) (u : O) :
-    let F := columns S P j
-    let hF : ∀ I∈F,Admissible I := fun I hI => columns_admissible S hP hj hS hI
-    letI : ∀ i : primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-      fun i => by rw [poolPrimary_span F hF i]; infer_instance
-    residualNormalizedPolynomial S P j η a W Z r z G u =
-      ((Z^(-(r+z-2*G)/2) : ℝ) : ℂ)*inputConjugateRow (poolPrimary F)
-        (poolPrimary_good F hF) Finset.univ (elementCharacter η) (primaryGenerator j) 1 1
-        (initialTest (poolPrimary F) (reconstructedSelector S P j a)
-          (residualOverlapWindow P j W Z z G) Z (r+z-2*G)) u := by
-  intro F hF
-  let : ∀ i : primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-    fun i => by rw [poolPrimary_span F hF i]; infer_instance
-  rw [residual_eq_input S hP hj hS η a W Z r z G u]
-  congr 2
-  funext A
-  simp only [initialTest,poolPrimary_norm F hF]
-  rfl
-
-theorem residual_initial_physical_rays (S : Finset (Ideal O)) {P j : Ideal O}
-    (hP : Admissible P) (hj : j∣P)
-    (hS : ∀ n∈S,Squarefree n → Supported n)
-    (η : Ideal O →* ℂ) (a : Ideal O → ℂ) (W : ℝ → ℂ) {Z : ℝ} (hZ : 0<Z)
-    (r z G m : ℝ) (Φ : 𝓢(ℝ,ℂ)) :
-    let F := columns S P j
-    let hF : ∀ I∈F,Admissible I := fun I hI => columns_admissible S hP hj hS hI
-    letI : ∀ i : primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-      fun i => by rw [poolPrimary_span F hF i]; infer_instance
-    (∑' u : O,Φ (‖eisEmbedding u‖^2/Z^m)*
-      (‖residualNormalizedPolynomial S P j η a W Z r z G u‖^2 : ℝ)) =
-    ∑ C ∈ (Finset.univ : Finset (primePool F)).powerset,
-      ∑ U ∈ (Finset.univ\C).powerset,∑ T ∈ (Finset.univ\C).powerset,
-        if Disjoint U T then ∑ E ∈ C.powerset,∑' h : O,
-          initialPhysicalMode (poolPrimary F) (poolPrimary_ne_zero F hF) (poolPrimary_coprime F hF)
-            (poolPrimary_good F hF) (elementCharacter η) (primaryGenerator j)
-            (reconstructedSelector S P j a) (residualOverlapWindow P j W Z z G)
-            Φ Z (r+z-2*G) m C U T E h else 0 := by
-  intro F hF
-  let : ∀ i : primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-    fun i => by rw [poolPrimary_span F hF i]; infer_instance
-  simp_rw [residual_eq_initialTest S hP hj hS η a W Z r z G]
-  exact initial_input_physical (poolPrimary F) (poolPrimary_ne_zero F hF)
-    (poolPrimary_coprime F hF) (poolPrimary_good F hF) (poolPrimary_injective F hF)
-    (poolPrimary_odd F hF) (poolPrimary_primary F hF) Finset.univ (elementCharacter η)
-    (primaryGenerator j) (reconstructedSelector S P j a) (residualOverlapWindow P j W Z z G)
-    Φ hZ (r+z-2*G) m
-
-theorem idealPair_product_transport (F : Finset (Ideal O))
-    (hF : ∀ I∈F,Admissible I) (I J : Ideal O) (Φ : 𝓢(ℝ,ℂ)) (Y : ℝ) :
-    letI : ∀ i : primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-      fun i => by rw [poolPrimary_span F hF i]; infer_instance
-    idealPairPoissonKernel F (pool_positive F hF) (pool_good F hF) I J Φ Y =
-      GaussGeneratorTransport.squarefreePairProductPoissonKernel (poolPrimary F)
-        (poolPrimary_ne_zero F hF) (poolPrimary_injective F hF) (poolPrimary_good F hF)
-        (idealSupport F I) (idealSupport F J) Φ Y := by
-  let : ∀ i : primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-    fun i => by rw [poolPrimary_span F hF i]; infer_instance
-  have he : (fun i : primePool F => Ideal.span {poolPrimary F i}) =
-      (fun i : primePool F => i.val) := funext (poolPrimary_span F hF)
-  have ht := GaussGeneratorTransport.squarefreePairPoissonKernel_eq_product
-    (poolPrimary F) (poolPrimary_ne_zero F hF) (poolPrimary_injective F hF)
-    (poolPrimary_good F hF) (idealSupport F I) (idealSupport F J) Φ Y
-  simpa only [he,idealPairPoissonKernel] using ht
 
 end SevenEighths.InverseInitialRayAttachment
 

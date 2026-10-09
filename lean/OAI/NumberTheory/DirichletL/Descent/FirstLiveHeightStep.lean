@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstLiveActualStep
 import OAI.NumberTheory.DirichletL.Descent.FirstSecondHeightCost
-
 namespace OAI
 
 noncomputable section

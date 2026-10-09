@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.Signal
 import OAI.NumberTheory.DirichletL.Hecke.Origin
 import Mathlib.Analysis.Analytic.IsolatedZeros
-
 namespace OAI
 
 noncomputable section
@@ -43,23 +42,6 @@ theorem signalMellin_eq_amplitude (χ : Character) (H : ℂ → ℂ)
     (z₀ := (2 : ℂ)) (by simpa using max_lt ha (by norm_num : (1 : ℝ) < 2)) _ hs
   apply line_tendsto_punctured.frequently
   exact Filter.Frequently.of_forall (fun y => signalMellin_eq_amplitude_on_line χ H hH hb c a ha htop y)
-
-theorem poleRemoved_mul_signalMellin (χ : Character) (H : ℂ → ℂ)
-    (hH : DifferentiableOn ℂ H {s : ℂ | 7/8 < s.re})
-    (hb : ∀ s : ℂ, 7/8 < s.re → ‖H s - 1‖ ≤ 1/2)
-    (c a : ℝ) (ha : a < 2)
-    (htop : signal χ H c =O[atTop] (fun x : ℝ => x^(a+c)))
-    {s : ℂ} (hs : max a 1 < s.re) :
-    HeckeOrigin.poleRemoved χ s * signalMellin (signal χ H c) c s =
-      (s-1) * gaussianMultiplier H s := by
-  have hs1 : 1 < s.re := (le_max_right a 1).trans_lt hs
-  have h0 : s ≠ 0 := by intro h; norm_num [h] at hs1
-  have h1 : s ≠ 1 := by intro h; norm_num [h] at hs1
-  rw [HeckeOrigin.poleRemoved_eq χ h0 h1, signalMellin_eq_amplitude χ H hH hb c a ha htop hs]
-  unfold amplitude quotient gaussianMultiplier
-  rw [HeckeReciprocal.reciprocal_eq_inv χ h0 h1]
-  have hn := LFunction_ne_zero_of_one_lt_re χ hs1
-  field_simp
 
 def targetRegularizer (χ : Character) (s : ℂ) : ℂ :=
   if χ.residue = 1 then s-1 else 1

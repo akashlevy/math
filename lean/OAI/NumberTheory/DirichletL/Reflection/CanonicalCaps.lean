@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.ActualSizeCaps
 import OAI.NumberTheory.DirichletL.Reflection.SourceScaleCaps
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

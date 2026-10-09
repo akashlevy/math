@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondSourceAttachment
 import OAI.NumberTheory.DirichletL.Inversion.SecondPrincipalCaller
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -60,37 +59,6 @@ theorem fresh_input_parent_mask {Jo : ℕ} (parent : SecondParentSource ι Jo)
       (m*b*d)*ConcretePrimeRowBridge.idealGenerator parent.quotient by ring]
   simp only [←Ideal.span_singleton_mul_span_singleton,
     ConcretePrimeRowBridge.span_idealGenerator,hq,sourceIdeal]
-
-theorem first_fresh_parent_truncated
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hc : ∀ i,ringChar (Eis ⧸ Ideal.span {p i}) ≠ 2)
-    {Jo : ℕ} (parent : SecondParentSource ι Jo) (F D : Finset ι)
-    (hq : parent.quotient = sourceIdeal p D)
-    (negative : Bool) (χ : RayCharacter) (Ψ : Eis →* ℂ) (m : Eis)
-    (H : Finset ι → ℂ) (ω : ℝ → ℂ) (X t Y : ℝ) (hY : 0 < Y) (core : FirstCoreIndex)
-    (K : Finset ι → Finset ι → Finset Eis) :
-    let Ψ₀ := firstCoreTwist negative χ Ψ core
-    let H₀ := firstCoreTest H (fun u => ω (Real.exp u))
-      (columnLog p (primeProductNorm p D*X)) negative (-t) D
-    firstFreshSecondPoisson p hp hg hinj F D parent.cube.support
-      (fun i => parent.cube.leftExponent i+parent.cube.rightExponent i)
-      parent.cube.leftBit parent.cube.rightBit negative χ Ψ m H ω X
-      (∏ i∈parent.firstCommon,p i) (secondParentDivisor p parent) core t Y =
-    truncatedSecondSource p hp hg hinj F Ψ₀ (secondParentPuncture p m parent)
-      (secondParentLabel p parent) (secondParentDivisor p parent) H₀ rowMajorant Y K +
-    secondSourceTail p hp hg hinj F Ψ₀ (secondParentPuncture p m parent)
-      (secondParentLabel p parent) (secondParentDivisor p parent) H₀ rowMajorant Y K := by
-  intro Ψ₀ H₀
-  rw [firstFreshSecondPoisson_fixed_pool p hp hg hinj hc (hY:=hY)]
-  rw [←inputConjugateRow_smoothed_second_poisson p hg hp hinj hc _ _ _ _ _ _ _ _ hY]
-  change (∑' k : Eis,rowMajorant (‖ConcreteTraceCRT.eisEmbedding k‖^2/Y)*
-    (‖inputConjugateRow p hg F Ψ₀
-      ((m*b0Label p parent.cube.support (fun i => parent.cube.leftExponent i+parent.cube.rightExponent i)
-        parent.cube.leftBit parent.cube.rightBit)*∏ i∈D,p i)
-      (secondParentLabel p parent) (secondParentDivisor p parent) H₀ k‖^2 : ℝ)) = _
-  simp_rw [fresh_input_parent_mask p hg parent F D hq Ψ₀ m H₀]
-  exact inputConjugateRow_eq_truncated_add_tail p hp hg hinj hc F Ψ₀ (secondParentPuncture p m parent)
-    (secondParentLabel p parent) (secondParentDivisor p parent) H₀ rowMajorant Y hY K
 
 end
 end SevenEighths.InverseMoment

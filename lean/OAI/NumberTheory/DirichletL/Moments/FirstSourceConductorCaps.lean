@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalSourceFixedFamily
 import OAI.NumberTheory.DirichletL.Moments.AmplificationRadicalFamily
 import OAI.NumberTheory.DirichletL.Moments.SecondRadicalBudget
-
 namespace OAI
 
 noncomputable section

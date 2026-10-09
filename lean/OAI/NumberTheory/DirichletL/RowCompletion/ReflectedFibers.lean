@@ -1,94 +1,26 @@
 import OAI.NumberTheory.DirichletL.GaussSum.ActiveReindexing
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CanonicalRowCompletion.GoodMaskRowData
 open ActualEisensteinCubic CompletedGauss CubicEisenstein
-local notation "Eis" => ActualEisensteinCubic.O
-
-theorem sum_selectedSourceRowScalar_mul {m f z:Eis} (D:GoodMaskRowData m f z)
-    (Q:Ideal Eis) (c:Eis) (hc:c≠0) [Fintype (Eis⧸Ideal.span {c})]
-    (hcQ:(Ideal.span {c}:Ideal Eis)=Ideal.span {(9:Eis)}*(Q*Ideal.span {(72:Eis)}))
-    (h:Eis⧸Ideal.span {c}) (G:FixedFourierGeometry c h)
-    (A:Finset (FreePrimeIndex D.movingIdeal (Q*Ideal.span {(72:Eis)})))
-    [Fintype G.PhaseResidue] (Ψ:Eis→*ℂ) (u:Eisˣ) (n:ℕ)
-    (k dN dB:Ideal Eis) (weight:G.PhaseResidue → ℂ) :
-    (∑rho:G.PhaseResidue,D.selectedSourceRowScalar Q c hc hcQ h G A Ψ u n rho k dN dB*weight rho)=
-      (D.sourceRowScalar Q c hc hcQ h G A Ψ u n*residualArgumentPhase k 1 dN dB)*
-        weight (D.sourceRowResidue Q c hcQ h G A) := by
-  simp only [selectedSourceRowScalar,ite_mul,zero_mul,Finset.sum_ite_eq',Finset.mem_univ,ite_true]
 
 end CanonicalRowCompletion.GoodMaskRowData
 
@@ -98,102 +30,6 @@ local notation "Eis" => ActualEisensteinCubic.O
 noncomputable local instance rayUnitsFintype : Fintype Eisˣ := by
   letI : Finite Eisˣ:=PrimaryIdealUnitReindex.finite_units
   exact Fintype.ofFinite _
-
-variable (q:ℕ) (hq:q≠0) (m:Eis) (hm:m≠0)
-    (rows:Finset (Ideal Eis)) (R F:Ideal Eis) (hR:R≠0) (hF:Squarefree F)
-    (hrows:∀I∈rows,I≠0) (v:Eisˣ)
-    [Fintype (Eis⧸Ideal.span {reflectionConductor q})]
-    [∀h:Eis⧸Ideal.span {reflectionConductor q},
-      Fintype (fixedFourierGeometry (reflectionConductor q) (reflectionConductor_ne_zero q hq) h).PhaseResidue]
-
-def rowResidue (h:Eis⧸Ideal.span {reflectionConductor q})
-    (e:FreeReflection.pool R (maskIdeal q m F) (freeConductor q) → Fin 6)
-    (J:RowIndex q m rows R F) :
-    (fixedFourierGeometry (reflectionConductor q) (reflectionConductor_ne_zero q hq) h).PhaseResidue :=
-  (data q m hm rows R F hF hrows v J).sourceRowResidue
-    (CanonicalCoefficientClass.fixedBaseConductor q) (reflectionConductor q)
-    (reflectionConductor_ideal q) h
-    (fixedFourierGeometry (reflectionConductor q) (reflectionConductor_ne_zero q hq) h)
-    (activeSet q hq m hm rows R F hR hF hrows v e J)
-
-def rowAmplitude (Ψ:Eis→*ℂ) (h:Eis⧸Ideal.span {reflectionConductor q}) (u:Eisˣ)
-    (e:FreeReflection.pool R (maskIdeal q m F) (freeConductor q) → Fin 6)
-    (n:ℕ) (J:RowIndex q m rows R F) : ℂ :=
-  (data q m hm rows R F hF hrows v J).sourceRowScalar
-    (CanonicalCoefficientClass.fixedBaseConductor q) (reflectionConductor q)
-    (reflectionConductor_ne_zero q hq) (reflectionConductor_ideal q) h
-    (fixedFourierGeometry (reflectionConductor q) (reflectionConductor_ne_zero q hq) h)
-    (activeSet q hq m hm rows R F hR hF hrows v e J) Ψ u n*
-      residualArgumentPhase (rowResidualPart J.val (maskIdeal q m F)) 1
-        (columnDivisor q m R F e 1) (columnDivisor q m R F e 2)
-
-omit [∀ h : Eis ⧸ Ideal.span {reflectionConductor q},
-  Fintype (fixedFourierGeometry (reflectionConductor q)
-    (reflectionConductor_ne_zero q hq) h).PhaseResidue] in
-lemma rowScalar_eq_ite (Ψ:Eis→*ℂ)
-    (h:Eis⧸Ideal.span {reflectionConductor q}) (u:Eisˣ)
-    (e:FreeReflection.pool R (maskIdeal q m F) (freeConductor q) → Fin 6)
-    (n:ℕ) (J:RowIndex q m rows R F)
-    (rho:(fixedFourierGeometry (reflectionConductor q) (reflectionConductor_ne_zero q hq) h).PhaseResidue) :
-    rowScalar q hq m hm rows R F hR hF hrows v Ψ (⟨h,rho,u⟩,e) n J=
-      if rho=rowResidue q hq m hm rows R F hR hF hrows v h e J then
-        rowAmplitude q hq m hm rows R F hR hF hrows v Ψ h u e n J else 0 := rfl
-
-theorem sum_rowScalar_phase_mul (Ψ:Eis→*ℂ)
-    (h:Eis⧸Ideal.span {reflectionConductor q}) (u:Eisˣ)
-    (e:FreeReflection.pool R (maskIdeal q m F) (freeConductor q) → Fin 6)
-    (n:ℕ) (J:RowIndex q m rows R F)
-    (weight:(fixedFourierGeometry (reflectionConductor q) (reflectionConductor_ne_zero q hq) h).PhaseResidue → ℂ) :
-    (∑rho:(fixedFourierGeometry (reflectionConductor q) (reflectionConductor_ne_zero q hq) h).PhaseResidue,
-      rowScalar q hq m hm rows R F hR hF hrows v Ψ (⟨h,rho,u⟩,e) n J*weight rho)=
-      rowAmplitude q hq m hm rows R F hR hF hrows v Ψ h u e n J*
-        weight (rowResidue q hq m hm rows R F hR hF hrows v h e J) := by
-  exact (data q m hm rows R F hF hrows v J).sum_selectedSourceRowScalar_mul
-    (CanonicalCoefficientClass.fixedBaseConductor q) (reflectionConductor q)
-    (reflectionConductor_ne_zero q hq) (reflectionConductor_ideal q) h
-    (fixedFourierGeometry (reflectionConductor q) (reflectionConductor_ne_zero q hq) h)
-    (activeSet q hq m hm rows R F hR hF hrows v e J) Ψ u n
-    (rowResidualPart J.val (maskIdeal q m F))
-    (columnDivisor q m R F e 1) (columnDivisor q m R F e 2) weight
-
-theorem sum_rowScalar_fixedRays (Ψ:Eis→*ℂ)
-    (e:FreeReflection.pool R (maskIdeal q m F) (freeConductor q) → Fin 6)
-    (n:ℕ) (J:RowIndex q m rows R F)
-    (weight:FixedReflectionRay (reflectionConductor q) (reflectionConductor_ne_zero q hq) → ℂ) :
-    (∑ray:FixedReflectionRay (reflectionConductor q) (reflectionConductor_ne_zero q hq),
-      rowScalar q hq m hm rows R F hR hF hrows v Ψ (ray,e) n J*weight ray)=
-      ∑h:Eis⧸Ideal.span {reflectionConductor q},∑u:Eisˣ,
-        rowAmplitude q hq m hm rows R F hR hF hrows v Ψ h u e n J*
-          weight ⟨h,rowResidue q hq m hm rows R F hR hF hrows v h e J,u⟩ := by
-  rw [sum_fixedReflectionRay]
-  apply Finset.sum_congr rfl
-  intro h hh
-  rw [Finset.sum_comm]
-  apply Finset.sum_congr rfl
-  intro u hu
-  exact sum_rowScalar_phase_mul q hq m hm rows R F hR hF hrows v Ψ h u e n J _
-
-theorem sum_rowScalar_fixedRayFin (Ψ:Eis→*ℂ)
-    (e:FreeReflection.pool R (maskIdeal q m F) (freeConductor q) → Fin 6)
-    (n:ℕ) (J:RowIndex q m rows R F)
-    (weight:Fin (fixedReflectionRayCount (reflectionConductor q) (reflectionConductor_ne_zero q hq)) → ℂ) :
-    (∑i:Fin (fixedReflectionRayCount (reflectionConductor q) (reflectionConductor_ne_zero q hq)),
-      rowScalar q hq m hm rows R F hR hF hrows v Ψ
-        ((fixedReflectionRayEquiv (reflectionConductor q) (reflectionConductor_ne_zero q hq)).symm i,e)
-        n J*weight i)=
-      ∑h:Eis⧸Ideal.span {reflectionConductor q},∑u:Eisˣ,
-        rowAmplitude q hq m hm rows R F hR hF hrows v Ψ h u e n J*
-          weight (fixedReflectionRayEquiv (reflectionConductor q) (reflectionConductor_ne_zero q hq)
-            ⟨h,rowResidue q hq m hm rows R F hR hF hrows v h e J,u⟩) := by
-  calc
-    _=(∑ray:FixedReflectionRay (reflectionConductor q) (reflectionConductor_ne_zero q hq),
-      rowScalar q hq m hm rows R F hR hF hrows v Ψ (ray,e) n J*
-        weight (fixedReflectionRayEquiv (reflectionConductor q) (reflectionConductor_ne_zero q hq) ray)):=by
-      symm
-      apply Fintype.sum_equiv (fixedReflectionRayEquiv (reflectionConductor q) (reflectionConductor_ne_zero q hq))
-      intro ray
-      simp only [Equiv.symm_apply_apply]
-    _=_:=sum_rowScalar_fixedRays q hq m hm rows R F hR hF hrows v Ψ e n J _
 
 end CanonicalRowCompletion.ActualFiber
 
@@ -218,8 +54,6 @@ theorem hasExactCompletedModels_of_representative_identity
 
 end CompletedGauss
 
-open scoped BigOperators Classical ContDiff
-
 namespace CanonicalRowCompletion.ActualFiber
 open ActualEisensteinCubic CompletedGauss CanonicalQuadraticSieve CubicEisenstein CubicJacobiGlobal
 local notation "Eis" => ActualEisensteinCubic.O
@@ -233,14 +67,6 @@ noncomputable def sourcePrimeSet (B:Finset (FreeReflection.pool R (maskIdeal q m
     (J:RowIndex q m rows R F) :
     Finset (FreePrimeIndex (data q m hm rows R F hF hrows v J).movingIdeal (freeConductor q)) :=
   completeActiveSet (splitIndex q hq m hm rows R F hR hF hrows v J) B
-
-omit [Fintype (Eis ⧸ span {reflectionConductor q})] in
-lemma sourcePrimeSet_encode (B:Finset (FreeReflection.pool R (maskIdeal q m F) (freeConductor q)))
-    (e:B→Fin 3) (J:RowIndex q m rows R F) :
-    activeSet q hq m hm rows R F hR hF hrows v (encodeReflectionSix ⟨B,e⟩) J=
-      sourcePrimeSet q hq m hm rows R F hR hF hrows v B J := by
-  unfold activeSet sourcePrimeSet
-  rw [reflectionSixSupport_encode]
 
 noncomputable abbrev sourceStratum
     (h:Eis⧸Ideal.span {reflectionConductor q})
@@ -366,8 +192,6 @@ theorem completedT_eq_nonresidual_source
 
 end CanonicalRowCompletion.ActualFiber
 
-open scoped Classical BigOperators ContDiff
-
 namespace CompletedGauss.FreeReflection
 open ActualEisensteinCubic CubicEisenstein CanonicalQuadraticSieve
 local notation "Eis" => ActualEisensteinCubic.O
@@ -394,59 +218,7 @@ lemma fixedRayFiber_branch (c:Eis) (hc:c≠0) (I F Q Q0:Ideal Eis) (hI:I≠0) (h
   change f ((fixedReflectionRayEquiv c hc).symm ((fixedReflectionRayEquiv c hc) r))=f r
   exact congrArg f ((fixedReflectionRayEquiv c hc).symm_apply_apply r)
 
-theorem fixedRayFiberFromRows_branch_value
-    (c:Eis) (hc:c≠0) (rows:Finset (Ideal Eis))
-    (I F Q Q0:Ideal Eis) (hI:I≠0) (hQ:Q≠0) (K:ℝ)
-    (scalar:(FixedBranchIndex c hc I Q Q0×ℕ) → representativeRowFiber rows I Q → ℂ)
-    (hscalar:∀a J,‖scalar a J‖≤1)
-    (hbad:∀P∈fixedBadPrimes,P∣Q)
-    (hrows:∀J∈rows,J≠0 ∧ (Ideal.absNorm J:ℝ)≤K)
-    (J:representativeRowFiber rows I Q) (r:FixedReflectionRay c hc)
-    (e:pool I Q Q0→Fin 6)
-    (W:ℝ→ℂ) (a b:ℝ) (ha:0<a) (hsupp:Function.support W⊆Set.Icc a b)
-    (hW:ContDiff ℝ ∞ W) (X ρ q:ℝ) (hX:0<X) (hρ:0<ρ) (hq:1<q)
-    (hK:0<completedResidualScale K I Q)
-    (hk:completedResidualScale K I Q/2≤
-      (Ideal.absNorm (fiberResidualIndex rows I Q K hbad hrows J).val:ℝ)) :
-    let G:=fixedFourierGeometry c hc r.1
-    let d:=(fixedRayFiberFromRows c hc rows I F Q Q0 hI hQ K scalar hscalar).branch
-      (fixedReflectionRayEquiv c hc r,e)
-    let A:=reflectionExtractedDivisor (fun P:d.primes=>P.val)
-      (fun P=>completedLocalExponent I F P.val) d.label 1
-    let B:=reflectionExtractedDivisor (fun P:d.primes=>P.val)
-      (fun P=>completedLocalExponent I F P.val) d.label 2
-    d.value W X ρ q (fiberResidualIndex rows I Q K hbad hrows J)=
-      d.rawValue (fun m n b=>G.array r.2.1 r.2.2 m (A*n) (B*b))
-        (fun m _=>scalar ((r,e),m) J) W X ρ q (fiberResidualIndex rows I Q K hbad hrows J) := by
-  let G:=fixedFourierGeometry c hc r.1
-  let σ:ℕ→idealRange (completedResidualScale K I Q)→ℂ:=
-    fun m=>extendFiberRowScalar rows I Q K scalar ((r,e),m)
-  have hσ:∀m k,‖σ m k‖≤1:=fun m=>extendFiberRowScalar_norm_le_one rows I Q K scalar hscalar ((r,e),m)
-  have hb:=fixedRayFiber_branch c hc I F Q Q0 hI hQ K (fun _=>1) (by intro x;simp)
-    (fun x m=>extendFiberRowScalar rows I Q K scalar (x,m))
-    (fun x m=>extendFiberRowScalar_norm_le_one rows I Q K scalar hscalar (x,m)) r e
-  change (fixedRayFiberFromRows c hc rows I F Q Q0 hI hQ K scalar hscalar).branch _=_ at hb
-  let P (d : ReflectedBranchData (fixedCuspLevelBound c) K I F Q) : Prop :=
-    let A := reflectionExtractedDivisor (fun P : d.primes => P.val)
-      (fun P => completedLocalExponent I F P.val) d.label 1
-    let B := reflectionExtractedDivisor (fun P : d.primes => P.val)
-      (fun P => completedLocalExponent I F P.val) d.label 2
-    d.value W X ρ q (fiberResidualIndex rows I Q K hbad hrows J) =
-      d.rawValue (fun m n b => G.array r.2.1 r.2.2 m (A * n) (B * b))
-        (fun m _ => scalar ((r, e), m) J) W X ρ q
-        (fiberResidualIndex rows I Q K hbad hrows J)
-  apply Eq.mpr (congrArg P hb)
-  dsimp only [P]
-  rw [G.sixPhaseFixedCuspBranch_value_eq_geometric_rawValue I F Q Q0 hI hQ K
-    (fixedCuspLevelBound c) (G.levelScale_le hc) e r.2.1 r.2.2 σ hσ
-    W a b ha hsupp hW X ρ q hX hρ hq hK (fiberResidualIndex rows I Q K hbad hrows J) hk]
-  apply ReflectedBranchData.rawValue_congr_phase_at
-  intro m
-  exact extendFiberRowScalar_at_original rows I Q K hbad hrows scalar ((r,e),m) J
-
 end CompletedGauss.FreeReflection
-
-open scoped BigOperators Classical ContDiff
 
 namespace CanonicalRowCompletion.ActualFiber
 open ActualEisensteinCubic CompletedGauss CanonicalQuadraticSieve CubicEisenstein
@@ -606,41 +378,14 @@ theorem reflectedFiber_branch_exact
 
 end CanonicalRowCompletion.ActualFiber
 
-open scoped Classical
-
 namespace CanonicalRowCompletion
 open ActualEisensteinCubic CompletedGauss CubicEisenstein CanonicalCoefficientClass
-local notation "Eis" => ActualEisensteinCubic.O
-
-theorem dirichletTarget_of_reflection_shells
-    (hmodels:∀(q₀:ℕ) [NeZero q₀] (χ:DirichletCharacter ℂ q₀),
-      ∃(rays:ℕ) (scale:ℂ),
-        HasFixedShellModels (reflectionExcludedPrimes q₀) (initialBase χ)
-          rays scale 1 completedRamifiedStep (fixedCuspLevelBound (reflectionConductor q₀))) :
-    ShortDraft.DirichletTarget := by
-  apply dirichletTarget_of_theta_models
-  intro q₀ hq₀ χ
-  obtain ⟨rays,scale,hm⟩:=hmodels q₀ χ
-  refine ⟨reflectionExcludedPrimes q₀,reflectionExcludedPrimes_bad q₀,
-    reflectionExcludedPrimes_prime q₀,1,completedRamifiedStep,
-    fixedCuspLevelBound (reflectionConductor q₀),by norm_num,
-    completedRamifiedStep_gt_one,reflectionLevelBound_ge_one q₀ (NeZero.ne q₀),?_⟩
-  exact hasCanonicalThetaModels_of_fixed_shell_models
-    (reflectionExcludedPrimes q₀) (initialBase χ) rays scale 1 completedRamifiedStep
-    (fixedCuspLevelBound (reflectionConductor q₀)) hm
 
 end CanonicalRowCompletion
 
 namespace ShortDraft
 
-theorem zeta_nonvanishing_of_dirichletTarget (h:DirichletTarget)
-    (s:ℂ) (hs:(23/24:ℝ)<s.re) (hs1:s≠1) : riemannZeta s≠0 := by
-  have he:=h 1 (1:DirichletCharacter ℂ 1) s hs (by simp only [true_and]; exact hs1)
-  simpa only [DirichletCharacter.LFunction_modOne_eq] using he
-
 end ShortDraft
-
-open scoped BigOperators Classical ContDiff
 
 namespace CanonicalRowCompletion.ActualFiber
 open ActualEisensteinCubic CompletedGauss CanonicalQuadraticSieve CubicEisenstein CubicJacobiGlobal

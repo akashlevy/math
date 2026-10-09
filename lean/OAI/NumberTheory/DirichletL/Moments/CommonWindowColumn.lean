@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.ExceptionalWholeWindow
 import OAI.NumberTheory.DirichletL.Moments.CommonPairedSource
 import OAI.NumberTheory.DirichletL.Moments.CommonHeightEnvelope
-
 namespace OAI
 
 noncomputable section

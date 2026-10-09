@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Reflection.ActiveProducts
 import OAI.NumberTheory.DirichletL.Reflection.SlotCoefficients
 import OAI.NumberTheory.DirichletL.Reflection.OriginalTransport
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

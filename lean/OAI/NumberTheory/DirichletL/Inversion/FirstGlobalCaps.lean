@@ -1,7 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.FirstGlobalParents
-import OAI.NumberTheory.DirichletL.Descent.FirstChildWindowsLive
-import OAI.NumberTheory.DirichletL.Descent.FirstChildWindowsPhysical
-
+import OAI.NumberTheory.DirichletL.Descent.FirstChildWindowsCells
 namespace OAI
 
 noncomputable section
@@ -86,37 +84,6 @@ lemma outerNorms_ge_one (x : FirstOriginalOuter ι) : ∀i,1≤outerNorms p x i 
     rw [primeSubsetGenerator_norm_eq_productNorm]
     exact primeProductNorm_ge_one p hp _
   · exact primeProductNorm_ge_one p hp _
-
-include hp in
-omit [∀i,(Ideal.span {p i}).IsMaximal] in
-lemma source_norms_ge_one (pool : Finset ι) (Q : Finset (ι→₀ℕ))
-    (labels : Finset (Ideal O)) (Y : ℝ)
-    (x : Σ _ : FirstOriginalOuter ι,Ideal O×O)
-    (hx : x∈firstGlobalRetainedSource p (firstOriginalOuter pool Q) (fun _=>labels) (fun o=>o.1) Y) :
-    ∀i,1≤originalNorms p x i := by
-  have hf:=((mem_firstRetainedSource p labels x.1.1 Y x.2).mp (Finset.mem_sigma.mp hx).2).2
-  have hn : x.2.2≠0 := (Finset.mem_erase.mp hf).1
-  intro i
-  fin_cases i
-  · exact outerNorms_ge_one p hp x.1 0
-  · exact outerNorms_ge_one p hp x.1 1
-  · exact outerNorms_ge_one p hp x.1 2
-  · exact outerNorms_ge_one p hp x.1 3
-  · exact outerNorms_ge_one p hp x.1 4
-  · exact EisensteinSchwartzPoisson.one_le_eisenstein_norm_sq _ hn
-
-include hp in
-omit [∀i,(Ideal.span {p i}).IsMaximal] in
-theorem sourceCell_frequency (pool : Finset ι) (Q : Finset (ι→₀ℕ))
-    (labels : Finset (Ideal O)) (Y : ℝ) (k : SourceIndex)
-    (x : Σ _ : FirstOriginalOuter ι,Ideal O×O)
-    (hx : x∈sourceCell (originalNorms p)
-      (firstGlobalRetainedSource p (firstOriginalOuter pool Q) (fun _=>labels) (fun o=>o.1) Y) k) :
-    dyadScale (k 5)≤‖eisEmbedding x.2.2‖^2 ∧
-      ‖eisEmbedding x.2.2‖^2≤2*dyadScale (k 5) := by
-  have h:=sourceCell_ratios (originalNorms p) _ (source_norms_ge_one p hp pool Q labels Y) k x hx 5
-  exact ⟨by simpa only [originalNorms_frequency,one_mul] using (le_div_iff₀ (dyadScale_pos _)).mp h.1,
-    by simpa only [originalNorms_frequency] using (div_le_iff₀ (dyadScale_pos _)).mp h.2⟩
 
 include hp in
 omit [∀i,(Ideal.span {p i}).IsMaximal] in
@@ -240,66 +207,6 @@ theorem labelParentCell_bounds (pool : Finset ι) (Q : Finset (ι→₀ℕ))
   have hd:=dyadIndex_bounds _ hn
   rw [hj] at hd
   exact ⟨hm,dyad_power_bounds Z eta _ hZ h2 j ⟨hd.1,hd.2.le⟩⟩
-
-theorem raw_column_exponent (Z r : ℝ) (hZ : 1<Z) (a b c : ℕ) :
-    Z^r/(dyadScale a*dyadScale b*dyadScale c)=
-      Z^(r-dyadicExponent Z a-dyadicExponent Z b-dyadicExponent Z c) := by
-  simp only [Real.rpow_sub (show 0<Z by linarith),rpow_dyadicExponent Z hZ]
-  simp only [div_div]
-
-theorem columnScales_exponents (Z r : ℝ) (hZ : 1<Z) (k : SourceIndex) (l : ℕ) :
-    columnScales k l (Z^r) (Z^r)=rawScales k l
-      (Z^(r-dyadicExponent Z (k 0)-dyadicExponent Z (k 2)-dyadicExponent Z l))
-      (Z^(r-dyadicExponent Z (k 1)-dyadicExponent Z (k 2)-dyadicExponent Z l)) := by
-  simp only [columnScales,raw_column_exponent Z r hZ]
-
-theorem columnScales_products (Z r : ℝ) (k : SourceIndex) (l : ℕ) :
-    let s:=columnScales k l (Z^r) (Z^r)
-    s 0*s 2*s 5*s 7=Z^r ∧ s 1*s 2*s 5*s 8=Z^r :=
-  ⟨columnScales_left k l _ _,columnScales_right k l _ _⟩
-
-theorem sourceCell_parent (p : ι→O) (pool : Finset ι) (Q : Finset (ι→₀ℕ))
-    (labels : Finset (Ideal O)) (Y : ℝ) (k : SourceIndex)
-    (selector : FirstOriginalOuter ι→Finset ι→ℂ) (l : ℕ)
-    (x : Σ _ : FirstOriginalOuter ι,Ideal O×O)
-    (hx : x∈sourceCell (originalNorms p)
-      (firstGlobalRetainedSource p (firstOriginalOuter pool Q) (fun _=>labels) (fun o=>o.1) Y) k)
-    (D : Finset ι) (hD : D⊆pool) (hs : commonSelector p (selector x.1) l D≠0) :
-    fillFirstQuotient (ofOriginal x.1) D∈parentCell p pool Q selector k l :=
-  (mem_parentCell p pool Q selector k l _).mpr
-    ⟨x.1,sourceCell_outer p pool Q labels Y k x hx,D,Finset.mem_powerset.mpr hD,hs,rfl⟩
-
-theorem outerCell_eq_of_first_five (p : ι→O) (pool : Finset ι) (Q : Finset (ι→₀ℕ))
-    (k k' : SourceIndex) (h : ∀i : Fin 5,k i.castSucc=k' i.castSucc) :
-    outerCell p pool Q k=outerCell p pool Q k' := by
-  ext x
-  simp only [outerCell, Finset.mem_filter, outerGate, h]
-
-omit [∀i,(Ideal.span {p i}).IsMaximal] in
-lemma live_selector_norm_le_one (selector : Finset ι→ℂ)
-    (hs : ∀D,‖selector D‖≤1) (l : ℕ) (D : Finset ι) :
-    ‖commonSelector p selector l D‖≤1 := (commonSelector_norm p selector l D).trans (hs D)
-
-include hp in
-
-theorem sourceCell_actual_ratios
-    (hg : ∀i,ConcretePrimeRowBridge.goodLambda∉Ideal.span {p i})
-    (pool : Finset ι) (Q : Finset (ι→₀ℕ)) (labels : Finset (Ideal O)) (Y : ℝ)
-    (selector C₁ C₂ : (Σ _ : FirstOriginalOuter ι,Ideal O×O)→Finset ι→ℂ)
-    (k : SourceIndex) (l : ℕ) (T₁ T₂ : ℝ)
-    (x : Σ _ : FirstOriginalOuter ι,Ideal O×O)
-    (hx : x∈sourceCell (originalNorms p)
-      (firstGlobalRetainedSource p (firstOriginalOuter pool Q) (fun _=>labels) (fun o=>o.1) Y) k)
-    (j : FirstCommonIndex ι)
-    (hn : commonSelector p (selector x) l j.2.1*firstCommonWeight p hg (C₁ x) (C₂ x) x.2.2 j≠0) :
-    ∀i,actualOuterRatios p (outerNorms p x.1 0) (outerNorms p x.1 1)
-      (outerNorms p x.1 2) (outerNorms p x.1 4)
-      (primeSubsetGenerator (fun i=>Ideal.span {p i}) x.1.2.2) x.2.2 j (rawScales k l T₁ T₂) i∈Set.Icc 1 2 := by
-  exact actual_original_cell_ratios p hp hg _ selector C₁ C₂
-    (fun y=>outerNorms p y.1 0) (fun y=>outerNorms p y.1 1)
-    (fun y=>outerNorms p y.1 2) (fun y=>outerNorms p y.1 4)
-    (fun y=>primeSubsetGenerator (fun i=>Ideal.span {p i}) y.1.2.2) (fun y=>y.2.2)
-    (source_norms_ge_one p hp pool Q labels Y) k l T₁ T₂ x hx j hn
 
 end SevenEighths.InverseFirstGlobalCaps
 

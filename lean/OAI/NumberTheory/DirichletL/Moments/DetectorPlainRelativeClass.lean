@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.Bands
 import OAI.NumberTheory.DirichletL.Moments.NaturalFixedRaySourceCharacters
-
 namespace OAI
 
 noncomputable section

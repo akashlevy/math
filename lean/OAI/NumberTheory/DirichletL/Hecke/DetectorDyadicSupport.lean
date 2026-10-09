@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorDyadicBridge
 import OAI.NumberTheory.DirichletL.Hecke.DetectorFinite
-
 namespace OAI
 
 noncomputable section

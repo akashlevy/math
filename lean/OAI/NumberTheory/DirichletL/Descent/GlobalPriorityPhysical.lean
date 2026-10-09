@@ -1,5 +1,8 @@
-import OAI.NumberTheory.DirichletL.Descent.GlobalPriorityEnergy
-
+import OAI.NumberTheory.DirichletL.Descent.SecondCellPhysical
+import OAI.NumberTheory.DirichletL.Descent.SecondCellParameters
+import OAI.NumberTheory.DirichletL.Descent.PrioritySourceBudget
+import OAI.NumberTheory.DirichletL.Descent.GlobalPrioritySource
+import OAI.NumberTheory.DirichletL.Inversion.WholePriorityRetainedSource
 namespace OAI
 
 noncomputable section

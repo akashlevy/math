@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.CanonicalInactiveEnergy
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

@@ -1,24 +1,18 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.RationalApproximation
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
+open RationalPrimeExtraction ShortDraftLatticeCount
 
 namespace ActualEisensteinCubic
 
@@ -459,9 +453,6 @@ theorem two_coordinate_norm_four :
 
 end ActualEisensteinCubic
 
-open Filter
-open scoped Topology
-
 theorem abel_transfer (P V W : ℝ → ℂ) (p w : ℂ)
     (hP : Tendsto P (𝓝[>] (0 : ℝ)) (𝓝 p))
     (hW : Tendsto (fun η : ℝ => (η : ℂ) * W η) (𝓝[>] (0 : ℝ)) (𝓝 w))
@@ -488,21 +479,6 @@ theorem abel_transfer (P V W : ℝ → ℂ) (p w : ℂ)
 namespace ActualEisensteinCubic
 
 section
-
-theorem gamma_scalar (n : ℝ) (hn : 0 < n) (G S : ℂ)
-    (h : (((2 / (Real.sqrt 3 * n) : ℝ) : ℂ) * G) =
-      (((n / 2 : ℝ) : ℂ) *
-        (((4 / (n*n) : ℝ) : ℂ) *
-          (((2 / (Real.sqrt 3 * 4) : ℝ) : ℂ) * S)))) :
-    G = S / 2 := by
-  have hnC : (n : ℂ) ≠ 0 := by exact_mod_cast hn.ne'
-  have hsC : (Real.sqrt 3 : ℂ) ≠ 0 := by
-    exact_mod_cast (ne_of_gt (Real.sqrt_pos.2 (by norm_num : (0:ℝ) < 3)))
-  push_cast at h
-  field_simp [hnC, hsC] at h
-  calc
-    G = (2 * G) / 2 := by ring
-    _ = S / 2 := by rw [h]
 
 open EisensteinEmbedding ConcreteTraceCRT Complex
 

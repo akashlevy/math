@@ -3,7 +3,6 @@ import OAI.NumberTheory.DirichletL.Inversion.InitialCanonicalDomains
 import OAI.NumberTheory.DirichletL.Inversion.InitialCanonicalStateWindow
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerFixedWindows
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerEmpty
-
 namespace OAI
 
 noncomputable section

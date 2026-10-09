@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.FirstDeclaredCapacityLossBudget
 import OAI.NumberTheory.DirichletL.Moments.SectorLocalization
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Foundation
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

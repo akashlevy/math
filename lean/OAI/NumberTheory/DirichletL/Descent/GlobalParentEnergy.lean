@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.GlobalParentSource
-
 namespace OAI
 
 noncomputable section

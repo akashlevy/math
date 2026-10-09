@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstReferenceEnergy
 import OAI.NumberTheory.DirichletL.Moments.FirstWindowBudgets
-
 namespace OAI
 
 noncomputable section
@@ -179,26 +178,6 @@ theorem sourceFactor_pairedBudget_polynomial (lowerProduct : ℝ) (hlower : 0 < 
         (mul_le_mul_of_nonneg_left (heightEnvelope_pow_le (J₁ + J₂) s.t)
           (by positivity)) hm₁) hm₂
     _ = _ := by unfold polynomialConstant; ring
-
-theorem uniform_source_normalization (lowerProduct : ℝ) (hlower : 0 < lowerProduct)
-    (J₁ J₂ : ℕ) :
-    ∃ C : ℝ, 0 < C ∧ ∀ {ι : Type*} [Fintype ι] [DecidableEq ι],
-    ∀ (s : Input ι) (a₁ a₂ K Z F Mdecl ell : ℝ) (lossL lossR EL ER : Fin 4 → ℝ),
-    0 < a₁ → 0 < a₂ → 0 < K → 1 < Z → 0 ≤ F →
-    lowerProduct ≤ (∏ i, s.lo i) * a₁ * a₂ →
-    (∀ i, EL i ≤ F * Z ^
-      (Mdecl - (Real.logb Z K + Real.logb Z (s.η.modulus.absNorm : ℝ)) + lossL i)) →
-    (∀ j, ER j ≤ F * Z ^
-      (Mdecl - (Real.logb Z K + Real.logb Z (s.η.modulus.absNorm : ℝ)) + lossR j)) →
-    (∀ i, lossL i ≤ ell) → (∀ j, lossR j ≤ ell) →
-    sourceFactor s a₁ a₂ K * pairedBudget J₁ J₂ s.t EL ER ≤
-      C * F * Z ^ (Mdecl + ell) * (1 + ‖s.t‖) ^ (J₁ + J₂) *
-        profileMoment J₁ * profileMoment J₂ := by
-  refine ⟨polynomialConstant lowerProduct J₁ J₂,
-    polynomialConstant_pos lowerProduct J₁ J₂ hlower, ?_⟩
-  intro ι _ _ s a₁ a₂ K Z F Mdecl ell lossL lossR EL ER ha₁ ha₂ hK hZ hF hs hL hR heL heR
-  exact sourceFactor_pairedBudget_polynomial lowerProduct hlower s a₁ a₂ K Z F Mdecl ell
-    J₁ J₂ lossL lossR EL ER ha₁ ha₂ hK hZ hF hs hL hR heL heR
 
 open Filter CenteredMomentOriginalCommonHarmonic CenteredMomentFirstSourceReduction
 open CenteredMomentFirstReferenceSource CenteredMomentFirstPhysicalDyadicAssembly

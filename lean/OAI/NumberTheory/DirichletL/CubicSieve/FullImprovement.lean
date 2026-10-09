@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.AnnularImprovement
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

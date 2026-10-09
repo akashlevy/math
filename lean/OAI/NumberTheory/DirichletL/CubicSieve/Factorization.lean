@@ -1,7 +1,6 @@
 import Mathlib.Algebra.Squarefree.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Lean.Elab.Tactic.Omega
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve
@@ -53,22 +52,6 @@ omit [Subsingleton Mˣ] in
 theorem secondPart_squarefree (x : M) : Squarefree (secondPart x) :=
   residual_squarefree x 2
 
-omit [Subsingleton Mˣ] in
-theorem residual_parts_isRelPrime (x : M) : IsRelPrime (firstPart x) (secondPart x) := by
-  unfold firstPart secondPart
-  apply IsRelPrime.prod_left
-  intro p hp
-  apply IsRelPrime.prod_right
-  intro q hq
-  have hp' := Finset.mem_filter.mp hp
-  have hq' := Finset.mem_filter.mp hq
-  apply (irreducible_of_normalized_factor p (Multiset.mem_toFinset.mp hp'.1)).isRelPrime_iff_not_dvd.mpr
-  intro hd
-  have heq := normalizedFactors_eq_of_dvd x p (Multiset.mem_toFinset.mp hp'.1)
-    q (Multiset.mem_toFinset.mp hq'.1) hd
-  subst q
-  omega
-
 theorem cubic_factorization (x : M) (hx : x ≠ 0) :
     x = firstPart x * secondPart x ^ 2 * cubePart x ^ 3 := by
   have hp : (∏ p ∈ (normalizedFactors x).toFinset,
@@ -89,15 +72,6 @@ theorem cubic_factorization (x : M) (hx : x ≠ 0) :
       simp_rw [hper]
       simp only [Finset.prod_mul_distrib, Finset.prod_pow]
       simp only [firstPart, secondPart, cubePart, Finset.prod_filter]
-
-theorem extraction_injective_on_nonzero :
-    Set.InjOn (fun x : M => (firstPart x, secondPart x, cubePart x)) {x | x ≠ 0} := by
-  intro x hx y hy h
-  have h1 := congrArg (fun t : M × M × M => t.1) h
-  have h2 := congrArg (fun t : M × M × M => t.2.1) h
-  have h3 := congrArg (fun t : M × M × M => t.2.2) h
-  dsimp only at h1 h2 h3
-  rw [cubic_factorization x hx, cubic_factorization y hy, h1, h2, h3]
 
 end
 end SevenEighths.CubicSieve

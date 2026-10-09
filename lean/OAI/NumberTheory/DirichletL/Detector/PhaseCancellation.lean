@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.Phase
-
 namespace OAI
 
 noncomputable section
@@ -48,17 +47,6 @@ theorem G_conjugate_cancel (a : O) (ha : EisensteinEPrimaryPhase.odd (residue a)
   have hs : star (G a) = (G a)⁻¹ := (Complex.inv_eq_conj hn).symm
   rw [hs]
   exact inv_mul_cancel₀ (norm_ne_zero_iff.mp (by rw [hn]; norm_num))
-
-theorem completed_phase_cancel (c n : O)
-    (hc : EisensteinEPrimaryPhase.odd (residue c))
-    (hn : EisensteinEPrimaryPhase.odd (residue n))
-    (hu : IsUnit (Ideal.Quotient.mk cubicTwoIdeal (c * n ^ 3))) :
-    star (G (c * n ^ 3)) * (G c * reciprocitySign c n * G (n ^ 3)) = 1 := by
-  rw [← G_completed_index c n hc hn]
-  apply G_conjugate_cancel _ _ hu
-  rw [show c * n ^ 3 = c * ((n * n) * n) by ring]
-  simp only [residue_mul]
-  exact odd_mul _ _ hc (odd_mul _ _ (odd_mul _ _ hn hn) hn)
 
 end SevenEighths.ProbePhase
 end

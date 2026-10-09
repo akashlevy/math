@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstUnequalPhysicalEnergy
 import OAI.NumberTheory.DirichletL.Descent.FirstGlobalPush
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

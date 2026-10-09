@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.ResidueCharacter
 import Mathlib.RingTheory.PrincipalIdealDomain
-
 namespace OAI
 
 namespace SevenEighths.IdealCharacter
@@ -153,12 +152,6 @@ theorem ofResidue_one (M : Ideal A) (I : Ideal A) :
       exact MulChar.one_apply (hu.mpr hc)
     · simp only [hc, ite_false]
       exact MulChar.map_nonunit _ (fun h => hc (hu.mp h))
-
-theorem ofResidue_one_top (I : Ideal A) :
-    ofResidue (⊤ : Ideal A) 1 (one_unitInvariant ⊤) I = if I = ⊥ then 0 else 1 := by
-  rw [ofResidue_one]
-  have h : IsCoprime I (⊤ : Ideal A) := Ideal.isCoprime_iff_sup_eq.mpr (sup_top_eq I)
-  simp only [h, ite_true]
 
 theorem ofResidue_source_mask (M K : Ideal A)
     (χ : MulChar (A ⧸ M) ℂ) (φ : MulChar (A ⧸ K) ℂ)

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GramCanonical
 import OAI.NumberTheory.DirichletL.CenteredExceptionalProfile
-
 namespace OAI
 
 noncomputable section

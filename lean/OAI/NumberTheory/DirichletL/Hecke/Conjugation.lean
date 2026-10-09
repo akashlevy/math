@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.IdealOperations
 import OAI.NumberTheory.DirichletL.Hecke.Euler
-
 namespace OAI
 
 noncomputable section

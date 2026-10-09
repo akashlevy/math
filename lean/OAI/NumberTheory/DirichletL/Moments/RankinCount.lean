@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.Rankin
-
 namespace OAI
 
 noncomputable section

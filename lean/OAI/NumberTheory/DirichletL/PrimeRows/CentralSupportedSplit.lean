@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CubeCalibration
-
 namespace OAI
 
 noncomputable section
@@ -25,13 +24,6 @@ def supportedNonfloorRows (S : Finset (Ideal O)) (hmax : ∀P∈S,P.IsMaximal)
     (R : Finset FreeRow) (grid : FreeRow→ℕ) (u : FreeRow) :
     u∈supportedNonfloorRows S hmax R grid ↔ u∈R ∧ (calibrationForSet S hmax).residueMonoid u.val≠0 ∧ grid u≠0 :=
   Finset.mem_filter
-
-lemma nonfloor_grid_positive (S : Finset (Ideal O)) (hmax : ∀P∈S,P.IsMaximal)
-    (R : Finset FreeRow) (grid : FreeRow→ℕ) (u : FreeRow)
-    (hu : u∈supportedNonfloorRows S hmax R grid) (e : ℝ) (he : 0<e) :
-    51/100<(51/100:ℝ)+e*grid u := by
-  have hg : 0<(grid u:ℝ) := by exact_mod_cast Nat.pos_of_ne_zero ((mem_supportedNonfloorRows S hmax R grid u).mp hu).2.2
-  linarith [mul_pos he hg]
 
 theorem finiteCentralCubeRows_supported_split {K : ℕ}
     (S : Finset (Ideal O)) (hS : SourceExclusions S) (hmax : ∀P∈S,P.IsMaximal)

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.Coordinates
-
 namespace OAI
 
 noncomputable section
@@ -102,12 +101,6 @@ theorem continuedLattice_entire_nonprincipal (χ : HeckeFamily.Character)
   exact ((differentiable_id.const_cpow (Or.inl
     (Complex.ofReal_ne_zero.mpr Real.pi_ne_zero))).mul
       Complex.differentiable_one_div_Gamma).mul (completed_entire_nonprincipal χ hχ)
-
-theorem continuedLattice_neg_succ (χ : HeckeFamily.Character) (n : ℕ) :
-    HeckeFamily.continuedLattice χ (-((n + 1 : ℕ) : ℂ)) = 0 := by
-  unfold HeckeFamily.continuedLattice HeckeTheta.latticeL
-  rw [Complex.Gamma_neg_nat_eq_zero (n + 1)]
-  simp
 
 end SevenEighths.HeckeCharacterAnalytic
 

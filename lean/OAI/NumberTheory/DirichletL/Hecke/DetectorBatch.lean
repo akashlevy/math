@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorFiberPartition
-
 namespace OAI
 
 noncomputable section
@@ -49,9 +48,6 @@ def Batch.fiber (B : Batch M H Label Slot U a ε tstar T allowance i)
   toFiber M H B.rows B.family U a ε tstar T allowance i B.witness B.row_norm B.data B.reverse
     B.row_coeff B.slots B.profile B.upper B.widths B.external B.mesh B.binWidth B.mesh_nonneg
     B.binWidth_pos B.widths_pos B.widths_mesh B.supply bin j J K hne
-
-def Batch.q (B : Batch M H Label Slot U a ε tstar T allowance i) (bin : B.Bin) : ℝ :=
-  weightedMean B.slots B.widths (binValue B.slots ((2*a-1)/2) B.binWidth bin)
 
 theorem Batch.card_eq_sum_fibers [Fintype Label] (B : Batch M H Label Slot U a ε tstar T allowance i) :
     B.rows.card=∑ bin : B.Bin, ∑ j : Label, ∑ J : Fin (dyadicLength U), ∑ K : Fin (dyadicLength U),

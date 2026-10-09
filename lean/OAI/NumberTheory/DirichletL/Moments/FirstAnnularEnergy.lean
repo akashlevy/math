@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstAnnularMajorant
 import OAI.NumberTheory.DirichletL.Moments.GaussNormalization
-
 namespace OAI
 
 noncomputable section

@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondPhysicalWindow
 import OAI.NumberTheory.DirichletL.Moments.SecondCanonicalScalar
 import OAI.NumberTheory.DirichletL.Moments.SecondNonexceptional
-
 namespace OAI
 
 noncomputable section

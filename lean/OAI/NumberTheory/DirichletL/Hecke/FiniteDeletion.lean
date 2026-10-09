@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.Reciprocal
 import OAI.NumberTheory.DirichletL.Hecke.IdealOperations
 import OAI.NumberTheory.DirichletL.EulerFactors
-
 namespace OAI
 
 noncomputable section
@@ -131,18 +130,6 @@ theorem LFunction_eq_of_mask_nonpole (χ ψ : Character)
   rcases hpole with h1 | hχ
   · exact LFunction_eq_of_mask χ ψ hmask hs h1
   · exact LFunction_eq_of_mask_nonprincipal χ ψ hmask hχ hs
-
-theorem exists_primitive_same_zeros (χ : Character) :
-    ∃ ψ : Character, χ.modulus ≤ ψ.modulus ∧
-      FiniteFourier.IsPrimitiveOnIdeals ψ.residue ∧
-      ψ.modulus.absNorm ≤ χ.modulus.absNorm ∧
-      ∀ s : ℂ, 0 < s.re → s ≠ 1 →
-        (LFunction χ s = 0 ↔ LFunction ψ s = 0) := by
-  obtain ⟨ψ, hmod, hp, hnorm, hmask⟩ := exists_primitive_character χ
-  refine ⟨ψ, hmod, hp, hnorm, ?_⟩
-  intro s hs h1
-  rw [LFunction_eq_of_mask χ ψ hmask hs h1, mul_eq_zero]
-  exact or_iff_left (factors_ne_zero χ.modulus ψ hs)
 
 theorem exists_primitive_zero (χ : Character) {s : ℂ}
     (hs : 0 < s.re) (hpole : s ≠ 1 ∨ χ.residue ≠ 1) (hz : LFunction χ s = 0) :

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.SmallPartition
-
 namespace OAI
 
 noncomputable section
@@ -56,32 +55,6 @@ lemma retained_dyadic_sum {A : Type*} [AddCommMonoid A] (rows : Finset FreeRow) 
   apply Finset.sum_biUnion
   intro m hm n hn hmn
   exact (dyadicRows_disjoint 1 (by norm_num) hmn).mono (Finset.inter_subset_right) (Finset.inter_subset_right)
-
-lemma bounded_freeRow_power_sum (p : ℝ) (hp : -1<p) :
-    ∃C : ℝ,0<C ∧ ∀(rows : Finset FreeRow) (H : ℝ),0<H →
-      (∀u∈rows,u.val≠1 ∧ rowNorm u≤H) →
-      (∑u∈rows,rowNorm u^p)≤C*H^(1+p) := by
-  obtain ⟨C,hC,hpow⟩ := bounded_dyadic_power_sum (1+p) (by linarith)
-  let A := ProbeSelectedPrimeSums.annularPower 1 2 p
-  have hA : 0≤A := ProbeSelectedPrimeSums.annularPower_nonneg 1 2 p (by norm_num)
-  refine ⟨256*(A+1)*C,by positivity,?_⟩
-  intro rows H hH hrows
-  rw [retained_dyadic_sum rows H hrows]
-  have hdyad (n : ℕ) : (∑u∈rows∩dyadicRows 1 n,rowNorm u^p)≤256*(A+1)*((2:ℝ)^n)^(1+p) := by
-    have hn : ∀u∈rows∩dyadicRows 1 n,(2:ℝ)^n≤rowNorm u ∧ rowNorm u≤2*(2:ℝ)^n := by
-      intro u hu
-      have hh := (mem_dyadicRows.mp (Finset.mem_inter.mp hu).2).2
-      simpa only [one_mul] using And.intro hh.1 hh.2.le
-    have hb := dyadic_weighted_rows p 0 1 ((2:ℝ)^n) (by norm_num) (one_le_pow₀ (by norm_num : (1:ℝ)≤2))
-      (rows∩dyadicRows 1 n) hn (fun u=>rowNorm u^p) (fun u hu=>by simp [rowNorm]) (0:ℂ) rfl
-    simp only [frequencyWeight_ideal_norm,Complex.zero_re,neg_zero,Real.rpow_zero,one_mul,sub_zero] at hb
-    exact hb.trans (by change 256*1*A*_≤_;gcongr <;> linarith)
-  calc
-    _ ≤ ∑n∈smallDyadicIndices H,256*(A+1)*((2:ℝ)^n)^(1+p) := Finset.sum_le_sum (fun n _=>hdyad n)
-    _ = 256*(A+1)*∑n∈smallDyadicIndices H,((2:ℝ)^n)^(1+p) := (Finset.mul_sum _ _ _).symm
-    _ ≤ 256*(A+1)*(C*H^(1+p)) :=
-      mul_le_mul_of_nonneg_left (hpow H hH (smallDyadicIndices H) (fun n hn=>mem_smallDyadicIndices.mp hn)) (by positivity)
-    _ = _ := by ring
 
 end SevenEighths.ProbeHighRowFamily
 

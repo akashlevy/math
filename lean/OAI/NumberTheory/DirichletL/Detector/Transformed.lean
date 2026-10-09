@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.MellinPoisson
-
 namespace OAI
 
 noncomputable section
@@ -48,12 +47,6 @@ theorem markedPhysicalProbe_eq_poisson (η : HeckeFamily.Character) (C : Calibra
     simpa only [hn] using inner_mellin_poisson η C D (primaryGenerator s.val) has
       W₀ hWc hWs (elementNorm C.generator*(Ideal.absNorm s.val:ℝ)*X) Z hK hZ
   · rfl
-
-theorem physicalProbe_eq_poisson (η : HeckeFamily.Character) (C : CalibrationData)
-    (W₀ W₁ : ℝ → ℂ) (hWc : HasCompactSupport W₀) (hWs : ContDiff ℝ ∞ W₀)
-    (X Y Z : ℝ) (hX : 0<X) (hZ : 0<Z) :
-    physicalProbe η C W₀ W₁ X Y Z = poissonPhysicalProbe η C 1 W₀ W₁ X Y Z :=
-  markedPhysicalProbe_eq_poisson η C 1 W₀ W₁ hWc hWs X Y Z hX hZ
 
 end SevenEighths.ProbePhysical
 end

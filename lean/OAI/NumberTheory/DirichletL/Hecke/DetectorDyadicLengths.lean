@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorSaturation
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondSectorAssembly
-import OAI.NumberTheory.DirichletL.Descent.SecondInheritedEnergy
-
+import OAI.NumberTheory.DirichletL.Descent.SecondSupportedEnergy
+import OAI.NumberTheory.DirichletL.Descent.SecondPuncture
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -68,36 +68,6 @@ theorem second_inherited_mode_canonical {Jo Jn : ℕ}
   simpa only [secondInheritedProfile,secondModeBranch,secondModeOuter,secondModeLeft,secondModeRight,
     secondCanonicalPolynomial,actualSecondInheritedPuncture,actualSecondChild_neg_frequency,
     Finset.empty_union,Finset.mul_sum,mul_assoc,hq] using he
-
-theorem actual_second_modes_common_sectors
-    (hpr : ∀ i, ConcretePrimeRowBridge.goodLambda^2 ∣ p i-1)
-    {Jo : ℕ} (source : Finset (MarkedSecondSource ι Jo 0))
-    (hs : ActualSecondSourceConditions p source) :
-    ∃ sector : MarkedSecondSource ι Jo 0 → Eisˣ × Eisˣ,
-      ∀ (pool : Finset ι) (Ψ : Eis →* ℂ) (m : Eis) (z : SecondRayIndex)
-        (slots₁ slots₂ : Finset σ) (lists₁ lists₂ : σ → Finset ι) (a₁ a₂ : σ → ι → ℂ)
-        (ω₁ ω₂ : ℝ → ℂ) (G E V B X : ℝ) (t : Frequency × (Fin 6 → ℝ))
-        (w : MarkedSecondSource ι Jo 0 → ℂ),
-      (∑ x ∈ source,w x * secondSeparatedPair p hp hcop hg pool (secondInheritedProfile p x Ψ m z)
-        slots₁ slots₂ lists₁ lists₂ a₁ a₂ ω₁ ω₂ G E V B X t) =
-      ∑ uv : Eisˣ × Eisˣ, ∑ x ∈ secondSourceSector source sector uv, w x *
-        ∑ J₁ ∈ slots₁.powerset,∑ J₂ ∈ slots₂.powerset,
-          secondModeBranch p hp hcop hg x uv.1 uv.2 pool Ψ m z slots₁ slots₂ J₁ J₂ lists₁ lists₂ a₁ a₂
-            ω₁ ω₂ G E V B X t := by
-  obtain ⟨sector,hsector⟩ := exists_second_uniform_sectors p hp hcop hg hpr (σ:=σ) source hs
-  refine ⟨sector,?_⟩
-  intro pool Ψ m z slots₁ slots₂ lists₁ lists₂ a₁ a₂ ω₁ ω₂ G E V B X t w
-  rw [secondSourceSector_partition source sector]
-  apply Finset.sum_congr rfl
-  intro uv huv
-  apply Finset.sum_congr rfl
-  intro x hx
-  obtain ⟨hx,hxs⟩ := Finset.mem_filter.mp hx
-  congr 1
-  have hh := hsector x hx
-  rw [hxs] at hh
-  exact second_inherited_mode_canonical p hp hcop hg x uv.1 uv.2 hh
-    pool Ψ m z slots₁ slots₂ lists₁ lists₂ a₁ a₂ ω₁ ω₂ G E V B X t
 
 end
 end SevenEighths.InverseMoment

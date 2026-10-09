@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.DualCoefficients
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

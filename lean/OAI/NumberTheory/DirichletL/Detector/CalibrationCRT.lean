@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstPoisson
 import OAI.NumberTheory.DirichletL.Detector.CalibrationFourier
 import OAI.NumberTheory.DirichletL.Detector.PhysicalCoefficient
-
 namespace OAI
 
 noncomputable section

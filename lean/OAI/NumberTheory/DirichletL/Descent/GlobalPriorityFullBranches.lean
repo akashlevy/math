@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.GlobalPriorityZeroPhysical
 import OAI.NumberTheory.DirichletL.Descent.GlobalPriorityAggregate
 import OAI.NumberTheory.DirichletL.Descent.GlobalPriorityTailPhysical
-
 namespace OAI
 
 noncomputable section

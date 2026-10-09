@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowGaussianCentral
-
 namespace OAI
 
 noncomputable section

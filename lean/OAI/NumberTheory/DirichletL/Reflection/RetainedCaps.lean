@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.RetainedWidth
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

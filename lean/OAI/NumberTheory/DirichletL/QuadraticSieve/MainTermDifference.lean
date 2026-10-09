@@ -1,168 +1,33 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.CubeLabels
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace QuadraticMainTermDifference
-abbrev O := ActualEisensteinCubic.O
 open ActualEisensteinCubic QuadraticDivisorCancellation QuadraticMainBoundary
-
-theorem sum_powerset_disjoint_union {κ V : Type*} [DecidableEq κ] [AddCommMonoid V]
-    (T G : Finset κ) (hTG : Disjoint T G) (f : Finset κ → V) :
-    (∑ A ∈ (T ∪ G).powerset, f A) =
-      ∑ H ∈ T.powerset, ∑ D ∈ G.powerset, f (H ∪ D) := by
-  induction T using Finset.induction_on generalizing f with
-  | empty => simp
-  | @insert i T hi ih =>
-    have hiG : i ∉ G := fun h => Finset.disjoint_left.mp hTG (by simp) h
-    have hTG' : Disjoint T G := Finset.disjoint_of_subset_left (Finset.subset_insert _ _) hTG
-    have hiU : i ∉ T ∪ G := by simp [hi, hiG]
-    rw [Finset.insert_union, Finset.sum_powerset_insert hiU]
-    rw [ih hTG' f, ih hTG' (fun A => f (insert i A))]
-    rw [Finset.sum_powerset_insert hi]
-    simp only [Finset.insert_union]
-
-def normCutoff {κ : Type*} (q : κ → O) (K : ℝ) (A : Finset κ) : ℂ :=
-  if (Ideal.absNorm (∏ i ∈ A, Ideal.span {q i}) : ℝ) ≤ K then 1 else 0
-
-def partialSquarefreeSum {ι κ : Type*} [DecidableEq κ]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hg : ∀ i, lambda ∉ P i) (S : Finset ι)
-    (q : κ → O) (K : ℝ) (V : Finset κ) : ℂ :=
-  ∑ A ∈ V.powerset, normalizedRow P hg S (∏ i ∈ A, q i) * normCutoff q K A
-
-def divisorSum {ι κ : Type*} [DecidableEq κ]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hg : ∀ i, lambda ∉ P i) (S : Finset ι)
-    (q : κ → O) (G : Finset κ) : ℂ :=
-  ∑ E ∈ G.powerset, (UniqueFactorizationMonoid.moebius (∏ i ∈ E, Ideal.span {q i}) : ℂ) *
-    normalizedRow P hg S (∏ i ∈ E, q i)
-
-theorem actual_main_terms_difference {ι κ : Type*} [DecidableEq κ]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hg : ∀ i, lambda ∉ P i) (S : Finset ι)
-    (q : κ → O) [∀ i, (Ideal.span {q i}).IsMaximal]
-    (hprime : ∀ i, Prime (Ideal.span {q i}))
-    (hinj : Function.Injective (fun i => (Ideal.span {q i} : Ideal O)))
-    (T G : Finset κ) (hTG : Disjoint T G) (K : ℝ)
-    (havoid : ∀ i ∈ G, ∀ j ∈ S, q i ∉ P j) :
-    partialSquarefreeSum P hg S q K (T ∪ G) * divisorSum P hg S q G -
-      partialSquarefreeSum P hg S q K T *
-        (∏ i ∈ G, (1 - (1 : ℂ) / (Ideal.absNorm (Ideal.span {q i}) : ℂ))) =
-      ∑ H ∈ T.powerset, ∑ D ∈ G.powerset, ∑ E ∈ G.powerset,
-        (UniqueFactorizationMonoid.moebius (∏ i ∈ E, Ideal.span {q i}) : ℂ) *
-        normalizedRow P hg S ((∏ i ∈ H, q i) * (∏ i ∈ D, q i) * ∏ i ∈ E, q i) *
-        (cutoffDifference K (∏ i ∈ H, Ideal.span {q i})
-          (∏ i ∈ D, Ideal.span {q i}) : ℝ) := by
-  have hdensity := actual_double_divisor_cancellation_coprime P hg S q hprime hinj
-    G ∅ (by simp) havoid
-  simp only [Finset.union_empty, Finset.powerset_empty, Finset.sum_singleton,
-    Finset.prod_empty, UniqueFactorizationMonoid.moebius_one, Int.cast_one,
-    normalizedRow_one, mul_one] at hdensity
-  rw [← hdensity]
-  unfold partialSquarefreeSum divisorSum
-  rw [sum_powerset_disjoint_union T G hTG]
-  simp only [Finset.sum_mul]
-  simp only [Finset.mul_sum]
-  rw [← Finset.sum_sub_distrib]
-  apply Finset.sum_congr rfl
-  intro H hH
-  rw [← Finset.sum_sub_distrib]
-  apply Finset.sum_congr rfl
-  intro D hD
-  rw [← Finset.sum_sub_distrib]
-  apply Finset.sum_congr rfl
-  intro E hE
-  have hHD : Disjoint H D := hTG.mono (Finset.mem_powerset.mp hH) (Finset.mem_powerset.mp hD)
-  have hc : normCutoff q K (H ∪ D) - normCutoff q K H =
-      (cutoffDifference K (∏ i ∈ H, Ideal.span {q i})
-        (∏ i ∈ D, Ideal.span {q i}) : ℝ) := by
-    simp only [normCutoff, Finset.prod_union hHD, cutoffDifference, Complex.ofReal_sub]
-    split_ifs <;> norm_num
-  simp only [Finset.prod_union hHD, normalizedRow_mul]
-  rw [← hc]
-  ring
 
 end QuadraticMainTermDifference
 
-open scoped Classical FourierTransform SchwartzMap ContDiff Topology
-open MeasureTheory Filter
 namespace CubicReflectionKernel
 
 def realBeta (a b : ℝ) : ℝ :=
   ∫ x : ℝ in 0..1, x ^ (a - 1) * (1 - x) ^ (b - 1)
-
-theorem realBeta_nonneg (a b : ℝ) : 0 ≤ realBeta a b := by
-  apply intervalIntegral.integral_nonneg (by norm_num)
-  intro x hx
-  exact mul_nonneg (Real.rpow_nonneg hx.1 _) (Real.rpow_nonneg (sub_nonneg.mpr hx.2) _)
 
 theorem betaIntegral_ofReal (a b : ℝ) :
     Complex.betaIntegral (a : ℂ) (b : ℂ) = (realBeta a b : ℂ) := by
@@ -243,28 +108,6 @@ theorem Gamma_shifted_pair_bound (a σ t : ℝ) (n : ℕ)
   rw [hdm, Gamma_vertical_conj, norm_div, norm_star]
   simpa only [norm_div] using hb
 
-theorem gammaMultiplier_left_bound (t : ℝ) :
-    ‖gammaMultiplier ((-(1 / 4) : ℝ) + t * Complex.I)‖ ≤
-      (Real.Gamma (11 / 12) / Real.Gamma (17 / 12)) *
-      (Real.Gamma (7 / 12) / Real.Gamma (13 / 12)) := by
-  have h1 := Gamma_shifted_pair_bound (7 / 6) (-(1 / 4)) t 0 (by norm_num) (by norm_num)
-  have h2 := Gamma_shifted_pair_bound (5 / 6) (-(1 / 4)) t 0 (by norm_num) (by norm_num)
-  norm_num only [Nat.cast_zero, add_zero, show (7 / 6 : ℝ) + -(1 / 4) = 11 / 12 by norm_num,
-    show (7 / 6 : ℝ) - -(1 / 4) = 17 / 12 by norm_num,
-    show (5 / 6 : ℝ) + -(1 / 4) = 7 / 12 by norm_num,
-    show (5 / 6 : ℝ) - -(1 / 4) = 13 / 12 by norm_num] at h1 h2
-  have heq : gammaMultiplier ((-(1 / 4) : ℝ) + t * Complex.I) =
-      (Complex.Gamma (((7 / 6 : ℝ) : ℂ) + ((-(1 / 4) : ℝ) + t * Complex.I)) /
-       Complex.Gamma (((7 / 6 : ℝ) : ℂ) - ((-(1 / 4) : ℝ) + t * Complex.I))) *
-      (Complex.Gamma (((5 / 6 : ℝ) : ℂ) + ((-(1 / 4) : ℝ) + t * Complex.I)) /
-       Complex.Gamma (((5 / 6 : ℝ) : ℂ) - ((-(1 / 4) : ℝ) + t * Complex.I))) := by
-    simp only [gammaMultiplier, Complex.ofReal_div, Complex.ofReal_ofNat]
-    exact div_mul_div_comm _ _ _ _ |>.symm
-  rw [heq, norm_mul]
-  exact mul_le_mul h1 h2 (norm_nonneg _) (div_nonneg
-    (Real.Gamma_pos_of_pos (by norm_num : (0 : ℝ) < 11 / 12)).le
-    (Real.Gamma_pos_of_pos (by norm_num : (0 : ℝ) < 17 / 12)).le)
-
 theorem norm_Gamma_shift_factor (z : ℂ) (n : ℕ) :
     ‖∏ k ∈ Finset.range n, (z + k)‖ ≤ (‖z‖ + n) ^ n := by
   rw [norm_prod]
@@ -280,8 +123,6 @@ theorem norm_Gamma_shift_factor (z : ℂ) (n : ℕ) :
 
 end CubicReflectionKernel
 
-open scoped Classical FourierTransform SchwartzMap ContDiff Topology
-open MeasureTheory Filter Set
 namespace CubicReflectionKernel
 
 theorem Gamma_pair_strip_bound (a : ℝ) (ha : 1 / 4 < a) (A : ℕ) :
@@ -557,8 +398,6 @@ theorem compact_source_mellin_strip_decay (V : ℝ → ℂ) (a b : ℝ) (ha : 0 
 
 end CubicReflectionKernel
 
-open scoped Classical FourierTransform SchwartzMap ContDiff Topology
-open MeasureTheory Filter Set
 namespace CubicReflectionKernel
 
 def mellinData (V : ℝ → ℂ) (s : ℂ) : ℂ := mellin V (-s) * gammaMultiplier s

@@ -1,73 +1,23 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.MainTermDifference
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
 namespace CubicReflectionKernel
 open scoped Classical FourierTransform SchwartzMap ContDiff Topology
@@ -250,51 +200,6 @@ theorem paperKernel_euler_power_decay
   · exact (hR x hx).trans
       (mul_le_mul_of_nonneg_right (le_max_right CL CR) (Real.rpow_nonneg hx.le _))
 
-theorem paperKernel_euler_uniform_weighted_bound
-    (V : ℝ → ℂ) (a b : ℝ) (ha : 0 < a)
-    (hsupp : Function.support V ⊆ Set.Icc a b) (hV : ContDiff ℝ ∞ V)
-    (A K : ℕ) :
-    ∃ C : ℝ, 0 < C ∧ ∀ i ≤ K, ∀ x : ℝ, 0 < x →
-      (1 + x) ^ A * ‖LocalLogFourier.eulerDeriv (paperKernel V) i x‖ ≤ C := by
-  choose c hc hb using fun i : Fin (K + 1) =>
-    paperKernel_euler_power_decay V a b ha hsupp hV A i.val
-  let D : ℝ := (∑ i : Fin (K + 1), c i) + 1
-  have hD : 0 < D := by
-    have hs : (0 : ℝ) ≤ ∑ i : Fin (K + 1), c i := Finset.sum_nonneg (fun i _ => (hc i).le)
-    dsimp [D]
-    linarith
-  have hci (i : Fin (K + 1)) : c i ≤ D := by
-    have hs : c i ≤ ∑ k : Fin (K + 1), c k :=
-      Finset.single_le_sum (fun k _ => (hc k).le) (Finset.mem_univ i)
-    dsimp [D]
-    linarith
-  have hsmall : ∀ i ≤ K, ∀ x : ℝ, 0 < x → x ≤ 1 →
-      ‖LocalLogFourier.eulerDeriv (paperKernel V) i x‖ ≤ D := by
-    intro i hi x hx hx1
-    let k : Fin (K + 1) := ⟨i, by omega⟩
-    have hp : x ^ (1 / 4 : ℝ) ≤ 1 := Real.rpow_le_one hx.le hx1 (by norm_num)
-    calc
-      _ ≤ c k * x ^ (1 / 4 : ℝ) := (hb k x hx).1
-      _ ≤ c k := by simpa using mul_le_mul_of_nonneg_left hp (hc k).le
-      _ ≤ D := hci k
-  have hlarge : ∀ i ≤ K, ∀ x : ℝ, 1 ≤ x →
-      x ^ A * ‖LocalLogFourier.eulerDeriv (paperKernel V) i x‖ ≤ D := by
-    intro i hi x hx1
-    have hx : 0 < x := lt_of_lt_of_le zero_lt_one hx1
-    let k : Fin (K + 1) := ⟨i, by omega⟩
-    have hxpow : x ^ A ≠ 0 := pow_ne_zero A hx.ne'
-    calc
-      _ ≤ x ^ A * (c k * x ^ (-(A : ℝ))) :=
-        mul_le_mul_of_nonneg_left (hb k x hx).2 (pow_nonneg hx.le A)
-      _ = c k := by
-        rw [Real.rpow_neg hx.le, Real.rpow_natCast]
-        field_simp
-      _ ≤ D := hci k
-  refine ⟨2 ^ A * (D + D), by positivity, ?_⟩
-  intro i hi x hx
-  exact LocalLogFourier.euler_two_regime_bound (paperKernel V) A K D D hD.le hD.le
-    hsmall hlarge i hi x hx
-
 end CubicReflectionKernel
 
 namespace DescentFiberCost
@@ -363,29 +268,6 @@ theorem fixed_triple_count
   calc
     _ ≤ (128 * B) * ((128 * T) * (128 * W)) := by gcongr
     _ = _ := by ring
-
-theorem complete_second_prefactor
-    (K ell B F A C d J g e v t w c : ℝ)
-    (hK : K ≠ 0) (hell : ell ≠ 0) (hB : B ≠ 0) (hF : F ≠ 0)
-    (hC : C ≠ 0) (hd : d ≠ 0) (hJ : J ≠ 0)
-    (hg : g ≠ 0) (he : e ≠ 0) (hv : v ≠ 0) (hc : c ≠ 0)
-    (Li : ℝ) (hLi : Li ≠ 0) :
-    (K * A * C / (d * ell ^ 2 * B ^ 2 * F * c)) *
-      ((ell ^ 2 * B ^ 4 * F ^ 2 * d / (K * C ^ 2 * J)) * g / (e * Li)) *
-      ((B * c / J) * t * w) *
-      ((Li / (g * v)) * (J * C * e * v)) =
-      (B * F * A * t * w) * B ^ 2 / J := by
-  field_simp
-
-theorem complete_second_zero_prefactor
-    (K ell B F A C d J t c : ℝ)
-    (hK : K ≠ 0) (hell : ell ≠ 0) (hB : B ≠ 0) (hF : F ≠ 0)
-    (hA : A ≠ 0) (hC : C ≠ 0) (hd : d ≠ 0) (hJ : J ≠ 0)
-    (ht : t ≠ 0) (hc : c ≠ 0) :
-    (K * A * C / (d * ell ^ 2 * B ^ 2 * F * c)) *
-      ((ell ^ 2 * B ^ 4 * F ^ 2 * d / (K * C ^ 2 * J)) * (ell / (A * C * t))) *
-      (C * t) * (B * c) = (ell * B ^ 3) * F / (C * J) := by
-  field_simp
 
 end DescentFiberCost
 
@@ -489,8 +371,6 @@ theorem paperRadialFourier_halfline_integral (W : 𝓢(ℝ, ℂ)) :
 
 end EisensteinSchwartzPoisson
 
-open scoped Classical FourierTransform SchwartzMap ContDiff Topology
-open MeasureTheory Filter Set
 namespace CubicReflectionKernel
 
 def logRadius (a b : ℝ) : ℝ := |Real.log a| + |Real.log b| + 1
@@ -581,8 +461,6 @@ theorem logPullbackCLM_eq_actual (a b : ℝ) (ha : 0 < a) (W : SchwartzMap ℝ �
 
 end CubicReflectionKernel
 
-open scoped Classical FourierTransform SchwartzMap ContDiff Topology
-open MeasureTheory Filter Set
 namespace CubicReflectionKernel
 
 theorem compact_family_deriv_sup_bound (F : ℝ → ℝ → ℂ)

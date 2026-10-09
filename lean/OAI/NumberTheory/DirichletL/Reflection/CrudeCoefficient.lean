@@ -1,6 +1,5 @@
-import OAI.NumberTheory.DirichletL.Reflection.KernelBaseline
+import OAI.NumberTheory.DirichletL.Reflection.KernelActual
 import OAI.NumberTheory.DirichletL.Descent.MarkedPhase
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

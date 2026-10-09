@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstLiveCaps
 import OAI.NumberTheory.DirichletL.Inversion.FirstGlobalCaps
-
 namespace OAI
 
 noncomputable section

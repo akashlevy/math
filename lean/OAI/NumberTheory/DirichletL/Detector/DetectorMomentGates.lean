@@ -1,8 +1,8 @@
 import OAI.NumberTheory.DirichletL.Detector.DetectorMomentData
-import OAI.NumberTheory.DirichletL.Dictionary.InverseRawFiberSource
+import OAI.NumberTheory.DirichletL.Inversion.InitialPhysicalSlots
+import OAI.NumberTheory.DirichletL.Hecke.DetectorRawFiber
 import OAI.NumberTheory.DirichletL.Hecke.DetectorBatch
 import OAI.NumberTheory.DirichletL.Inversion.InitialExcludedElement
-
 namespace OAI
 
 noncomputable section
@@ -19,35 +19,9 @@ local instance:Finite (O⧸M):=Ring.HasFiniteQuotients.finiteQuotient (NeZero.ne
 variable (H:Subgroup (O⧸M)ˣ)(hH:RayOrthogonality.globalUnits M≤H)
 local instance:Fintype (Sum Bool (RayQuotient.Characters M H)):=Fintype.ofFinite _
 
-def sourceMomentPeriod (S:Finset (Ideal O))(hS:∀P∈S,Prime P)(η:Character):ℕ:=
-  ∏j:Sum Bool (RayQuotient.Characters M H),
-    (baseCharacter (sourceMomentData M H hH S hS η j)).period
-
 def sourceMomentConductorBound (S:Finset (Ideal O))(hS:∀P∈S,Prime P)(η:Character):ℝ:=
   1+∑j:Sum Bool (RayQuotient.Characters M H),
     ((baseCharacter (sourceMomentData M H hH S hS η j)).modulus.absNorm:ℝ)
-
-theorem sourceMomentPeriod_ne_zero (S:Finset (Ideal O))(hS:∀P∈S,Prime P)(η:Character):
-    sourceMomentPeriod M H hH S hS η≠0:=by
-  exact Finset.prod_ne_zero_iff.mpr (fun j _=>Nat.ne_of_gt (Character.period_pos _))
-
-theorem sourceMomentPeriod_le (S:Finset (Ideal O))(hS:∀P∈S,Prime P)(η:Character)
-    (j:Sum Bool (RayQuotient.Characters M H)):
-    Ideal.span {(sourceMomentPeriod M H hH S hS η:O)}≤
-      (baseCharacter (sourceMomentData M H hH S hS η j)).modulus:=by
-  apply Ideal.span_le.mpr
-  intro x hx
-  rcases Set.mem_singleton_iff.mp hx with rfl
-  have hd:(baseCharacter (sourceMomentData M H hH S hS η j)).period∣
-      sourceMomentPeriod M H hH S hS η:=Finset.dvd_prod_of_mem _ (Finset.mem_univ j)
-  obtain ⟨n,hn⟩:=hd
-  rw [hn,Nat.cast_mul]
-  exact Ideal.mul_mem_right _ _ (Character.period_mem _)
-
-theorem sourceMomentConductorBound_pos (S:Finset (Ideal O))(hS:∀P∈S,Prime P)(η:Character):
-    0<sourceMomentConductorBound M H hH S hS η:=by
-  unfold sourceMomentConductorBound
-  positivity
 
 theorem sourceMomentConductor_le (S:Finset (Ideal O))(hS:∀P∈S,Prime P)(η:Character)
     (j:Sum Bool (RayQuotient.Characters M H)):
@@ -58,22 +32,6 @@ theorem sourceMomentConductor_le (S:Finset (Ideal O))(hS:∀P∈S,Prime P)(η:Ch
       (Finset.mem_univ j)
   unfold sourceMomentConductorBound
   linarith
-
-theorem sourceMoment_deleted_base_gates (S:Finset (Ideal O))(hS:∀P∈S,Prime P)(η:Character):
-    let q:=sourceMomentPeriod M H hH S hS η
-    deletedPeriod q≠0 ∧ reflectionExcludedPrimes (deletedPeriod q)=reflectionExcludedPrimes q ∧
-    ∀j:Sum Bool (RayQuotient.Characters M H),
-      let χ:=(baseCharacter (sourceMomentData M H hH S hS η j)).excludePrimes
-        (reflectionExcludedPrimes q) (reflectionExcludedPrimes_prime q)
-      (∀x,‖elementCharacter (idealCoeff χ).toMonoidHom x‖≤1) ∧
-      FactorsModulo (fixedBaseConductor (deletedPeriod q))
-        (elementCharacter (idealCoeff χ).toMonoidHom):=by
-  dsimp only
-  let q:=sourceMomentPeriod M H hH S hS η
-  have hq:q≠0:=sourceMomentPeriod_ne_zero M H hH S hS η
-  refine ⟨deletedPeriod_ne_zero q hq,deleted_excluded_eq q hq,?_⟩
-  intro j
-  exact (deleted_physical_base_gates _ q hq (sourceMomentPeriod_le M H hH S hS η j)).2.2
 
 theorem sourceMoment_large_eventually (S:Finset (Ideal O))(hS:∀P∈S,Prime P)(η:Character)
     {Slot:Type*}[Fintype Slot](ell:Slot→ℝ)(hell:∀s,0<ell s):

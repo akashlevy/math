@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLiveCount
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLiveAggregate
 import OAI.NumberTheory.DirichletL.Descent.FirstLiveNorms
-
 namespace OAI
 
 noncomputable section

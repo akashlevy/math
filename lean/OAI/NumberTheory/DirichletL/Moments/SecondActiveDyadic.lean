@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondDyadicPartition
 import OAI.NumberTheory.DirichletL.Moments.SecondRetainedRows
 import OAI.NumberTheory.DirichletL.Moments.ActiveSource
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GramFrequencyMass
 import OAI.NumberTheory.DirichletL.Detector.GramPrefactor
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondCellParameters
-import OAI.NumberTheory.DirichletL.Descent.PriorityCellEnergy
-
+import OAI.NumberTheory.DirichletL.Descent.SecondCellPhysical
 namespace OAI
 
 noncomputable section

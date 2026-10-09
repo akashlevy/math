@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.CommonMaskExpansion
 import OAI.NumberTheory.DirichletL.Hecke.DeletionBounds
 import OAI.NumberTheory.DirichletL.Moments.LiveCapacity
-
 namespace OAI
 
 noncomputable section
@@ -55,36 +54,6 @@ lemma weighted_uniform_term (R D₁ D₂:Finset (Ideal O))
   have hprod:0≤∏i∈J,(Real.sqrt (max 1 (b i))*M i)*(∑I∈R,weight I):=
     Finset.prod_nonneg (fun i hi=>mul_nonneg (mul_nonneg (Real.sqrt_nonneg _) (hM i hi))
       (Finset.sum_nonneg (fun I _=>weight_nonneg I)))
-  unfold uniformMajorant
-  calc
-    _=(weight (∏I∈D₁,I)*(weight (∏I∈D₂,I)*((∏I∈D₂,I).absNorm:ℝ)^t))*
-        (∏i∈J,(Real.sqrt (max 1 (b i))*M i)*(∑I∈R,weight I)):=by ring
-    _≤1*(∏i∈J,(Real.sqrt (max 1 (b i))*M i)*(∑I∈R,weight I)):=
-      mul_le_mul_of_nonneg_right
-        ((mul_le_mul hw₁ hw₂ (mul_nonneg (weight_nonneg _) (Real.rpow_nonneg (Nat.cast_nonneg _) t))
-          zero_le_one).trans_eq (one_mul 1)) hprod
-    _=_:=one_mul _
-
-lemma signed_weighted_term (χ:Character)(R D₁ D₂:Finset (Ideal O))
-    (hR:∀I∈R,Prime I)(hD₁:D₁⊆R)(hD₂:D₂⊆R)(J:Finset α)
-    (pool:α→Finset (Ideal O))(β:α→Ideal O→ℂ)(P b M:α→ℝ)
-    (hp:∀i∈J,∀I∈pool i,Prime I)(hP:∀i∈J,0<P i)(hM:∀i∈J,0≤M i)
-    (hβ:∀i∈J,∀I∈pool i,‖β i I‖≤M i)
-    (hs:∀i∈J,∀I∈pool i,β i I≠0→(I.absNorm:ℝ)≤b i*P i)
-    (t:ℝ)(ht:t≤1/2):
-    ‖signedCoefficient χ R D₁ D₂ J pool β P‖*((∏I∈D₂,I).absNorm:ℝ)^t≤
-      ∏i∈J,(Real.sqrt (max 1 (b i))*M i)*(∑I∈R,weight I):=by
-  have hn₂:=subset_product_nonzero D₂ (fun I hi=>hR I (hD₂ hi))
-  have hw₁:weight (∏I∈D₁,I)≤1:=by
-    simpa using weighted_inverse_sqrt (∏I∈D₁,I)
-      (subset_product_nonzero D₁ (fun I hi=>hR I (hD₁ hi))) 0 (by norm_num)
-  have hw₂:=weighted_inverse_sqrt (∏I∈D₂,I) hn₂ t ht
-  have hprod:0≤∏i∈J,(Real.sqrt (max 1 (b i))*M i)*(∑I∈R,weight I):=
-    Finset.prod_nonneg (fun i hi=>mul_nonneg (mul_nonneg (Real.sqrt_nonneg _) (hM i hi))
-      (Finset.sum_nonneg (fun I _=>weight_nonneg I)))
-  apply (mul_le_mul_of_nonneg_right
-    (signedCoefficient_uniform χ R hR D₁ D₂ hD₁ hD₂ J pool β P b M hp hP hM hβ hs)
-    (Real.rpow_nonneg (Nat.cast_nonneg _) t)).trans
   unfold uniformMajorant
   calc
     _=(weight (∏I∈D₁,I)*(weight (∏I∈D₂,I)*((∏I∈D₂,I).absNorm:ℝ)^t))*
@@ -173,32 +142,6 @@ theorem weighted_uniform_mass_subpower (F:Finset α)(b M:α→ℝ)(hM:∀i∈F,0
         (Cc*A*Ce^F.card)*(N^(eps/2)*N^(eps/2)) by ring,←Real.rpow_add hN0]
       congr 2
       ring
-
-theorem weighted_signed_mass_subpower (F:Finset α)(b M:α→ℝ)(hM:∀i∈F,0≤M i)
-    (eps:ℝ)(heps:0<eps):
-    ∃C:ℝ,0<C ∧ ∀(R:Finset (Ideal O))(_hR:∀I∈R,Prime I)
-      (χ:Character)(pool:α→Finset (Ideal O))(β:α→Ideal O→ℂ)(P:α→ℝ),
-      (∀i∈F,∀I∈pool i,Prime I)→(∀i∈F,0<P i)→
-      (∀i∈F,∀I∈pool i,‖β i I‖≤M i)→
-      (∀i∈F,∀I∈pool i,β i I≠0→(I.absNorm:ℝ)≤b i*P i)→
-      ∀t:ℝ,t≤1/2→
-      (∑D₁∈R.powerset,∑D₂∈R.powerset,∑J∈F.powerset,
-        ‖signedCoefficient χ R D₁ D₂ J pool β P‖*((∏I∈D₂,I).absNorm:ℝ)^t)≤
-        C*((∏I∈R,I).absNorm:ℝ)^eps:=by
-  obtain ⟨C,hC,hbound⟩:=weighted_uniform_mass_subpower F b M hM eps heps
-  refine ⟨C,hC,?_⟩
-  intro R hR χ pool β P hp hP hβ hs t ht
-  apply le_trans _ (hbound R hR t ht)
-  apply Finset.sum_le_sum;intro D₁ hD₁
-  apply Finset.sum_le_sum;intro D₂ hD₂
-  apply Finset.sum_le_sum;intro J hJ
-  have hJF:=Finset.mem_powerset.mp hJ
-  exact mul_le_mul_of_nonneg_right
-    (signedCoefficient_uniform χ R hR D₁ D₂ (Finset.mem_powerset.mp hD₁)
-      (Finset.mem_powerset.mp hD₂) J pool β P b M
-      (fun i hi=>hp i (hJF hi)) (fun i hi=>hP i (hJF hi))
-      (fun i hi=>hM i (hJF hi)) (fun i hi=>hβ i (hJF hi))
-      (fun i hi=>hs i (hJF hi))) (Real.rpow_nonneg (Nat.cast_nonneg _) t)
 
 end SevenEighths.CenteredMomentEnergyReferenceDeletionBudget
 

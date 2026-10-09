@@ -5,7 +5,6 @@ import Mathlib.Analysis.Complex.Polynomial.Basic
 import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 import Mathlib.Order.Preorder.Finite
 import Mathlib.RingTheory.Ideal.Maps
-
 namespace OAI
 
 namespace SevenEighths.FiniteConductor
@@ -78,17 +77,6 @@ theorem primitiveOnIdeals_iff_no_descent (χ : MulChar R ℂ) :
   push Not
   rfl
 
-theorem FactorsThroughIdeal.mono {χ : MulChar R ℂ} {I J : Ideal R}
-    (h : FactorsThroughIdeal χ I) (hJI : J ≤ I) : FactorsThroughIdeal χ J := by
-  rw [factorsThroughIdeal_iff] at h ⊢
-  exact fun u hu => h u (hJI hu)
-
-theorem FactorsThroughIdeal.inv {χ : MulChar R ℂ} {I : Ideal R}
-    (h : FactorsThroughIdeal χ I) : FactorsThroughIdeal χ⁻¹ I := by
-  rw [factorsThroughIdeal_iff] at h ⊢
-  intro u hu
-  rw [← MulChar.star_apply', h u hu, star_one]
-
 omit [Finite R] in
 
 theorem factorization_with_source_mask (χ : MulChar R ℂ) (I : Ideal R)
@@ -101,54 +89,6 @@ theorem factorization_with_source_mask (χ : MulChar R ℂ) (I : Ideal R)
     simp only [u.isUnit, ite_true]
     exact (congrArg (fun f : Rˣ →* ℂˣ => ((f u : ℂˣ) : ℂ)) hφ).symm
   · simp only [ha, ite_false, MulChar.map_nonunit _ ha]
-
-theorem exists_primitive_quotient (χ : MulChar R ℂ) :
-    ∃ (I : Ideal R) (φ : MulChar (R ⧸ I) ℂ),
-      φ.toUnitHom.comp (quotientUnits I) = χ.toUnitHom ∧
-      IsPrimitiveOnIdeals φ ∧ Maximal (FactorsThroughIdeal χ) I := by
-  classical
-  let : Finite (Ideal R) := Finite.of_injective
-    (fun I : Ideal R => (I : Set R)) SetLike.coe_injective
-  have hbot : FactorsThroughIdeal χ ⊥ := by
-    rw [factorsThroughIdeal_iff]
-    intro u hu
-    have hu1 : (u : R) = 1 := sub_eq_zero.mp hu
-    rw [hu1, map_one]
-  obtain ⟨I, hI⟩ := (Set.toFinite {I : Ideal R | FactorsThroughIdeal χ I}).exists_maximal
-    ⟨⊥, hbot⟩
-  obtain ⟨φ, hφ⟩ := hI.1
-  let : Finite (R ⧸ I) := Finite.of_surjective _ (Ideal.Quotient.mk_surjective (I := I))
-  refine ⟨I, φ, hφ, ?_, hI⟩
-  apply (primitiveOnIdeals_iff_no_descent φ).mpr
-  intro J hJ hdesc
-  let K : Ideal R := J.comap (Ideal.Quotient.mk I)
-  have hK : FactorsThroughIdeal χ K := by
-    apply (factorsThroughIdeal_iff χ K).mpr
-    intro u hu
-    have huJ : ((quotientUnits I u : (R ⧸ I)ˣ) : R ⧸ I) - 1 ∈ J := by
-      change Ideal.Quotient.mk I ((u : R) - 1) ∈ J at hu
-      change Ideal.Quotient.mk I (u : R) - 1 ∈ J
-      simpa only [map_sub, map_one] using hu
-    have heq := congrArg (fun f : Rˣ →* ℂˣ => ((f u : ℂˣ) : ℂ)) hφ
-    exact heq.symm.trans ((factorsThroughIdeal_iff φ J).mp hdesc _ huJ)
-  have hIK : I ≤ K := by
-    intro x hx
-    change Ideal.Quotient.mk I x ∈ J
-    rw [Ideal.Quotient.eq_zero_iff_mem.mpr hx]
-    exact J.zero_mem
-  have hKI : K ≤ I := hI.2 hK hIK
-  apply hJ
-  apply le_antisymm _ bot_le
-  intro x hx
-  obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective x
-  exact Ideal.Quotient.eq_zero_iff_mem.mpr (hKI hx)
-
-theorem exists_primitive_quotient_with_mask (χ : MulChar R ℂ) :
-    ∃ (I : Ideal R) (φ : MulChar (R ⧸ I) ℂ),
-      IsPrimitiveOnIdeals φ ∧ Maximal (FactorsThroughIdeal χ) I ∧
-      ∀ a : R, χ a = if IsUnit a then φ (Ideal.Quotient.mk I a) else 0 := by
-  obtain ⟨I, φ, hφ, hprimitive, hmaximal⟩ := exists_primitive_quotient χ
-  exact ⟨I, φ, hprimitive, hmaximal, factorization_with_source_mask χ I φ hφ⟩
 
 end
 

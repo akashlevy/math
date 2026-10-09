@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.PhaseCancellation
 import OAI.NumberTheory.DirichletL.Detector.Sextic
-
 namespace OAI
 
 noncomputable section

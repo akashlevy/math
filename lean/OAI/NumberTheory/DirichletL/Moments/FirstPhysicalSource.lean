@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstChildBound
 import OAI.NumberTheory.DirichletL.Moments.FirstSectorTransform
-import OAI.NumberTheory.DirichletL.Moments.FirstChildProfile
-
+import OAI.NumberTheory.DirichletL.Moments.HeckeColumnWindow
 namespace OAI
 
 noncomputable section

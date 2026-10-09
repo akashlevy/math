@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.ReferenceHomogeneousError
 import OAI.NumberTheory.DirichletL.Moments.RayMaskedFloorCoefficients
-
 namespace OAI
 
 noncomputable section

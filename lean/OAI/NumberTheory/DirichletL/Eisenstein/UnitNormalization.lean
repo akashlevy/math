@@ -1,79 +1,24 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.FredholmAlternative
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace CanonicalUnitEuler
 open ActualEisensteinCubic
 open CanonicalRowCompletion
@@ -163,102 +108,17 @@ theorem idealRowHom_unit_eq_of_norm_mod_thirty_six (u : ActualEisensteinCubic.O�
     omega
   exact congrArg eisEmbedding (pow_eq_pow_of_modEq hm (unit_pow_six u))
 
-theorem rowTwist_unit_norm (Ψ : ActualEisensteinCubic.O→*ℂ) (m f z n : ActualEisensteinCubic.O) (u : ActualEisensteinCubic.Oˣ)
-    (hn : n≠0)
-    (hgood : ∀P∈normalizedFactors (Ideal.span {n}),
-      P.IsMaximal ∧ lambda∉P ∧ ringChar (ActualEisensteinCubic.O⧸P)≠2) :
-    rowTwist Ψ m f (u.val*z) n = rowTwist Ψ m f z n *
-      eisEmbedding (u.val^((Ideal.absNorm (Ideal.span {n})-1)/6)) := by
-  change Ψ n*idealRowHom (m^6*f^4*(u.val*z)) (Ideal.span {n}) =
-    (Ψ n*idealRowHom (m^6*f^4*z) (Ideal.span {n}))*_
-  rw [show m^6*f^4*(u.val*z)=u.val*(m^6*f^4*z) by ring,
-    idealRowHom_argument_mul,
-    idealRowHom_unit_norm u _ (Ideal.span_singleton_eq_bot.not.mpr hn) hgood]
-  ring
-
 end CanonicalUnitEuler
 
 namespace CompletedGauss
 open ActualEisensteinCubic CompletedDyadic
 
-theorem normalized_cusp_coefficient (d ζ : ℂ) (m n b : ℝ) (hn : 0<n) (hb : 0<b) :
-    ζ*(d/((Real.sqrt ((3:ℝ)^m*n*b^3):ℝ):ℂ)) =
-      (4/3:ℂ)*(81*ζ)*(normalizedCuspAmplitude d m b /
-        ((4*(3:ℝ)^(m/3)*Real.sqrt n*b:ℝ):ℂ)) := by
-  have ha : (3:ℝ)^(m/6)*Real.sqrt b≠0:=by positivity
-  have hs : Real.sqrt ((3:ℝ)^m*n*b^3)≠0:=by positivity
-  have hr : (3:ℝ)^(m/3)*Real.sqrt n*b≠0:=by positivity
-  have hid:=cusp_coefficient_normalization m n b hn hb
-  have hcross : ((3:ℝ)^(m/6)*Real.sqrt b)*((3:ℝ)^(m/3)*Real.sqrt n*b)=
-      Real.sqrt ((3:ℝ)^m*n*b^3) := by
-    have hh:=(div_eq_div_iff hs hr).mp hid
-    simpa only [one_mul] using hh
-  have hc := congrArg (fun x:ℝ=>(x:ℂ)) hcross
-  push_cast at hc
-  unfold normalizedCuspAmplitude
-  have hsa : (((3:ℝ)^(m/6):ℝ):ℂ)≠0:=by exact_mod_cast (Real.rpow_pos_of_pos (by norm_num) (m/6)).ne'
-  have hsb : ((Real.sqrt b:ℝ):ℂ)≠0:=by exact_mod_cast (Real.sqrt_pos.mpr hb).ne'
-  have hsr : (((3:ℝ)^(m/3):ℝ):ℂ)≠0:=by exact_mod_cast (Real.rpow_pos_of_pos (by norm_num) (m/3)).ne'
-  have hsn : ((Real.sqrt n:ℝ):ℂ)≠0:=by exact_mod_cast (Real.sqrt_pos.mpr hn).ne'
-  have hbc : (b:ℂ)≠0:=by exact_mod_cast hb.ne'
-  rw [←hc]
-  push_cast
-  field_simp
-  ; ring
-
-theorem normalized_reflection_weight (ζ : ℂ) (hζ : ‖ζ‖≤(1:ℝ)/81) :
-    ‖(81:ℂ)*ζ‖≤1 := by
-  rw [norm_mul]
-  norm_num
-  linarith
-
-theorem normalized_cusp_coefficient_nat (d ζ : ℂ) (m : ℕ) (n b : ℝ)
-    (hn : 0<n) (hb : 0<b) :
-    ζ*(d/((Real.sqrt ((3:ℝ)^((m:ℝ)-4)*n*b^3):ℝ):ℂ)) =
-      (4/3:ℂ)*(81*ζ)*(normalizedCuspAmplitude d ((m:ℝ)-4) b /
-        ((4*ramifiedScale completedRamifiedInitial completedRamifiedStep m*Real.sqrt n*b:ℝ):ℂ)) := by
-  rw [actual_ramified_scale]
-  exact normalized_cusp_coefficient d ζ ((m:ℝ)-4) n b hn hb
-
-theorem reflection_kernel_scale (X r c0 C K U B k n b D E : ℝ)
-    (hX : 0<X) (hc0 : 0<c0) (hC : 0<C) (hK : 0<K) (hU : 0<U) (hB : 0<B)
-    (hk : 0<k) (hn : 0<n) (hb : 0<b) (hD : 0<D) (hE : 0<E) :
-    ((K^2*C^2/((X/c0^2)*D*E^3))⁻¹*r^3*B^3*U)*
-      Real.exp (-2*Real.log (k/K)+Real.log (n/U)+3*Real.log (b/B)) =
-      r^3*(D*n)*(E*b)^3*X/(k^2*(c0*C)^2) := by
-  rw [positive_log_scale_identity k n b K U B _ hk hn hb hK hU hB]
-  field_simp
-
-theorem completed_branch_kernel_argument {ι : Type*} [Fintype ι]
-    (P : ι→Ideal ActualEisensteinCubic.O) (hP : ∀i,P i≠0) (e : ι→Fin 3)
-    (K X c0 r U B : ℝ) (I F Q H N V : Ideal ActualEisensteinCubic.O)
-    (hX : 0<X) (hc0 : 0<c0) (hK : 0<completedResidualScale K I Q)
-    (hU : 0<U) (hB : 0<B) (hH : H≠0) (hN : N≠0) (hV : V≠0) :
-    ((completedBranchScale K (X/c0^2) I F Q P e)⁻¹*r^3*B^3*U)*
-      Real.exp (-2*Real.log ((Ideal.absNorm H:ℝ)/completedResidualScale K I Q)+
-        Real.log ((Ideal.absNorm N:ℝ)/U)+3*Real.log ((Ideal.absNorm V:ℝ)/B)) =
-      r^3*(Ideal.absNorm (reflectionExtractedDivisor P (fun i=>completedLocalExponent I F (P i)) e 1*N):ℝ)*
-        (Ideal.absNorm (reflectionExtractedDivisor P (fun i=>completedLocalExponent I F (P i)) e 2*V):ℝ)^3*X/
-        ((Ideal.absNorm H:ℝ)^2*(c0*(Ideal.absNorm (∏i,P i):ℝ))^2) := by
-  have hnorm (J : Ideal ActualEisensteinCubic.O) (hj : J≠0) : 0<(Ideal.absNorm J:ℝ) := by
-    exact_mod_cast Nat.pos_of_ne_zero (fun hz=>hj (Ideal.absNorm_eq_zero_iff.mp hz))
-  have hp : (∏i,P i)≠0:=Finset.prod_ne_zero_iff.mpr (fun i _=>hP i)
-  have hD:=reflectionExtractedDivisor_ne_zero P hP (fun i=>completedLocalExponent I F (P i)) e 1
-  have hE:=reflectionExtractedDivisor_ne_zero P hP (fun i=>completedLocalExponent I F (P i)) e 2
-  simpa only [completedBranchScale,map_mul,Nat.cast_mul] using
-    reflection_kernel_scale X r c0 (Ideal.absNorm (∏i,P i):ℝ) (completedResidualScale K I Q) U B
-      (Ideal.absNorm H:ℝ) (Ideal.absNorm N:ℝ) (Ideal.absNorm V:ℝ)
-      (Ideal.absNorm (reflectionExtractedDivisor P (fun i=>completedLocalExponent I F (P i)) e 1):ℝ)
-      (Ideal.absNorm (reflectionExtractedDivisor P (fun i=>completedLocalExponent I F (P i)) e 2):ℝ)
-      hX hc0 (hnorm _ hp) hK hU hB (hnorm _ hH) (hnorm _ hN) (hnorm _ hV) (hnorm _ hD) (hnorm _ hE)
-
 end CompletedGauss
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace CanonicalRowCompletion
 open ActualEisensteinCubic
 open CompletedGauss hiding O
-open ConcretePrimeRowBridge hiding O columnWeight
+open ConcretePrimeRowBridge hiding O
 open CanonicalQuadraticSieve hiding O
 open SecondPassArithmetic hiding O
 open ConcreteTraceCRT (eisEmbedding)
@@ -338,8 +198,7 @@ theorem canonicalShortEnergy_normalized_uniform_twist
 
 end CanonicalRowCompletion
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ContDiff MatrixGroups
+open scoped MatrixGroups
 
 namespace CubicEisenstein
 
@@ -554,9 +413,6 @@ lemma translated_remainder_majorant (a b : ℝ) (s : ℂ)
     (translatedCuspRow_coprime M r) z hz v hv
 
 end CubicEisenstein
-
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ContDiff MatrixGroups
 
 namespace CubicEisenstein
 open ActualEisensteinCubic ConcreteTraceCRT

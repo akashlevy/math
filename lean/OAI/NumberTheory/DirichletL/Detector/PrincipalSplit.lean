@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.CompensatedRows
-
 namespace OAI
 
 noncomputable section
@@ -49,19 +48,6 @@ lemma rowIntegral_summable {K : ℕ} (η : HeckeFamily.Character) (S : Finset Id
     a0 b0 a1 b1 ha0 ha1 hW0 hW1 X Y Z hX hY hZ).integral_prod_left
   rw [integrable_count_iff] at hi
   exact hi.of_norm.mul_left _
-
-theorem compensatedRowTripleIntegral_principal_split {K : ℕ} (η : HeckeFamily.Character)
-    (S : Finset Id) (C : CalibrationData) (p : Fin K→O) (hp : ∀i,p i≠0)
-    (W0 W1 : SchwartzMap ℝ ℂ) (a0 b0 a1 b1 : ℝ) (ha0 : 0<a0) (ha1 : 0<a1)
-    (hW0 : Function.support W0⊆Set.Icc a0 b0) (hW1 : Function.support W1⊆Set.Icc a1 b1)
-    (X Y Z : ℝ) (hX : 0<X) (hY : 0<Y) (hZ : 0<Z) :
-    compensatedRowTripleIntegral η S C W0 W1 p X Y Z=
-      principalRowIntegral η S p W0 W1 X Y Z+
-        ∑'u : FreeRow,if u=principalFreeRow then 0 else rowIntegral η S C p W0 W1 X Y Z u := by
-  rw [compensatedRowTripleIntegral_eq_tsum η S C p hp W0 W1 a0 b0 a1 b1 ha0 ha1 hW0 hW1 X Y Z hX hY hZ]
-  change (∑'u : FreeRow,rowIntegral η S C p W0 W1 X Y Z u)=_
-  rw [(rowIntegral_summable η S C p hp W0 W1 a0 b0 a1 b1 ha0 ha1 hW0 hW1 X Y Z hX hY hZ).tsum_eq_add_tsum_ite principalFreeRow,
-    rowIntegral_principal]
 
 end SevenEighths.ProbePhysical
 end

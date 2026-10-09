@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.MarkedFiber
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

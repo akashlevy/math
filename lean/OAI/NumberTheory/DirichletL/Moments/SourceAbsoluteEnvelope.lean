@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SourceRectangleEnergy
 import OAI.NumberTheory.DirichletL.Moments.PositiveSummability
-
 namespace OAI
 
 noncomputable section

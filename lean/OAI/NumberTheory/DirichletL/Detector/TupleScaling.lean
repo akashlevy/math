@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.MellinScaling
 import OAI.NumberTheory.DirichletL.Detector.SourceTriple
-
 namespace OAI
 
 noncomputable section

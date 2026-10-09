@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstNominal
 import OAI.NumberTheory.DirichletL.Descent.FirstCoupledReindex
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

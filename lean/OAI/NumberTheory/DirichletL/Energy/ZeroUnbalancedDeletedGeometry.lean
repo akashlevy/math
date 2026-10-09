@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.ZeroReferenceGeometry
-
 namespace OAI
 
 noncomputable section

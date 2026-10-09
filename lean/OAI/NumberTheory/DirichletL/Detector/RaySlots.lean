@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.RayPrimeNormalizer
 import OAI.NumberTheory.DirichletL.Detector.PrincipalResidueActual
-
 namespace OAI
 
 noncomputable section

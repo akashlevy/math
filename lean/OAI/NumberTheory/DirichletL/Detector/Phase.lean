@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Foundation
-
 namespace OAI
 
 noncomputable section
@@ -45,16 +44,6 @@ theorem reciprocitySign_cube_right (a b : O)
   calc
     _ = reciprocitySign a b ^ 2 * reciprocitySign a b := by ring
     _ = reciprocitySign a b := by rw [hs, one_mul]
-
-theorem G_completed_index (c n : O)
-    (hc : EisensteinEPrimaryPhase.odd (residue c))
-    (hn : EisensteinEPrimaryPhase.odd (residue n)) :
-    G (c * n ^ 3) = G c * reciprocitySign c n * G (n ^ 3) := by
-  have hn3 : EisensteinEPrimaryPhase.odd (residue (n ^ 3)) := by
-    rw [show n ^ 3 = (n * n) * n by ring, residue_mul, residue_mul]
-    exact QuadraticAllOddCRT.odd_mul _ _ (QuadraticAllOddCRT.odd_mul _ _ hn hn) hn
-  rw [G_mul c (n ^ 3) hc hn3, reciprocitySign_cube_right c n hc hn]
-  ring
 
 theorem quadraticRayValue_cube (r : EisensteinEPrimaryPhase.Coord)
     (hr : EisensteinEPrimaryPhase.odd r) :

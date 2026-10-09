@@ -1,77 +1,24 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.SpatialDerivatives
 import OAI.NumberTheory.DirichletL.CubicSieve.FirstCoreCutoff
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-
-open scoped BigOperators Classical SchwartzMap
+open scoped ContDiff
+open Set
 
 namespace EisensteinSchwartzPoisson
 open ActualEisensteinCubic ConcreteTraceCRT
@@ -529,57 +476,9 @@ theorem integral_hyperbolicHeight_mul_le_one (M : SL(2,O)) (hc : M 1 0≠0) (w :
   change _ * _ * Complex.normSq (eisEmbedding (M 1 0)) ≤ 1 at hb
   nlinarith
 
-def cuspHoroball (σ : SL(2,O)) (Y : ℝ) : Set HyperbolicSpace :=
-  {w | Y < hyperbolicHeight (integralComplexMatrix σ⁻¹ • w)}
-
-theorem cuspHoroball_disjoint (σ τ : SL(2,O)) (Y Z : ℝ)
-    (hY : 1≤Y) (hZ : 1≤Z) (hc : (σ⁻¹*τ) 1 0≠0) :
-    Disjoint (cuspHoroball σ Y) (cuspHoroball τ Z) := by
-  apply Set.disjoint_left.mpr
-  intro w hwσ hwτ
-  have hprod := integral_hyperbolicHeight_mul_le_one (σ⁻¹*τ) hc
-    (integralComplexMatrix τ⁻¹ • w)
-  simp only [map_mul,map_inv,mul_smul,smul_inv_smul] at hprod
-  have hσ : 1 < hyperbolicHeight (integralComplexMatrix σ⁻¹ • w) := lt_of_le_of_lt hY hwσ
-  have hτ : 1 < hyperbolicHeight (integralComplexMatrix τ⁻¹ • w) := lt_of_le_of_lt hZ hwτ
-  simp only [map_inv] at hσ hτ
-  nlinarith [mul_pos (sub_pos.mpr hσ) (sub_pos.mpr hτ)]
-
-def InequivalentCusps (σ τ : SL(2,O)) : Prop :=
-  ∀ M : levelThree, (σ⁻¹*(M : SL(2,O))*τ) 1 0≠0
-
-def cuspNeighborhood (σ : SL(2,O)) (Y : ℝ) : Set HyperbolicSpace :=
-  {w | ∃ M : levelThree, w ∈ cuspHoroball ((M : SL(2,O))*σ) Y}
-
-lemma cuspNeighborhood_invariant (σ : SL(2,O)) (Y : ℝ) (M : levelThree) (w : HyperbolicSpace) :
-    complexMatrix M • w ∈ cuspNeighborhood σ Y ↔ w ∈ cuspNeighborhood σ Y := by
-  constructor
-  · rintro ⟨N,hN⟩
-    refine ⟨M⁻¹*N,?_⟩
-    change Y < hyperbolicHeight (integralComplexMatrix (((M⁻¹*N : levelThree) : SL(2,O))*σ)⁻¹ • w)
-    change Y < hyperbolicHeight (integralComplexMatrix ((N : SL(2,O))*σ)⁻¹ • (complexMatrix M • w)) at hN
-    simpa only [Subgroup.coe_mul,Subgroup.coe_inv,mul_inv_rev,inv_inv,map_mul,map_inv,mul_smul,
-      integralComplexMatrix_levelThree] using hN
-  · rintro ⟨N,hN⟩
-    refine ⟨M*N,?_⟩
-    change Y < hyperbolicHeight (integralComplexMatrix (((M*N : levelThree) : SL(2,O))*σ)⁻¹ • (complexMatrix M • w))
-    change Y < hyperbolicHeight (integralComplexMatrix ((N : SL(2,O))*σ)⁻¹ • w) at hN
-    simpa only [Subgroup.coe_mul,mul_inv_rev,map_mul,map_inv,mul_smul,
-      integralComplexMatrix_levelThree,inv_smul_smul] using hN
-
-theorem cuspNeighborhood_disjoint (σ τ : SL(2,O)) (hστ : InequivalentCusps σ τ)
-    (Y Z : ℝ) (hY : 1≤Y) (hZ : 1≤Z) :
-    Disjoint (cuspNeighborhood σ Y) (cuspNeighborhood τ Z) := by
-  apply Set.disjoint_left.mpr
-  rintro w ⟨M,hM⟩ ⟨N,hN⟩
-  apply Set.disjoint_left.mp (cuspHoroball_disjoint ((M : SL(2,O))*σ) ((N : SL(2,O))*τ) Y Z hY hZ ?_) hM hN
-  have hc := hστ (M⁻¹*N)
-  simpa only [Subgroup.coe_mul,Subgroup.coe_inv,mul_inv_rev,mul_assoc] using hc
-
 end CubicEisenstein
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
+open scoped MatrixGroups
 
 namespace CubicEisenstein
 open ActualEisensteinCubic CubicKubota ConcreteTraceCRT
@@ -674,30 +573,6 @@ lemma hyperbolicHeight_upperPoint (z : ℂ) (v : ℝ) (hv : 0<v) :
     hyperbolicHeight (upperPoint z v hv)=v := by
   have h := hyperbolicHeight_action_upperPoint 1 z v hv
   simpa [Matrix.one_apply] using h
-
-def infinityConstantMode (s : ℂ) (v : ℝ) : ℂ :=
-  if hv : 0<v then eisensteinFourierCoefficient v hv s 0 else 0
-
-def truncatedAtInfinity (Y : ℝ) (s : ℂ) (w : HyperbolicSpace) : ℂ :=
-  hyperbolicEisenstein s w-cuspCutoffCorrection Y (infinityConstantMode s) w
-
-theorem truncatedAtInfinity_automorphy (Y : ℝ) (hY : 1≤Y) (s : ℂ) (hs : 2<s.re)
-    (M : levelThree) (w : HyperbolicSpace) :
-    truncatedAtInfinity Y s (complexMatrix M • w) = complexCharacter M*truncatedAtInfinity Y s w := by
-  rw [truncatedAtInfinity,hyperbolicEisenstein_automorphy M s hs,
-    cuspCutoffCorrection_automorphy Y hY]
-  unfold truncatedAtInfinity
-  ring
-
-theorem truncatedAtInfinity_upperPoint (Y : ℝ) (hY : 1≤Y) (s : ℂ)
-    (z : ℂ) (v : ℝ) (hv : 0<v) (hYv : Y<v) :
-    truncatedAtInfinity Y s (upperPoint z v hv) =
-      upperEisenstein z v hv s-eisensteinFourierCoefficient v hv s 0 := by
-  have hh : cosetHeight (cosetOf 1) (upperPoint z v hv)=v := by
-    rw [cosetHeight_cosetOf,map_one,one_smul,hyperbolicHeight_upperPoint]
-  rw [truncatedAtInfinity,cuspCutoffCorrection_eq Y hY _ _ (cosetOf 1) (hh.symm ▸ hYv),
-    hh,cosetCharacter_cosetOf,map_one,inv_one,one_mul,hyperbolicEisenstein_upperPoint]
-  rw [infinityConstantMode,dite_eq_left hv]
 
 end CubicEisenstein
 

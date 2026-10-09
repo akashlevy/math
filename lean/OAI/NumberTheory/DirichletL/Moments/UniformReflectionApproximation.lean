@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.OriginalReflectionApproximation
 import OAI.NumberTheory.DirichletL.Moments.UniformReflectionProfile
-
 namespace OAI
 
 noncomputable section
@@ -134,32 +133,6 @@ lemma retainedSchwartz_eq (χ ψ : Character) (G : 𝓢(ℝ,ℂ)) (X R : ℝ) (h
   have hI := norm_pos I.val
   rw [finiteAnnularColumn_eq _ _ (reflected_decayTwo G) _ _ (by positivity)]
 
-lemma restoration_summable (χ ψ : Character) (G : 𝓢(ℝ,ℂ)) (X R : ℝ) (hX : 0<X) :
-    let S := redundantSet χ.modulus ψ.modulus
-    ∀D∈S.powerset,
-      Summable (fun I : SmoothIdeal S=>coefficient ψ ψ.inverse S D I*
-        finiteAnnularColumn χ.inverse (paperRadialFourier G) R
-          ((ψ.modulus.absNorm:ℝ)*(Ideal.absNorm (∏P∈D,P):ℝ)/(X*norm I.val))) ∧
-      Summable (fun I : SmoothIdeal S=>coefficient ψ ψ.inverse S D I*
-        HeckeDyadic.polynomial χ.inverse false
-          (fun x=>(discardedWeight R x:ℂ)*paperRadialFourier G x)
-          ((ψ.modulus.absNorm:ℝ)*(Ideal.absNorm (∏P∈D,P):ℝ)/(X*norm I.val)) 0 0) := by
-  dsimp only
-  intro D hD
-  have hS := redundantSet_prime χ.modulus ψ.modulus
-  have hQ : 0<(ψ.modulus.absNorm:ℝ) := by
-    exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr ψ.modulus_ne_bot)
-  have hF := reflected_decayTwo G
-  have hr := reflected_column_summable _ hS ψ ψ.inverse χ.inverse _
-    (masked_decayTwo _ hF _ (retainedWeight_bounds R)) _ X hQ hX D hD
-  have hd := reflected_column_summable _ hS ψ ψ.inverse χ.inverse _
-    (masked_decayTwo _ hF _ (discardedWeight_bounds R)) _ X hQ hX D hD
-  refine ⟨hr.congr ?_,hd⟩
-  intro I
-  have hN := subset_product_norm_pos D (fun P hP=>hS P ((Finset.mem_powerset.mp hD) hP))
-  have hI := norm_pos I.val
-  rw [finiteAnnularColumn_eq _ _ hF _ _ (by positivity)]
-
 theorem original_split (χ : Character) (hn : χ.residue≠1) :
     ∃(ψ : Character)(g : ℂ),FiniteFourier.IsPrimitiveOnIdeals ψ.residue ∧ ψ.residue≠1 ∧ ‖g‖=1 ∧
       ψ.modulus.absNorm*(redundantIdeal χ.modulus ψ.modulus).absNorm≤χ.modulus.absNorm ∧
@@ -203,74 +176,6 @@ theorem actual_original_approximation (xi saving L Cscale epsilon : ℝ)
   apply mul_le_mul_of_nonneg_right _ (by positivity)
   apply mul_le_mul_of_nonneg_left _ (by positivity)
   exact Real.rpow_le_rpow (Nat.cast_nonneg _) (radical_le_original χ ψ hcap) hepsilon.le
-
-lemma retainedSchwartz_uniformTwisted (χ ψ : Character) (W : ℝ→ℂ)
-    (a b : ℝ) (ha : 0<a) (hs : Function.support W⊆Set.Icc a b)
-    (hW : ContDiff ℝ ∞ W) (t X R : ℝ) :
-    retainedSchwartz χ ψ (CompletedHeight.uniformTwistedSchwartz W a b ha hs hW t) X R=
-      retainedOriginal χ ψ W X R t := by
-  have he : (CompletedHeight.uniformTwistedSchwartz W a b ha hs hW t : ℝ→ℂ)=
-      CompletedHeight.normTwistedSource W t := by
-    funext x
-    exact CompletedHeight.uniformTwistedSchwartz_apply W a b ha hs hW t x
-  unfold retainedSchwartz retainedOriginal
-  rw [he]
-
-theorem actual_twisted_approximation (xi saving L Cscale epsilon : ℝ)
-    (hxi : 0<xi) (hscale : 0<Cscale) (hepsilon : 0<epsilon) :
-    ∃H : Finset (ℕ×ℕ),∃C : ℝ,0<C ∧ ∀χ : Character,χ.residue≠1 →
-      ∃(ψ : Character)(g : ℂ),FiniteFourier.IsPrimitiveOnIdeals ψ.residue ∧ ψ.residue≠1 ∧ ‖g‖=1 ∧
-      ψ.modulus.absNorm*(redundantIdeal χ.modulus ψ.modulus).absNorm≤χ.modulus.absNorm ∧
-      ∀(W : ℝ→ℂ)(a b : ℝ)(ha : 0<a)(hs : Function.support W⊆Set.Icc a b)
-        (hW : ContDiff ℝ ∞ W)(t X Z : ℝ),0<X → 1≤Z →
-        (χ.modulus.absNorm:ℝ)≤Cscale*Z^L*X →
-        ‖HeckeDyadic.polynomial χ false W X 0 (2*Real.pi*t)-
-          g*retainedOriginal χ ψ W X (Z^(xi/2)) t‖≤
-          C*H.sup (schwartzSeminormFamily ℝ ℝ ℂ)
-            (CompletedHeight.uniformTwistedSchwartz W a b ha hs hW t)*
-            (χ.modulus.absNorm:ℝ)^epsilon*Z^(-saving) := by
-  obtain ⟨H,C,hC,hb⟩ := actual_original_approximation xi saving L Cscale epsilon hxi hscale hepsilon
-  refine ⟨H,C,hC,?_⟩
-  intro χ hn
-  obtain ⟨ψ,g,hp,hnp,hg,hcap,hbound⟩ := hb χ hn
-  refine ⟨ψ,g,hp,hnp,hg,hcap,?_⟩
-  intro W a b ha hs hW t X Z hX hZ hmod
-  have hh := hbound (CompletedHeight.uniformTwistedSchwartz W a b ha hs hW t) X Z hX hZ hmod
-  rw [retainedSchwartz_uniformTwisted] at hh
-  have he : (CompletedHeight.uniformTwistedSchwartz W a b ha hs hW t : ℝ→ℂ)=
-      CompletedHeight.normTwistedSource W t := by
-    funext x
-    exact CompletedHeight.uniformTwistedSchwartz_apply W a b ha hs hW t x
-  have ht := CenteredMomentTwistedReflection.polynomial_twisted_source χ W X t hX
-  rw [←he] at ht
-  rw [←ht] at hh
-  exact hh
-
-theorem detector_original_approximation (xi saving L Cscale epsilon : ℝ)
-    (hxi : 0<xi) (hscale : 0<Cscale) (hepsilon : 0<epsilon) :
-    ∃n : ℕ,∃C : ℝ,0<C ∧ ∀χ : Character,χ.residue≠1 →
-      ∃(ψ : Character)(g : ℂ),FiniteFourier.IsPrimitiveOnIdeals ψ.residue ∧ ψ.residue≠1 ∧ ‖g‖=1 ∧
-      ψ.modulus.absNorm*(redundantIdeal χ.modulus ψ.modulus).absNorm≤χ.modulus.absNorm ∧
-      ∀reverse : Bool,∀k : ℕ,k≤2→∀σ∈Set.Icc (0:ℝ) 1,∀t X Z : ℝ,
-        0<X → 1≤Z → (χ.modulus.absNorm:ℝ)≤Cscale*Z^L*X →
-        let G := CenteredMomentDetectorDictionary.detectorSchwartz reverse k σ t
-        ‖HeckeDyadic.polynomial χ false G X 0 0-
-          g*retainedSchwartz χ ψ G X (Z^(xi/2))‖≤
-          C*(χ.modulus.absNorm:ℝ)^epsilon*(1+‖t‖)^n*Z^(-saving) := by
-  obtain ⟨H,C,hC,hb⟩ := actual_original_approximation xi saving L Cscale epsilon hxi hscale hepsilon
-  obtain ⟨n,D,hD,hcontrol⟩ := CenteredMomentDetectorDictionary.detectorSchwartz_uniform H
-  refine ⟨n,C*D,mul_pos hC hD,?_⟩
-  intro χ hn
-  obtain ⟨ψ,g,hp,hnp,hg,hcap,hbound⟩ := hb χ hn
-  refine ⟨ψ,g,hp,hnp,hg,hcap,?_⟩
-  intro reverse k hk σ hσ t X Z hX hZ hmod
-  dsimp only
-  apply (hbound _ X Z hX hZ hmod).trans
-  have he := hcontrol reverse k hk σ hσ t
-  have hh := mul_le_mul_of_nonneg_right
-    (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left he hC.le) (by positivity :
-      0≤(χ.modulus.absNorm:ℝ)^epsilon)) (by positivity : 0≤Z^(-saving))
-  exact hh.trans_eq (by ring)
 
 end SevenEighths.CenteredMomentUniformReflectionApproximation
 

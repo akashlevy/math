@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.ZeroUnbalancedOriginalPower
 import OAI.NumberTheory.DirichletL.Energy.ZeroUnbalancedOriginalGates
-
 namespace OAI
 
 noncomputable section

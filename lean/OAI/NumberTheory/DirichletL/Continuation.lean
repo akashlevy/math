@@ -4,7 +4,6 @@ import Mathlib.Analysis.Complex.Convex
 import Mathlib.Analysis.Complex.CauchyIntegral
 import Mathlib.Analysis.Analytic.Uniqueness
 import OAI.NumberTheory.DirichletL.Supremum
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,5 @@
-import OAI.NumberTheory.DirichletL.Reflection.PhysicalBranchMeasure
-
+import OAI.NumberTheory.DirichletL.Reflection.PhysicalIntegral
+import OAI.NumberTheory.DirichletL.Reflection.WeightedMeasurable
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

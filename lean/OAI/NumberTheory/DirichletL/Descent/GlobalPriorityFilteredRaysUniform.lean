@@ -1,7 +1,11 @@
-import OAI.NumberTheory.DirichletL.Descent.GlobalPriorityFilteredRays
+import OAI.NumberTheory.DirichletL.Inversion.SecondChildWindows
+import OAI.NumberTheory.DirichletL.Descent.SecondCellPhysical
+import OAI.NumberTheory.DirichletL.Descent.SecondCellParameters
+import OAI.NumberTheory.DirichletL.Descent.PrioritySourceBudget
+import OAI.NumberTheory.DirichletL.Descent.GlobalRetainedGatesGeometry
+import OAI.NumberTheory.DirichletL.Descent.GlobalPrioritySource
+import OAI.NumberTheory.DirichletL.Inversion.WholePriorityRetainedSource
 import OAI.NumberTheory.DirichletL.Descent.GlobalPriorityFilteredEnergyUniform
-import OAI.NumberTheory.DirichletL.Descent.GlobalPriorityFilteredEnergy
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.PhysicalFourier
-
 namespace OAI
 
 noncomputable section
@@ -85,21 +84,6 @@ theorem actualCongruenceCoefficient_norm_le (C : CalibrationData) (A s : O)
     exact calibratedNumerator_norm_le C A _
   · intro d
     exact idealRowHom_norm _ _
-
-theorem normalizedPhysicalFourier_eq (C : CalibrationData) (A s : O)
-    (hA : A≠0) (hs : s≠0) (H : O) :
-    (Real.sqrt (Ideal.absNorm (Ideal.span {s})):ℂ)⁻¹ * actualPhysicalFourier C A s hA hs H =
-      (Real.sqrt (Ideal.absNorm (Ideal.span {s})):ℂ) * actualCongruenceCoefficient C A s hA H := by
-  have hQ : 0<(Ideal.absNorm (Ideal.span {s}):ℝ) := by
-    exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr
-      (Ideal.span_singleton_eq_bot.not.mpr hs))
-  have hroot : (Real.sqrt (Ideal.absNorm (Ideal.span {s})):ℂ) ≠ 0 := by
-    exact_mod_cast (Real.sqrt_pos.mpr hQ).ne'
-  have he : (Ideal.absNorm (Ideal.span {s}):ℂ) =
-      (Real.sqrt (Ideal.absNorm (Ideal.span {s})):ℂ)^2 := by
-    exact_mod_cast (Real.sq_sqrt hQ.le).symm
-  rw [actualPhysicalFourier_eq, he]
-  field_simp
 
 end SevenEighths.ProbePhysical
 end

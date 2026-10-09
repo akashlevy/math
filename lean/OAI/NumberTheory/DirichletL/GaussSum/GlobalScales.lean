@@ -1,74 +1,23 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.FundamentalDomain
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 namespace CompletedGauss
 open ActualEisensteinCubic
@@ -81,7 +30,6 @@ theorem largeCubeCoefficient_small_power (ε : ℝ) (hε : 0 < ε) :
 
 end CompletedGauss
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 
 section
@@ -348,8 +296,6 @@ end SecondPassArithmetic
 
 section
 
-open scoped BigOperators Classical
-open MeasureTheory
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 open FirstPassCubeLabels (columnLog primeProductNorm)
@@ -613,7 +559,6 @@ theorem globalRadialBin_terminal_bound_all_bins {ι : Type*} [DecidableEq ι]
 
 end SecondPassArithmetic
 
-open scoped BigOperators Classical
 namespace CanonicalQuadraticSieve
 open ActualEisensteinCubic ConcretePrimeRowBridge IdealMobiusDivisorSum CompletedGauss
 open QuadraticSquarefreeKernel
@@ -662,9 +607,6 @@ theorem liftingPrime_supported : Supported liftingPrime := by
     have h := congrArg ShortDraftLatticeCount.qNat hz
     rw [liftingPrimeElement_norm,ShortDraftLatticeCount.qNat_mul,htwo] at h
     omega
-
-theorem liftingPrime_admissible : Admissible liftingPrime :=
-  ⟨liftingPrime_prime.ne_zero,liftingPrime_prime.squarefree,liftingPrime_supported.2⟩
 
 theorem supported_pow {I : Ideal O} (hI : Supported I) (k : ℕ) : Supported (I^k) := by
   induction k with
@@ -728,15 +670,6 @@ theorem liftedRow_character (M : ℝ) (I : Ideal O) (hI : Admissible I)
   rw [liftedRow,canonical_quadraticRow_primary_squarefree J hJ,
     idealZeroMask_primary_eq_indicator J _ hJ.1 (supported_pow liftingPrime_supported _),
     ite_eq_left hPJ.pow_left,one_mul]
-
-theorem liftedRow_injective (M : ℝ) :
-    Function.Injective (fun I : idealRange M =>
-      liftedRow M I.val (mem_idealRange.mp I.property).1.1 (mem_idealRange.mp I.property).2) := by
-  intro I J h
-  apply Subtype.ext
-  have he := congrArg squarefreePart h
-  simpa only [liftedRow_squarefreePart M I.val (mem_idealRange.mp I.property).1,
-    liftedRow_squarefreePart M J.val (mem_idealRange.mp J.property).1] using he
 
 end CanonicalQuadraticSieve
 

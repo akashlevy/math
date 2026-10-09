@@ -1,104 +1,29 @@
 import OAI.NumberTheory.DirichletL.Poisson.BinaryGaussian
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
 
 namespace ActualEisensteinCubic
-
-theorem principal_absNorm_pow (p : O) (k : ℕ) :
-    Ideal.absNorm (Ideal.span {p ^ k}) =
-      (Ideal.absNorm (Ideal.span {p})) ^ k := by
-  rw [← Ideal.span_singleton_pow]
-  exact map_pow Ideal.absNorm (Ideal.span {p}) k
-
-theorem sixth_power_rows_within_norm_cutoff
-    {β : Type*} (selected : Finset β) (p : β → O) (rows : Finset O)
-    (D : ℕ) (hD : 1 ≤ D)
-    (hupper : ∀ i ∈ selected,
-      (Ideal.absNorm (Ideal.span {p i}) : ℝ) ≤
-        (D : ℝ) ^ (11 / 60 : ℝ))
-    (hcover : ∀ u : O,
-      (Ideal.absNorm (Ideal.span {u}) : ℝ) ≤
-        (D : ℝ) ^ (11 / 10 : ℝ) → u ∈ rows) :
-    selected.image (fun i => p i ^ 6) ⊆ rows := by
-  classical
-  intro u hu
-  rcases Finset.mem_image.mp hu with ⟨i, hi, rfl⟩
-  apply hcover
-  have hDreal : (1 : ℝ) ≤ D := by exact_mod_cast hD
-  have hDpos : (0 : ℝ) < D := lt_of_lt_of_le zero_lt_one hDreal
-  calc
-    (Ideal.absNorm (Ideal.span {p i ^ 6}) : ℝ) =
-        (Ideal.absNorm (Ideal.span {p i}) : ℝ) ^ 6 := by
-          exact_mod_cast principal_absNorm_pow (p i) 6
-    _ ≤ ((D : ℝ) ^ (11 / 60 : ℝ)) ^ 6 := by
-          gcongr
-          exact hupper i hi
-    _ = (D : ℝ) ^ (11 / 10 : ℝ) := by
-          rw [← Real.rpow_mul_natCast hDpos.le (11 / 60 : ℝ) 6]
-          congr 1
-          norm_num
 
 end ActualEisensteinCubic
 namespace OscillatoryDeterminant
 
 open Complex
 
-private def q (a b : ℂ) : ℂ := a*a-a*b+b*b
-
-private noncomputable def A (t a b : ℂ) : ℂ := t + 2*Complex.I*b/q a b
-private noncomputable def B (t a b : ℂ) : ℂ := -t/2-2*Complex.I*a/q a b
-private noncomputable def D (t a b : ℂ) : ℂ := t + 2*Complex.I*(a-b)/q a b
-
-theorem determinant (t a b : ℂ) (hq : q a b ≠ 0) :
-    A t a b * D t a b - (B t a b)^2 =
-      4/q a b + 3*t^2/4 := by
-  dsimp [A, B, D]
-  field_simp [hq]
-  dsimp [q]
-  ring_nf
-  simp [Complex.I_sq]
-  ring
-
 end OscillatoryDeterminant
 
 namespace ActualEisensteinCubic
 
 open EisensteinEmbedding ConcreteTraceCRT Complex
-
-theorem breveE_bilinear_coordinates (u v m n : ℤ) :
-    ShortDraftTrace.breveE
-      (eisEmbedding (ActualEisensteinCoordinates.eval u v) *
-        eisEmbedding (ActualEisensteinCoordinates.eval m n) / eisLam) =
-      Complex.exp (2 * Real.pi * Complex.I *
-        ((u*n+v*m-v*n : ℤ) : ℂ)) := by
-  rw [← map_mul, ActualEisensteinCoordinates.eval_mul]
-  rw [eisEmbedding_eval]
-  simpa using
-    breveE_int_trace_div 1 (u*m-v*n) (u*n+v*m-v*n) (by norm_num)
-
-theorem breveE_standard_dual_frequency (k l m n : ℤ) :
-    ShortDraftTrace.breveE
-      (eisEmbedding (ActualEisensteinCoordinates.eval (k+l) k) *
-        eisEmbedding (ActualEisensteinCoordinates.eval m n) / eisLam) =
-      Complex.exp (2 * Real.pi * Complex.I *
-        ((k*m+l*n : ℤ) : ℂ)) := by
-  rw [breveE_bilinear_coordinates]
-  congr 1
-  push_cast
-  ring
 
 end ActualEisensteinCubic
 namespace EisensteinFiberShift
@@ -198,21 +123,6 @@ end EisensteinGaussianPrefactor
 
 namespace ActualEisensteinCubic
 
-theorem sixth_power_rows_in_rowNormBall
-    {β : Type*} (selected : Finset β) (p : β → O)
-    (D H : ℕ) (hD : 1 ≤ D)
-    (hupper : ∀ i ∈ selected,
-      (Ideal.absNorm (Ideal.span {p i}) : ℝ) ≤
-        (D : ℝ) ^ (11 / 60 : ℝ))
-    (hH : (D : ℝ) ^ (11 / 10 : ℝ) ≤ (H : ℝ)) :
-    selected.image (fun i => p i ^ 6) ⊆
-      ShortDraftLatticeCount.rowNormBall H := by
-  apply sixth_power_rows_within_norm_cutoff selected p
-    (ShortDraftLatticeCount.rowNormBall H) D hD hupper
-  intro u hu
-  apply ShortDraftLatticeCount.mem_rowNormBall_of_absNorm_le H
-  exact_mod_cast hu.trans hH
-
 open EisensteinEmbedding ConcreteTraceCRT Complex
 
 theorem actual_oscillatory_gaussian_coordinate
@@ -276,188 +186,12 @@ end EisensteinGaussianPrefactor
 
 namespace ActualEisensteinCubic
 
-theorem finite_actual_prime_extraction_dyadic_ball
-    {ι β : Type*} (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hgood : ∀ i, lambda ∉ P i)
-    (columns : Finset O) (support : O → Finset ι) (weight : O → ℂ)
-    (selected : Finset β) (p : β → O)
-    (D H : ℕ) (ε : ℝ) (hD : 1 ≤ D) (hε : 0 ≤ ε)
-    (hp : ∀ i ∈ selected, p i ≠ 0)
-    (hprime : ∀ i ∈ selected, (Ideal.span {p i} : Ideal O).IsMaximal)
-    (hinj : Set.InjOn (fun i => (Ideal.span {p i} : Ideal O)) (selected : Set β))
-    (hsupport : ∀ n ∈ columns, ∀ i ∈ support n, n ∈ P i)
-    (hcolnorm : ∀ n ∈ columns, Ideal.absNorm (Ideal.span {n}) ≤ D)
-    (hweight : ∀ n ∈ columns, ‖weight n‖ ≤ 1)
-    (hnormlower : ∀ i ∈ selected,
-      (D : ℝ) ^ (11 / 60 : ℝ) / 2 ≤
-        (Ideal.absNorm (Ideal.span {p i}) : ℝ))
-    (hnormupper : ∀ i ∈ selected,
-      (Ideal.absNorm (Ideal.span {p i}) : ℝ) ≤
-        (D : ℝ) ^ (11 / 60 : ℝ))
-    (hH : (D : ℝ) ^ (11 / 10 : ℝ) ≤ (H : ℝ))
-    (hcount : (D : ℝ) ^ ((11 / 60 : ℝ) - ε) ≤ (selected.card : ℝ))
-    (hmean :
-      (∑ u ∈ ShortDraftLatticeCount.rowNormBall H,
-        ‖∑ n ∈ columns,
-          weight n * finiteSquarefreeRow P hgood (support n) u‖ ^ 2) ≤
-        (D : ℝ) ^ ((21 / 10 : ℝ) + ε)) :
-    ‖∑ n ∈ columns, weight n‖ ≤
-      384 * (D : ℝ) ^ ((23 / 24 : ℝ) + ε) := by
-  apply finite_actual_prime_extraction_dyadic P hgood columns support weight
-    selected p (ShortDraftLatticeCount.rowNormBall H) D ε hD hε hp hprime
-    hinj ?_ hsupport hcolnorm hweight hnormlower hcount hmean
-  exact sixth_power_rows_in_rowNormBall selected p D H hD hnormupper hH
-
 end ActualEisensteinCubic
 namespace OscillatoryDeterminant
 
 open Complex
 
-noncomputable def r (t a b : ℂ) : ℂ := 1 + 3 * q a b * t^2 / 16
-
-theorem inverse_quadratic (t a b k l : ℂ)
-    (hq : q a b ≠ 0) (hr : r t a b ≠ 0) :
-    (D t a b * k^2 - 2 * B t a b * k*l + A t a b * l^2) /
-      (A t a b * D t a b - (B t a b)^2) =
-      (t * q a b / (4 * r t a b)) * (k^2+k*l+l^2) +
-        Complex.I / (2 * r t a b) *
-          ((a-b)*k^2+2*a*k*l+b*l^2) := by
-  rw [determinant t a b hq]
-  have hden : 4/q a b + 3*t^2/4 = 4*r t a b/q a b := by
-    dsimp [r]
-    field_simp [hq]
-    ring
-  rw [hden]
-  dsimp [A, B, D]
-  field_simp [hq, hr]
-  dsimp [q] at *
-  ring_nf
-  try simp [Complex.I_sq]
-
 end OscillatoryDeterminant
-open Filter Real Asymptotics
-
-private theorem cheby_small_log :
-    ∀ᶠ Y : ℝ in atTop, Real.log (Y + 2) ≤ (Real.log 2 / 80) * (Y + 2) := by
-  have hsmall : (fun x : ℝ => Real.log x) =o[atTop] id := by
-    simpa only [pow_one] using (Real.isLittleO_pow_log_id_atTop (n := 1))
-  have hbound := hsmall.bound (by positivity : 0 < Real.log (2 : ℝ) / 80)
-  have hshift : Tendsto (fun Y : ℝ => Y + 2) atTop atTop :=
-    tendsto_atTop_add_const_right atTop 2 tendsto_id
-  filter_upwards [hshift.eventually hbound,
-    eventually_ge_atTop (1 : ℝ)] with Y hY hY1
-  simpa only [Function.comp_def, id_eq, Real.norm_eq_abs,
-    abs_of_nonneg (Real.log_nonneg (by linarith : (1 : ℝ) ≤ Y + 2)),
-    abs_of_nonneg (by linarith : (0 : ℝ) ≤ Y + 2)] using hY
-
-theorem rational_prime_three_interval_real_count :
-    ∃ Y₀ : ℝ, ∀ Y : ℝ, Y₀ ≤ Y →
-      ((Real.log 2) / 20) * (Y / Real.log Y) ≤
-        (Nat.primeCounting ⌊Y⌋₊ : ℝ) -
-          (Nat.primeCounting ⌊Y / 3⌋₊ : ℝ) := by
-  have hlog2pos : 0 < Real.log (2 : ℝ) := Real.log_pos (by norm_num)
-  have hε : 0 < Real.log (2 : ℝ) / 4 := by positivity
-  obtain ⟨X₀, hX₀⟩ := (eventually_atTop.1
-    (Chebyshev.eventually_primeCounting_le hε))
-  obtain ⟨X₁, hX₁⟩ := (eventually_atTop.1 cheby_small_log)
-  refine ⟨max 729 (max (3 * X₀) X₁), ?_⟩
-  intro Y hY
-  have hY729 : (729 : ℝ) ≤ Y := le_trans (le_max_left _ _) hY
-  have hYX₀ : X₀ ≤ Y / 3 := by
-    linarith [le_max_left (3 * X₀) X₁, le_max_right (729 : ℝ) (max (3 * X₀) X₁)]
-  have hYX₁ : X₁ ≤ Y := by
-    linarith [le_max_right (3 * X₀) X₁, le_max_right (729 : ℝ) (max (3 * X₀) X₁)]
-  have hYpos : (0 : ℝ) < Y := by linarith
-  have hY3pos : (0 : ℝ) < Y / 3 := by positivity
-  have hlogYpos : 0 < Real.log Y := Real.log_pos (by linarith)
-  have hlogY3pos : 0 < Real.log (Y / 3) := Real.log_pos (by linarith)
-  have hlog3 : 6 * Real.log (3 : ℝ) ≤ Real.log Y := by
-    have h := Real.log_le_log (by norm_num : (0 : ℝ) < 729) hY729
-    calc
-      6 * Real.log (3 : ℝ) = Real.log ((3 : ℝ) ^ 6) := by rw [Real.log_pow]; ring
-      _ = Real.log 729 := by norm_num
-      _ ≤ Real.log Y := h
-  have hlogY3 : 5 / 6 * Real.log Y ≤ Real.log (Y / 3) := by
-    rw [Real.log_div (ne_of_gt hYpos) (by norm_num : (3 : ℝ) ≠ 0)]
-    linarith
-  have hlogerror : Real.log (Y + 2) ≤ (Real.log 2 / 40) * Y := by
-    have hbound := hX₁ Y hYX₁
-    have hprod : 0 ≤ Real.log 2 * (Y - 2) :=
-      mul_nonneg hlog2pos.le (by linarith)
-    nlinarith
-  have hconsterror : Real.log (2 : ℝ) ≤ (Real.log 2 / 40) * Y := by
-    have hprod : 0 ≤ Real.log 2 * (Y - 40) :=
-      mul_nonneg hlog2pos.le (by linarith)
-    nlinarith
-  have hnumlo : (19 / 20 : ℝ) * Real.log 2 * Y ≤
-      (Y - 1) * Real.log 2 - Real.log (Y + 2) := by
-    nlinarith [hlogerror, hconsterror]
-  have hPlo : (19 / 20 : ℝ) * Real.log 2 * (Y / Real.log Y) ≤
-      (Nat.primeCounting ⌊Y⌋₊ : ℝ) := by
-    calc
-      _ = ((19 / 20 : ℝ) * Real.log 2 * Y) / Real.log Y := by ring
-      _ ≤ ((Y - 1) * Real.log 2 - Real.log (Y + 2)) / Real.log Y :=
-        (div_le_div_of_nonneg_right hnumlo hlogYpos.le)
-      _ ≤ _ := Chebyshev.pi_ge' (by linarith)
-  have hfrac : (Y / 3) / Real.log (Y / 3) ≤ (2 / 5 : ℝ) * (Y / Real.log Y) := by
-    have hprod : 0 ≤ Y * (Real.log (Y / 3) - 5 / 6 * Real.log Y) :=
-      mul_nonneg hYpos.le (sub_nonneg.mpr hlogY3)
-    have hq : (Y / 3) / Real.log (Y / 3) ≤
-        ((2 / 5 : ℝ) * Y) / Real.log Y := by
-      apply (div_le_div_iff₀ hlogY3pos hlogYpos).mpr
-      nlinarith
-    convert hq using 1 ; ring
-  have hlog4 : Real.log (4 : ℝ) = 2 * Real.log 2 := by
-    calc
-      Real.log (4 : ℝ) = Real.log ((2 : ℝ) ^ 2) := by norm_num
-      _ = 2 * Real.log 2 := by rw [Real.log_pow]; ring
-  have hcoeff : 0 ≤ Real.log 4 + Real.log 2 / 4 := by positivity
-  have hPup : (Nat.primeCounting ⌊Y / 3⌋₊ : ℝ) ≤
-      (9 / 10 : ℝ) * Real.log 2 * (Y / Real.log Y) := by
-    calc
-      _ ≤ (Real.log 4 + Real.log 2 / 4) * ((Y / 3) / Real.log (Y / 3)) :=
-        by simpa only [mul_div_assoc] using hX₀ (Y / 3) hYX₀
-      _ ≤ (Real.log 4 + Real.log 2 / 4) * ((2 / 5 : ℝ) * (Y / Real.log Y)) :=
-        mul_le_mul_of_nonneg_left hfrac hcoeff
-      _ = (9 / 10 : ℝ) * Real.log 2 * (Y / Real.log Y) := by rw [hlog4]; ring
-  have htarget : (Real.log 2 / 20) * (Y / Real.log Y) =
-      ((19 / 20 : ℝ) - 9 / 10) * Real.log 2 * (Y / Real.log Y) := by ring
-  rw [htarget]
-  linarith
-
-theorem rational_prime_three_interval_count :
-    ∃ Y₀ : ℝ, ∀ Y : ℝ, Y₀ ≤ Y →
-      ((Real.log 2) / 20) * (Y / Real.log Y) ≤
-        (((Finset.Ioc ⌊Y / 3⌋₊ ⌊Y⌋₊).filter Nat.Prime).card : ℝ) := by
-  obtain ⟨Y₀, hY₀⟩ := rational_prime_three_interval_real_count
-  refine ⟨max 729 Y₀, ?_⟩
-  intro Y hY
-  have hY729 : (729 : ℝ) ≤ Y := le_trans (le_max_left _ _) hY
-  have hfloor : ⌊Y / 3⌋₊ ≤ ⌊Y⌋₊ :=
-    Nat.floor_mono (by linarith : Y / 3 ≤ Y)
-  have hsubset : Nat.primesLE ⌊Y / 3⌋₊ ⊆ Nat.primesLE ⌊Y⌋₊ := by
-    intro p hp
-    exact Nat.mem_primesLE.mpr
-      ⟨(Nat.mem_primesLE.mp hp).1.trans hfloor, (Nat.mem_primesLE.mp hp).2⟩
-  have hset : (Finset.Ioc ⌊Y / 3⌋₊ ⌊Y⌋₊).filter Nat.Prime =
-      Nat.primesLE ⌊Y⌋₊ \ Nat.primesLE ⌊Y / 3⌋₊ := by
-    ext p
-    simp only [Finset.mem_filter, Finset.mem_Ioc, Finset.mem_sdiff, Nat.mem_primesLE]
-    constructor
-    · rintro ⟨⟨hlo, hhi⟩, hp⟩
-      exact ⟨⟨hhi, hp⟩, fun hh => (not_le_of_gt hlo) hh.1⟩
-    · rintro ⟨⟨hhi, hp⟩, hnot⟩
-      exact ⟨⟨lt_of_not_ge (fun hle => hnot ⟨hle, hp⟩), hhi⟩, hp⟩
-  have hcard : ((Finset.Ioc ⌊Y / 3⌋₊ ⌊Y⌋₊).filter Nat.Prime).card =
-      Nat.primeCounting ⌊Y⌋₊ - Nat.primeCounting ⌊Y / 3⌋₊ := by
-    rw [hset, Finset.card_sdiff_of_subset hsubset,
-      Nat.primesLE_card_eq_primeCounting, Nat.primesLE_card_eq_primeCounting]
-  have hpile : Nat.primeCounting ⌊Y / 3⌋₊ ≤ Nat.primeCounting ⌊Y⌋₊ := by
-    rw [← Nat.primesLE_card_eq_primeCounting,
-      ← Nat.primesLE_card_eq_primeCounting]
-    exact Finset.card_le_card hsubset
-  rw [hcard, Nat.cast_sub hpile]
-  exact hY₀ Y (le_trans (le_max_right _ _) hY)
 
 namespace RankTwoLimit
 

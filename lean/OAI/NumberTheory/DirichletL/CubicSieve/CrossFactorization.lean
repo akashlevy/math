@@ -1,76 +1,25 @@
 import OAI.NumberTheory.DirichletL.Mellin.UniformKernelBounds
 import OAI.NumberTheory.DirichletL.QuadraticSieve.FiniteOperator
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace FirstPassCubeLabels
 open ActualEisensteinCubic
 open MixedCrossSeparation (crossSymbol quadraticCrossPhase columnPrimeCoprime)
@@ -295,101 +244,7 @@ theorem quadraticRayValue_same_residue_product (a b : ActualEisensteinCubic.O)
 end QuadraticGaussRay
 
 namespace QuadraticMainBoundaryFibers
-abbrev O := ActualEisensteinCubic.O
 open IdealMobiusDivisorSum QuadraticMainBoundary
-
-def productIdeal (x : Ideal O × Ideal O × Ideal O) : Ideal O := x.1 * x.2.1 * x.2.2
-
-theorem product_fiber_card_le (s : Finset (Ideal O × Ideal O × Ideal O))
-    (G : Ideal O) (hG : G ≠ 0)
-    (hdiv : ∀ x ∈ s, x.2.1 ∣ G ∧ x.2.2 ∣ G) (B : Ideal O) :
-    (s.filter (fun x => productIdeal x = B)).card ≤ (idealDivisors G).card ^ 2 := by
-  have hle : (s.filter (fun x => productIdeal x = B)).card ≤
-      ((idealDivisors G) ×ˢ (idealDivisors G)).card := by
-    apply Finset.card_le_card_of_injOn (fun x => (x.2.1, x.2.2))
-    · intro x hx
-      have hd := hdiv x (Finset.mem_filter.mp hx).1
-      exact Finset.mem_product.mpr ⟨(mem_idealDivisors hG).mpr hd.1,
-        (mem_idealDivisors hG).mpr hd.2⟩
-    · intro x hx y hy hde
-      obtain ⟨hD, hE⟩ := Prod.mk.inj hde
-      have hd := hdiv x (Finset.mem_filter.mp hx).1
-      have hD0 := ne_zero_of_dvd_ne_zero hG hd.1
-      have hE0 := ne_zero_of_dvd_ne_zero hG hd.2
-      have hprod := (Finset.mem_filter.mp hx).2.trans (Finset.mem_filter.mp hy).2.symm
-      change x.1 * x.2.1 * x.2.2 = y.1 * y.2.1 * y.2.2 at hprod
-      rw [← hD, ← hE] at hprod
-      have hH : x.1 = y.1 := mul_right_cancel₀ hD0 (mul_right_cancel₀ hE0 hprod)
-      exact Prod.ext hH (Prod.ext hD hE)
-  simpa only [Finset.card_product, pow_two] using hle
-
-theorem product_fiber_small_power (ε : ℝ) (hε : 0 < ε) :
-    ∃ C : ℝ, 0 < C ∧ ∀ (s : Finset (Ideal O × Ideal O × Ideal O)) (G : Ideal O),
-      G ≠ 0 → (∀ x ∈ s, x.2.1 ∣ G ∧ x.2.2 ∣ G) → ∀ B : Ideal O,
-      ((s.filter (fun x => productIdeal x = B)).card : ℝ) ≤
-        C * (Ideal.absNorm G : ℝ) ^ ε := by
-  obtain ⟨C, hC, hbound⟩ := IdealDivisorBound.ideal_divisor_small_power (ε / 2) (by linarith)
-  refine ⟨C ^ 2, by positivity, ?_⟩
-  intro s G hG hdiv B
-  have hc : ((s.filter (fun x => productIdeal x = B)).card : ℝ) ≤
-      ((idealDivisors G).card : ℝ) ^ 2 := by
-    exact_mod_cast product_fiber_card_le s G hG hdiv B
-  have hb := pow_le_pow_left₀ (by positivity : 0 ≤ ((idealDivisors G).card : ℝ))
-    (hbound G hG) 2
-  have heq : ((Ideal.absNorm G : ℝ) ^ (ε / 2)) ^ 2 = (Ideal.absNorm G : ℝ) ^ ε := by
-    rw [← Real.rpow_natCast]
-    rw [← Real.rpow_mul (Nat.cast_nonneg _)]
-    congr 1
-    norm_num
-  apply hc.trans
-  simpa only [mul_pow, heq] using hb
-
-def boundaryCoefficient (K : ℝ) (s : Finset (Ideal O × Ideal O × Ideal O))
-    (B : Ideal O) : ℂ :=
-  ∑ x ∈ s.filter (fun x => productIdeal x = B),
-    (UniqueFactorizationMonoid.moebius x.2.2 : ℂ) * (cutoffDifference K x.1 x.2.1 : ℝ)
-
-theorem norm_cutoffDifference_le (K : ℝ) (H D : Ideal O) :
-    ‖(cutoffDifference K H D : ℂ)‖ ≤ 1 := by
-  unfold cutoffDifference
-  split_ifs <;> norm_num
-
-theorem boundaryCoefficient_norm_le_card (K : ℝ)
-    (s : Finset (Ideal O × Ideal O × Ideal O)) (B : Ideal O) :
-    ‖boundaryCoefficient K s B‖ ≤ (s.filter (fun x => productIdeal x = B)).card := by
-  unfold boundaryCoefficient
-  apply (norm_sum_le _ _).trans
-  calc
-    _ ≤ ∑ _x ∈ s.filter (fun x => productIdeal x = B), (1 : ℝ) := by
-      apply Finset.sum_le_sum
-      intro x _
-      rw [norm_mul]
-      have hm : ‖(UniqueFactorizationMonoid.moebius x.2.2 : ℂ)‖ ≤ 1 := by
-        unfold UniqueFactorizationMonoid.moebius
-        split_ifs <;> simp
-      exact (mul_le_of_le_one_left (norm_nonneg _) hm).trans (norm_cutoffDifference_le _ _ _)
-    _ = _ := by simp
-
-theorem boundaryCoefficient_small_power (ε : ℝ) (hε : 0 < ε) :
-    ∃ C : ℝ, 0 < C ∧ ∀ (K : ℝ) (s : Finset (Ideal O × Ideal O × Ideal O)) (G : Ideal O),
-      G ≠ 0 → (∀ x ∈ s, x.2.1 ∣ G ∧ x.2.2 ∣ G) → ∀ B : Ideal O,
-      ‖boundaryCoefficient K s B‖ ≤ C * (Ideal.absNorm G : ℝ) ^ ε := by
-  obtain ⟨C, hC, hbound⟩ := product_fiber_small_power ε hε
-  exact ⟨C, hC, fun K s G hG hdiv B =>
-    (boundaryCoefficient_norm_le_card K s B).trans (hbound s G hG hdiv B)⟩
-
-theorem boundaryCoefficient_eq_zero_below (K : ℝ)
-    (s : Finset (Ideal O × Ideal O × Ideal O)) (G : Ideal O) (hG : G ≠ 0)
-    (hdiv : ∀ x ∈ s, x.2.1 ∣ G ∧ x.2.2 ∣ G)
-    (B : Ideal O) (hB : (Ideal.absNorm B : ℝ) ≤ K) : boundaryCoefficient K s B = 0 := by
-  apply Finset.sum_eq_zero
-  intro x hx
-  have hx' := Finset.mem_filter.mp hx
-  have hd := hdiv x hx'.1
-  have hz := cutoffDifference_eq_zero_of_product_le K
-    (ne_zero_of_dvd_ne_zero hG hd.1) (ne_zero_of_dvd_ne_zero hG hd.2)
-    (by simpa only [← hx'.2, productIdeal] using hB)
-  rw [hz, Complex.ofReal_zero, mul_zero]
 
 end QuadraticMainBoundaryFibers
 
@@ -583,39 +438,14 @@ theorem ideal_coprime_gram_operator_bound {m n : Type*}
 
 open ConcretePrimeRowBridge
 
-theorem actual_quadratic_coprime_gram_bound {m : Type*}
-    [Fintype m] [DecidableEq m]
-    (ε : ℝ) (hε : 0 < ε)
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (hFgood : ∀ I ∈ F, ∀ P ∈ normalizedFactors I, goodLambda ∉ P)
-    (r : m → O) (N : ℝ) (hN : 0 ≤ N)
-    (hnorm : ∀ I ∈ F, (Ideal.absNorm I : ℝ) ≤ N)
-    (a : F → ℂ) (w : m → ℂ) (W : ℝ) (hW : 0 ≤ W) (hw : ∀ i, ‖w i‖ ≤ W) :
-    let A : Matrix m F ℂ := fun i J => (idealSexticRow F hFpos hFgood J.val (r i)) ^ 3
-    ‖∑ i, w i * (∑ J : F, ∑ columnTwo : F,
-      if IsCoprime J.val columnTwo.val then star (A i J * a J) * (A i columnTwo * a columnTwo) else 0)‖ ≤
-      W * ‖operator A‖ ^ 2 * (supportConstant ε hε * N ^ ε) * ∑ J : F, ‖a J‖ ^ 2 := by
-  dsimp only
-  exact ideal_coprime_gram_operator_bound ε hε (fun J : F => J.val)
-    (fun J => hFpos J.val J.property) N hN (fun J => hnorm J.val J.property)
-    (fun i J => (idealSexticRow F hFpos hFgood J.val (r i)) ^ 3) a w W hW hw
-
 end IdealCoprimeSieveOperator
 
-open scoped BigOperators Classical
 namespace QuadraticMainOperatorBound
 abbrev O := ActualEisensteinCubic.O
 open IdealMobiusDivisorSum QuadraticMainBoundary IdealCoprimeSieveOperator FiniteSieveOperator
 
 def mainWeight (K : ℝ) (H D E : Ideal O) : ℂ :=
   (cutoffDifference K H D : ℂ) / (Real.sqrt (Ideal.absNorm (H * D * E) : ℝ) : ℂ)
-
-theorem mainWeight_eq_zero_of_row_gt (K : ℝ) (H D E : Ideal O) (hD : D ≠ 0)
-    (hH : K < (Ideal.absNorm H : ℝ)) : mainWeight K H D E = 0 := by
-  have hc : cutoffDifference K H D = 0 := by
-    by_contra h
-    exact (not_le.mpr hH) ((cutoffDifference_nonzero_iff K H D hD).mp h).1
-  simp [mainWeight, hc]
 
 theorem mainWeight_norm_le (K : ℝ) (hK : 0 < K) (H D E : Ideal O)
     (hD : D ≠ 0) (hE : E ≠ 0) : ‖mainWeight K H D E‖ ≤ 1 / Real.sqrt K := by
@@ -706,31 +536,6 @@ theorem ideal_quadraticRow_norm_le_one (F : Finset (Ideal O))
   apply pow_le_one₀ (norm_nonneg _)
   exact finiteSquarefreeRow_norm_le_one (fun i : primePool F => i.val)
     (primePool_good F hFgood) (idealSupport F J) z
-
-theorem actual_quadratic_main_difference_bound {m : Type*}
-    [Fintype m] [DecidableEq m]
-    (ε : ℝ) (hε : 0 < ε) (K : ℝ) (hK : 0 < K)
-    (G : Ideal O) (hG : G ≠ 0) (H : m → Ideal O) (g : Ideal O → O)
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (hFgood : ∀ I ∈ F, ∀ P ∈ UniqueFactorizationMonoid.normalizedFactors I, goodLambda ∉ P)
-    (N : ℝ) (hN : 0 ≤ N) (hnorm : ∀ J ∈ F, (Ideal.absNorm J : ℝ) ≤ N)
-    (a : F → ℂ) :
-    let A : Matrix m F ℂ := fun i J => (idealSexticRow F hFpos hFgood J.val (g (H i))) ^ 3
-    let r : Ideal O → Ideal O → F → ℂ := fun D E J =>
-      (idealSexticRow F hFpos hFgood J.val (g D * g E)) ^ 3
-    ‖∑ D ∈ idealDivisors G, ∑ E ∈ idealDivisors G,
-      (UniqueFactorizationMonoid.moebius E : ℂ) *
-      (∑ i, mainWeight K (H i) D E *
-        (∑ J : F, ∑ columnTwo : F, if IsCoprime J.val columnTwo.val then
-          star (A i J * (a J * r D E J)) * (A i columnTwo * (a columnTwo * r D E columnTwo)) else 0))‖ ≤
-      ((idealDivisors G).card : ℝ) ^ 2 *
-        ((1 / Real.sqrt K) * ‖operator A‖ ^ 2 * (supportConstant ε hε * N ^ ε) *
-          ∑ J : F, ‖a J‖ ^ 2) := by
-  dsimp only
-  apply main_difference_operator_bound ε hε K hK G hG H (fun J : F => J.val)
-    (fun J => hFpos J.val J.property) N hN (fun J => hnorm J.val J.property)
-  intro D E J
-  exact ideal_quadraticRow_norm_le_one F hFpos hFgood J.val (g D * g E)
 
 end QuadraticMainOperatorBound
 

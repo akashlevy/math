@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalRankEnergyMonotone
-
 namespace OAI
 
 noncomputable section

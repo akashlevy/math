@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.HeckeHeight
 import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-
 namespace OAI
 
 noncomputable section
@@ -112,34 +111,6 @@ theorem normPowerProfile_dilated_finite (W : ℝ → ℂ) (a b B c : ℝ) (ha : 
   exact mul_le_mul (pow_le_pow_right₀ hB (Finset.le_sup hz))
     (Seminorm.le_finset_sup_apply (p := schwartzSeminormFamily ℝ ℝ ℂ) hz) (apply_nonneg _ _) (by positivity)
 
-theorem dilated_normPowerProfile_uniform_degree (a b B : ℝ) (ha : 0 < a)
-    (hB : 1 ≤ B) (F : Finset (ℕ × ℕ)) :
-    ∃ J : ℕ, ∀ W : ℝ → ℂ, ∀ hs : Function.support W ⊆ Set.Icc a b,
-      ∀ hW : ContDiff ℝ ∞ W, ∃ C : ℝ, 0 < C ∧
-      ∀ c : ℝ, ∀ hc : 1 ≤ c, ∀ hcB : c ≤ B, ∀ t : ℝ,
-      F.sup (schwartzSeminormFamily ℝ ℝ ℂ)
-        (normPowerProfile (dilated W c) (a / B) b
-          (div_pos ha (lt_of_lt_of_le zero_lt_one hB))
-          (dilated_support W a b B c ha hB hc hcB hs) (dilated_contDiff W hW c) t) ≤
-        C * (1 + ‖t‖) ^ J := by
-  obtain ⟨J, hJ⟩ := normPowerProfile_uniform_degree a b ha F
-  refine ⟨J, ?_⟩
-  intro W hs hW
-  obtain ⟨C, hC, hbound⟩ := hJ W hs hW
-  refine ⟨B ^ (F.sup Prod.snd) * C, mul_pos (pow_pos (lt_of_lt_of_le zero_lt_one hB) _) hC, ?_⟩
-  intro c hc hcB t
-  have ht : (1 + ‖t / (2 * Real.pi)‖) ^ J ≤ (1 + ‖t‖) ^ J := by
-    gcongr
-    exact CenteredMomentHeight.normalized_height_le t
-  calc
-    _ ≤ B ^ (F.sup Prod.snd) *
-        F.sup (schwartzSeminormFamily ℝ ℝ ℂ) (normPowerProfile W a b ha hs hW t) :=
-      normPowerProfile_dilated_finite W a b B c ha hB hc hcB hs hW t F
-    _ ≤ B ^ (F.sup Prod.snd) * (C * (1 + ‖t‖) ^ J) :=
-      mul_le_mul_of_nonneg_left
-        ((hbound t).trans (mul_le_mul_of_nonneg_left ht hC.le)) (by positivity)
-    _ = _ := by ring
-
 def clippedScale (S : ℝ) : ℝ := max 1 S
 
 def clipDilation (S : ℝ) : ℝ := clippedScale S / S
@@ -156,12 +127,6 @@ theorem clipDilation_le (b S : ℝ) (hS : 0 < S) (hret : 1 ≤ S * b) :
   apply max_le
   · exact hret.trans (by nlinarith [le_max_right (1 : ℝ) b])
   · nlinarith [le_max_left (1 : ℝ) b]
-
-theorem clipDilation_eq_one (S : ℝ) (hS : 1 ≤ S) : clipDilation S = 1 := by
-  simp [clipDilation, clippedScale, max_eq_right hS, ne_of_gt (lt_of_lt_of_le zero_lt_one hS)]
-
-theorem clipDilation_subunit (S : ℝ) (hS : S ≤ 1) :
-    clipDilation S = 1 / S := by simp [clipDilation, clippedScale, max_eq_left hS]
 
 theorem clipped_source (W : ℝ → ℂ) (S x : ℝ) (hS : 0 < S) :
     dilated W (clipDilation S) (x / clippedScale S) = W (x / S) := by
@@ -201,17 +166,6 @@ theorem clipped_ideal_sum (A : Ideal O → ℂ) (W : ℝ → ℂ) (S : ℝ) (hS 
   intro I
   rw [clipped_source W S _ hS]
 
-theorem clipped_twistedIdealSum (χ : Character) (W : ℝ → ℂ) (t S : ℝ) (hS : 0 < S) :
-    twistedIdealSum χ W t S =
-      twistedIdealSum χ (dilated W (clipDilation S)) t (clippedScale S) :=
-  clipped_ideal_sum _ W S hS
-
-theorem strict_subunit_twistedIdealSum_zero (χ : Character) (W : ℝ → ℂ)
-    (b t S : ℝ) (hS : 0 < S) (hs : Function.support W ⊆ Set.Iic b)
-    (hstrict : S * b < 1) : twistedIdealSum χ W t S = 0 := by
-  apply strict_subunit_sum_zero _ _ W b S hS hs hstrict
-  simp only [map_zero, zero_mul]
-
 theorem clipped_rowTwistedSum (η : Character) (m A₀ z : O)
     (W : ℝ → ℂ) (t S : ℝ) (hS : 0 < S) :
     rowTwistedSum η m A₀ z W t S =
@@ -233,13 +187,6 @@ def retainedProfile (W : ℝ → ℂ) (a b : ℝ) (ha : 0 < a)
       (clipDilation_ge_one S hS) (clipDilation_le b S hS hret) hs)
     (dilated_contDiff W hW (clipDilation S)) t
 
-theorem retainedProfile_apply (W : ℝ → ℂ) (a b : ℝ) (ha : 0 < a)
-    (hs : Function.support W ⊆ Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    (S : ℝ) (hS : 0 < S) (hret : 1 ≤ S * b) (t x : ℝ) :
-    retainedProfile W a b ha hs hW S hS hret t x =
-      (x : ℂ) ^ (Complex.I * t) * W (clipDilation S * x) :=
-  normPowerProfile_apply _ _ _ _ _ _ _ _
-
 theorem retainedProfile_support (W : ℝ → ℂ) (a b : ℝ) (ha : 0 < a)
     (hs : Function.support W ⊆ Set.Icc a b) (hW : ContDiff ℝ ∞ W)
     (S : ℝ) (hS : 0 < S) (hret : 1 ≤ S * b) (t : ℝ) :
@@ -248,152 +195,6 @@ theorem retainedProfile_support (W : ℝ → ℂ) (a b : ℝ) (ha : 0 < a)
   apply (normPowerProfile_support _ _ _ _ _ _ _).trans
   exact dilated_support W a b (max 1 b) (clipDilation S) ha (le_max_left _ _)
     (clipDilation_ge_one S hS) (clipDilation_le b S hS hret) hs
-
-theorem retainedProfile_uniform_degree (a b : ℝ) (ha : 0 < a)
-    (F : Finset (ℕ × ℕ)) :
-    ∃ J : ℕ, ∀ W : ℝ → ℂ, ∀ hs : Function.support W ⊆ Set.Icc a b,
-      ∀ hW : ContDiff ℝ ∞ W, ∃ C : ℝ, 0 < C ∧
-      ∀ S : ℝ, ∀ hS : 0 < S, ∀ hret : 1 ≤ S * b, ∀ t : ℝ,
-      F.sup (schwartzSeminormFamily ℝ ℝ ℂ)
-        (retainedProfile W a b ha hs hW S hS hret t) ≤ C * (1 + ‖t‖) ^ J := by
-  obtain ⟨J, hJ⟩ := dilated_normPowerProfile_uniform_degree a b (max 1 b) ha (le_max_left _ _) F
-  refine ⟨J, ?_⟩
-  intro W hs hW
-  obtain ⟨C, hC, hbound⟩ := hJ W hs hW
-  exact ⟨C, hC, fun S hS hret t =>
-    hbound (clipDilation S) (clipDilation_ge_one S hS) (clipDilation_le b S hS hret) t⟩
-
-theorem two_retainedProfile_uniform_degree (a₁ b₁ a₂ b₂ : ℝ)
-    (ha₁ : 0 < a₁) (ha₂ : 0 < a₂) (F : Finset (ℕ × ℕ)) :
-    ∃ J : ℕ, ∀ W₁ W₂ : ℝ → ℂ,
-      ∀ hs₁ : Function.support W₁ ⊆ Set.Icc a₁ b₁,
-      ∀ hs₂ : Function.support W₂ ⊆ Set.Icc a₂ b₂,
-      ∀ hW₁ : ContDiff ℝ ∞ W₁, ∀ hW₂ : ContDiff ℝ ∞ W₂,
-      ∃ C : ℝ, 0 < C ∧ ∀ S₁ S₂ : ℝ, ∀ hS₁ : 0 < S₁, ∀ hS₂ : 0 < S₂,
-      ∀ hret₁ : 1 ≤ S₁ * b₁, ∀ hret₂ : 1 ≤ S₂ * b₂, ∀ t : ℝ,
-      F.sup (schwartzSeminormFamily ℝ ℝ ℂ)
-        (retainedProfile W₁ a₁ b₁ ha₁ hs₁ hW₁ S₁ hS₁ hret₁ t) +
-      F.sup (schwartzSeminormFamily ℝ ℝ ℂ)
-        (retainedProfile W₂ a₂ b₂ ha₂ hs₂ hW₂ S₂ hS₂ hret₂ t) ≤ C * (1 + ‖t‖) ^ J := by
-  obtain ⟨J₁, hJ₁⟩ := retainedProfile_uniform_degree a₁ b₁ ha₁ F
-  obtain ⟨J₂, hJ₂⟩ := retainedProfile_uniform_degree a₂ b₂ ha₂ F
-  refine ⟨max J₁ J₂, ?_⟩
-  intro W₁ W₂ hs₁ hs₂ hW₁ hW₂
-  obtain ⟨C₁, hC₁, hb₁⟩ := hJ₁ W₁ hs₁ hW₁
-  obtain ⟨C₂, hC₂, hb₂⟩ := hJ₂ W₂ hs₂ hW₂
-  refine ⟨C₁ + C₂, add_pos hC₁ hC₂, ?_⟩
-  intro S₁ S₂ hS₁ hS₂ hret₁ hret₂ t
-  have ht : 1 ≤ 1 + ‖t‖ := by linarith [norm_nonneg t]
-  have h₁ := (hb₁ S₁ hS₁ hret₁ t).trans
-    (mul_le_mul_of_nonneg_left (pow_le_pow_right₀ ht (le_max_left J₁ J₂)) hC₁.le)
-  have h₂ := (hb₂ S₂ hS₂ hret₂ t).trans
-    (mul_le_mul_of_nonneg_left (pow_le_pow_right₀ ht (le_max_right J₁ J₂)) hC₂.le)
-  nlinarith
-
-theorem retained_row_rectangle (η : Character) (m A₀ z : O)
-    (W₁ W₂ : ℝ → ℂ) (t S₁ S₂ : ℝ) (hS₁ : 0 < S₁) (hS₂ : 0 < S₂) (A : ℂ) :
-    A * (rowTwistedSum η m A₀ z W₁ t S₁ * rowTwistedSum η m A₀ z W₂ t S₂) =
-      A * (rowTwistedSum η m A₀ z (dilated W₁ (clipDilation S₁)) t (clippedScale S₁) *
-        rowTwistedSum η m A₀ z (dilated W₂ (clipDilation S₂)) t (clippedScale S₂)) := by
-  rw [clipped_rowTwistedSum η m A₀ z W₁ t S₁ hS₁,
-    clipped_rowTwistedSum η m A₀ z W₂ t S₂ hS₂]
-
-theorem strict_subunit_row_rectangle_zero (η : Character) (m A₀ z : O)
-    (W₁ W₂ : ℝ → ℂ) (b₁ b₂ t S₁ S₂ : ℝ) (hS₁ : 0 < S₁) (hS₂ : 0 < S₂)
-    (hs₁ : Function.support W₁ ⊆ Set.Iic b₁) (hs₂ : Function.support W₂ ⊆ Set.Iic b₂)
-    (hstrict : S₁ * b₁ < 1 ∨ S₂ * b₂ < 1) (A : ℂ) :
-    A * (rowTwistedSum η m A₀ z W₁ t S₁ * rowTwistedSum η m A₀ z W₂ t S₂) = 0 := by
-  rcases hstrict with h₁ | h₂
-  · rw [strict_subunit_rowTwistedSum_zero η m A₀ z W₁ b₁ t S₁ hS₁ hs₁ h₁, zero_mul, mul_zero]
-  · rw [strict_subunit_rowTwistedSum_zero η m A₀ z W₂ b₂ t S₂ hS₂ hs₂ h₂, mul_zero, mul_zero]
-
-theorem two_retained_row_rectangles (η : Character) (m A₀ z : O)
-    (W₁ W₂ : ℝ → ℂ) (t S₁ S₂ T₁ T₂ : ℝ)
-    (hS₁ : 0 < S₁) (hS₂ : 0 < S₂) (hT₁ : 0 < T₁) (hT₂ : 0 < T₂) (A : ℂ) :
-    ‖A * (rowTwistedSum η m A₀ z W₁ t S₁ * rowTwistedSum η m A₀ z W₂ t S₂ -
-      rowTwistedSum η m A₀ z W₁ t T₁ * rowTwistedSum η m A₀ z W₂ t T₂)‖ ≤
-      ‖A * (rowTwistedSum η m A₀ z (dilated W₁ (clipDilation S₁)) t (clippedScale S₁) *
-        rowTwistedSum η m A₀ z (dilated W₂ (clipDilation S₂)) t (clippedScale S₂))‖ +
-      ‖A * (rowTwistedSum η m A₀ z (dilated W₁ (clipDilation T₁)) t (clippedScale T₁) *
-        rowTwistedSum η m A₀ z (dilated W₂ (clipDilation T₂)) t (clippedScale T₂))‖ := by
-  rw [mul_sub, retained_row_rectangle η m A₀ z W₁ W₂ t S₁ S₂ hS₁ hS₂ A,
-    retained_row_rectangle η m A₀ z W₁ W₂ t T₁ T₂ hT₁ hT₂ A]
-  exact norm_sub_le _ _
-
-theorem two_retained_row_energies (η : Character) (m A₀ : O)
-    (W₁ W₂ : ℝ → ℂ) (t S₁ S₂ T₁ T₂ : ℝ)
-    (hS₁ : 0 < S₁) (hS₂ : 0 < S₂) (hT₁ : 0 < T₁) (hT₂ : 0 < T₂)
-    (rows : Finset O) (A : O → ℂ) (w : O → ℝ) (hw : ∀ z ∈ rows, 0 ≤ w z) :
-    (∑ z ∈ rows, w z * ‖A z *
-      (rowTwistedSum η m A₀ z W₁ t S₁ * rowTwistedSum η m A₀ z W₂ t S₂ -
-        rowTwistedSum η m A₀ z W₁ t T₁ * rowTwistedSum η m A₀ z W₂ t T₂)‖ ^ 2) ≤
-      2 * (∑ z ∈ rows, w z * ‖A z *
-        (rowTwistedSum η m A₀ z (dilated W₁ (clipDilation S₁)) t (clippedScale S₁) *
-          rowTwistedSum η m A₀ z (dilated W₂ (clipDilation S₂)) t (clippedScale S₂))‖ ^ 2) +
-      2 * (∑ z ∈ rows, w z * ‖A z *
-        (rowTwistedSum η m A₀ z (dilated W₁ (clipDilation T₁)) t (clippedScale T₁) *
-          rowTwistedSum η m A₀ z (dilated W₂ (clipDilation T₂)) t (clippedScale T₂))‖ ^ 2) := by
-  rw [Finset.mul_sum, Finset.mul_sum, ← Finset.sum_add_distrib]
-  apply Finset.sum_le_sum
-  intro z hz
-  have hb := two_retained_row_rectangles η m A₀ z W₁ W₂ t S₁ S₂ T₁ T₂ hS₁ hS₂ hT₁ hT₂ (A z)
-  have hsq := pow_le_pow_left₀ (norm_nonneg _) hb 2
-  have hnorm : ‖A z *
-      (rowTwistedSum η m A₀ z W₁ t S₁ * rowTwistedSum η m A₀ z W₂ t S₂ -
-        rowTwistedSum η m A₀ z W₁ t T₁ * rowTwistedSum η m A₀ z W₂ t T₂)‖ ^ 2 ≤
-      2 * ‖A z *
-        (rowTwistedSum η m A₀ z (dilated W₁ (clipDilation S₁)) t (clippedScale S₁) *
-          rowTwistedSum η m A₀ z (dilated W₂ (clipDilation S₂)) t (clippedScale S₂))‖ ^ 2 +
-      2 * ‖A z *
-        (rowTwistedSum η m A₀ z (dilated W₁ (clipDilation T₁)) t (clippedScale T₁) *
-          rowTwistedSum η m A₀ z (dilated W₂ (clipDilation T₂)) t (clippedScale T₂))‖ ^ 2 := by
-    nlinarith [sq_nonneg
-      (‖A z * (rowTwistedSum η m A₀ z (dilated W₁ (clipDilation S₁)) t (clippedScale S₁) *
-          rowTwistedSum η m A₀ z (dilated W₂ (clipDilation S₂)) t (clippedScale S₂))‖ -
-       ‖A z * (rowTwistedSum η m A₀ z (dilated W₁ (clipDilation T₁)) t (clippedScale T₁) *
-          rowTwistedSum η m A₀ z (dilated W₂ (clipDilation T₂)) t (clippedScale T₂))‖)]
-  convert mul_le_mul_of_nonneg_left hnorm (hw z hz) using 1; ring
-
-theorem retained_volumeControl_le (Q : Ideal O) (χ : Character)
-    (W : ℝ → ℂ) (a b : ℝ) (ha : 0 < a)
-    (hs : Function.support W ⊆ Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    (S : ℝ) (hS : 0 < S) (hret : 1 ≤ S * b) (t : ℝ) :
-    volumeControl Q χ (retainedProfile W a b ha hs hW S hS hret t) ≤
-      (max 1 b) ^ (pvSeminorms.sup Prod.snd) *
-        volumeControl Q χ (normPowerProfile W a b ha hs hW t) := by
-  have h := normPowerProfile_dilated_finite W a b (max 1 b) (clipDilation S)
-    ha (le_max_left _ _) (clipDilation_ge_one S hS) (clipDilation_le b S hS hret) hs hW t pvSeminorms
-  change pvSeminorms.sup (schwartzSeminormFamily ℝ ℝ ℂ)
-    (retainedProfile W a b ha hs hW S hS hret t) ≤ _ at h
-  unfold volumeControl pvControl
-  have hh := mul_le_mul_of_nonneg_left h
-    (show 0 ≤ ((IdealMobiusDivisorSum.idealDivisors χ.modulus).card : ℝ) *
-      (Nat.card (O ⧸ Ideal.span {fixedPeriod Q}) : ℝ) * pvConstant from
-      mul_nonneg (mul_nonneg (Nat.cast_nonneg _) (Nat.cast_nonneg _)) pvConstant_pos.le)
-  convert hh using 1 <;> ring
-
-theorem retained_volumeControl_uniform_degree (Q : Ideal O) (a b ε B : ℝ)
-    (ha : 0 < a) (hε : 0 < ε) (hB : 0 ≤ B) :
-    ∃ J : ℕ, ∀ W : ℝ → ℂ, ∀ hs : Function.support W ⊆ Set.Icc a b,
-      ∀ hW : ContDiff ℝ ∞ W, ∃ C : ℝ, 0 < C ∧
-      ∀ Z : ℝ, 1 ≤ Z → ∀ χ : Character, (Ideal.absNorm χ.modulus : ℝ) ≤ Z ^ B →
-      ∀ S : ℝ, ∀ hS : 0 < S, ∀ hret : 1 ≤ S * b, ∀ t : ℝ,
-      volumeControl Q χ (retainedProfile W a b ha hs hW S hS hret t) ≤
-        C * Z ^ ε * (1 + ‖t‖) ^ J := by
-  obtain ⟨J, hJ⟩ := volumeControl_polynomial_height Q a b ε B ha hε hB
-  refine ⟨J, ?_⟩
-  intro W hs hW
-  obtain ⟨C, hC, hbound⟩ := hJ W hs hW
-  let D := (max 1 b) ^ (pvSeminorms.sup Prod.snd)
-  have hD : 0 < D := pow_pos (lt_of_lt_of_le zero_lt_one (le_max_left _ _)) _
-  refine ⟨D * C, mul_pos hD hC, ?_⟩
-  intro Z hZ χ hχ S hS hret t
-  calc
-    _ ≤ D * volumeControl Q χ (normPowerProfile W a b ha hs hW t) :=
-      retained_volumeControl_le Q χ W a b ha hs hW S hS hret t
-    _ ≤ D * (C * Z ^ ε * (1 + ‖t‖) ^ J) :=
-      mul_le_mul_of_nonneg_left (hbound Z hZ χ hχ t) hD.le
-    _ = _ := by ring
 
 end SevenEighths.CenteredMomentRetainedProfile
 

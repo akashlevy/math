@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalChildSupport
 import OAI.NumberTheory.DirichletL.Descent.FirstLabelCellStep
-
 namespace OAI
 
 noncomputable section

@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondNonexceptionalScalar
 import OAI.NumberTheory.DirichletL.Moments.SecondPhysicalLedger
 import OAI.NumberTheory.DirichletL.Moments.FirstSourceConductorCaps
-
 namespace OAI
 
 noncomputable section
@@ -60,10 +59,6 @@ lemma scalar_capacity_shift (Z F q U V H K a c d k h x y:ℝ)
   have hm:0<max 1 (1/(k*h/(x*y))):=lt_of_lt_of_le zero_lt_one (le_max_left _ _)
   simp (disch := positivity) only [Real.logb_mul,Real.logb_div,Real.logb_pow] at hl hr hs hrow ⊢
   linarith
-
-def adjustedEnvelope (η:Character)(C D:Ideal O)(U:Finset (CommonIndex C D))(n:Fin 4→ℤ):ℝ:=
-  childEnvelope η C D U n*
-    max 1 (1/(dyadicScale (n 0)*dyadicScale (n 1)/(dyadicScale (n 2)*dyadicScale (n 3))))
 
 def adjustedEnvelopeRef (qref:ℝ)(C D:Ideal O)(U:Finset (CommonIndex C D))(n:Fin 4→ℤ):ℝ:=
   (fixedFactor:ℝ)*qref*(∏P∈U,P.val).absNorm*
@@ -163,20 +158,6 @@ theorem actual_capacity_shift_reference_right (η:Character)(t:ℝ)(S:Finset (Id
     (dyadicScale_pos _) (dyadicScale_pos _) (dyadicScale_pos _) (dyadicScale_pos _)
     ((Ideal.span {commonFrequencyGenerator C D}).absNorm:ℝ) hg hgc hs' hr hl
   simpa only [adjustedEnvelopeRef,mul_comm (dyadicScale (n 3)) (dyadicScale (n 2))] using hh'
-
-theorem actual_capacity_shift (η:Character)(t:ℝ)(S:Finset (Ideal O))(β:Ideal O→ℂ)
-    (C D:Ideal O)(hC:Supported C)(hD:Supported D)
-    (hCD:primeSupport C=primeSupport D)(U:Finset (CommonIndex C D))
-    (R:ℝ)(rows:Finset O)(W:𝓢(ℝ,ℂ))(K H a Z:ℝ)(n:Fin 4→ℤ)
-    (hK:0<K)(hH:0<H)(ha:0<a)(hZ:1<Z)
-    (hlower:∀I:Ideal O,β I≠0→a*H≤(I.absNorm:ℝ))
-    (hne:physicalBlock η t S β C D hC hD U R rows W K n≠0):
-    Real.logb Z (H/(C.absNorm:ℝ))-Real.logb Z (adjustedEnvelope η C D U n)≤
-      Real.logb Z K-Real.logb Z (η.modulus.absNorm:ℝ)-Real.logb Z H+
-        Real.logb Z (4/((fixedFactor:ℝ)*a^2)):=
-  actual_capacity_shift_reference η t S β C D hC hD hCD U R rows W K H a Z
-    (η.modulus.absNorm:ℝ) n (CenteredMomentFirstScale.norm_pos η.modulus η.modulus_ne_bot)
-    hK hH ha hZ hlower hne
 
 end SevenEighths.CenteredMomentSecondCapacitySourceShift
 

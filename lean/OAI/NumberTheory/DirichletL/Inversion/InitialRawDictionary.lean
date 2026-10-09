@@ -1,7 +1,7 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialConjugateEnergy
 import OAI.NumberTheory.DirichletL.Hecke.DetectorDyadicBridge
-import OAI.NumberTheory.DirichletL.Hecke.DetectorRowSpecialization
-
+import OAI.NumberTheory.DirichletL.Hecke.RowClosure
+import OAI.NumberTheory.DirichletL.Hecke.Dyadic
 namespace OAI
 
 noncomputable section
@@ -57,49 +57,6 @@ theorem inverse_eq_initial_source (η : Ideal O →* ℂ) (χ : Character) (u : 
     twistedProfile]
   ring
 
-theorem canonical_inverse_eq_initial_source (η χ : Character) (m f z : O)
-    (hrow : ∀n:O,elementCoeff χ n=
-      CanonicalRowCompletion.rowTwist (elementHom η) m f z n)
-    (W : ℝ → ℂ) (Z r σ freq b : ℝ) (hZ : 0<Z)
-    (hW : ∀x,W x≠0 → x≤b) :
-    polynomial χ true W (Z^r) σ freq=
-      originalTotalPolynomial (idealsUpTo ⌈Z^r*b⌉₊) 1
-        (idealCoeff η).toMonoidHom (fun _=>1)
-        (twistedProfile W σ freq) Z r 0 (m^6*f^4*z) := by
-  apply inverse_eq_initial_source (idealCoeff η).toMonoidHom χ (m^6*f^4*z)
-    (HeckeRowClosure.idealCoeff_eq_row η χ m f z hrow) W Z r σ freq hZ
-  exact finite_source_cover W (Z^r) b (Real.rpow_pos_of_pos hZ r) hW
-
-theorem inverse_times_mark_eq_initial (η : Ideal O →* ℂ) (χ : Character) (u : O)
-    (hrow : ∀I,idealCoeff χ I=η I*CanonicalRowCompletion.idealRowHom u I)
-    (W : ℝ → ℂ) (Z r z σ freq : ℝ) (hZ : 0<Z)
-    (S P : Finset (Ideal O)) (A : Ideal O → ℂ)
-    (hcover : ∀I:Ideal O,I≠0 → W ((I.absNorm:ℝ)/Z^r)≠0 → I∈S) :
-    polynomial χ true W (Z^r) σ freq*(Z^(-z/2):ℝ)*
-      (∑p∈P,A p*idealCoeff χ p)=
-      ∑p∈P,A p*originalTotalPolynomial S p η
-        (fun _=>1) (twistedProfile W σ freq) Z r z u := by
-  rw [inverse_eq_initial_source η χ u hrow W Z r σ freq hZ S hcover]
-  have hn : ((Z^(-r/2):ℝ):ℂ)*((Z^(-z/2):ℝ):ℂ)=
-      ((Z^(-(r+z)/2):ℝ):ℂ) := by
-    rw [←Complex.ofReal_mul,←Real.rpow_add hZ]
-    congr 2
-    ring
-  unfold originalTotalPolynomial
-  simp only [add_zero,map_one,mul_one,Finset.mul_sum,Finset.sum_mul]
-  apply Finset.sum_congr rfl
-  intro p hp
-  apply Finset.sum_congr rfl
-  intro I hI
-  rw [hrow p]
-  simp only [heckeIdealCharacter_apply]
-  calc
-    _ = (((Z^(-r/2):ℝ):ℂ)*((Z^(-z/2):ℝ):ℂ))*
-      (A p*((moebius I:ℂ)*(η I*CanonicalRowCompletion.idealRowHom u I)*
-      (η p*CanonicalRowCompletion.idealRowHom u p)*
-      twistedProfile W σ freq ((I.absNorm:ℝ)/Z^r))) := by ring
-    _ = _ := by rw [hn];ring
-
 theorem originalTotal_supported_source (S : Finset (Ideal O)) (P : Ideal O)
     (η : Ideal O →* ℂ) (hη : ∀I,¬CanonicalQuadraticSieve.Supported I → η I=0)
     (a : Ideal O → ℂ) (W : ℝ → ℂ) (Z r z : ℝ) (u : O) :
@@ -145,44 +102,6 @@ theorem fixedBase_zero_unsupported (η : Character) (m f : O)
     (Ideal.span {n})=0 at he
   rw [mul_one,hs,←idealCoeff_span η hn,hs] at he
   exact he
-
-theorem canonical_inverse_eq_supported_initial (η χ : Character) (m f z : O)
-    (hmLam : ConcretePrimeRowBridge.goodLambda∣m) (hm2 : (2:O)∣m)
-    (hrow : ∀n:O,elementCoeff χ n=
-      CanonicalRowCompletion.rowTwist (elementHom η) m f z n)
-    (W : ℝ → ℂ) (Z r σ freq b : ℝ) (hZ : 0<Z)
-    (hW : ∀x,W x≠0 → x≤b) :
-    polynomial χ true W (Z^r) σ freq=
-      originalTotalPolynomial ((idealsUpTo ⌈Z^r*b⌉₊).filter CanonicalQuadraticSieve.Supported)
-        1 (fixedBase η m f) (fun _=>1) (twistedProfile W σ freq) Z r 0 z := by
-  rw [inverse_eq_initial_source (fixedBase η m f) χ z (fixedBase_row η χ m f z hrow)
-    W Z r σ freq hZ (idealsUpTo ⌈Z^r*b⌉₊)
-    (finite_source_cover W (Z^r) b (Real.rpow_pos_of_pos hZ r) hW)]
-  exact originalTotal_supported_source _ _ _ (fixedBase_zero_unsupported η m f hmLam hm2)
-    _ _ _ _ _ _
-
-theorem inverse_times_conjugate_row_mark_norm (η : Ideal O →* ℂ) (χ : Character) (u : O)
-    (hrow : ∀I,idealCoeff χ I=η I*CanonicalRowCompletion.idealRowHom u I)
-    (W : ℝ → ℂ) (Z r z σ freq : ℝ) (hZ : 0<Z)
-    (S P : Finset (Ideal O)) (A : Ideal O → ℂ)
-    (hη : ∀p∈P,A p≠0 → η p≠0)
-    (hcover : ∀I:Ideal O,I≠0 → W ((I.absNorm:ℝ)/Z^r)≠0 → I∈S) :
-    ‖polynomial χ true W (Z^r) σ freq*(Z^(-z/2):ℝ)*
-      (∑p∈P,A p*star (CanonicalRowCompletion.idealRowHom u p))‖=
-    ‖∑p∈P,(star (A p)/η p)*originalTotalPolynomial S p η
-      (fun _=>1) (twistedProfile W σ freq) Z r z u‖ := by
-  have hm : (∑p∈P,(star (A p)/η p)*idealCoeff χ p)=
-      star (∑p∈P,A p*star (CanonicalRowCompletion.idealRowHom u p)) := by
-    simp only [star_sum,star_mul,star_star]
-    apply Finset.sum_congr rfl
-    intro p hp
-    by_cases ha : A p=0
-    · simp [ha]
-    · rw [hrow p]
-      field_simp [hη p hp ha]
-  rw [←inverse_times_mark_eq_initial η χ u hrow W Z r z σ freq hZ S P
-    (fun p=>star (A p)/η p) hcover,hm]
-  simp only [norm_mul,norm_star]
 
 end SevenEighths.InverseInitialRawDictionary
 

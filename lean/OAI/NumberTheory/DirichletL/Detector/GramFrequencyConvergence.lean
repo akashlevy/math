@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GramCanonicalSource
 import OAI.NumberTheory.DirichletL.Moments.Tail
-
 namespace OAI
 
 noncomputable section

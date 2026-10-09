@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.NonfloorCount
 import OAI.NumberTheory.DirichletL.Hecke.PrimeAmplitudeScale
-
 namespace OAI
 
 noncomputable section

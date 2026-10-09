@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondCanonical
-
 namespace OAI
 
 noncomputable section
@@ -37,20 +36,6 @@ theorem idealCorrelation_zero_outside_common (C D : Ideal O) (hC : Supported C) 
   let : Fintype (O⧸Ideal.span {primaryGenerator D}) := Fintype.ofFinite _
   unfold idealCorrelation actualCorrelation
   exact fullModulusCorrelation_eq_zero_of_common_not_dvd _ _ _ _ _ _ hd.1 hd.2 hj
-
-theorem idealCorrelation_tsum_common (C D : Ideal O) (hC : Supported C) (hD : Supported D)
-    (hCD : CompletedGauss.primeSupport C=CompletedGauss.primeSupport D) (F : O→ℂ) :
-    (∑' j : O,idealCorrelation C D hC hD j*F j)=
-      ∑' w : O,idealCorrelation C D hC hD (commonFrequencyGenerator C D*w)*
-        F (commonFrequencyGenerator C D*w) := by
-  apply Eq.symm
-  refine (mul_right_injective₀ (commonFrequencyGenerator_ne_zero C D hC)).tsum_eq (f := fun j => idealCorrelation C D hC hD j*F j) ?_
-  intro j hj
-  have hd : commonFrequencyGenerator C D∣j := by
-    by_contra hn
-    exact hj (by dsimp only;rw [idealCorrelation_zero_outside_common C D hC hD hCD j hn,zero_mul])
-  obtain ⟨w,hw⟩ := hd
-  exact ⟨w,hw.symm⟩
 
 def canonicalPartition (C D : Ideal O) (U : Finset (CommonIndex C D)) (w : O) : Prop :=
   actualUnitSet (commonPrime C D) (leftExponent C D) (rightExponent C D) w=U

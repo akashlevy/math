@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstFamilySource
 import OAI.NumberTheory.DirichletL.Descent.FirstUnequalEnergy
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

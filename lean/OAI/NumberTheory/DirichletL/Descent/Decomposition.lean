@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.IdealMasks
 import Mathlib.Algebra.BigOperators.Group.Finset.Preimage
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -58,18 +57,6 @@ theorem HybridColumnData.primary_factors (d : HybridColumnData)
   refine ⟨hc, hm, hh, ht, ?_⟩
   rw [CompletedGauss.primaryGenerator_mul]
   exact mul_ne_zero hc ht
-
-theorem HybridColumnData.residual_norm_identity (d : HybridColumnData) :
-    (Ideal.absNorm (d.residualN * d.residualB) : ℝ) =
-      ((Ideal.absNorm (d.common * d.residualN) : ℝ) *
-        (Ideal.absNorm ((d.common * d.residualB) * d.square ^ 2) : ℝ)) /
-      ((Ideal.absNorm d.common : ℝ) ^ 2 * (Ideal.absNorm d.square : ℝ) ^ 2) := by
-  have hc : (Ideal.absNorm d.common : ℝ) ≠ 0 := by
-    exact_mod_cast (fun hz => d.common_ne_zero (Ideal.absNorm_eq_zero_iff.mp hz))
-  have ht : (Ideal.absNorm d.square : ℝ) ≠ 0 := by
-    exact_mod_cast (fun hz => d.square_ne_zero (Ideal.absNorm_eq_zero_iff.mp hz))
-  simp only [map_mul, map_pow, Nat.cast_mul, Nat.cast_pow]
-  field_simp
 
 theorem HybridColumnData.residual_norm_bounds (d : HybridColumnData)
     (N B C T : ℝ) (hN : 0 ≤ N) (_hB : 0 ≤ B) (hC : 0 < C) (hT : 0 < T)
@@ -149,16 +136,6 @@ theorem HybridColumnData.toOriginal_bijective : Function.Bijective HybridColumnD
     · exact squarefree_mul_iff.mpr ⟨hch, hcs, hhs⟩
     · apply Subtype.ext
       exact Prod.ext hn.symm hb.symm
-
-def hybridColumnEquiv : HybridColumnData ≃
-    {p : Ideal Eis × Ideal Eis // Squarefree p.1 ∧ p.2 ≠ 0} :=
-  Equiv.ofBijective HybridColumnData.toOriginal HybridColumnData.toOriginal_bijective
-
-theorem hybrid_column_reindex (f : Ideal Eis → Ideal Eis → ℂ) :
-    (∑' p : {p : Ideal Eis × Ideal Eis // Squarefree p.1 ∧ p.2 ≠ 0}, f p.val.1 p.val.2) =
-      ∑' d : HybridColumnData,
-        f (d.common * d.residualN) ((d.common * d.residualB) * d.square ^ 2) := by
-  exact (hybridColumnEquiv.tsum_eq (fun p => f p.val.1 p.val.2)).symm
 
 def hybridColumnSupport (S : Finset (Ideal Eis × Ideal Eis)) : Finset HybridColumnData :=
   S.preimage HybridColumnData.reconstruct HybridColumnData.reconstruct_injective.injOn

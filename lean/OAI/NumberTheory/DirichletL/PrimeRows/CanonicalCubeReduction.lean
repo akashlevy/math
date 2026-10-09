@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CanonicalReduction
 import OAI.NumberTheory.DirichletL.PrimeRows.CubeFiniteIntegral
-
 namespace OAI
 
 noncomputable section

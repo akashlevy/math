@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.FixedRadialEntry
 import OAI.NumberTheory.DirichletL.Moments.FirstSourceReduction
-
 namespace OAI
 
 noncomputable section

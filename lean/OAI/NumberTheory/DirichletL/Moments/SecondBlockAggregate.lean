@@ -3,7 +3,6 @@ import OAI.NumberTheory.DirichletL.Moments.SecondRetainedRows
 import OAI.NumberTheory.DirichletL.Moments.SecondActiveDyadic
 import OAI.NumberTheory.DirichletL.Moments.SecondPhysicalBlock
 import OAI.NumberTheory.DirichletL.Moments.ActiveSource
-
 namespace OAI
 
 noncomputable section
@@ -117,34 +116,6 @@ lemma common_height_norm_le_one (η : Character) (t : ℝ) (C D : Ideal O)
   have hc := CenteredMomentSourceSecondZeroEnergy.heightCoeff_norm_le_one η t C hC
   have hd := CenteredMomentSourceSecondZeroEnergy.heightCoeff_norm_le_one η t D hD
   nlinarith [norm_nonneg (heightCoeff η t C),norm_nonneg (heightCoeff η t D)]
-
-theorem original_secondRetainedEnergy_norm_le (η : Character) (t : ℝ)
-    (S : Finset (Ideal O)) (β : Ideal O→ℂ) (W : 𝓢(ℝ,ℂ))
-    (K Tsec Z ξ H : ℝ) (hK : 0<K)
-    (hH : ∀I∈S,β I≠0 → (Ideal.absNorm I:ℝ)≤H) :
-    ‖secondRetainedEnergy η t S β W K Tsec Z ξ‖≤
-      ∑p : ActiveLabel S β,∑U : Finset (CommonIndex p.val.1 p.val.2),
-        ∑n : SourceBlocks p.val.1 p.val.2 U K (frequencyRadius Tsec Z ξ) H,
-          ‖physicalBlock η t (activeSource S β) β p.val.1 p.val.2
-            (commonLabels_supported (activeSource S β) _ _ p.property).1
-            (commonLabels_supported (activeSource S β) _ _ p.property).2 U
-            (frequencyRadius Tsec Z ξ)
-            (retainedRows (frequencyRadius Tsec Z ξ)
-              (commonFrequencyGenerator p.val.1 p.val.2*nonunitFrequencyGenerator p.val.1 p.val.2 U))
-            W K (fun i=>(n i:ℤ))‖ := by
-  rw [original_secondRetainedEnergy_blocks η t S β W K Tsec Z ξ H hK hH]
-  apply (norm_sum_le _ _).trans
-  apply Finset.sum_le_sum
-  intro p hp
-  rw [norm_mul]
-  apply (mul_le_of_le_one_left (norm_nonneg _)
-    (common_height_norm_le_one η t _ _
-      (commonLabels_supported (activeSource S β) _ _ p.property).1.1
-      (commonLabels_supported (activeSource S β) _ _ p.property).2.1)).trans
-  apply (norm_sum_le _ _).trans
-  apply Finset.sum_le_sum
-  intro U hU
-  exact norm_sum_le _ _
 
 end SevenEighths.CenteredMomentSecondBlockAggregate
 

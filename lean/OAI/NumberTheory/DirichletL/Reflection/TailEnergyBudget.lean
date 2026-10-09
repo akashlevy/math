@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.TailAbsorption
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

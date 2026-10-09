@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Detector.RadialMellin
 import OAI.NumberTheory.DirichletL.Detector.HighAbsolute
 import OAI.NumberTheory.DirichletL.Detector.FrequencySupport
 import Mathlib.MeasureTheory.Integral.DominatedConvergence
-
 namespace OAI
 
 noncomputable section

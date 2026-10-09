@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.Theta
-
 namespace OAI
 
 noncomputable section
@@ -30,10 +29,6 @@ theorem pair_f_continuous {N : ℕ} [NeZero N] (w : Fin N × Fin N → ℂ) :
 theorem theta_continuous {N : ℕ} [NeZero N] (w : Fin N × Fin N → ℂ) :
     ContinuousOn (theta w) (Ioi 0) :=
   (pair_f_continuous w).congr (fun _t ht => theta_eq_pair w ht)
-
-theorem theta_locallyIntegrable {N : ℕ} [NeZero N] (w : Fin N × Fin N → ℂ) :
-    LocallyIntegrableOn (theta w) (Ioi 0) :=
-  (theta_continuous w).locallyIntegrableOn measurableSet_Ioi
 
 theorem theta_rapid {N : ℕ} [NeZero N] (w : Fin N × Fin N → ℂ) (r : ℝ) :
     (fun t => theta w t - w (0,0)) =O[atTop] (fun t : ℝ => t ^ r) := by

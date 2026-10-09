@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.IdealFactorization
 import OAI.NumberTheory.DirichletL.Detector.IdealUnit
-
 namespace OAI
 
 noncomputable section

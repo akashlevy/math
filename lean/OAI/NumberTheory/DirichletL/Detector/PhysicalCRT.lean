@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.CalibrationRemoval
-
 namespace OAI
 
 noncomputable section

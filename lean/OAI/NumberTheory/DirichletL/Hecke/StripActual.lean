@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.Primitive
 import OAI.NumberTheory.DirichletL.Hecke.Strip
 import OAI.NumberTheory.DirichletL.Hecke.ReciprocalBound
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.IdealEuler
 import PrimeNumberTheoremAnd.Wiener
-
 namespace OAI
 
 namespace SevenEighths.IdealMangoldt

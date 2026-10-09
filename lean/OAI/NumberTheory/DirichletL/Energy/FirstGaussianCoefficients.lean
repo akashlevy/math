@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstAmplifiedFourCoefficients
 import OAI.NumberTheory.DirichletL.Moments.SecondSourceSeededPowerDescent
-
 namespace OAI
 
 noncomputable section
@@ -77,17 +76,6 @@ theorem seeded_factors_main (Cm Ce Cd Ct Z epsilon delta theta B saving radius t
   · simp [seededFactors,physicalFactors,fixedFactors,mainPowers,mul_comm,mul_left_comm,mul_assoc]
   · simp only [seededFactors,physicalFactors,fixedFactors,mainPowers,Fin.isValue,Matrix.cons_val,Fin.reduceFinMk]
     exact le_of_eq (by ring)
-
-lemma fixedFactors_nonneg (Cm Ce Cd Ct Z epsilon delta theta B cost Ebase t loFloor seed:ℝ)
-    (J:ℕ)(Sf:Finset (ℕ×ℕ))(W:𝓢(ℝ,ℂ))
-    (hCm:0≤Cm)(hCe:0≤Ce)(hCd:0≤Cd)(hCt:0≤Ct)(hZ:0≤Z)
-    (hcost:0≤cost)(hE:0≤Ebase)(hlo:0≤loFloor)(hseed:0≤seed):
-    ∀j,0≤fixedFactors Cm Ce Cd Ct Z epsilon delta theta B cost Ebase t loFloor seed J Sf W j:=by
-  have hh:0≤heightEnvelope t:=(heightEnvelope_pos t).le
-  have hp:=profileMoment_nonneg J
-  have hc:0≤Sf.sup (schwartzSeminormFamily ℝ ℝ ℂ) W:=apply_nonneg _ _
-  intro j
-  fin_cases j <;> simp only [fixedFactors,Matrix.cons_val,Fin.reduceFinMk] <;> positivity
 
 theorem main_coefficients {a b:ℝ}(N:ℕ)(upper b1 b2 A:ℝ)(Sp:Finset (ℕ×ℕ))
     (p:Profiles a b)(Jprofile:ℕ)(Q:Ideal O)(Kfix:ℝ)

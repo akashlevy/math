@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.IdealMultiplicative
 import OAI.NumberTheory.DirichletL.Detector.SourcePrime
-
 namespace OAI
 
 noncomputable section

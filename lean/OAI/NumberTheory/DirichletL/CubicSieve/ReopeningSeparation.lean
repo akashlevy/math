@@ -1,79 +1,24 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.ReopenedFibers
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical SchwartzMap
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 open ConcreteTraceCRT (eisEmbedding eisEmbedding_ne_zero)
@@ -111,11 +56,6 @@ theorem normPhase_add (s t : ℝ) : normPhase (s+t)=normPhase s*normPhase t := b
   by_cases hz : z=0
   · simp [hz]
   · simp only [MonoidHom.mul_apply,normPhase_of_ne_zero _ z hz,JointLogSeparation.logPhase_add_frequency]
-
-theorem normPhase_star (t : ℝ) (z : ActualEisensteinCubic.O) : star (normPhase t z)=normPhase (-t) z := by
-  by_cases hz : z=0
-  · simp [hz]
-  · simp only [normPhase_of_ne_zero _ z hz,SecondPassIntegration.logPhase_conjugate]
 
 def normHeightTwist (Ψ : ActualEisensteinCubic.O →* ℂ) (t : ℝ) : ActualEisensteinCubic.O →* ℂ := Ψ*normPhase t
 
@@ -159,31 +99,10 @@ theorem canonicalSourceCoefficient_frequencyTwist (Ψ : ActualEisensteinCubic.O 
     logPhase_columnLog p hp X t hX S,normHeightTwist,MonoidHom.mul_apply]
   ring
 
-theorem fixedChildRow_frequencyTwist (pool : Finset ι) (Ψ : ActualEisensteinCubic.O →* ℂ) (m f y : ActualEisensteinCubic.O)
-    (g : 𝓢(ℝ,ℂ)) (X t : ℝ) (hX : 0<X) :
-    fixedChildRow p hp hcop hg pool Ψ m (fun U=>frequencyTwist g t (columnLog p X U)) f y=
-    logPhase t (-Real.log X)*fixedChildRow p hp hcop hg pool (normHeightTwist Ψ t) m
-      (fun U=>g (columnLog p X U)) f y := by
-  unfold fixedChildRow
-  rw [Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro S hS
-  simp only [secondChildColumn,JointLogSeparation.frequencyTwist_apply,
-    logPhase_columnLog p hp X t hX S,normHeightTwist,MonoidHom.mul_apply]
-  ring
-
-theorem fixedChildRow_frequencyTwist_norm (pool : Finset ι) (Ψ : ActualEisensteinCubic.O →* ℂ) (m f y : ActualEisensteinCubic.O)
-    (g : 𝓢(ℝ,ℂ)) (X t : ℝ) (hX : 0<X) :
-    ‖fixedChildRow p hp hcop hg pool Ψ m (fun U=>frequencyTwist g t (columnLog p X U)) f y‖=
-    ‖fixedChildRow p hp hcop hg pool (normHeightTwist Ψ t) m
-      (fun U=>g (columnLog p X U)) f y‖ := by
-  rw [fixedChildRow_frequencyTwist p hp hcop hg pool Ψ m f y g X t hX,norm_mul,FourierBridge.logPhase_norm,one_mul]
-
 end SecondPassArithmetic
 
 section
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 open FourierBridge (logPhase)
@@ -258,8 +177,6 @@ theorem childEnergy_previousNormHeight (pool : Finset ι) (Ψ : ActualEisenstein
 
 end SecondPassIntegration
 
-open scoped BigOperators Classical
-open MeasureTheory
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 
@@ -338,7 +255,6 @@ theorem densityChildEnergy_normHeight_polynomial
 end SecondPassIntegration
 end
 
-open scoped BigOperators Classical SchwartzMap
 namespace SecondPassArithmetic
 
 section
@@ -467,9 +383,6 @@ theorem reopenedCanonicalRow_twoPassage_uniform_height
 
 end SecondPassArithmetic
 
-open MeasureTheory
-open scoped BigOperators Classical SchwartzMap FourierTransform ContDiff
-
 namespace CanonicalCubeSeparation
 open FourierBridge JointLogSeparation FirstPassCubeLabels
 
@@ -569,41 +482,6 @@ theorem reopening_separation_with_window (W : ℝ → ℂ) (a b : ℝ) (ha : 0 <
       rw [logPhase_add, frequencyTwist_apply]
       unfold cubeFrequencyFactor
       ring
-
-theorem exists_reopening_separation (W : ℝ → ℂ) (a b : ℝ) (ha : 0 < a)
-    (hs : Function.support W ⊆ Set.Icc a b) (hW : ContDiff ℝ ∞ W) :
-    ∃ V : 𝓢(ℝ,ℂ), HasCompactSupport V ∧
-      (∀ u, |u| ≤ columnWindowRadius a b → V u = 1) ∧
-      (∀ u, V u ≠ 0 → |u| ≤ columnWindowRadius a b + 1) ∧
-      (∀ t u : ℝ, t ∈ Set.Icc (0:ℝ) 1 →
-        (Real.exp (t/2) : ℂ) * W (Real.exp (u+3*t)) =
-          ∫ ξ : ℝ, reopeningCoefficient W a b ha hs hW ξ *
-            cubeFrequencyFactor t ξ * frequencyTwist V ξ u) ∧
-      (∀ t u : ℝ, Integrable (fun ξ : ℝ => reopeningCoefficient W a b ha hs hW ξ *
-          cubeFrequencyFactor t ξ * frequencyTwist V ξ u)) ∧
-      (∀ J : ℕ, ∃ C : ℝ, 0 < C ∧
-        Integrable (fun ξ : ℝ => (1+‖ξ‖)^J * ‖reopeningCoefficient W a b ha hs hW ξ‖) ∧
-        (∫ ξ : ℝ, (1+‖ξ‖)^J * ‖reopeningCoefficient W a b ha hs hW ξ‖) ≤ C ∧
-        ∀ ξ : ℝ, ‖reopeningCoefficient W a b ha hs hW ξ‖ ≤ C * firstLogDensity J ξ) := by
-  obtain ⟨v,hvc,hvs,hvone,hvsupp,_⟩ := exists_complex_smooth_cutoff
-    (columnWindowRadius a b) (columnWindowRadius_nonneg a b)
-  let V : 𝓢(ℝ,ℂ) := hvc.toSchwartzMap hvs
-  have hVone : ∀ u, |u| ≤ columnWindowRadius a b → V u = 1 := hvone
-  refine ⟨V,hvc,hVone,?_,?_,reopening_integrable _ V,?_⟩
-  · intro u hu
-    have hmem := hvsupp (subset_tsupport v hu)
-    exact abs_le.mpr hmem
-  · exact fun t u ht => reopening_separation_with_window W a b ha hs hW V hVone t u ht
-  · intro J
-    let g := sourceLogProfile W a b ha hs hW
-    let c := fourierPointBound (J+2) (profileSourceBound g (J+2))
-    let m := ∫ ξ : ℝ, (1+‖ξ‖)^J * ‖reopeningCoefficient W a b ha hs hW ξ‖
-    have hc : 0 ≤ c := fourierPointBound_nonneg _ _ (profileSourceBound_nonneg _ _)
-    have hm : 0 ≤ m := integral_nonneg (fun ξ => by positivity)
-    refine ⟨1+c+m,by positivity,weighted_schwartz_integrable _ J,by dsimp [m]; linarith,?_⟩
-    intro ξ
-    exact (profile_fourier_envelope g J ξ).trans
-      (mul_le_mul_of_nonneg_right (by linarith : c ≤ 1+c+m) (firstLogDensity_nonneg J ξ))
 
 end CanonicalCubeSeparation
 

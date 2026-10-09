@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowActualEnergies
-
 namespace OAI
 
 noncomputable section
@@ -19,26 +18,12 @@ def lowGramProfile (W1 : ℝ→ℂ) (v r : ℝ) : ℂ :=
 
 def lowGramScale (Y : ℝ) : ℂ := (Y:ℂ)⁻¹*(Real.sqrt Y:ℂ)⁻¹
 
-lemma lowGramCoefficient_source_norm (S : Finset Id) (hS : ∀P∈S,P.IsMaximal)
-    (σ : RayRing) (s : {I : Id // Supported I}) :
-    ‖lowGramCoefficient (calibrationForSet S hS) σ s‖≤1 := by
-  unfold lowGramCoefficient
-  split_ifs
-  · exact lowArithmeticCoefficient_source_norm S hS s
-  · simp
-
 lemma lowGramProfile_norm (W1 : ℝ→ℂ) (v r : ℝ) (hr : 0<r) :
     ‖lowGramProfile W1 v r‖=‖W1 r‖/r := by
   rw [lowGramProfile,norm_mul,Complex.norm_cpow_eq_rpow_re_of_pos hr]
   simp only [Complex.add_re,Complex.neg_re,Complex.one_re,Complex.mul_re,
     Complex.ofReal_re,Complex.ofReal_im,Complex.I_re,Complex.I_im,mul_zero,zero_mul,sub_self,add_zero,
     Real.rpow_neg_one,div_eq_mul_inv]
-
-lemma lowGramScale_cpow (Y : ℝ) (hY : 0<Y) : lowGramScale Y=(Y:ℂ)^(-(3/2:ℂ)) := by
-  have hy : (Y:ℂ)≠0 := Complex.ofReal_ne_zero.mpr hY.ne'
-  rw [show -(3/2:ℂ)=(-1)+(-(1/2:ℂ)) by norm_num,Complex.cpow_add _ _ hy,
-    Complex.cpow_neg_one,Complex.cpow_neg,ProbeEuler.cpow_half_eq_sqrt _ hY.le]
-  rfl
 
 lemma lowGramScale_mul_star (Y : ℝ) (hY : 0<Y) :
     lowGramScale Y*star (lowGramScale Y)=((Y^3:ℝ):ℂ)⁻¹ := by
@@ -78,24 +63,6 @@ theorem lowGaussColumn_unnormalized (C : CalibrationData) (W1 : ℝ→ℂ)
           (Real.sqrt ((Ideal.absNorm s.val:ℝ)/Y):ℂ)⁻¹) := by ring_nf
       _ = _ := by rw [hp];unfold lowGramScale lowGramProfile;ring_nf
   · simp
-
-theorem lowRayAmplitude_unnormalized (C : CalibrationData) (W1 : ℝ→ℂ)
-    (hW1 : HasCompactSupport W1) (Y : ℝ) (hY : 0<Y) (σ : RayRing) (v : ℝ) (m : O) :
-    lowRayAmplitude C W1 Y σ m v=lowGramScale Y*
-      ∑s∈lowGaussColumns W1 hW1 Y hY,
-        lowGramCoefficient C σ s*lowGramProfile W1 v ((Ideal.absNorm s.val:ℝ)/Y)*
-          sexticGauss (primaryGenerator s.val) (supported_primaryGenerator_ne_zero s.val s.property) (-m) := by
-  rw [lowRayAmplitude_source_columns C W1 hW1 Y hY σ v]
-  unfold gaussPolynomial gaussRow
-  rw [Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro s hs
-  have he := congrArg Ideal.absNorm ((primaryGenerator_spec s.val (supported_primaryGenerator_ne_zero s.val s.property)).1)
-  rw [he]
-  calc
-    _ = (lowGaussColumn C W1 Y σ v s/(Real.sqrt (Ideal.absNorm s.val:ℝ):ℂ))*
-      sexticGauss (primaryGenerator s.val) (supported_primaryGenerator_ne_zero s.val s.property) (-m) := by ring
-    _ = _ := by rw [lowGaussColumn_unnormalized C W1 Y hY σ v s];ring
 
 end SevenEighths.ProbePhysical
 end

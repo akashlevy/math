@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalDyadicAssembly
 import OAI.NumberTheory.DirichletL.Moments.FirstAmplificationChoice
-
 namespace OAI
 
 noncomputable section
@@ -21,9 +20,6 @@ lemma mem_activeRows (rows : Finset O) (n : Fin 4→ℤ) (h : O) :
     h∈activeRows rows n ↔ h∈rows ∧ dyadicWeight (n 1) (normValue h)≠0 := by
   simp only [activeRows,Finset.mem_filter,mem_dyadRows]
 
-lemma activeRows_subset (rows : Finset O) (n : Fin 4→ℤ) : activeRows rows n⊆rows :=
-  Finset.filter_subset _ _
-
 lemma activeRows_nonzero (rows : Finset O) (n : Fin 4→ℤ) (h : O)
     (hh : h∈activeRows rows n) : h≠0 :=
   dyadRows_ne_zero (n 1) h (Finset.mem_filter.mp hh).2
@@ -38,11 +34,6 @@ lemma activeRows_scale_gt_one (rows : Finset O) (n : Fin 4→ℤ)
     (hne : (activeRows rows n).Nonempty) : 1<dyadicScale (n 1) := by
   obtain ⟨h,hh⟩:=hne
   exact (activeRows_norm rows n h hh).1.trans_lt (activeRows_norm rows n h hh).2.2
-
-lemma activeRows_ball_majorant (rows : Finset O) (n : Fin 4→ℤ) (h : O)
-    (hh : h∈activeRows rows n) :
-    1≤(ballProfile (‖eisEmbedding h‖^2/dyadicScale (n 1))).re :=
-  ballProfile_majorizes _ (dyadicScale_pos (n 1)) h (activeRows_norm rows n h hh).2.2.le
 
 lemma row_log_window (n : ℤ) (h : O) :
     logAnnulus (Real.log (‖eisEmbedding h‖^2/dyadicScale n)) =

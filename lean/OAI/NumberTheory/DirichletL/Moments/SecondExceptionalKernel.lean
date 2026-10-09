@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.ExceptionalKernel
 import OAI.NumberTheory.DirichletL.Moments.SecondIdealBlockBound
-
 namespace OAI
 
 noncomputable section

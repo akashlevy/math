@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.DetectorDictionaryRows
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRawFiber
-
 namespace OAI
 
 noncomputable section
@@ -50,16 +49,6 @@ theorem fiber_plain_energy_eq (F : Fiber M H Label Slot U a ε tstar T allowance
   rw [hprod] at he
   simpa only [detectorPositiveRow,Fiber.physicalProduct,HeckeDetectorPhysicalSelection.physical,
     Finset.prod_coe_sort] using he
-
-theorem fiber_plain_unmarked_energy_eq (F : Fiber M H Label Slot U a ε tstar T allowance i)
-    (η : Character) (hdata : F.rowData=momentData η)
-    (hMm : M≤Ideal.span {rowMaskElement}) (hU : 0<U)
-    (j k : ℕ) (σ t : ℝ) :
-    (∑u∈F.rows,‖polynomial (F.family u F.label) false ((logProfile^[j]) positiveAnnular) (U^F.m) σ t*
-      polynomial (F.family u F.label) false ((logProfile^[k]) positiveAnnular) (U^F.m) σ t‖^2)=
-      ∑u∈F.rows,‖detectorPositiveRow F η ∅ j k σ t u‖^2 := by
-  simpa only [Fiber.physicalProduct,Finset.prod_empty,mul_one] using
-    fiber_plain_energy_eq F η hdata hMm hU ∅ j k σ t (by simp)
 
 end SevenEighths.CenteredMomentDetectorDictionary
 

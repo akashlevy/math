@@ -1,100 +1,22 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.NormFiberExtraction
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-
-theorem second_prefactor_identity
-    (Y qe qg qx₁ qx₂ Li : ℝ)
-    (hqe : 0 < qe) (hqg : 0 < qg) (hqx₁ : 0 < qx₁)
-    (hqx₂ : 0 < qx₂) (hLi : 0 < Li) :
-    Y / (qe * Real.sqrt ((qx₁ / qg) * (qx₂ / qg))) =
-      (Y * qg / (qe * Li)) * Real.sqrt (Li / qx₁) * Real.sqrt (Li / qx₂) := by
-  have hs1 : Real.sqrt (qx₁ / qg) ≠ 0 := by
-    exact ne_of_gt (Real.sqrt_pos.2 (div_pos hqx₁ hqg))
-  have hs2 : Real.sqrt (qx₂ / qg) ≠ 0 := by
-    exact ne_of_gt (Real.sqrt_pos.2 (div_pos hqx₂ hqg))
-  have ht1 : Real.sqrt (Li / qx₁) ≠ 0 := by
-    exact ne_of_gt (Real.sqrt_pos.2 (div_pos hLi hqx₁))
-  have ht2 : Real.sqrt (Li / qx₂) ≠ 0 := by
-    exact ne_of_gt (Real.sqrt_pos.2 (div_pos hLi hqx₂))
-  have hqg0 : qg ≠ 0 := ne_of_gt hqg
-  have hqe0 : qe ≠ 0 := ne_of_gt hqe
-  have hLi0 : Li ≠ 0 := ne_of_gt hLi
-  have hqx10 : qx₁ ≠ 0 := ne_of_gt hqx₁
-  have hqx20 : qx₂ ≠ 0 := ne_of_gt hqx₂
-  rw [Real.sqrt_mul (le_of_lt (div_pos hqx₁ hqg))]
-  have ha : Real.sqrt (qx₁ / qg) * Real.sqrt (Li / qx₁) = Real.sqrt (Li / qg) := by
-    rw [← Real.sqrt_mul (le_of_lt (div_pos hqx₁ hqg))]
-    congr 1
-    field_simp
-  have hb : Real.sqrt (qx₂ / qg) * Real.sqrt (Li / qx₂) = Real.sqrt (Li / qg) := by
-    rw [← Real.sqrt_mul (le_of_lt (div_pos hqx₂ hqg))]
-    congr 1
-    field_simp
-  have hc : Real.sqrt (Li / qg) * Real.sqrt (Li / qg) = Li / qg := by
-    simpa [pow_two] using Real.sq_sqrt (le_of_lt (div_pos hLi hqg))
-  have hmain :
-      Real.sqrt (Li / qx₁) * Real.sqrt (Li / qx₂) *
-        (Real.sqrt (qx₁ / qg) * Real.sqrt (qx₂ / qg)) = Li / qg := by
-    calc
-      _ = (Real.sqrt (qx₁ / qg) * Real.sqrt (Li / qx₁)) *
-          (Real.sqrt (qx₂ / qg) * Real.sqrt (Li / qx₂)) := by ring
-      _ = Li / qg := by rw [ha, hb, hc]
-  apply (div_eq_iff (mul_ne_zero hqe0 (mul_ne_zero hs1 hs2))).2
-  calc
-    Y = (Y * qg / (qe * Li)) * ((Li / qg) * qe) := by field_simp
-    _ = ((Y * qg / (qe * Li)) * Real.sqrt (Li / qx₁) * Real.sqrt (Li / qx₂)) *
-          (qe * (Real.sqrt (qx₁ / qg) * Real.sqrt (qx₂ / qg))) := by
-       rw [← hmain]
-       ring
+open scoped ContDiff
 
 namespace ActualEisensteinCubic
 
@@ -130,20 +52,6 @@ theorem canonicalSextic_conj_as_row_label
   · have hzero : χ x = 0 := MulChar.map_nonunit χ hx
     change (χ x)⁻¹ = χ x * (χ x) ^ 4
     simp [hzero]
-
-theorem canonicalSextic_second_child
-    (P : Ideal O) [P.IsMaximal] (hgood : lambda ∉ P)
-    (d e k J C v : O) :
-    star (canonicalSextic P hgood (Ideal.Quotient.mk P e)) *
-      canonicalSextic P hgood (Ideal.Quotient.mk P d) *
-      canonicalSextic P hgood (Ideal.Quotient.mk P k) *
-      (canonicalSextic P hgood (Ideal.Quotient.mk P (J * C))) ^ 4 *
-      (canonicalSextic P hgood (Ideal.Quotient.mk P v)) ^ 4 =
-    canonicalSextic P hgood (Ideal.Quotient.mk P (d * e * k)) *
-      (canonicalSextic P hgood (Ideal.Quotient.mk P (J * C * e * v))) ^ 4 := by
-  rw [canonicalSextic_conj_as_row_label P hgood e]
-  simp only [map_mul]
-  ring
 
 theorem finiteSquarefreeRow_mul
     {ι : Type*} (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
@@ -275,97 +183,6 @@ theorem rowCoprimeMask_subsets
   classical
   exact mask_powerset S (fun i => u ∈ P i)
 
-theorem finiteSquarefreeRow_pair_sum_mobius
-    {ι : Type*} [DecidableEq ι]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hgood : ∀ i, (IsCyclotomicExtension.zeta_spec 3 ℚ K).toInteger - 1 ∉ P i)
-    (S T : Finset ι) (R : Finset O) (V : O → ℂ) :
-    (∑ u ∈ R, V u * star (finiteSquarefreeRow P hgood S u) *
-      finiteSquarefreeRow P hgood T u) =
-      ∑ E ∈ (S ∩ T).powerset, (-1 : ℂ) ^ E.card *
-        ∑ u ∈ R.filter (fun u => ∀ i ∈ E, u ∈ P i),
-          V u * star (finiteSquarefreeRow P hgood (S \ T) u) *
-            finiteSquarefreeRow P hgood (T \ S) u := by
-  classical
-  have hterm (u : O) :
-      V u * star (finiteSquarefreeRow P hgood S u) *
-          finiteSquarefreeRow P hgood T u =
-        ∑ E ∈ (S ∩ T).powerset, (-1 : ℂ) ^ E.card *
-          if ∀ i ∈ E, u ∈ P i then
-            V u * star (finiteSquarefreeRow P hgood (S \ T) u) *
-              finiteSquarefreeRow P hgood (T \ S) u else 0 := by
-    rw [mul_assoc, finiteSquarefreeRow_pair_kernel, rowCoprimeMask_subsets]
-    simp only [Finset.sum_mul, Finset.mul_sum]
-    apply Finset.sum_congr rfl
-    intro E hE
-    by_cases h : ∀ i ∈ E, u ∈ P i
-    · simp only [ite_eq_left h, mul_one]
-      ring
-    · simp only [ite_eq_right h, mul_zero, zero_mul]
-  simp_rw [hterm]
-  rw [Finset.sum_comm]
-  apply Finset.sum_congr rfl
-  intro E hE
-  rw [Finset.mul_sum, Finset.sum_filter]
-  apply Finset.sum_congr rfl
-  intro u hu
-  by_cases h : ∀ i ∈ E, u ∈ P i <;> simp [h]
-
-private theorem finite_energy_expand {α β : Type*}
-    (R : Finset α) (C : Finset β) (V : α → ℂ) (a : β → ℂ)
-    (r : β → α → ℂ) :
-    (∑ u ∈ R, V u * (↑(‖∑ n ∈ C, a n * r n u‖ ^ 2) : ℂ)) =
-      ∑ n ∈ C, ∑ m ∈ C, star (a n) * a m *
-        ∑ u ∈ R, V u * star (r n u) * r m u := by
-  have hnorm (u : α) :
-      (↑(‖∑ n ∈ C, a n * r n u‖ ^ 2) : ℂ) =
-        (∑ n ∈ C, star (a n) * star (r n u)) *
-          (∑ m ∈ C, a m * r m u) := by
-    rw [Complex.sq_norm, Complex.normSq_eq_conj_mul_self]
-    simp only [map_sum, map_mul, starRingEnd_apply]
-  simp_rw [hnorm]
-  calc
-    _ = ∑ u ∈ R, ∑ n ∈ C, ∑ m ∈ C,
-        (star (a n) * a m) * (V u * star (r n u) * r m u) := by
-      apply Finset.sum_congr rfl
-      intro u hu
-      simp only [Finset.sum_mul, Finset.mul_sum]
-      rw [Finset.sum_comm]
-      apply Finset.sum_congr rfl
-      intro n hn
-      apply Finset.sum_congr rfl
-      intro m hm
-      ring
-    _ = _ := by
-      rw [Finset.sum_comm]
-      apply Finset.sum_congr rfl
-      intro n hn
-      rw [Finset.sum_comm]
-      apply Finset.sum_congr rfl
-      intro m hm
-      rw [Finset.mul_sum]
-
-theorem finiteSquarefreeRow_mean_square_mobius
-    {ι β : Type*} [DecidableEq ι]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hgood : ∀ i, (IsCyclotomicExtension.zeta_spec 3 ℚ K).toInteger - 1 ∉ P i)
-    (C : Finset β) (support : β → Finset ι) (a : β → ℂ)
-    (R : Finset O) (V : O → ℂ) :
-    (∑ u ∈ R, V u * (↑(‖∑ n ∈ C,
-      a n * finiteSquarefreeRow P hgood (support n) u‖ ^ 2) : ℂ)) =
-      ∑ n ∈ C, ∑ m ∈ C, star (a n) * a m *
-        ∑ E ∈ (support n ∩ support m).powerset, (-1 : ℂ) ^ E.card *
-          ∑ u ∈ R.filter (fun u => ∀ i ∈ E, u ∈ P i),
-            V u * star (finiteSquarefreeRow P hgood (support n \ support m) u) *
-              finiteSquarefreeRow P hgood (support m \ support n) u := by
-  rw [finite_energy_expand]
-  apply Finset.sum_congr rfl
-  intro n hn
-  apply Finset.sum_congr rfl
-  intro m hm
-  congr 1
-  exact finiteSquarefreeRow_pair_sum_mobius P hgood (support n) (support m) R V
-
 theorem prime_product_moebius
     {ι : Type*} [DecidableEq ι] (P : ι → Ideal O)
     [∀ i, (P i).IsMaximal] (hprime : ∀ i, Prime (P i))
@@ -404,94 +221,9 @@ section
 open ActualEisensteinCubic ShortDraftHeckeBridge
 open scoped BigOperators Classical
 
-noncomputable def primeSubsetProduct (F : Finset (Ideal O))
-    (E : Finset (primePool F)) : Ideal O := ∏ i ∈ E, i.1
-
-noncomputable def residualSexticRow
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (hFgood : ∀ I ∈ F,
-      ∀ P ∈ UniqueFactorizationMonoid.normalizedFactors I,
-        goodLambda ∉ P)
-    (I J : Ideal O) (u : O) : ℂ := by
-  letI : ∀ i : primePool F, (i.1).IsMaximal := primePool_maximal F hFpos
-  exact finiteSquarefreeRow (fun i : primePool F => i.1)
-    (primePool_good F hFgood) (idealSupport F I \ idealSupport F J) u
-
-theorem idealRowSum_mean_square_mobius
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (hFgood : ∀ I ∈ F,
-      ∀ P ∈ UniqueFactorizationMonoid.normalizedFactors I,
-        goodLambda ∉ P)
-    {q : ℕ} (χ : DirichletCharacter ℂ q) (W : ℕ → ℂ)
-    (R : Finset O) (V : O → ℂ) :
-    (∑ u ∈ R, V u * (↑(‖idealRowSum F hFpos hFgood χ W u‖ ^ 2) : ℂ)) =
-      ∑ I ∈ F, ∑ J ∈ F,
-        star (baseChangeWeight χ I * W (Ideal.absNorm I)) *
-          (baseChangeWeight χ J * W (Ideal.absNorm J)) *
-        ∑ E ∈ (idealSupport F I ∩ idealSupport F J).powerset,
-          (UniqueFactorizationMonoid.moebius (primeSubsetProduct F E) : ℂ) *
-          ∑ u ∈ R.filter (fun u => u ∈ primeSubsetProduct F E),
-            V u * star (residualSexticRow F hFpos hFgood I J u) *
-              residualSexticRow F hFpos hFgood J I u := by
-  classical
-  let : ∀ i : primePool F, (i.1).IsMaximal := primePool_maximal F hFpos
-  have hprime (i : primePool F) : Prime i.1 := by
-    obtain ⟨I, hIF, hi⟩ := mem_primePool_iff.mp i.property
-    exact UniqueFactorizationMonoid.prime_of_normalized_factor i.1 hi
-  change (∑ u ∈ R, V u * (↑(‖∑ I ∈ F,
-    (baseChangeWeight χ I * W (Ideal.absNorm I)) *
-      finiteSquarefreeRow (fun i : primePool F => i.1)
-        (primePool_good F hFgood) (idealSupport F I) u‖ ^ 2) : ℂ)) = _
-  erw [finiteSquarefreeRow_mean_square_mobius]
-  apply Finset.sum_congr rfl
-  intro I hI
-  apply Finset.sum_congr rfl
-  intro J hJ
-  congr 1
-  apply Finset.sum_congr rfl
-  intro E hE
-  rw [show (UniqueFactorizationMonoid.moebius (primeSubsetProduct F E) : ℂ) =
-    (-1 : ℂ) ^ E.card from
-      prime_product_moebius (fun i : primePool F => i.1)
-        hprime Subtype.val_injective E]
-  congr 1
-  apply Finset.sum_congr
-  · ext u
-    simp only [Finset.mem_filter]
-    exact and_congr_right fun hu =>
-      (mem_prime_product_iff (fun i : primePool F => i.1)
-        Subtype.val_injective E u).symm
-  · intro u hu
-    rfl
-
 end
 
 open ActualEisensteinCubic
-
-theorem idealSupport_product_dvd
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (I : Ideal O) (E : Finset (primePool F))
-    (hE : E ⊆ idealSupport F I) :
-    (∏ i ∈ E, i.1) ∣ I := by
-  let : ∀ i : primePool F, (i.1).IsMaximal := primePool_maximal F hFpos
-  apply Finset.prod_dvd_of_coprime
-  · intro i hi j hj hij
-    apply Ideal.isCoprime_of_isMaximal
-    exact Subtype.val_injective.ne hij
-  · intro i hi
-    exact UniqueFactorizationMonoid.dvd_of_mem_normalizedFactors
-      ((mem_idealSupport_iff F I i).mp (hE hi))
-
-theorem commonSupport_product_dvd
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (I J : Ideal O) (E : Finset (primePool F))
-    (hE : E ∈ (idealSupport F I ∩ idealSupport F J).powerset) :
-    (∏ i ∈ E, i.1) ∣ I ∧ (∏ i ∈ E, i.1) ∣ J := by
-  have hsub := Finset.mem_powerset.mp hE
-  exact ⟨idealSupport_product_dvd F hFpos I E
-    (fun i hi => (Finset.mem_inter.mp (hsub hi)).1),
-    idealSupport_product_dvd F hFpos J E
-    (fun i hi => (Finset.mem_inter.mp (hsub hi)).2)⟩
 
 end ConcretePrimeRowBridge
 
@@ -574,13 +306,6 @@ def partialFourier (f : SchwartzMap ℂ ℂ) (η x : ℝ) : ℂ :=
 theorem partialFourier_eq_integral (f : SchwartzMap ℂ ℂ) (η x : ℝ) :
     partialFourier f η x =
       ∫ y : ℝ, Real.fourierChar (-inner ℝ y η) • f (complexPoint x y) := rfl
-
-theorem partialFourier_eq_exp_integral (f : SchwartzMap ℂ ℂ) (η x : ℝ) :
-    partialFourier f η x = ∫ y : ℝ,
-      Complex.exp (((-2 * Real.pi * (y * η) : ℝ) : ℂ) * Complex.I) *
-        f ((x : ℂ) + Complex.I * (y : ℂ)) := by
-  have hin (y : ℝ) : inner ℝ y η = y * η := by simp [RCLike.inner_apply, mul_comm]
-  simp only [partialFourier, Real.fourier_eq', hin, complexPoint_eq, smul_eq_mul]
 
 def verticalMajorant (f : SchwartzMap ℂ ℂ) (y : ℝ) : ℝ :=
   ((SchwartzMap.seminorm ℝ 0 0) f + (SchwartzMap.seminorm ℝ 2 0) f) * (1 + y ^ 2)⁻¹
@@ -669,11 +394,6 @@ theorem partialFourierSchwartz_coe (f : SchwartzMap ℂ ℂ) (η : ℝ) :
     (partialFourierSchwartz f η : ℝ → ℂ) = partialFourier f η :=
   funext (partialFourierSchwartz_apply f η)
 
-theorem fourier_partialFourierSchwartz (f : SchwartzMap ℂ ℂ) (ξ η : ℝ) :
-    𝓕 (partialFourierSchwartz f η : ℝ → ℂ) ξ =
-      𝓕 (f : ℂ → ℂ) ((ξ : ℂ) + Complex.I * (η : ℂ)) := by
-  rw [partialFourierSchwartz_coe, fourier_partialFourier, complexPoint_eq]
-
 theorem horizontal_hasFDerivAt (η x : ℝ) :
     HasFDerivAt (fun y : ℝ => complexPoint y η) Complex.ofRealCLM x := by
   have heq : (fun y : ℝ => complexPoint y η) =
@@ -729,18 +449,9 @@ theorem summable_norm_of_cauchy_product (F : ℤ × ℤ → ℂ) (C : ℝ)
   Summable.of_nonneg_of_le (fun _ => norm_nonneg _) hF
     (summable_int_cauchy_product.mul_left C)
 
-theorem summable_of_cauchy_product (F : ℤ × ℤ → ℂ) (C : ℝ)
-    (hF : ∀ p, ‖F p‖ ≤ C *
-      ((1 + (p.1 : ℝ) ^ 2)⁻¹ * (1 + (p.2 : ℝ) ^ 2)⁻¹)) : Summable F :=
-  (summable_norm_of_cauchy_product F C hF).of_norm
-
 def planeDecayConstant (F : SchwartzMap ℂ ℂ) : ℝ :=
   SchwartzMap.seminorm ℝ 0 0 F + SchwartzMap.seminorm ℝ 2 0 F +
     SchwartzMap.seminorm ℝ 4 0 F
-
-theorem planeDecayConstant_nonneg (F : SchwartzMap ℂ ℂ) : 0 ≤ planeDecayConstant F := by
-  unfold planeDecayConstant
-  positivity
 
 theorem plane_schwartz_product_decay (F : SchwartzMap ℂ ℂ) (ξ η : ℝ) :
     ((1 + ξ ^ 2) * (1 + η ^ 2)) * ‖F (complexPoint ξ η)‖ ≤
@@ -831,11 +542,6 @@ theorem inverse_horizontalSlice_product_decay (F : SchwartzMap ℂ ℂ) (η x : 
 def partialFourierDecayConstant (f : SchwartzMap ℂ ℂ) : ℝ :=
   Real.pi * (planeDecayConstant (𝓕 f) +
     planeDecayConstant (∂_{(1 : ℂ)} (∂_{(1 : ℂ)} (𝓕 f))))
-
-theorem partialFourierDecayConstant_nonneg (f : SchwartzMap ℂ ℂ) :
-    0 ≤ partialFourierDecayConstant f :=
-  mul_nonneg Real.pi_pos.le
-    (add_nonneg (planeDecayConstant_nonneg _) (planeDecayConstant_nonneg _))
 
 theorem partialFourier_product_decay (f : SchwartzMap ℂ ℂ) (η x : ℝ) :
     ((1 + x ^ 2) * (1 + η ^ 2)) * ‖partialFourier f η x‖ ≤

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseRawEnergy
 import OAI.NumberTheory.DirichletL.Dictionary.InverseClippedUniform
-
 namespace OAI
 
 noncomputable section

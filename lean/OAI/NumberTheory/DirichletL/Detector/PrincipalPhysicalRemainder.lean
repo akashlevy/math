@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.PrincipalPhysical
 import OAI.NumberTheory.DirichletL.Detector.PrincipalRemainderBounds
-
 namespace OAI
 
 noncomputable section

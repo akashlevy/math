@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.CuspAverage
-
 namespace OAI
 
 noncomputable section
@@ -8,79 +7,25 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
+open scoped MatrixGroups
 
 section
-open CubicKubota ActualEisensteinCubic ConcreteTraceCRT
+open CubicKubota
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma period_integral_fourier_translation (f:ℂ→ℂ)
@@ -182,55 +127,13 @@ lemma translatedCuspFourier_one (h:Eis) (F:KernelQuotientL2) :
   rw [translatedCuspFourier,ContinuousLinearMap.comp_apply,
     LinearIsometry.coe_toContinuousLinearMap,kernelSourcePullback_one]
 
-lemma translatedCuspFourier_bruhat (h:Eis) (e:Fin 2) (a:Fin 3⊕(Fin 3×Fin 3)) :
-    translatedCuspFourier h (rationalLift (rationalBruhatRep (e,a))) cubicEisensteinResidue=
-      match a with
-      | Sum.inl _=>kernelCuspFourier h cubicEisensteinResidue
-      | Sum.inr ab=>ShortDraftTrace.breveE (cuspFrequency h*(ab.2.val:ℂ))*
-        translatedCuspFourier h oppositeSource cubicEisensteinResidue := by
-  cases a with
-  | inl a =>
-    rw [←one_mul (kernelCuspFourier h cubicEisensteinResidue),←translatedCuspFourier_one h]
-    apply translatedCuspFourier_residue_scaled_of_initial
-    intro s hs hi
-    simp_rw [sourceComplexMatrix_rationalLift,hyperbolicEisenstein_bruhat]
-    simp only [map_one,one_smul,one_mul]
-  | inr ab =>
-    apply translatedCuspFourier_residue_scaled_of_initial
-    intro s hs hi
-    simp_rw [sourceComplexMatrix_rationalLift,hyperbolicEisenstein_bruhat]
-    change (∫w in cuspPeriodStrip 5 6,
-      hyperbolicEisenstein s (rationalComplex ModularGroup.S •
-        (rationalComplex (ModularGroup.T^ab.2.val) • w))*cuspFourierPhase h w∂hyperbolicVolume)=
-      ShortDraftTrace.breveE (cuspFrequency h*(ab.2.val:ℂ))*
-      ∫w in cuspPeriodStrip 5 6,hyperbolicEisenstein s (rationalComplex ModularGroup.S • w)*
-        cuspFourierPhase h w∂hyperbolicVolume
-    simpa only [map_mul,mul_smul] using
-      rational_cusp_fourier_right_T ModularGroup.S ab.2.val h s (by linarith)
-
 def sourceRayPhaseSum (h:Eis) : ℂ :=
   ∑ b:Fin 3,ShortDraftTrace.breveE (cuspFrequency h*(b.val:ℂ))
-
-theorem kernelSourceProjection_residue_fourier (h:Eis) :
-    kernelCuspFourier h (kernelSourceProjection cubicEisensteinResidue)=
-      (4:ℂ)⁻¹*(kernelCuspFourier h cubicEisensteinResidue+
-        sourceRayPhaseSum h*translatedCuspFourier h oppositeSource cubicEisensteinResidue) := by
-  rw [kernelSourceProjection_eq_twentyFour,map_smul,map_sum]
-  change (24:ℂ)⁻¹*(∑i:RationalBruhatIndex,
-    translatedCuspFourier h (rationalLift (rationalBruhatRep i)) cubicEisensteinResidue)=_
-  rw [Fintype.sum_prod_type]
-  simp_rw [translatedCuspFourier_bruhat]
-  simp only [Fintype.sum_sum_type,Fintype.sum_prod_type,Finset.sum_const,Finset.card_univ,
-    Fintype.card_fin,nsmul_eq_mul]
-  rw [←Finset.sum_mul]
-  change (24:ℂ)⁻¹*((2:ℂ)*(3*kernelCuspFourier h cubicEisensteinResidue+
-    3*(sourceRayPhaseSum h*translatedCuspFourier h oppositeSource cubicEisensteinResidue)))=_
-  ring
 
 end
 
 section
-open CubicKubota ConcreteTraceCRT
+open CubicKubota
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma sourceRayPhase_cube (h:Eis) :
@@ -282,18 +185,6 @@ lemma kernelCuspFourier_residue_eq_zero_of_not_horizontal (h:Eis)
   have hz : (ShortDraftTrace.breveE (cuspFrequency h)-1)*
       kernelCuspFourier h cubicEisensteinResidue=0 := by linear_combination -he
   exact (mul_eq_zero.mp hz).resolve_left (sub_ne_zero.mpr hh)
-
-theorem kernelSourceProjection_residue_fourier_mask (h:Eis) :
-    kernelCuspFourier h (kernelSourceProjection cubicEisensteinResidue)=
-      if ShortDraftTrace.breveE (cuspFrequency h)=1 then
-        (4:ℂ)⁻¹*(kernelCuspFourier h cubicEisensteinResidue+
-          3*translatedCuspFourier h oppositeSource cubicEisensteinResidue)
-      else 0 := by
-  rw [kernelSourceProjection_residue_fourier,sourceRayPhaseSum_eq]
-  split_ifs with hh
-  · rfl
-  · rw [kernelCuspFourier_residue_eq_zero_of_not_horizontal h hh]
-    ring
 
 end
 
@@ -388,26 +279,6 @@ def sourceArithmeticResidue (h:Eis) : ℂ :=
       3*unramifiedGaussResidue (9*h)/((9*Real.sqrt 3/2:ℝ):ℂ))
   else 0
 
-theorem kernelSourceProjection_gauss_residue (h:Eis) :
-    kernelCuspFourier h (kernelSourceProjection cubicEisensteinResidue)=
-      ((9*Real.sqrt 3/2:ℝ):ℂ)*sourceArithmeticResidue h*
-        cuspWhittakerHeightFactor (4/3:ℂ) h := by
-  rw [kernelSourceProjection_residue_fourier_mask,sourceArithmeticResidue]
-  split_ifs with hh
-  · rw [kernelCuspFourier_principal_residue,translatedCuspFourier_unramified_residue]
-    field_simp [cusp_volume_ne_zero]
-
-  · ring
-
-theorem cubicSourceResidualFunction_fourier_average (h:Eis) :
-    (∫w in cuspPeriodStrip 5 6,cubicSourceResidualFunction w*cuspFourierPhase h w∂hyperbolicVolume)=
-      ((9*Real.sqrt 3/2:ℝ):ℂ)*sourceArithmeticResidue h*
-        cuspWhittakerHeightFactor (4/3:ℂ) h := by
-  rw [←kernelSourceProjection_gauss_residue,kernelCuspFourier_integral]
-  apply integral_congr_ae
-  filter_upwards [ae_restrict_of_ae cubicSourceResidualFunction_represents_projection] with w hw
-  exact congrArg (fun z:ℂ=>z*cuspFourierPhase h w) hw.symm
-
 lemma unramifiedGaussResidue_zero :
     unramifiedGaussResidue 0=((9*Real.sqrt 3/2:ℝ):ℂ)*constantArithmeticResidue := by
   apply mul_right_cancel₀ (cuspWhittakerHeightFactor_center_ne_zero (0:Eis))
@@ -428,9 +299,6 @@ lemma sourceArithmeticResidue_zero : sourceArithmeticResidue 0=constantArithmeti
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
-open Finset AddChar MulChar EisensteinEmbedding
 
 def horizontalPhaseMultiplier (freq direction : ℂ) : ℂ :=
   (2*Real.pi*Complex.I)*(freq*direction+star (freq*direction))
@@ -461,15 +329,6 @@ lemma horizontalPhaseMultiplier_norm (freq direction : ℂ) :
       mul_le_mul_of_nonneg_left (norm_add_le _ _) (by positivity)
     _ = _ := by rw [norm_star,norm_mul];ring
 
-lemma horizontalPhaseMultiplier_wirtinger (freq : ℂ) :
-    (1/2:ℂ)*(horizontalPhaseMultiplier freq 1+
-      Complex.I*horizontalPhaseMultiplier freq Complex.I)=2*Real.pi*Complex.I*star freq := by
-  simp only [horizontalPhaseMultiplier,mul_one,star_mul,Complex.star_def,
-    Complex.conj_I]
-  ring_nf
-  norm_num [Complex.I_sq,Complex.I_pow_three]
-  ring
-
 lemma norm_mul_exp_neg_bound (a r : ℝ) (ha : 0<a) :
     r*Real.exp (-a*r)≤(2/a)*Real.exp (-(a/2)*r) := by
   have hbase := Real.add_one_le_exp ((a/2)*r)
@@ -488,114 +347,11 @@ lemma summable_norm_mul_exp_neg_cuspFrequency (a : ℝ) (ha : 0<a) :
     (fun h => norm_mul_exp_neg_bound a _ ha)
   exact (summable_exp_neg_cuspFrequency_norm (a/2) (half_pos ha)).mul_left (2/a)
 
-local notation "O" => ActualEisensteinCubic.O
-
-def cubicResidualDirectionalTerm (h : ActualEisensteinCubic.O) (v : ℝ) (z direction : ℂ) : ℂ :=
-  horizontalPhaseMultiplier (cuspFrequency h) direction*cubicResidualNonzeroTerm h (v,z)
-
-lemma cubicResidualNonzeroTerm_horizontal_hasDerivAt (h : ActualEisensteinCubic.O) (v : ℝ) (hv : 0<v)
-    (z direction : ℂ) (t : ℝ) :
-    HasDerivAt (fun x : ℝ => cubicResidualNonzeroTerm h (v,z+(x:ℂ)*direction))
-      (cubicResidualDirectionalTerm h v (z+(t:ℂ)*direction) direction) t := by
-  have hh := (brevePhase_hasDerivAt (cuspFrequency h) z direction t).const_mul
-    (cubicResidualModeAmplitude v h)
-  have hf : (fun x : ℝ => cubicResidualNonzeroTerm h (v,z+(x:ℂ)*direction))=
-      (fun x : ℝ => cubicResidualModeAmplitude v h*
-        ShortDraftTrace.breveE (cuspFrequency h*(z+(x:ℂ)*direction))) := by
-    funext x
-    exact cubicResidualNonzeroTerm_eq_amplitude v hv h _
-  rw [hf]
-  convert hh using 1
-  rw [cubicResidualDirectionalTerm,cubicResidualNonzeroTerm_eq_amplitude v hv h]
-  ring
-
-lemma cubicResidualDirectionalTerm_slab_bound (a b : ℝ) (ha : 0<a) (hab : a≤b)
-    (direction : ℂ) :
-    ∃C : ℝ,0≤C ∧ ∀(h : ActualEisensteinCubic.O)(v : ℝ)(z : ℂ),v∈Set.Icc a b →
-      ‖cubicResidualDirectionalTerm h v z direction‖≤
-        C*(‖cuspFrequency h‖*Real.exp (-(Real.pi*a)*‖cuspFrequency h‖)) := by
-  obtain ⟨C,hC,hbound⟩ := cubicResidualNonzeroTerm_slab_bound a b ha hab
-  refine ⟨4*Real.pi*‖direction‖*C,by positivity,?_⟩
-  intro h v z hv
-  rw [cubicResidualDirectionalTerm,norm_mul]
-  calc
-    _ ≤ (4*Real.pi*‖cuspFrequency h‖*‖direction‖)*
-        (C*Real.exp (-(Real.pi*a)*‖cuspFrequency h‖)) :=
-      mul_le_mul (horizontalPhaseMultiplier_norm _ _) (hbound h (v,z) hv)
-        (norm_nonneg _) (by positivity)
-    _ = _ := by ring
-
-lemma cubicResidualDirectionalTerm_summable (v : ℝ) (hv : 0<v) (z direction : ℂ) :
-    Summable (fun h : ActualEisensteinCubic.O => cubicResidualDirectionalTerm h v z direction) := by
-  obtain ⟨C,hC,hbound⟩ := cubicResidualDirectionalTerm_slab_bound v v hv le_rfl direction
-  apply Summable.of_norm
-  apply Summable.of_nonneg_of_le (fun h => norm_nonneg _) (fun h => hbound h v z ⟨le_rfl,le_rfl⟩)
-  exact (summable_norm_mul_exp_neg_cuspFrequency (Real.pi*v) (mul_pos Real.pi_pos hv)).mul_left C
-
-lemma cubicResidualNonzeroSeries_horizontal_hasDerivAt (v : ℝ) (hv : 0<v)
-    (z direction : ℂ) (t : ℝ) :
-    HasDerivAt (fun x : ℝ => cubicResidualNonzeroSeries (v,z+(x:ℂ)*direction))
-      (∑'h : ActualEisensteinCubic.O,cubicResidualDirectionalTerm h v (z+(t:ℂ)*direction) direction) t := by
-  obtain ⟨C,hC,hbound⟩ := cubicResidualDirectionalTerm_slab_bound v v hv le_rfl direction
-  have hs := (summable_norm_mul_exp_neg_cuspFrequency (Real.pi*v) (mul_pos Real.pi_pos hv)).mul_left C
-  have hz : Summable (fun h : ActualEisensteinCubic.O => cubicResidualNonzeroTerm h (v,z+(0:ℂ)*direction)) := by
-    simpa only [zero_mul,add_zero] using cubicResidualNonzeroTerm_summable (v,z) hv
-  exact hasDerivAt_tsum hs (fun h x => cubicResidualNonzeroTerm_horizontal_hasDerivAt h v hv z direction x)
-    (fun h x => hbound h v (z+(x:ℂ)*direction) ⟨le_rfl,le_rfl⟩) hz t
-
-lemma cubicResidualFunction_horizontal_hasDerivAt (v : ℝ) (hv : 0<v)
-    (z direction : ℂ) (t : ℝ) :
-    HasDerivAt (fun x : ℝ => cubicResidualFunction (upperPoint (z+(x:ℂ)*direction) v hv))
-      (∑'h : ActualEisensteinCubic.O,cubicResidualDirectionalTerm h v (z+(t:ℂ)*direction) direction) t := by
-  have hh := (cubicResidualNonzeroSeries_horizontal_hasDerivAt v hv z direction t).const_add
-    ((3*Real.pi:ℂ)*constantArithmeticResidue*(v:ℂ)^(2/3:ℂ))
-  simpa only [cubicResidualFunction,cubicResidualNonzeroFunction,
-    hyperbolicHeight_upperPoint,hyperbolicHorizontal_upperPoint] using hh
-
 end
-
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
-open Finset AddChar MulChar EisensteinEmbedding
-
-local notation "O" => ActualEisensteinCubic.O
 
 def horizontalWirtingerBar (f : ℂ→ℂ) (z : ℂ) : ℂ :=
   (1/2:ℂ)*(deriv (fun t : ℝ => f (z+(t:ℂ))) 0+
     Complex.I*deriv (fun t : ℝ => f (z+(t:ℂ)*Complex.I)) 0)
-
-lemma horizontalWirtingerBar_brevePhase (freq z : ℂ) :
-    horizontalWirtingerBar (fun w => ShortDraftTrace.breveE (freq*w)) z=
-      (2*Real.pi*Complex.I*star freq)*ShortDraftTrace.breveE (freq*z) := by
-  have h1 := (brevePhase_hasDerivAt freq z 1 0).deriv
-  have hI := (brevePhase_hasDerivAt freq z Complex.I 0).deriv
-  simp only [mul_one,Complex.ofReal_zero,zero_mul,add_zero] at h1 hI
-  rw [horizontalWirtingerBar,h1,hI]
-  linear_combination ShortDraftTrace.breveE (freq*z)*horizontalPhaseMultiplier_wirtinger freq
-
-theorem cubicResidualFunction_wirtingerBar (v : ℝ) (hv : 0<v) (z : ℂ) :
-    horizontalWirtingerBar (fun w => cubicResidualFunction (upperPoint w v hv)) z=
-      ∑'h : ActualEisensteinCubic.O,(2*Real.pi*Complex.I*star (cuspFrequency h))*cubicResidualNonzeroTerm h (v,z) := by
-  have h1 := (cubicResidualFunction_horizontal_hasDerivAt v hv z 1 0).deriv
-  have hI := (cubicResidualFunction_horizontal_hasDerivAt v hv z Complex.I 0).deriv
-  simp only [mul_one,Complex.ofReal_zero,zero_mul,add_zero] at h1 hI
-  rw [horizontalWirtingerBar,h1,hI]
-  have hs1 := cubicResidualDirectionalTerm_summable v hv z 1
-  have hsI := (cubicResidualDirectionalTerm_summable v hv z Complex.I).mul_left Complex.I
-  rw [←tsum_mul_left,←hs1.tsum_add hsI,←tsum_mul_left]
-  apply tsum_congr
-  intro h
-  unfold cubicResidualDirectionalTerm
-  linear_combination cubicResidualNonzeroTerm h (v,z)*horizontalPhaseMultiplier_wirtinger (cuspFrequency h)
-
-lemma cubicResidualFunction_wirtingerBar_summable (v : ℝ) (hv : 0<v) (z : ℂ) :
-    Summable (fun h : ActualEisensteinCubic.O => (2*Real.pi*Complex.I*star (cuspFrequency h))*cubicResidualNonzeroTerm h (v,z)) := by
-  have hs := ((cubicResidualDirectionalTerm_summable v hv z 1).add
-    ((cubicResidualDirectionalTerm_summable v hv z Complex.I).mul_left Complex.I)).mul_left (1/2:ℂ)
-  apply hs.congr
-  intro h
-  unfold cubicResidualDirectionalTerm
-  linear_combination cubicResidualNonzeroTerm h (v,z)*horizontalPhaseMultiplier_wirtinger (cuspFrequency h)
 
 end CubicEisenstein
 

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.WindowFourier
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -38,15 +37,6 @@ theorem inverseRootWindow_compact (V : ℝ → ℂ) (hV : HasCompactSupport V) :
   apply hV.mono
   intro y hy
   exact (div_ne_zero_iff.mp hy).1
-
-theorem firstRootWindows_smooth_compact (V : Fin 9 → ℝ → ℂ)
-    (hV : ∀ i, ContDiff ℝ ∞ (V i)) (hS : ∀ i, HasCompactSupport (V i)) :
-    ∀ i, ContDiff ℝ ∞ (firstRootWindows V i) ∧ HasCompactSupport (firstRootWindows V i) := by
-  intro i
-  fin_cases i <;> first
-    | exact ⟨hV _, hS _⟩
-    | exact ⟨inverseNormWindow_contDiff _ (hV _), inverseNormWindow_compact _ (hS _)⟩
-    | exact ⟨inverseRootWindow_contDiff _ (hV _), inverseRootWindow_compact _ (hS _)⟩
 
 theorem secondRootWindows_smooth_compact (V : Fin 6 → ℝ → ℂ)
     (hV : ∀ i, ContDiff ℝ ∞ (V i)) (hS : ∀ i, HasCompactSupport (V i)) :

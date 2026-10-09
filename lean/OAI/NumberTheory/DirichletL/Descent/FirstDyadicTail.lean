@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstDyadicRadius
-
 namespace OAI
 
 noncomputable section

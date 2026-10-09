@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialCommonTuples
 import OAI.NumberTheory.DirichletL.Descent.CompleteMarkedPool
-
 namespace OAI
 
 noncomputable section
@@ -14,14 +13,6 @@ variable {σ:Type*} [DecidableEq σ]
 
 def poolList (F:Finset (Ideal Eis))(L:Finset (Ideal Eis)) : Finset (primePool F) :=
   Finset.univ.filter (fun i=>i.val∈L)
-
-theorem outside_pool_not_dvd (F:Finset (Ideal Eis))(A:Finset (primePool F))
-    {P:Ideal Eis}(hP:Prime P)(hn:P∉primePool F) : ¬P∣∏i∈A,i.val := by
-  intro hd
-  obtain ⟨i,hi,hd⟩ := hP.dvd_finsetProd_iff (fun i:primePool F=>i.val) |>.mp hd
-  have hip : Prime i.val := Ideal.prime_of_isPrime (NeZero.ne i.val) inferInstance
-  have he := (prime_dvd_prime_iff_eq hP hip).mp hd
-  exact hn (he ▸ i.property)
 
 theorem dividing_list_image (F:Finset (Ideal Eis))(L:Finset (Ideal Eis))
     (hL:∀P∈L,Prime P)(A:Finset (primePool F)) :

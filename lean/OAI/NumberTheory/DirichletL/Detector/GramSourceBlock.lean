@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.GramPhysicalScale
 import OAI.NumberTheory.DirichletL.Detector.GramShell
 import OAI.NumberTheory.DirichletL.Detector.GramJointProfile
-
 namespace OAI
 
 noncomputable section

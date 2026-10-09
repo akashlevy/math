@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SourceZeroEnergy
 import OAI.NumberTheory.DirichletL.Moments.SecondPhysicalCost
-
 namespace OAI
 
 noncomputable section

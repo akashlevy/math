@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.PrincipalTransport
 import OAI.NumberTheory.DirichletL.PrincipalSignalComparison
-
 namespace OAI
 
 noncomputable section
@@ -541,22 +540,6 @@ lemma source_z_scale_identity {ι : Type*} (J : Finset ι) (ell : ι→ℝ)
       (∏j∈J,(Z^(ell j))^(33/200:ℝ)) = Z^(a-11/16-13/9600) := by
   rw [source_scale_identity J ell hell Z a (33/200) 1 hZ]
   congr 1;ring
-
-lemma eventual_annulus_threshold {ι : Type*} (η : Character) (J : Finset ι)
-    (c : ℝ) (hc : 0<c) (ell : ι→ℝ) (hell : ∀j∈J,0<ell j) :
-    ∃Z0 : ℝ,1≤Z0 ∧ ∀Z : ℝ,Z0≤Z→∀j∈J,
-      480≤c*Z^(ell j) ∧ (Ideal.absNorm η.modulus:ℝ)<c*Z^(ell j) := by
-  have hh : ∀ᶠZ : ℝ in atTop,∀j∈J,
-      480≤c*Z^(ell j) ∧ (Ideal.absNorm η.modulus:ℝ)<c*Z^(ell j) := by
-    apply (Filter.eventually_all_finset J).mpr
-    intro j hj
-    have ht := (tendsto_rpow_atTop (hell j hj)).const_mul_atTop hc
-    exact (ht.eventually (eventually_ge_atTop 480)).and
-      (ht.eventually (eventually_gt_atTop (Ideal.absNorm η.modulus:ℝ)))
-  obtain ⟨Z0,hZ0⟩ := eventually_atTop.mp hh
-  refine ⟨max 1 Z0,le_max_left _ _,?_⟩
-  intro Z hZ
-  exact hZ0 Z ((le_max_right _ _).trans hZ)
 
 theorem source_remainders_power_bound {ι : Type*}
     (η : Character) (S : Finset Id) (hS : SourceExclusions S)

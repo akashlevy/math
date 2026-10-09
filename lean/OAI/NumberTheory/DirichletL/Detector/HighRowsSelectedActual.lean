@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsSelectedUnramified
 import OAI.NumberTheory.DirichletL.Detector.HighRowsRegion
-
 namespace OAI
 
 noncomputable section

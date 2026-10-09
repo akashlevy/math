@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.MarkedNormalization
 import OAI.NumberTheory.DirichletL.Detector.TuplePrime
-
 namespace OAI
 
 noncomputable section

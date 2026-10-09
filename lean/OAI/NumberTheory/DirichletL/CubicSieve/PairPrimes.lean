@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.GaussNorm
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

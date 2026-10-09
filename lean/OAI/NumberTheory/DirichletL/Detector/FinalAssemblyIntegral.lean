@@ -1,6 +1,5 @@
-import OAI.NumberTheory.DirichletL.PrimeRows.NonfloorIntegral
+import OAI.NumberTheory.DirichletL.PrimeRows.NonfloorArithmetic
 import OAI.NumberTheory.DirichletL.Detector.FinalAssemblyArithmetic
-
 namespace OAI
 
 noncomputable section

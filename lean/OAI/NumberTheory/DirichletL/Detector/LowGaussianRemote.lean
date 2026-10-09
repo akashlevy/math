@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowGaussianDyad
-
 namespace OAI
 
 noncomputable section

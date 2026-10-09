@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GaussianCompletion
 import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-
 namespace OAI
 
 noncomputable section
@@ -23,15 +22,6 @@ lemma gaussianAnnulus_contDiff : ContDiff ℝ ∞ gaussianAnnulus := by
   unfold gaussianAnnulus annularCutoff gaussianCutoff
   exact (Complex.ofRealCLM.contDiff.comp (Real.smoothTransition.contDiff.comp (by fun_prop))).sub
     (Complex.ofRealCLM.contDiff.comp (Real.smoothTransition.contDiff.comp (by fun_prop)))
-lemma gaussianAnnulus_compact : HasCompactSupport gaussianAnnulus := by
-  apply HasCompactSupport.of_support_subset_isCompact (isCompact_Icc (a:=(1/2:ℝ)) (b:=2))
-  intro y hy
-  change gaussianAnnulus y≠0 at hy
-  constructor
-  · by_contra h
-    exact hy (gaussianAnnulus_small y (le_of_lt (lt_of_not_ge h)))
-  · by_contra h
-    exact hy (gaussianAnnulus_large y (le_of_lt (lt_of_not_ge h)))
 
 lemma gaussianAnnulus_nonneg (y : ℝ) : 0≤(gaussianAnnulus y).re := by
   by_cases hy : y≤1/2

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationScale
-
 namespace OAI
 
 noncomputable section
@@ -73,24 +72,6 @@ theorem exists_scale_majorant {ι : Type*} (rows : Finset ι) (χ : ι→Charact
       scaleSum_eq_polynomial (χ i) W S (t i) (scaleSupport_cover W a b hi (t i) hb hWs (ht i).2)] at hh
     exact hh
   · exact rowwise_scales rows χ W a b hb hWs hW lo hi E hlh t (fun i hi => ht i) h0 h1
-
-theorem polynomial_zero_small_scale (χ : Character) (inv : Bool) (W : ℝ→ℂ)
-    (a b D σ freq : ℝ) (hD : 0<D) (hs : Function.support W⊆Icc a b)
-    (hsmall : D*b<1) : polynomial χ inv W D σ freq=0 := by
-  unfold polynomial
-  suffices hh : (∑' J : HeckeDyadic.NonzeroIdeal, summand χ inv W D σ freq J)=0 by
-    rw [hh,mul_zero]
-  have hz : ∀ J : HeckeDyadic.NonzeroIdeal, summand χ inv W D σ freq J=0 := by
-    intro J
-    have hw : W (norm J/D)=0 := by
-      by_contra hn
-      have hb := (div_le_iff₀ hD).mp (hs hn).2
-      have hN : 1≤norm J := by
-        change (1 : ℝ) ≤ (J.val.absNorm : ℝ)
-        exact_mod_cast Nat.one_le_iff_ne_zero.mpr (Ideal.absNorm_eq_zero_iff.not.mpr J.property)
-      nlinarith
-    simp only [summand,hw,mul_zero,zero_mul]
-  simp only [hz,tsum_zero]
 
 end SevenEighths.HeckeInverseAmplification
 

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalUnit
-
 namespace OAI
 
 noncomputable section

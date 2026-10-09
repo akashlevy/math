@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.SectorData
 import OAI.NumberTheory.DirichletL.Reflection.SectorAggregation
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

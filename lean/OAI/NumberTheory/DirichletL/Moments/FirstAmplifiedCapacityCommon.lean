@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstAmplifiedCapacitySource
 import OAI.NumberTheory.DirichletL.Moments.FirstSecondCapacityDefect
-
 namespace OAI
 
 noncomputable section

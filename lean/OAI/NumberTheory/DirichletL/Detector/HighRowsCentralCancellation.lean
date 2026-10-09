@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsSelectedCancellation
-
 namespace OAI
 
 noncomputable section

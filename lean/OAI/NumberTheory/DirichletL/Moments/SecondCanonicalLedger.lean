@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondCanonicalNonunit
 import OAI.NumberTheory.DirichletL.Moments.RankinLabels
-
 namespace OAI
 
 noncomputable section
@@ -61,21 +60,6 @@ theorem actual_second_ledger_lower (C D : Ideal O) (hC : Supported C) (hD : Supp
   rw [hpart,←nonunitPartitionSet_eq_actual C D U w hpart,
     ←nonunitFrequencyGenerator_span C D U] at hh
   simpa only [unitIdeal,commonPrime_span C D hC,forcingIdeal] using hh
-
-theorem actual_partition_count (ε : ℝ) (hε : 0<ε) :
-    ∃ B : ℝ,0<B ∧ ∀ C D : Ideal O,C≠0 →
-      (Fintype.card (Finset (CommonIndex C D)):ℝ)≤B*(Ideal.absNorm C:ℝ)^ε := by
-  obtain ⟨B,hB,hcount⟩ := SquarefreeDivisorBound.prime_support_subsets_bound ε hε
-  refine ⟨B,hB,?_⟩
-  intro C D hC
-  have hc : Fintype.card (CommonIndex C D)≤(CompletedGauss.primeSupport C).card := by
-    rw [Fintype.card_coe]
-    exact Finset.card_le_card Finset.inter_subset_left
-  have hh : (Fintype.card (Finset (CommonIndex C D)):ℝ)≤
-      (2:ℝ)^(CompletedGauss.primeSupport C).card := by
-    rw [Fintype.card_finset,Nat.cast_pow,Nat.cast_ofNat]
-    exact pow_le_pow_right₀ (by norm_num) hc
-  exact hh.trans (hcount C hC)
 
 end SevenEighths.CenteredMomentSecondCanonicalLedger
 

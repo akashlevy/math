@@ -1,77 +1,24 @@
 import OAI.NumberTheory.DirichletL.MeanSquare.ReflectedDyadicSeries
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace CompletedGauss
 open ActualEisensteinCubic CanonicalQuadraticSieve CompletedDyadic
 
@@ -84,54 +31,8 @@ def completedBranchScale {ι : Type*} [Fintype ι]
     (X*(Ideal.absNorm (reflectionExtractedDivisor P (fun i => completedLocalExponent I F (P i)) e 1):ℝ)*
       (Ideal.absNorm (reflectionExtractedDivisor P (fun i => completedLocalExponent I F (P i)) e 2):ℝ)^3)
 
-theorem completed_reflected_fiber
-    (W : ℝ→ℂ) (a b : ℝ) (ha : 0<a)
-    (hsupp : Function.support W⊆Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    (deltaLoss ρ q : ℝ) (hδ : 0<deltaLoss) (hρ : 0<ρ) (hq : 1<q) :
-    ∃C : ℝ,0<C ∧ ∀K X : ℝ,1≤K → 1≤X →
-    ∀I F Q : Ideal O,I≠0 → Q≠0 → (Ideal.absNorm I:ℝ)≤K →
-      1≤completedResidualScale K I Q →
-    ∀{ι : Type*} [Fintype ι] (P : ι→Ideal O) [∀i,(P i).IsMaximal]
-      (hg : ∀i,lambda∉P i),
-      Pairwise (fun i j => IsCoprime (P i) (P j)) →
-      (∀i,P i∣I*Q) → (∀i,¬P i∣rowResidualPart I Q) →
-    ∀e : ι→Fin 3,∀S T : (ℕ×ℕ×ℕ)→Finset (Ideal O),
-      (∀i,∀J∈S i,J≠0 ∧ (2:ℝ)^i.2.2/2≤(Ideal.absNorm J:ℝ) ∧ (Ideal.absNorm J:ℝ)≤(2:ℝ)^i.2.2) →
-      (∀i,∀J∈T i,J≠0 ∧ (2:ℝ)^i.2.1/2≤(Ideal.absNorm J:ℝ) ∧ (Ideal.absNorm J:ℝ)≤(2:ℝ)^i.2.1) →
-    ∀η : (ℕ×ℕ×ℕ)→Ideal O→Ideal O→ℂ,
-      (∀i,∀n∈S i,∀v∈T i,‖η i n v‖≤1) →
-    ∀σ : (ℕ×ℕ×ℕ)→idealRange (completedResidualScale K I Q)→ℂ,(∀i k,‖σ i k‖≤1) →
-      (∑k : idealRange (completedResidualScale K I Q),‖∑'i : ℕ×ℕ×ℕ,
-        reflectedBranchBlock P hg (fun i => completedLocalExponent I F (P i)) e W
-          (completedResidualScale K I Q) (completedBranchScale K X I F Q P e) ρ q S T η σ i k‖^2)
-        ≤C*(K*(Ideal.absNorm Q:ℝ))^(10*deltaLoss)*(K+K^2*(Ideal.absNorm Q:ℝ)/X)/
-          (Ideal.absNorm (rowPowerfulPart I):ℝ) := by
-  obtain ⟨C,hC,h⟩ := completed_reflected_branch_series W a b ha hsupp hW deltaLoss ρ q hδ hρ hq
-  refine ⟨C,hC,?_⟩
-  intro K X hK hX I F Q hI hQ hIK hscale ι _ P _ hg hcop hpool hres e S T hS hT η hη σ hσ
-  have hn (J : Ideal O) (hJ : J≠0) : 0<(Ideal.absNorm J:ℝ) := by
-    exact_mod_cast Nat.pos_of_ne_zero (fun hz => hJ (Ideal.absNorm_eq_zero_iff.mp hz))
-  have hj (v : Fin 3) := hn _
-    (reflectionExtractedDivisor_ne_zero P (fun i => NeZero.ne (P i))
-      (fun i => completedLocalExponent I F (P i)) e v)
-  have hp := hn (∏i,P i) (Finset.prod_ne_zero_iff.mpr (fun i _ => NeZero.ne (P i)))
-  have hy : 0<completedBranchScale K X I F Q P e := by
-    unfold completedBranchScale
-    have hk : 0<completedResidualScale K I Q := by linarith
-    have hx : 0<X := by linarith
-    have hd := hj 1
-    have he := hj 2
-    positivity
-  have hb := (h (completedResidualScale K I Q) (completedBranchScale K X I F Q P e)
-    hscale hy P hg (fun i => completedLocalExponent I F (P i)) e S T hS hT η hη σ hσ).2
-  have hc := completed_actual_fiber_cost deltaLoss K X hδ.le hK hX I F Q hI hQ hIK P hcop hpool hres e
-  have hm := mul_le_mul_of_nonneg_left hc hC.le
-  apply hb.trans
-  convert hm using 1 <;> (try dsimp [completedResidualScale,completedBranchScale]) <;> ring
-
 end CompletedGauss
 
-open scoped BigOperators Classical
 namespace LocalReflectionBrackets
 variable {F : Type*} [Field F] [Fintype F]
 
@@ -344,68 +245,8 @@ theorem polynomial_density_cost (B G : Frequency → ℝ) (J : ℕ) (S C E : ℝ
       convert hb using 1 ; ring
     _ = _ := by ring
 
-theorem initialBinCost_of_child_bound {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (F R : Finset ι) (Ψ : O →* ℂ) (m : O) (ray : SecondRayIndex)
-    (K : Finset ι → Finset ι → Finset O) (Z H M ε Cₛ Cchild : ℝ)
-    (hZ : 0 < Z) (hH : 0 < H) (hCₛ : 0 ≤ Cₛ) (hCc : 0 ≤ Cchild)
-    (j : SecondLogIndex) (windows : Fin 7 → ℝ → ℂ) (B : Frequency → ℝ)
-    (J N : ℕ) (hB : ∀ q, 0 ≤ B q)
-    (hdec : ∀ q, (1+H*secondLogK j*(primeProductNorm p R)^2/Z^2)^N*B q ≤
-      Cₛ*firstLogDensity J q.1*firstLogDensity J q.2.1*firstLogDensity J q.2.2)
-    (hchild : ∀ q,
-      let s := secondLogSector p ∅ F K R Z M j
-      let X := initialLogColumn Z (primeProductNorm p R) j
-      let r := primeSubsetGenerator (fun i => Ideal.span {p i}) R
-      childGeometricMean p hp hcop hg F (secondRayMinus Ψ ray) (secondRayPlus Ψ ray)
-        (m*r) (sourceIdealTarget (s.image (sourceObservation p))) (windows 5) (windows 6) X X q ≤
-        (Cchild*(X*initialLogLabel j))*(1+‖q.1‖)^J*(1+‖q.2.1‖)^J*(1+‖q.2.2‖)^J) :
-    initialBinCost p hp hcop hg F R Ψ m ray K Z H M ε j windows B ≤
-      ((H/Z)*Real.exp 2*Cchild*Cₛ*(∫ t : ℝ,firstLogDensity 0 t)^3)*
-        ‖secondRayCoefficient ray‖*(secondLogK j*Real.exp 2)^ε /
-        (1+H*secondLogK j*(primeProductNorm p R)^2/Z^2)^N := by
-  let s := secondLogSector p ∅ F K R Z M j
-  let X := initialLogColumn Z (primeProductNorm p R) j
-  let r := primeSubsetGenerator (fun i => Ideal.span {p i}) R
-  let G := sourceGeometricMean p hp hcop hg F (secondRayMinus Ψ ray) (secondRayPlus Ψ ray)
-    (m*r) (s.image (sourceObservation p)) (windows 5) (windows 6) X X
-  let E := Cchild*(X*initialLogLabel j)
-  let S := (1+H*secondLogK j*(primeProductNorm p R)^2/Z^2)^N
-  have hpR : 0 < primeProductNorm p R := primeProductNorm_pos p hp R
-  have hX : 0 < X := div_pos hZ (mul_pos (mul_pos (normLogScale_pos _) (normLogScale_pos _)) hpR)
-  have hlabel : 0 < initialLogLabel j := by
-    unfold initialLogLabel secondLogE secondLogV
-    exact mul_pos (mul_pos (normLogScale_pos _) (normLogScale_pos _)) (Real.exp_pos _)
-  have hE : 0 ≤ E := mul_nonneg hCc (mul_pos hX hlabel).le
-  have hS : 0 < S := by
-    dsimp [S]
-    have hk : 0 < secondLogK j := normLogScale_pos _
-    positivity
-  have hG : ∀ q, 0 ≤ G q := fun q => mul_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
-  have henergy : ∀ q, G q ≤ E*(1+‖q.1‖)^J*(1+‖q.2.1‖)^J*(1+‖q.2.2‖)^J := by
-    intro q
-    exact (sourceGeometricMean_le_ideal p hp hcop hg F (secondRayMinus Ψ ray) (secondRayPlus Ψ ray)
-      (m*r) (s.image (sourceObservation p)) (windows 5) (windows 6) X X q).trans (hchild q)
-  have hb := polynomial_density_cost B G J S Cₛ E hS hCₛ hE hB hG hdec henergy
-  have hpref : 0 ≤ H*primeProductNorm p R/Z^2*‖secondRayCoefficient ray‖*
-      (secondLogK j*Real.exp 2)^ε := by
-    have hk : 0 < secondLogK j := normLogScale_pos _
-    positivity
-  calc
-    _ ≤ (H*primeProductNorm p R/Z^2*‖secondRayCoefficient ray‖*(secondLogK j*Real.exp 2)^ε)*
-        ((Cₛ*E/S)*(∫ t : ℝ,firstLogDensity 0 t)^3) := mul_le_mul_of_nonneg_left hb hpref
-    _ = _ := by
-      dsimp only [E,X,S]
-      rw [initial_log_mass Z (primeProductNorm p R) hpR.ne']
-      have hz := hZ.ne'
-      have hr := hpR.ne'
-      field_simp
-
 end InitialMeanSquare
 
-open scoped BigOperators Classical SchwartzMap
 namespace FirstPassCubeLabels
 
 section
@@ -519,31 +360,6 @@ def unitSquareRowEquiv (u:Oˣ) : O≃O where
     dsimp only
     rw [←mul_assoc,←mul_pow]
     simp
-
-theorem tsum_actualFirstKernel_common_unit (F B:Finset ι) (hFB:Disjoint F B)
-    (v:ι→ℕ) (ε₁ ε₂:ι→Bool) (C₁ C₂:Finset ι→ℂ)
-    (W:𝓢(ℝ,ℂ)) (V₁ V₂:ℝ→ℂ) (X₁ X₂ K:ℝ) (u:Oˣ) (c f d:O) :
-    (∑'h:O,actualFirstKernel p hp hcop hg F B v ε₁ ε₂
-      (originalLabelColumn p hg B ε₁ ε₂ true C₁ ((u:O)*c) f)
-      (originalLabelColumn p hg B ε₁ ε₂ false C₂ ((u:O)*c) f) W V₁ V₂ X₁ X₂ K d h) =
-    blockRow p hg (cubeActiveSupport B v ε₁ ε₂)
-      (fun i=>(conductorExponent (parity (v i)) (ε₁ i) (ε₂ i)).val) ((u:O)^2)*
-    ∑'h:O,actualFirstKernel p hp hcop hg F B v ε₁ ε₂
-      (originalLabelColumn p hg B ε₁ ε₂ true C₁ c f)
-      (originalLabelColumn p hg B ε₁ ε₂ false C₂ c f) W V₁ V₂ X₁ X₂ K d h := by
-  let F₀ : O→ℂ := actualFirstKernel p hp hcop hg F B v ε₁ ε₂
-    (originalLabelColumn p hg B ε₁ ε₂ true C₁ c f)
-    (originalLabelColumn p hg B ε₁ ε₂ false C₂ c f) W V₁ V₂ X₁ X₂ K d
-  let q := blockRow p hg (cubeActiveSupport B v ε₁ ε₂)
-    (fun i=>(conductorExponent (parity (v i)) (ε₁ i) (ε₂ i)).val) ((u:O)^2)
-  calc
-    _ = ∑'h:O,q*F₀ ((u:O)^2*h) := by
-      apply tsum_congr
-      intro h
-      exact actualFirstKernel_common_unit p hp hcop hg F B hFB v ε₁ ε₂ C₁ C₂ W V₁ V₂ X₁ X₂ K u c f d h
-    _ = q*∑'h:O,F₀ ((u:O)^2*h) := tsum_mul_left
-    _ = q*∑'h:O,F₀ h := by
-      exact congrArg (fun z:ℂ=>q*z) ((unitSquareRowEquiv u).tsum_eq F₀)
 
 end
 

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstDyadicTail
 import OAI.NumberTheory.DirichletL.Descent.OriginalZeroPhysical
-
 namespace OAI
 
 noncomputable section

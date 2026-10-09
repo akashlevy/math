@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialDyadicTailGates
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialRetainedWindow
 import OAI.NumberTheory.DirichletL.Inversion.InitialDyadicAssemblyRetained
-
 namespace OAI
 
 noncomputable section

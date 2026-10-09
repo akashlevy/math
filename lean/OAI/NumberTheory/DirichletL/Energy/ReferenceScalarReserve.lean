@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.ReferenceScalarBounds
-
 namespace OAI
 
 noncomputable section

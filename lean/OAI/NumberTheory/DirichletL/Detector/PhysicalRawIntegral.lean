@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.RawNesting
 import OAI.NumberTheory.DirichletL.Detector.RawNestedJoin
-
 namespace OAI
 
 noncomputable section

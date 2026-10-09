@@ -1,154 +1,29 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.InitialBound
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
 namespace CubicReflectionKernel
 
 section
 open scoped Classical FourierTransform SchwartzMap ContDiff
 open MeasureTheory
-
-theorem reflectedLogProfile_deriv_bound (logSource : SchwartzMap ℝ ℂ) (j : ℕ) (y : ℝ) :
-    ‖iteratedDeriv j (reflectedLogProfile logSource) y‖ ≤
-      (2 * Real.pi) ^ j * ∫ u : ℝ, ‖u‖ ^ j * ‖(𝓕 logSource) u‖ := by
-  rw [reflectedLogProfile_deriv]
-  have hb := VectorFourier.norm_fourierIntegral_le_integral_norm
-    Real.fourierChar volume (innerₗ ℝ)
-    (fun u : ℝ => (-2 * Real.pi * Complex.I * u) ^ j * spectralProfile logSource u) y
-  change ‖𝓕 (fun u : ℝ => (-2 * Real.pi * Complex.I * u) ^ j * spectralProfile logSource u) y‖ ≤ _ at hb
-  refine hb.trans_eq ?_
-  have hnorm (u : ℝ) :
-      ‖(-2 * Real.pi * Complex.I * u) ^ j * spectralProfile logSource u‖ =
-        (2 * Real.pi) ^ j * (‖u‖ ^ j * ‖(𝓕 logSource) u‖) := by
-    simp only [norm_mul, norm_pow, spectralProfile_norm, Complex.norm_I, mul_one,
-      Complex.norm_real, Real.norm_eq_abs, abs_of_pos Real.pi_pos]
-    norm_num
-    ring
-  simp_rw [hnorm]
-  exact integral_const_mul _ _
-
-def momentScale : ℝ :=
-  2 ^ (volume : Measure ℝ).integrablePower *
-    ∫ u : ℝ, (1 + ‖u‖) ^ (-(volume : Measure ℝ).integrablePower : ℝ)
-
-theorem momentScale_nonneg : 0 ≤ momentScale := by
-  apply mul_nonneg (by positivity)
-  apply integral_nonneg
-  intro u
-  positivity
-
-theorem reflectedLogProfile_source_bound (j : ℕ) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-      ∀ (logSource : SchwartzMap ℝ ℂ) (y : ℝ),
-        ‖iteratedDeriv j (reflectedLogProfile logSource) y‖ ≤
-          C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) logSource := by
-  let m := j + (volume : Measure ℝ).integrablePower
-  let S : Finset (ℕ × ℕ) := {(0, 0), (m, 0)}
-  obtain ⟨s, C, hC, hbound⟩ := EisensteinSchwartzPoisson.schwartzCLM_finite_seminorm_control (E := ℝ)
-    (FourierTransform.fourierCLM ℝ (SchwartzMap ℝ ℂ)) S
-  refine ⟨s, (2 * Real.pi) ^ j * (momentScale + 1) * (2 * C), by
-    have := momentScale_nonneg
-    positivity, ?_⟩
-  intro logSource y
-  have h0' : schwartzSeminormFamily ℝ ℝ ℂ (0, 0) ≤
-      S.sup (schwartzSeminormFamily ℝ ℝ ℂ) :=
-    Finset.le_sup (f := schwartzSeminormFamily ℝ ℝ ℂ) (by simp [S])
-  have hm' : schwartzSeminormFamily ℝ ℝ ℂ (m, 0) ≤
-      S.sup (schwartzSeminormFamily ℝ ℝ ℂ) :=
-    Finset.le_sup (f := schwartzSeminormFamily ℝ ℝ ℂ) (by simp [S])
-  have h0 := Seminorm.le_def.mp h0' (𝓕 logSource)
-  have hm := Seminorm.le_def.mp hm' (𝓕 logSource)
-  change SchwartzMap.seminorm ℝ 0 0 (𝓕 logSource) ≤ _ at h0
-  change SchwartzMap.seminorm ℝ m 0 (𝓕 logSource) ≤ _ at hm
-  have hs := hbound logSource
-  change S.sup (schwartzSeminormFamily ℝ ℝ ℂ) (𝓕 logSource) ≤ _ at hs
-  have hsum : SchwartzMap.seminorm ℝ 0 0 (𝓕 logSource) + SchwartzMap.seminorm ℝ m 0 (𝓕 logSource) ≤
-      2 * C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) logSource := by linarith
-  have hmoment := FourierBridge.fourier_coefficient_moment logSource j
-  change (∫ u : ℝ, ‖u‖ ^ j * ‖(𝓕 logSource) u‖) ≤ momentScale *
-    (SchwartzMap.seminorm ℝ 0 0 (𝓕 logSource) + SchwartzMap.seminorm ℝ m 0 (𝓕 logSource)) at hmoment
-  calc
-    _ ≤ (2 * Real.pi) ^ j * ∫ u : ℝ, ‖u‖ ^ j * ‖(𝓕 logSource) u‖ :=
-      reflectedLogProfile_deriv_bound logSource j y
-    _ ≤ (2 * Real.pi) ^ j * (momentScale *
-        (2 * C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) logSource)) := by
-      exact mul_le_mul_of_nonneg_left
-        (hmoment.trans (mul_le_mul_of_nonneg_left hsum momentScale_nonneg)) (by positivity)
-    _ ≤ _ := by
-      have hpos : 0 ≤ 2 * C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) logSource := by positivity
-      calc
-        _ ≤ (2 * Real.pi) ^ j * ((momentScale + 1) *
-            (2 * C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) logSource)) :=
-          mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_right
-            (le_add_of_nonneg_right zero_le_one) hpos) (by positivity)
-        _ = _ := by ring
 
 end
 
@@ -243,40 +118,7 @@ theorem paperKernel_eq_logFourier (V : ℝ → ℂ) (logSource : SchwartzMap ℝ
 
 end CubicReflectionKernel
 
-open scoped Classical FourierTransform SchwartzMap ContDiff Topology
-open MeasureTheory Filter
 namespace CubicReflectionKernel
-
-theorem kernel_vertical_eq_spectralProfile (V : ℝ → ℂ) (logSource : SchwartzMap ℝ ℂ)
-    (hL : ∀ u, logSource u = V (Real.exp u)) (y : ℝ) :
-    mellin V (-(y * Complex.I)) * gammaMultiplier (y * Complex.I) =
-      spectralProfile logSource (y / (2 * Real.pi)) := by
-  have hy : 2 * Real.pi * (y / (2 * Real.pi)) = y := by field_simp
-  rw [spectralProfile, axisMultiplier, ← mellin_axis_eq_fourier V logSource hL, hy]
-  exact mul_comm _ _
-
-theorem kernel_vertical_integrable (V : ℝ → ℂ) (logSource : SchwartzMap ℝ ℂ)
-    (hL : ∀ u, logSource u = V (Real.exp u)) :
-    Complex.VerticalIntegrable (fun t => mellin V (-t) * gammaMultiplier t) 0 := by
-  have hi : Integrable (spectralProfile logSource) := by
-    simpa using spectralProfile_pow_integrable logSource 0
-  have hscaled := hi.comp_div (R := 2 * Real.pi) (by positivity)
-  simpa only [Complex.VerticalIntegrable, Complex.ofReal_zero, zero_add,
-    kernel_vertical_eq_spectralProfile V logSource hL] using hscaled
-
-theorem paperKernel_integrable (V : ℝ → ℂ) (logSource : SchwartzMap ℝ ℂ)
-    (hL : ∀ u, logSource u = V (Real.exp u)) (x : ℝ) (hx : 0 < x) :
-    Integrable (fun y : ℝ => ((paperScale * x : ℝ) : ℂ) ^ (-(y * Complex.I)) *
-      (mellin V (-(y * Complex.I)) * gammaMultiplier (y * Complex.I))) := by
-  have hcx := mul_pos paperScale_pos hx
-  have hi := kernel_vertical_integrable V logSource hL
-  simp only [Complex.VerticalIntegrable, Complex.ofReal_zero, zero_add] at hi
-  apply hi.bdd_mul (c := 1)
-  · exact ((show Continuous (fun y : ℝ => -(y * Complex.I)) by fun_prop).const_cpow
-      (Or.inl (Complex.ofReal_ne_zero.mpr (ne_of_gt hcx)))).aestronglyMeasurable
-  · filter_upwards [] with y
-    rw [Complex.norm_cpow_eq_rpow_re_of_pos hcx]
-    simp
 
 theorem paperKernel_contDiffOn (V : ℝ → ℂ) (logSource : SchwartzMap ℝ ℂ)
     (hL : ∀ u, logSource u = V (Real.exp u)) :
@@ -304,60 +146,11 @@ theorem paperKernel_euler_eq (V : ℝ → ℂ) (logSource : SchwartzMap ℝ ℂ)
   rw [LocalLogFourier.eulerDeriv, hfun, iteratedDeriv_comp_const_add]
   simp
 
-theorem paperKernel_source_euler_bound (j : ℕ) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-      ∀ (V : ℝ → ℂ) (a b : ℝ) (ha : 0 < a)
-        (hsupp : Function.support V ⊆ Set.Icc a b) (hV : ContDiff ℝ ∞ V)
-        (x : ℝ), 0 < x →
-        ‖LocalLogFourier.eulerDeriv (paperKernel V) j x‖ ≤
-          C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) (logSchwartz V a b ha hsupp hV) := by
-  obtain ⟨s, C, hC, hb⟩ := reflectedLogProfile_source_bound j
-  refine ⟨s, C, hC, ?_⟩
-  intro V a b ha hsupp hV x hx
-  rw [paperKernel_euler_eq V (logSchwartz V a b ha hsupp hV) (by intro u; rfl) j x hx]
-  exact hb _ _
-
-theorem paperKernel_compact_source_integrable
-    (V : ℝ → ℂ) (a b : ℝ) (ha : 0 < a)
-    (hsupp : Function.support V ⊆ Set.Icc a b) (hV : ContDiff ℝ ∞ V)
-    (x : ℝ) (hx : 0 < x) :
-    Integrable (fun y : ℝ => ((paperScale * x : ℝ) : ℂ) ^ (-(y * Complex.I)) *
-      (mellin V (-(y * Complex.I)) * gammaMultiplier (y * Complex.I))) :=
-  paperKernel_integrable V (logSchwartz V a b ha hsupp hV) (by intro u; rfl) x hx
-
 theorem paperKernel_compact_source_smooth
     (V : ℝ → ℂ) (a b : ℝ) (ha : 0 < a)
     (hsupp : Function.support V ⊆ Set.Icc a b) (hV : ContDiff ℝ ∞ V) :
     ContDiffOn ℝ ∞ (paperKernel V) (Set.Ioi 0) :=
   paperKernel_contDiffOn V (logSchwartz V a b ha hsupp hV) (by intro u; rfl)
-
-theorem reflectedLogProfile_deriv_vanish (logSource : SchwartzMap ℝ ℂ) (j : ℕ) :
-    Tendsto (iteratedDeriv j (reflectedLogProfile logSource)) (cocompact ℝ) (𝓝 0) := by
-  rw [reflectedLogProfile_deriv]
-  exact Real.zero_at_infty_fourier _
-
-theorem paperKernel_euler_vanish_infty (V : ℝ → ℂ) (logSource : SchwartzMap ℝ ℂ)
-    (hL : ∀ u, logSource u = V (Real.exp u)) (j : ℕ) :
-    Tendsto (LocalLogFourier.eulerDeriv (paperKernel V) j) atTop (𝓝 0) := by
-  have hd := (reflectedLogProfile_deriv_vanish logSource j).mono_left atTop_le_cocompact
-  have hlog : Tendsto (fun x : ℝ => Real.log (paperScale * x)) atTop atTop :=
-    Real.tendsto_log_atTop.comp (Tendsto.const_mul_atTop paperScale_pos tendsto_id)
-  apply (hd.comp hlog).congr'
-  filter_upwards [eventually_gt_atTop (0 : ℝ)] with x hx
-  exact (paperKernel_euler_eq V logSource hL j x hx).symm
-
-theorem paperKernel_euler_vanish_zero (V : ℝ → ℂ) (logSource : SchwartzMap ℝ ℂ)
-    (hL : ∀ u, logSource u = V (Real.exp u)) (j : ℕ) :
-    Tendsto (LocalLogFourier.eulerDeriv (paperKernel V) j) (𝓝[>] 0) (𝓝 0) := by
-  have hd := (reflectedLogProfile_deriv_vanish logSource j).mono_left atBot_le_cocompact
-  have hmul : Tendsto (fun x : ℝ => paperScale * x) (𝓝[>] 0) (𝓝[>] 0) := by
-    have hm : Tendsto (fun x : ℝ => paperScale * x)
-        (comap (fun x : ℝ => paperScale * x) (𝓝[>] 0)) (𝓝[>] 0) := tendsto_comap
-    rwa [comap_mulLeft_nhdsGT_zero paperScale_pos] at hm
-  have hlog := Real.tendsto_log_nhdsGT_zero.comp hmul
-  apply (hd.comp hlog).congr'
-  filter_upwards [self_mem_nhdsWithin] with x hx
-  exact (paperKernel_euler_eq V logSource hL j x hx).symm
 
 open scoped Classical FourierTransform SchwartzMap ContDiff Topology
 open MeasureTheory Filter Asymptotics
@@ -425,8 +218,6 @@ theorem kernelMellinIntegrand_differentiableAt
     differentiableAt_id.neg).mul (gammaMultiplier_differentiableAt s hs)
 
 end CubicReflectionKernel
-
-open scoped BigOperators Classical
 
 namespace DescentWeightedCauchy
 
@@ -500,61 +291,6 @@ theorem bounded_energy_pushforward {ι κ : Type*} [DecidableEq κ]
 
 abbrev O := ActualEisensteinCubic.O
 
-def firstRowMap (E : Ideal O) (x : Ideal O × Ideal O) : Ideal O :=
-  x.2 * x.1 ^ 2 * E
-
-theorem firstRowMap_fst_dvd (E : Ideal O) (x : Ideal O × Ideal O) :
-    x.1 ∣ firstRowMap E x := by
-  refine ⟨x.2 * x.1 * E, ?_⟩
-  simp only [firstRowMap]
-  ring
-
-theorem firstRowMap_fst_injective_on_fiber
-    (s : Finset (Ideal O × Ideal O)) (E Y : Ideal O) (hY : Y ≠ ⊥) :
-    Set.InjOn (Prod.fst : Ideal O × Ideal O → Ideal O)
-      {x | x ∈ s ∧ firstRowMap E x = Y} := by
-  intro x hx z hz hfst
-  have hx' := hx.2
-  have hz' := hz.2
-  have hfac : x.1 ^ 2 * E ≠ 0 := by
-    intro he
-    apply hY
-    rw [← hx']
-    simp [firstRowMap, mul_assoc, he]
-  apply Prod.ext hfst
-  apply mul_right_cancel₀ hfac
-  calc
-    x.2 * (x.1 ^ 2 * E) = Y := by simpa [firstRowMap, mul_assoc] using hx'
-    _ = z.2 * (x.1 ^ 2 * E) := by simpa [firstRowMap, mul_assoc, hfst] using hz'.symm
-
-theorem firstRowMap_fiber_card_le
-    (s : Finset (Ideal O × Ideal O)) (E Y : Ideal O) (hY : Y ≠ ⊥) :
-    (s.filter (fun x => firstRowMap E x = Y)).card ≤
-      (IdealMobiusDivisorSum.idealDivisors Y).card := by
-  apply Finset.card_le_card_of_injOn Prod.fst
-  · intro x hx
-    change x.1 ∈ IdealMobiusDivisorSum.idealDivisors Y
-    rw [IdealMobiusDivisorSum.mem_idealDivisors hY]
-    rw [← (Finset.mem_filter.mp hx).2]
-    exact firstRowMap_fst_dvd E x
-  · intro x hx z hz he
-    exact firstRowMap_fst_injective_on_fiber s E Y hY
-      (Finset.mem_filter.mp hx) (Finset.mem_filter.mp hz) he
-
-theorem first_energy_pushforward
-    (s : Finset (Ideal O × Ideal O)) (t : Finset (Ideal O))
-    (E : Ideal O) (w : Ideal O × Ideal O → ℂ) (P : Ideal O → ℂ) (C : ℝ)
-    (hC : 0 ≤ C) (hmap : ∀ x ∈ s, firstRowMap E x ∈ t)
-    (ht : ∀ Y ∈ t, Y ≠ ⊥) (hw : ∀ x ∈ s, ‖w x‖ ≤ C) :
-    (∑ x ∈ s, ‖w x‖ * ‖P (firstRowMap E x)‖ ^ 2) ≤
-      ∑ Y ∈ t, C * (IdealMobiusDivisorSum.idealDivisors Y).card * ‖P Y‖ ^ 2 := by
-  apply (bounded_energy_pushforward s t (firstRowMap E) w P C hmap hw).trans
-  apply Finset.sum_le_sum
-  intro Y hY
-  exact mul_le_mul_of_nonneg_right
-    (mul_le_mul_of_nonneg_left (by exact_mod_cast firstRowMap_fiber_card_le s E Y (ht Y hY)) hC)
-    (sq_nonneg _)
-
 def firstElementRowMap (e : O) (x : Ideal O × O) : O :=
   x.2 * ConcretePrimeRowBridge.idealGenerator x.1 ^ 2 * e
 
@@ -565,53 +301,6 @@ theorem firstElementRowMap_label_dvd (e : O) (x : Ideal O × O) :
   refine ⟨x.2 * ConcretePrimeRowBridge.idealGenerator x.1 * e, ?_⟩
   simp only [firstElementRowMap]
   ring
-
-theorem firstElementRowMap_fiber_card_le
-    (s : Finset (Ideal O × O)) (e y : O) (hy : y ≠ 0) :
-    (s.filter (fun x => firstElementRowMap e x = y)).card ≤
-      (IdealMobiusDivisorSum.idealDivisors (Ideal.span {y})).card := by
-  have hyI : (Ideal.span {y} : Ideal O) ≠ ⊥ := by
-    intro h
-    have hm : y ∈ (Ideal.span {y} : Ideal O) := Ideal.subset_span (by simp)
-    rw [h] at hm
-    exact hy hm
-  apply Finset.card_le_card_of_injOn Prod.fst
-  · intro x hx
-    change x.1 ∈ IdealMobiusDivisorSum.idealDivisors (Ideal.span {y})
-    rw [IdealMobiusDivisorSum.mem_idealDivisors hyI,
-      ← (Finset.mem_filter.mp hx).2]
-    exact firstElementRowMap_label_dvd e x
-  · intro x hx z hz hfst
-    have hx' := (Finset.mem_filter.mp hx).2
-    have hz' := (Finset.mem_filter.mp hz).2
-    have hfac : ConcretePrimeRowBridge.idealGenerator x.1 ^ 2 * e ≠ 0 := by
-      intro he
-      apply hy
-      rw [← hx']
-      simp [firstElementRowMap, mul_assoc, he]
-    apply Prod.ext hfst
-    apply mul_right_cancel₀ hfac
-    calc
-      x.2 * (ConcretePrimeRowBridge.idealGenerator x.1 ^ 2 * e) = y := by
-        simpa [firstElementRowMap, mul_assoc] using hx'
-      _ = z.2 * (ConcretePrimeRowBridge.idealGenerator x.1 ^ 2 * e) := by
-        simpa [firstElementRowMap, mul_assoc, hfst] using hz'.symm
-
-theorem first_element_energy_pushforward
-    (s : Finset (Ideal O × O)) (t : Finset O)
-    (e : O) (w : Ideal O × O → ℂ) (P : O → ℂ) (C : ℝ)
-    (hC : 0 ≤ C) (hmap : ∀ x ∈ s, firstElementRowMap e x ∈ t)
-    (ht : ∀ y ∈ t, y ≠ 0) (hw : ∀ x ∈ s, ‖w x‖ ≤ C) :
-    (∑ x ∈ s, ‖w x‖ * ‖P (firstElementRowMap e x)‖ ^ 2) ≤
-      ∑ y ∈ t, C * (IdealMobiusDivisorSum.idealDivisors (Ideal.span {y})).card *
-        ‖P y‖ ^ 2 := by
-  apply (bounded_energy_pushforward s t (firstElementRowMap e) w P C hmap hw).trans
-  apply Finset.sum_le_sum
-  intro y hyt
-  exact mul_le_mul_of_nonneg_right
-    (mul_le_mul_of_nonneg_left
-      (by exact_mod_cast firstElementRowMap_fiber_card_le s e y (ht y hyt)) hC)
-    (sq_nonneg _)
 
 end DescentWeightedCauchy
 

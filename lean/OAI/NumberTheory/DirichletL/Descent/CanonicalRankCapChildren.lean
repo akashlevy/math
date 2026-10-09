@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalRankMonotone
-
 namespace OAI
 
 noncomputable section
@@ -37,16 +36,6 @@ theorem canonical_rank_cap_children
     hZ heta hbin hell hV hb hbt hwindow hd hterminal hsmall hparent hpuncture hQ
     (canonical_rank_restrict p hp hcop hg pool base slots lists a ω₁ Z _ _ _ _ z _ _ eps A K degree hMc hFc hcc h₁)
     (canonical_rank_restrict p hp hcop hg pool base slots lists a ω₂ Z _ _ _ _ z _ _ eps A K degree hMc hFc hcc h₂)
-
-theorem canonical_depth_ceilings (n:ℕ)(cutoff Fbase cbase eta:ℝ)(M F c:ℝ)
-    (hM:M≤3*(n:ℝ)*cutoff/2)(hF:F≤Fbase-15*(n:ℝ)*eta)
-    (hc:cbase+7*((n:ℝ)+1)*eta≤c):
-    M-3*cutoff/2≤3*((n:ℝ)-1)*cutoff/2 ∧
-    F+15*eta≤Fbase-15*((n:ℝ)-1)*eta ∧
-    cbase+7*(n:ℝ)*eta≤c-7*eta :=by
-  constructor
-  · linarith
-  constructor <;> linarith
 
 end SevenEighths.InverseMoment
 

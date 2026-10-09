@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondExceptionalFamily
 import OAI.NumberTheory.DirichletL.Moments.SecondPhysicalCost
 import OAI.NumberTheory.DirichletL.Moments.SourceBlockWindows
-
 namespace OAI
 
 noncomputable section
@@ -69,53 +68,6 @@ theorem family_child_envelope {η:Character}{C D:Ideal O}{hC:Supported C}{hD:Sup
     simpa only [mul_comm (η.modulus.absNorm:ℝ) (fixedFactor:ℝ)] using hhcast
   exact mul_le_mul_of_nonneg_right hh' (dyadicScale_pos _).le
 
-theorem actual_envelope_scalar (η:Character)(t:ℝ)(S:Finset (Ideal O))(β:Ideal O→ℂ)
-    (C D:Ideal O)(hC:Supported C)(hD:Supported D)(U:Finset (CommonIndex C D))
-    (R:ℝ)(rows:Finset O)(W:𝓢(ℝ,ℂ))(K:ℝ)(_hK:0<K)(n:Fin 4→ℤ)
-    (hne:physicalBlock η t S β C D hC hD U R rows W K n≠0) :
-    (outerScalar C D K n*normalizer C D U)/Real.sqrt ((C.absNorm:ℝ)*D.absNorm)*
-      childEnvelope η C D U n/
-      (1+dyadicScale (n 0)*dyadicScale (n 1)/(dyadicScale (n 2)*dyadicScale (n 3)))≤
-    (fixedFactor:ℝ)*η.modulus.absNorm*Real.sqrt (dyadicScale (n 2)*dyadicScale (n 3)) := by
-  have hc:0<(C.absNorm:ℝ):=by exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr hC.1)
-  have hd:0<(D.absNorm:ℝ):=by exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr hD.1)
-  have hu:0<((∏P∈U,P.val).absNorm:ℝ):=by
-    rw [map_prod,Nat.cast_prod]
-    apply Finset.prod_pos
-    intro P hP
-    exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr
-      (by rw [←commonPrime_span C D hC P]; exact (commonPrime_supported C D hC P).1))
-  have hn (i:Fin 4):0<dyadicScale (n i):=dyadicScale_pos _
-  let r:=dyadicScale (n 0)*dyadicScale (n 1)/(dyadicScale (n 2)*dyadicScale (n 3))
-  have hr:0<r:=div_pos (mul_pos (hn 0) (hn 1)) (mul_pos (hn 2) (hn 3))
-  have hscale := (physical_effective_scale η t S β C D hC hD U R rows W K n hne).le
-  have he : secondEffectiveScale C D (commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U) K=
-      K*(Ideal.span {commonFrequencyGenerator C D}).absNorm*
-        (Ideal.span {nonunitFrequencyGenerator C D U}).absNorm/((C.absNorm:ℝ)*D.absNorm) := by
-    rw [secondEffectiveScale,←normValue_eq_embedding,normValue_mul]
-    dsimp only [normValue]
-    ring
-  have hrat : secondEffectiveScale C D (commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U) K*
-      dyadicScale (n 1)/(dyadicScale (n 2)*dyadicScale (n 3))≤r := by
-    exact div_le_div_of_nonneg_right
-      (mul_le_mul_of_nonneg_right hscale (dyadicScale_pos _).le) (mul_pos (hn 2) (hn 3)).le
-  have hfrac : (secondEffectiveScale C D (commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U) K*
-      dyadicScale (n 1)/(dyadicScale (n 2)*dyadicScale (n 3)))/(1+r)≤1 := by
-    apply (div_le_one (by positivity)).mpr
-    linarith
-  rw [outerScalar,normalizer,actual_partitionNormalizer C D hC]
-  change _≤(fixedFactor:ℝ)*η.modulus.absNorm*Real.sqrt (dyadicScale (n 2)*dyadicScale (n 3))
-  rw [childEnvelope,scalar_cancel _ _ _ _ _ _ _ _ _ r _ hc hd
-    (dyadicScale_pos _) (dyadicScale_pos _) hu hr.le]
-  rw [←he]
-  calc
-    _=((fixedFactor:ℝ)*η.modulus.absNorm*Real.sqrt (dyadicScale (n 2)*dyadicScale (n 3)))*
-      ((secondEffectiveScale C D (commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U) K*
-        dyadicScale (n 1)/(dyadicScale (n 2)*dyadicScale (n 3)))/(1+r)):=by ring
-    _≤_:=by
-      simpa only [mul_one] using mul_le_mul_of_nonneg_left hfrac
-        (show 0≤(fixedFactor:ℝ)*η.modulus.absNorm*Real.sqrt (dyadicScale (n 2)*dyadicScale (n 3)) by positivity)
-
 theorem actual_residual_sqrt_cap (η:Character)(t:ℝ)(S:Finset (Ideal O))(β:Ideal O→ℂ)
     (C D:Ideal O)(hC:Supported C)(hD:Supported D)(U:Finset (CommonIndex C D))
     (R:ℝ)(rows:Finset O)(W:𝓢(ℝ,ℂ))(K:ℝ)(n:Fin 4→ℤ)
@@ -137,33 +89,6 @@ theorem actual_residual_sqrt_cap (η:Character)(t:ℝ)(S:Finset (Ideal O))(β:Id
   rw [he,Real.sqrt_div (sq_nonneg _),Real.sqrt_sq (by positivity)] at hh
   exact hh
 
-theorem actual_source_envelope_scalar (η:Character)(t:ℝ)(S:Finset (Ideal O))(β:Ideal O→ℂ)
-    (C D:Ideal O)(hC:Supported C)(hD:Supported D)(U:Finset (CommonIndex C D))
-    (R:ℝ)(rows:Finset O)(W:𝓢(ℝ,ℂ))(K:ℝ)(hK:0<K)(n:Fin 4→ℤ)
-    (Hsource:ℝ)(hsource:∀I,β I≠0→(I.absNorm:ℝ)≤Hsource)
-    (hne:physicalBlock η t S β C D hC hD U R rows W K n≠0) :
-    (outerScalar C D K n*normalizer C D U)/Real.sqrt ((C.absNorm:ℝ)*D.absNorm)*
-      childEnvelope η C D U n/
-      (1+dyadicScale (n 0)*dyadicScale (n 1)/(dyadicScale (n 2)*dyadicScale (n 3)))≤
-    4*(fixedFactor:ℝ)*η.modulus.absNorm*Hsource/Real.sqrt ((C.absNorm:ℝ)*D.absNorm) := by
-  apply (actual_envelope_scalar η t S β C D hC hD U R rows W K hK n hne).trans
-  have hh:=mul_le_mul_of_nonneg_left
-    (actual_residual_sqrt_cap η t S β C D hC hD U R rows W K n Hsource hsource hne)
-    (show 0≤(fixedFactor:ℝ)*η.modulus.absNorm by positivity)
-  convert hh using 1 ; ring
-
-theorem actual_source_envelope_scalar_extra (η:Character)(t:ℝ)(S:Finset (Ideal O))(β:Ideal O→ℂ)
-    (C D:Ideal O)(hC:Supported C)(hD:Supported D)(U:Finset (CommonIndex C D))
-    (R:ℝ)(rows:Finset O)(W:𝓢(ℝ,ℂ))(K:ℝ)(hK:0<K)(n:Fin 4→ℤ)
-    (Hsource:ℝ)(hsource:∀I,β I≠0→(I.absNorm:ℝ)≤Hsource)
-    (hne:physicalBlock η t S β C D hC hD U R rows W K n≠0)
-    (Eextra:ℝ)(hEextra:0≤Eextra) :
-    ((outerScalar C D K n*normalizer C D U)/Real.sqrt ((C.absNorm:ℝ)*D.absNorm)*
-      childEnvelope η C D U n/
-      (1+dyadicScale (n 0)*dyadicScale (n 1)/(dyadicScale (n 2)*dyadicScale (n 3))))*Eextra≤
-    (4*(fixedFactor:ℝ)*η.modulus.absNorm*Hsource/Real.sqrt ((C.absNorm:ℝ)*D.absNorm))*Eextra :=
-  mul_le_mul_of_nonneg_right
-    (actual_source_envelope_scalar η t S β C D hC hD U R rows W K hK n Hsource hsource hne) hEextra
 end SevenEighths.CenteredMomentSecondNonexceptionalScalar
 
 end

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Foundation
 import Mathlib.Analysis.MellinInversion
-
 namespace OAI
 
 noncomputable section
@@ -489,14 +488,6 @@ theorem radial_mellin_analytic (W : SchwartzMap ℝ ℂ) :
   (radial_mellin_differentiable W).analyticOnNhd
     (isOpen_lt continuous_const Complex.continuous_re)
 
-theorem radial_mellin_strip_rapid (W : SchwartzMap ℝ ℂ) (a b : ℝ) (ha : 0<a)
-    (hW : Function.support W ⊆ Icc a b) (lo hi : ℝ) (hlo : 0<lo) (N : ℕ) :
-    ∃ C : ℝ, 0<C ∧ ∀ σ∈Icc lo hi, ∀t : ℝ,
-      ‖mellin (paperRadialFourier W) ((σ:ℂ)+t*Complex.I)‖ ≤ C/(1+|t|)^N := by
-  obtain ⟨C,hC,hb⟩ := radial_mellin_strip_decay W a b ha hW lo hi hlo N
-  refine ⟨C,hC,fun σ hσ t => (le_div_iff₀ (by positivity)).mpr ?_⟩
-  simpa only [mul_comm] using hb σ hσ t
-
 theorem radial_mellin_vertical_integrable (W : SchwartzMap ℝ ℂ) (a b : ℝ) (ha : 0<a)
     (hW : Function.support W ⊆ Icc a b) (σ : ℝ) (hσ : 0<σ) :
     Complex.VerticalIntegrable (mellin (paperRadialFourier W)) σ := by
@@ -533,15 +524,6 @@ theorem radial_mellin_inversion (W : SchwartzMap ℝ ℂ) (a b : ℝ) (ha : 0<a)
     (radial_mellin_convergent W σ hσ)
     (radial_mellin_vertical_integrable W a b ha hW σ hσ)
     (radial_continuous W).continuousAt
-
-theorem radial_mellin_one_sixth_ne_zero (W : SchwartzMap ℝ ℂ) (a b : ℝ) (ha : 0<a)
-    (hW : Function.support W ⊆ Icc a b)
-    (hreal : ∀r, (W r).im=0) (hnonneg : ∀r, 0≤(W r).re) (hne : W≠0) :
-    mellin (paperRadialFourier W) (1/6) ≠ 0 := by
-  intro h
-  have hp := (radial_mellin_one_sixth_pos W a b ha hW hreal hnonneg hne).1
-  rw [h] at hp
-  exact (lt_irrefl 0) hp
 
 end SevenEighths.ProbeRadialMellin
 

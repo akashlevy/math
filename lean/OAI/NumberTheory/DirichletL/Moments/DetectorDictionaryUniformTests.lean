@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.DetectorDictionaryUniformHeight
-
 namespace OAI
 
 noncomputable section

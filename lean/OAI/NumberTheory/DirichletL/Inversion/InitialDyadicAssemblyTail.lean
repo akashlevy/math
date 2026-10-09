@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialDyadicAssemblyRetained
-
 namespace OAI
 
 noncomputable section
@@ -96,18 +95,6 @@ theorem mass_weight_bound
   exact mul_le_of_le_one_right (norm_nonneg _) (windowMass_norm_le_one F _ ha hx)
 
 omit [DecidableEq ι] [∀ (i : ι), (Ideal.span {p i}).IsMaximal] in
-theorem tail_mass_live (a b:Fin 4→ℝ)(Z D m L:ℝ)(hZ:1<Z)
-    (x:Source (ι:=ι) 0)
-    (hn:windowMass (tailWindows a b Z D m L) (sourceNorms p x)≠0) :
-    ∃k∈tailWindows a b Z D m L,
-      L<radialCenter m (exponent Z (k 3).val) (exponent Z (k 1).val) D (exponent Z (k 0).val) ∧
-      outerCutoff cutoff (sourceRelative p x Z D (exponent Z (k 0).val)
-        (exponent Z (k 2).val) (exponent Z (k 1).val) (exponent Z (k 3).val))≠0 := by
-  obtain ⟨k,hk,hne⟩:=windowMass_ne_zero_exists _ _ hn
-  refine ⟨k,hk,(Finset.mem_filter.mp hk).2,?_⟩
-  rwa [source_weight_cutoff p Z D hZ] at hne
-
-omit [DecidableEq ι] [∀ (i : ι), (Ideal.span {p i}).IsMaximal] in
 theorem tail_mass_live_bounds (a b:Fin 4→ℝ)(Z D m L:ℝ)(hZ:1<Z)
     (x:Source (ι:=ι) 0)
     (hn:windowMass (tailWindows a b Z D m L) (sourceNorms p x)≠0) :
@@ -142,27 +129,6 @@ theorem physicalBlock_filter_of_live
     intro ρ hρ
     by_contra hn
     exact hh (hP x hx ρ hn)
-
-theorem physicalBlock_mass_filter
-    (pool:Finset ι)(S:Finset (Source (ι:=ι) 0))
-    (a b:Fin 4→ℝ)(F:Finset (Windows a b))
-    (w:Source (ι:=ι) 0→ℂ)(Ψ:Eis→*ℂ)(j:Eis)(marks:Finset ι→ℂ)
-    (W₁ W₂:ℝ→ℂ)(Φ:𝓢(ℝ,ℂ))(Z D m:ℝ) :
-    physicalBlock p hp hcop hg (pointSource pool S)
-      ((fun x=>w x*(windowMass F (sourceNorms p x):ℂ))∘erasePoint)
-      Ψ j marks W₁ W₂ Φ Z D m =
-    physicalBlock p hp hcop hg
-      (pointSource pool (S.filter (fun x=>windowMass F (sourceNorms p x)≠0)))
-      ((fun x=>w x*(windowMass F (sourceNorms p x):ℂ))∘erasePoint)
-      Ψ j marks W₁ W₂ Φ Z D m := by
-  unfold physicalBlock
-  rw [pointSource_sum,pointSource_sum,Finset.sum_filter]
-  apply Finset.sum_congr rfl
-  intro x hx
-  by_cases hn:windowMass F (sourceNorms p x)=0
-  · simp only [hn,ne_eq,not_true_eq_false,ite_false,Function.comp_apply,
-      erase_sourcePoint,Complex.ofReal_zero,mul_zero,zero_mul,Finset.sum_const_zero]
-  · rw [ite_eq_left hn]
 
 omit [DecidableEq ι] [∀ (i : ι), (Ideal.span {p i}).IsMaximal] in
 theorem exists_source_frequency_cap (S:Finset (Source (ι:=ι) 0)) :

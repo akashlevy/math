@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowSourceScales
-
 namespace OAI
 
 noncomputable section

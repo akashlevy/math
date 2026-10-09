@@ -1,84 +1,29 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.UnitNormalization
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace CanonicalRowCompletion
 
 section
 open ActualEisensteinCubic
-open ConcretePrimeRowBridge hiding O columnWeight
+open ConcretePrimeRowBridge hiding O
 open CanonicalQuadraticSieve hiding O
 open SecondPassArithmetic hiding O
 open FirstPassCubeLabels hiding O
@@ -130,7 +75,7 @@ end
 
 open ActualEisensteinCubic
 open CompletedGauss hiding O
-open ConcretePrimeRowBridge hiding O columnWeight
+open ConcretePrimeRowBridge hiding O
 open CanonicalQuadraticSieve hiding O
 open SecondPassArithmetic hiding O
 open CanonicalCubeSeparation JointLogSeparation
@@ -258,7 +203,6 @@ theorem progressingCanonicalBin_closed_step
 
 end CanonicalRowCompletion
 
-open scoped BigOperators Classical
 namespace CanonicalUnitEuler
 open ActualEisensteinCubic
 open CanonicalRowCompletion
@@ -387,29 +331,6 @@ theorem rowTwist_unitSupplement (Ψ : ActualEisensteinCubic.O→*ℂ) (m f z : A
           (Ideal.mem_span_singleton.mpr hm2) (Ideal.mem_span_singleton.mpr h2)
     change rowTwist Ψ m f (u.val*z) n=(if Supported (Ideal.span {n}) then _ else 0)*_
     rw [hz,ite_eq_right hn,zero_mul]
-
-theorem rowTwist_unitSupplement_base (Ψ : ActualEisensteinCubic.O→*ℂ) (m f z : ActualEisensteinCubic.O) (u : ActualEisensteinCubic.Oˣ)
-    (hmLam : lambda∣m) (hm2 : (2:ActualEisensteinCubic.O)∣m) :
-    rowTwist Ψ m f (u.val*z)=rowTwist (unitSupplement u*Ψ) m f z := by
-  rw [rowTwist_unitSupplement Ψ m f z u hmLam hm2]
-  ext n
-  change unitSupplement u n*(Ψ n*idealRowHom _ _)=(unitSupplement u n*Ψ n)*idealRowHom _ _
-  ring
-
-theorem unitRowFamily_transport (Ψ : ActualEisensteinCubic.O→*ℂ) (m : ActualEisensteinCubic.O) (u : ActualEisensteinCubic.Oˣ) {F : ℝ}
-    (f : idealRange F) (I : Ideal ActualEisensteinCubic.O) (hmLam : lambda∣m) (hm2 : (2:ActualEisensteinCubic.O)∣m) :
-    CompletedUnitRows.unitRowFamily Ψ m u f I=
-      CompletedUnitRows.unitRowFamily (unitSupplement u*Ψ) m 1 f I := by
-  simp only [CompletedUnitRows.unitRowFamily,Units.val_one,one_mul]
-  exact rowTwist_unitSupplement_base Ψ m (ConcretePrimeRowBridge.idealGenerator f.val)
-    (ConcretePrimeRowBridge.idealGenerator I) u hmLam hm2
-
-theorem unitSupplement_mul_periodic (u : ActualEisensteinCubic.Oˣ) (Ψ : ActualEisensteinCubic.O→*ℂ) (Q : Ideal ActualEisensteinCubic.O)
-    (hΨ : ∀x y : ActualEisensteinCubic.O,x-y∈Q→Ψ x=Ψ y) (x y : ActualEisensteinCubic.O)
-    (hxy : x-y∈Q*Ideal.span {(36:ActualEisensteinCubic.O)}) :
-    (unitSupplement u*Ψ) x=(unitSupplement u*Ψ) y := by
-  simp only [MonoidHom.mul_apply]
-  rw [unitSupplement_periodic u x y (Ideal.mul_le_right hxy),hΨ x y (Ideal.mul_le_left hxy)]
 
 end CanonicalUnitEuler
 
@@ -597,12 +518,10 @@ lemma cuspRemainder_row_scaled_deriv_bound (a b : ℝ) (s : ℂ) (C : ℝ)
 
 end CubicEisenstein
 
-open MeasureTheory
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace CanonicalRowCompletion
 open ActualEisensteinCubic
 open CompletedGauss hiding O
-open ConcretePrimeRowBridge hiding O columnWeight
+open ConcretePrimeRowBridge hiding O
 open CanonicalQuadraticSieve hiding O
 open SecondPassArithmetic hiding O
 open CanonicalCubeSeparation JointLogSeparation

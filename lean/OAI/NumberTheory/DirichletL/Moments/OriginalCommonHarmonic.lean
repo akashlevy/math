@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.CommonRadialData
 import OAI.NumberTheory.DirichletL.Moments.SourceZeroEnergy
 import OAI.NumberTheory.DirichletL.Moments.CommonHarmonicMass
 import OAI.NumberTheory.DirichletL.Moments.SecondActiveCount
-
 namespace OAI
 
 noncomputable section
@@ -67,29 +66,6 @@ omit [DecidableEq ι] in
   have hn:=commonLabel_norm_bounds S β (sourceRadius s)
     (fun I _ hI=>(original_column_norm s R seed I hz₁ hz₂ hI).2) C D hlabel
   exact ⟨hh.1,hh.2.1,hh.2.2.1,hh.2.2.2.1,hh.2.2.2.2,hn⟩
-
-omit [DecidableEq ι] in
- theorem actual_original_common_mass (B δ:ℝ) (hB:0≤B) (hδ:0<δ):
-    ∃C:ℝ,0<C ∧ ∀Z:ℝ,2≤Z → ∀(s:Input ι),s.W₁ 0=0 → s.W₂ 0=0 → sourceRadius s≤Z^B →
-      ∀R seed:Ideal O,Squarefree seed → seed≠0 → ∀Y:ℝ,
-      (∑v∈partitionLabels (finiteColumns (Fintype.piFinset s.pools)) (coefficient s R seed) Y,
-        1/Real.sqrt ((v.1.1.absNorm:ℝ)*v.1.2.absNorm))≤C*Z^δ/(seed.absNorm:ℝ):=by
-  obtain ⟨C,hC,hbound⟩:=common_harmonic_mass B δ hB hδ
-  refine ⟨C,hC,?_⟩
-  intro Z hZ s hz₁ hz₂ hcap R seed hs hs0 Y
-  let S:=finiteColumns (Fintype.piFinset s.pools)
-  let β:=coefficient s R seed
-  have hm (I:Ideal O) (_:I∈S) (hI:β I≠0):seed∣I:=original_column_mask s R seed I hI
-  have hN (I:Ideal O) (_:I∈S) (hI:β I≠0):(Ideal.absNorm I:ℝ)≤Z^B:=
-    (original_column_norm s R seed I hz₁ hz₂ hI).2.trans hcap
-  apply hbound Z hZ seed hs hs0 (partitionLabels S β Y)
-  · intro v hv
-    obtain ⟨hp,hU⟩:=(mem_partitionLabels S β Y v).mp hv
-    have hh:=active_common_data S β seed hs hm Y v.1 hp
-    exact ⟨hh.1,hh.2.1,hh.2.2.1,hh.2.2.2.1,hh.2.2.2.2,hU⟩
-  · intro v hv
-    have hp:=(mem_partitionLabels S β Y v).mp hv
-    exact commonLabel_norm_bounds S β (Z^B) hN v.1.1 v.1.2 (Finset.mem_filter.mp hp.1).1
 
 end SevenEighths.CenteredMomentOriginalCommonHarmonic
 

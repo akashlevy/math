@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.RayOrthogonality
-
 namespace OAI
 
 namespace SevenEighths.RayQuotient
@@ -75,11 +74,6 @@ theorem norm_idealCharacter_le_one (χ : Characters M H) (I : Ideal A) :
     ‖idealCharacter M H hH χ I‖ ≤ 1 :=
   IdealCharacter.norm_ofResidue_le_one M χ _ I
 
-theorem idealCharacter_one (I : Ideal A) :
-    idealCharacter M H hH 1 I =
-      if I = ⊥ then 0 else if IsCoprime I M then 1 else 0 :=
-  IdealCharacter.ofResidue_one M I
-
 theorem sum_idealCharacters (I : Ideal A) :
     ∑ χ : Characters M H, idealCharacter M H hH χ I =
       if I ∈ identityClass M H then (classNumber M H : ℂ) else 0 := by
@@ -97,12 +91,6 @@ theorem average_idealCharacters (I : Ideal A) :
   rw [sum_idealCharacters]
   have hn : (classNumber M H : ℂ) ≠ 0 := by exact_mod_cast (classNumber_pos M H).ne'
   split_ifs <;> simp [hn]
-
-omit [Finite (A ⧸ M)] [IsPrincipalIdealRing A] [IsDomain A] hH in
-theorem identityClass_globalUnits : identityClass M (globalUnits M) = principalIdeals M := by
-  ext I
-  simp only [identityClass, principalIdeals, Set.mem_ofPred_eq,
-    inUnitSubgroup_globalUnits_iff]
 
 end
 end SevenEighths.RayQuotient

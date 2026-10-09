@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondCanonicalFrequency
-
 namespace OAI
 
 noncomputable section
@@ -59,25 +58,6 @@ theorem nonunitFrequencyGenerator_dvd (C D : Ideal O) (hC : Supported C)
   · intro P hP
     rw [nonunitPartitionSet_eq_actual C D U w hpart] at hP
     exact (commonPrime_dividedFrequency_iff C D hC w P).mp (Finset.mem_filter.mp hP).2.2.2
-
-theorem partition_tsum_nonunit (C D : Ideal O) (hC : Supported C) (hD : Supported D)
-    (U : Finset (CommonIndex C D)) (F : O→ℂ) :
-    (∑' w : O,if canonicalPartition C D U w then
-      idealCorrelation C D hC hD (commonFrequencyGenerator C D*w)*F w else 0)=
-      ∑' h : O,if canonicalPartition C D U (nonunitFrequencyGenerator C D U*h) then
-        idealCorrelation C D hC hD ((commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U)*h)*
-          F (nonunitFrequencyGenerator C D U*h) else 0 := by
-  let f : O→ℂ := fun w=>if canonicalPartition C D U w then
-    idealCorrelation C D hC hD (commonFrequencyGenerator C D*w)*F w else 0
-  have hs : Function.support f⊆Set.range (fun h=>nonunitFrequencyGenerator C D U*h) := by
-    intro w hw
-    have hp : canonicalPartition C D U w := by
-      by_contra hn
-      exact hw (by simp only [f,ite_eq_right hn])
-    obtain ⟨h,hh⟩ := nonunitFrequencyGenerator_dvd C D hC U w hp
-    exact ⟨h,hh.symm⟩
-  have he := (mul_right_injective₀ (nonunitFrequencyGenerator_ne_zero C D hC U)).tsum_eq hs
-  simpa only [f,mul_assoc] using he.symm
 
 end SevenEighths.CenteredMomentSecondCanonicalNonunit
 

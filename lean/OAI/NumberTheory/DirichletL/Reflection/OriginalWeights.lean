@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.ActualSelected
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -35,14 +34,6 @@ lemma frozenInactiveWeight_norm (J F Q Q₀ : Ideal Eis) (A : Finset (FreeReflec
         (NeZero.ne ((poolPrimeFamily J Q Q₀).ideal b))
     · simp
 
-lemma original_fourier_frozen_weight_norm {m f z : Eis} (D : GoodMaskRowData m f z)
-    (Ψ : Eis→*ℂ) (Q : Ideal Eis) (hΨ : ∀ n,‖Ψ n‖≤1)
-    (c : Eis) (hc : c≠0) [Fintype (Eis⧸Ideal.span {c})] (h : Eis⧸Ideal.span {c})
-    (J F Q₀ : Ideal Eis) (A : Finset (FreeReflection.pool J (Ideal.span {m}*F) Q₀)) :
-    ‖fixedThetaRowCoeff c hc (D.fixedFactor Ψ Q) h*frozenInactiveWeight J F (Ideal.span {m}*F) Q₀ A‖≤1 := by
-  rw [norm_mul]
-  exact (mul_le_mul (D.fixedCoefficient_norm Ψ Q hΨ c hc h)
-    (frozenInactiveWeight_norm J F (Ideal.span {m}*F) Q₀ A) (norm_nonneg _) zero_le_one).trans_eq (one_mul 1)
 end
 end SevenEighths.InverseReflectedPhase
 

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GramResidue
 import OAI.NumberTheory.DirichletL.Detector.GramPeriodicPoisson
-
 namespace OAI
 
 noncomputable section

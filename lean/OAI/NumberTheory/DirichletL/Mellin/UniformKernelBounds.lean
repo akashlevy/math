@@ -1,73 +1,23 @@
 import OAI.NumberTheory.DirichletL.Mellin.InverseContour
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
 namespace CubicReflectionKernel
 open scoped Classical FourierTransform SchwartzMap ContDiff Topology
@@ -419,7 +369,6 @@ theorem paperKernel_euler_source_uniform_weighted_bound
 
 end CubicReflectionKernel
 
-open scoped BigOperators Classical
 namespace FirstPassCubeLabels
 open ActualEisensteinCubic
 open MixedCrossSeparation (crossSymbol quadraticCrossPhase columnPrimeCoprime)
@@ -525,66 +474,6 @@ theorem gaussBlock_congr {ι : Type*} [DecidableEq ι]
 
 def cubeActiveSupport {ι : Type*} (B : Finset ι) (v : ι → ℕ) (ε₁ ε₂ : ι → Bool) : Finset ι :=
   B.filter (fun k => conductorExponent (parity (v k)) (ε₁ k) (ε₂ k) ≠ 0)
-
-def blockCubeExponent {ι : Type*} [DecidableEq ι] (U : Finset ι)
-    (v : ι → ℕ) (ε₁ ε₂ : ι → Bool) (side : Bool) (i : ι) : ℕ :=
-  if i ∈ U then (if side then 5 else 1)
-  else (conductorExponent (parity (v i)) (ε₁ i) (ε₂ i)).val
-
-theorem gaussBlock_cube_partition {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hg : ∀ i, lambda ∉ Ideal.span {p i}) (U B : Finset ι) (hd : Disjoint U B)
-    (v : ι → ℕ) (ε₁ ε₂ : ι → Bool) (side : Bool) :
-    gaussBlock p hp hg (U ∪ cubeActiveSupport B v ε₁ ε₂)
-      (blockCubeExponent U v ε₁ ε₂ side) =
-    gaussBlock p hp hg U (fun _ => if side then 5 else 1) *
-      gaussBlock p hp hg (cubeActiveSupport B v ε₁ ε₂)
-        (fun k => (conductorExponent (parity (v k)) (ε₁ k) (ε₂ k)).val) *
-      mixedCubeCross p hg U B v ε₁ ε₂ side := by
-  have hdc : Disjoint U (cubeActiveSupport B v ε₁ ε₂) := hd.mono_right (Finset.filter_subset _ _)
-  have hU : ∀ i ∈ U, blockCubeExponent U v ε₁ ε₂ side i = (if side then 5 else 1) := by
-    intro i hi
-    simp only [blockCubeExponent, ite_eq_left hi]
-  have hB : ∀ i ∈ cubeActiveSupport B v ε₁ ε₂, blockCubeExponent U v ε₁ ε₂ side i =
-      (conductorExponent (parity (v i)) (ε₁ i) (ε₂ i)).val := by
-    intro i hi
-    exact ite_eq_right (fun hu => Finset.disjoint_left.mp hdc hu hi)
-  rw [gaussBlock_union p hp hg U _ hdc,
-    gaussBlock_congr p hp hg U _ _ hU, gaussBlock_congr p hp hg _ _ _ hB]
-  congr 1
-  apply Finset.prod_congr rfl
-  intro i hi
-  apply Finset.prod_congr rfl
-  intro k hk
-  rw [hU i hi, hB k hk]
-
-theorem canonicalProductGauss_cube_partition {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1) (U B : Finset ι) (hd : Disjoint U B)
-    (v : ι → ℕ) (ε₁ ε₂ : ι → Bool) (side : Bool) :
-    canonicalProductGauss (fun i : ↥(U ∪ cubeActiveSupport B v ε₁ ε₂) => p i.val)
-      (fun i => hp i.val) (columnPrimeCoprime p hcop _) (fun i => hg i.val)
-      (fun i => blockCubeExponent U v ε₁ ε₂ side i.val) =
-    gaussBlock p hp hg U (fun _ => if side then 5 else 1) *
-      gaussBlock p hp hg (cubeActiveSupport B v ε₁ ε₂)
-        (fun k => (conductorExponent (parity (v k)) (ε₁ k) (ε₂ k)).val) *
-      ((if side then star (finiteSquarefreeRow (fun i => Ideal.span {p i}) hg U
-          (crtLabel p B v ε₁ ε₂ side))
-        else finiteSquarefreeRow (fun i => Ideal.span {p i}) hg U
-          (crtLabel p B v ε₁ ε₂ side)) *
-        quadraticCrossPhase p hg U (cubeOddSupport B v ε₁ ε₂)) := by
-  have he : ∀ i ∈ U ∪ cubeActiveSupport B v ε₁ ε₂, blockCubeExponent U v ε₁ ε₂ side i ≠ 0 := by
-    intro i hi
-    by_cases hiU : i ∈ U
-    · cases side <;> simp [blockCubeExponent, hiU]
-    · have hiB := (Finset.mem_union.mp hi).resolve_left hiU
-      simp only [blockCubeExponent, ite_eq_right hiU]
-      exact (ZMod.val_eq_zero _).not.mpr (Finset.mem_filter.mp hiB).2
-  rw [canonicalProductGauss_eq_gaussBlock p hp hcop hg _ _ he,
-    gaussBlock_cube_partition p hp hg U B hd,
-    mixedCubeCross_eq_row_quadratic p hcop hg hpr U B hd]
 
 theorem columnCoefficient_eq_gaussBlock {ι : Type*} [DecidableEq ι]
     (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]

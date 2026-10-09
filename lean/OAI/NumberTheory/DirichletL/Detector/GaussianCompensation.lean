@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GaussianPhysicalTuple
 import OAI.NumberTheory.DirichletL.Detector.PhysicalNorms
-
 namespace OAI
 
 noncomputable section
@@ -56,22 +55,6 @@ lemma compensatedPhysicalProbe_eq_subsets {K : ℕ} (η : HeckeFamily.Character)
   unfold compensatedPhysicalProbe
   simp_rw [compensatedTuple_eq_subsets,Finset.mul_sum]
   exact Finset.sum_comm
-
-theorem compensationSubsetProbe_eq_gaussian_rows {K : ℕ} (η : HeckeFamily.Character) (C : CalibrationData)
-    (W0 W1 : ℝ→ℂ) (hW0 : HasCompactSupport W0) (hW1 : HasCompactSupport W1)
-    (p : Fin K→O) (hp : ∀i,p i≠0) (J : Finset (Fin K))
-    (X Y Z : ℝ) (hX : 0<X) (hY : 0<Y) (hZ : 0<Z) :
-    compensationSubsetProbe η C W0 W1 p J X Y Z=
-      compensationSubsetCoefficient η p J*
-        ∑'r : PhysicalRowIndex,
-          physicalRowWeight C W0 W1 (X/elementNorm (slotProduct p J)) (Y/elementNorm (slotProduct p J)) r*
-            correctedCompletedT C.excluded (Ideal.span {slotProduct p (Finset.univ\J)})
-              (physicalRowMonoid η C r) gaussianCompletedProfile
-                (Z*elementNorm (slotProduct p (Finset.univ\J))) := by
-  unfold compensationSubsetProbe
-  rw [markedPhysicalProbe_eq_gaussian_rows η C _ W0 W1 hW0 hW1 _ _ _
-    (div_pos hX (slotProduct_norm_pos p hp J)) (div_pos hY (slotProduct_norm_pos p hp J))
-    (mul_pos hZ (slotProduct_norm_pos p hp _))]
 
 end SevenEighths.ProbePhysical
 end

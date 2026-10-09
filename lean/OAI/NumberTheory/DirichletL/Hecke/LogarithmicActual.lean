@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.Logarithmic
 import OAI.NumberTheory.DirichletL.Hecke.EulerLog
 import OAI.NumberTheory.DirichletL.Hecke.DeletionReciprocal
-
 namespace OAI
 
 noncomputable section

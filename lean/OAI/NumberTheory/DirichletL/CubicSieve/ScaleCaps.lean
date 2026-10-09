@@ -1,209 +1,30 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.CommonMasks
 import OAI.NumberTheory.DirichletL.Eisenstein.QuotientTopology
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 
 section
 open ActualEisensteinCubic
 open FirstPassCubeLabels (primeProduct bit parity retained b0Exponent aLabel jLabel j2Label squarefreeLabel b0Label)
-
-variable {ι : Type*} [DecidableEq ι]
-
-def finiteBlockExponent (B : Finset ι) (v : ι → ℕ) : ι →₀ ℕ :=
-  Finsupp.onFinset B (fun i => if i∈B then v i else 0) (by
-    intro i hi
-    by_contra hn
-    exact hi (ite_eq_right hn))
-
-def cubeCoordinatesOfBlock (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool) : CubeCoordinates ι where
-  leftExponent := finiteBlockExponent B v₁
-  rightExponent := finiteBlockExponent B v₂
-  leftDivisor := B.filter (fun i => ε₁ i)
-  rightDivisor := B.filter (fun i => ε₂ i)
-
-theorem cubeCoordinatesOfBlock_support (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (hv : ∀ i∈B,0 < v₁ i+v₂ i) : (cubeCoordinatesOfBlock B v₁ v₂ ε₁ ε₂).support=B := by
-  ext i
-  simp only [CubeCoordinates.support,cubeCoordinatesOfBlock,Finset.mem_union,
-    Finsupp.mem_support_iff,finiteBlockExponent,Finsupp.onFinset_apply]
-  by_cases hi : i∈B
-  · simp only [hi,ite_true,iff_true]
-    have h := hv i hi
-    omega
-  · simp [hi]
-
-theorem cubeCoordinatesOfBlock_leftBit (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (i : ι) (hi : i∈B) : (cubeCoordinatesOfBlock B v₁ v₂ ε₁ ε₂).leftBit i=ε₁ i := by
-  cases h : ε₁ i <;> simp [CubeCoordinates.leftBit,cubeCoordinatesOfBlock,hi,h]
-
-theorem cubeCoordinatesOfBlock_rightBit (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (i : ι) (hi : i∈B) : (cubeCoordinatesOfBlock B v₁ v₂ ε₁ ε₂).rightBit i=ε₂ i := by
-  cases h : ε₂ i <;> simp [CubeCoordinates.rightBit,cubeCoordinatesOfBlock,hi,h]
-
-theorem cubeCoordinatesOfBlock_admissible (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (hv : ∀ i∈B,0 < v₁ i+v₂ i) : (cubeCoordinatesOfBlock B v₁ v₂ ε₁ ε₂).Admissible := by
-  unfold CubeCoordinates.Admissible
-  rw [cubeCoordinatesOfBlock_support B v₁ v₂ ε₁ ε₂ hv]
-  exact ⟨Finset.filter_subset _ _,Finset.filter_subset _ _⟩
-
-theorem cubeCoordinatesOfBlock_primeProduct (p : ι → O)
-    (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool) (hv : ∀ i∈B,0 < v₁ i+v₂ i)
-    (f : ℕ → ℕ → Bool → Bool → ℕ) :
-    let x := cubeCoordinatesOfBlock B v₁ v₂ ε₁ ε₂
-    primeProduct p x.support (fun i => f (x.leftExponent i) (x.rightExponent i) (x.leftBit i) (x.rightBit i)) =
-      primeProduct p B (fun i => f (v₁ i) (v₂ i) (ε₁ i) (ε₂ i)) := by
-  dsimp only
-  rw [cubeCoordinatesOfBlock_support B v₁ v₂ ε₁ ε₂ hv]
-  unfold primeProduct
-  apply Finset.prod_congr rfl
-  intro i hi
-  dsimp only
-  rw [cubeCoordinatesOfBlock_leftBit B v₁ v₂ ε₁ ε₂ i hi,
-    cubeCoordinatesOfBlock_rightBit B v₁ v₂ ε₁ ε₂ i hi]
-  simp only [cubeCoordinatesOfBlock,finiteBlockExponent,Finsupp.onFinset_apply,ite_eq_left hi]
-
-def globalSecondOfBlock (B A₀ C D : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (x : SecondExpansionData ι) : GlobalSecondData ι where
-  cube := cubeCoordinatesOfBlock B v₁ v₂ ε₁ ε₂
-  firstCommon := A₀
-  common := C
-  firstDivisor := D
-  source := x
-
-theorem globalSecondOfBlock_injective (B A₀ C D : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool) :
-    Function.Injective (globalSecondOfBlock B A₀ C D v₁ v₂ ε₁ ε₂) := by
-  intro x y h
-  exact congrArg GlobalSecondData.source h
-
-theorem globalSecondOfBlock_admissible (B A₀ C D : Finset ι)
-    (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool) (hv : ∀ i∈B,0 < v₁ i+v₂ i)
-    (hCB : Disjoint C B) (hD : D⊆C∪B) (x : SecondExpansionData ι) (hE : x.divisor⊆x.sourceCommon) :
-    GlobalSecondAdmissible (globalSecondOfBlock B A₀ C D v₁ v₂ ε₁ ε₂ x) := by
-  refine ⟨cubeCoordinatesOfBlock_admissible B v₁ v₂ ε₁ ε₂ hv,hE,?_,?_⟩
-  · simpa only [globalSecondOfBlock,cubeCoordinatesOfBlock_support B v₁ v₂ ε₁ ε₂ hv] using hCB
-  · simpa only [globalSecondOfBlock,cubeCoordinatesOfBlock_support B v₁ v₂ ε₁ ε₂ hv] using hD
-
-variable (p : ι → O) [∀ i,(Ideal.span {p i}).IsMaximal]
-
-omit [∀ (i : ι), (span {p i}).IsMaximal] in
-theorem globalSecondOfBlock_tuple (B A₀ C D : Finset ι)
-    (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool) (hv : ∀ i∈B,0 < v₁ i+v₂ i) (x : SecondExpansionData ι) :
-    globalSecondTuple p (globalSecondOfBlock B A₀ C D v₁ v₂ ε₁ ε₂ x) =
-      actualSecondTuple p B C D x.divisor x.overlap v₁ v₂ ε₁ ε₂ x.frequency := by
-  have hpoly := cubeCoordinatesOfBlock_primeProduct p B v₁ v₂ ε₁ ε₂ hv
-  have hspan (f : ℕ → ℕ → Bool → Bool → ℕ) := congrArg (fun a : O => (Ideal.span {a} : Ideal O)) (hpoly f)
-  let c := cubeCoordinatesOfBlock B v₁ v₂ ε₁ ε₂
-  have hJ : jLabel p c.support (fun i => c.leftExponent i+c.rightExponent i) c.leftBit c.rightBit =
-      jLabel p B (fun i => v₁ i+v₂ i) ε₁ ε₂ := hpoly (fun a b e₁ e₂ => bit (retained (parity (a+b)) e₁ e₂))
-  have hS : squarefreeLabel p c.support (fun i => c.leftExponent i+c.rightExponent i) =
-      squarefreeLabel p B (fun i => v₁ i+v₂ i) := hpoly (fun a b _ _ => bit (parity (a+b)))
-  have hP₁ : primeProduct p c.support c.leftExponent = primeProduct p B v₁ := hpoly (fun a _ _ _ => a)
-  have hP₂ : primeProduct p c.support c.rightExponent = primeProduct p B v₂ := hpoly (fun _ b _ _ => b)
-  have hA₁ : aLabel p c.support c.leftBit = aLabel p B ε₁ := hpoly (fun _ _ e₁ _ => bit e₁)
-  have hA₂ : aLabel p c.support c.rightBit = aLabel p B ε₂ := hpoly (fun _ _ _ e₂ => bit e₂)
-  have hJ₂ : j2Label p c.support (fun i => c.leftExponent i+c.rightExponent i) c.leftBit c.rightBit =
-      j2Label p B (fun i => v₁ i+v₂ i) ε₁ ε₂ := hpoly (fun a b e₁ e₂ => bit (FirstPassCubeLabels.evenDouble (a+b) e₁ e₂))
-  change actualSecondTuple p c.support C D x.divisor x.overlap c.leftExponent c.rightExponent c.leftBit c.rightBit x.frequency = _
-  unfold actualSecondTuple
-  rw [hJ,hS,hP₁,hA₁,hA₂,hJ₂,hP₂]
-
-omit [∀ (i : ι), (span {p i}).IsMaximal] in
-theorem globalSecondOfBlock_triple (B A₀ C D : Finset ι)
-    (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool) (hv : ∀ i∈B,0 < v₁ i+v₂ i) (x : SecondExpansionData ι) :
-    globalSecondFixedTriple p (globalSecondOfBlock B A₀ C D v₁ v₂ ε₁ ε₂ x) =
-    (Ideal.span {b0Label p B (fun i => v₁ i+v₂ i) ε₁ ε₂},
-      ∏ i∈A₀,Ideal.span {p i},∏ i∈x.sourceCommon\x.divisor,Ideal.span {p i}) := by
-  have h := cubeCoordinatesOfBlock_primeProduct p B v₁ v₂ ε₁ ε₂ hv
-    (fun a b e₁ e₂ => b0Exponent (a+b) e₁ e₂)
-  apply Prod.ext
-  · exact congrArg (fun a : O => (Ideal.span {a} : Ideal O)) h
-  · rfl
-
-omit [∀ (i : ι), (span {p i}).IsMaximal] in
-theorem globalSecondOfBlock_label (B A₀ C D : Finset ι)
-    (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool) (hv : ∀ i∈B,0 < v₁ i+v₂ i) (x : SecondExpansionData ι) :
-    globalSecondLabel p (globalSecondOfBlock B A₀ C D v₁ v₂ ε₁ ε₂ x) =
-      secondSupportLabel p B v₁ v₂ ε₁ ε₂ (expansionSupportData C D x) := by
-  have h := cubeCoordinatesOfBlock_primeProduct p B v₁ v₂ ε₁ ε₂ hv
-    (fun a b e₁ e₂ => bit (retained (parity (a+b)) e₁ e₂))
-  unfold globalSecondLabel globalSecondOfBlock secondSupportLabel
-  dsimp only [expansionSupportData]
-  rw [show jLabel p (cubeCoordinatesOfBlock B v₁ v₂ ε₁ ε₂).support
-      (fun i => (cubeCoordinatesOfBlock B v₁ v₂ ε₁ ε₂).leftExponent i+
-        (cubeCoordinatesOfBlock B v₁ v₂ ε₁ ε₂).rightExponent i)
-      (cubeCoordinatesOfBlock B v₁ v₂ ε₁ ε₂).leftBit (cubeCoordinatesOfBlock B v₁ v₂ ε₁ ε₂).rightBit =
-      jLabel p B (fun i => v₁ i+v₂ i) ε₁ ε₂ from h]
 
 end
 
@@ -288,15 +109,6 @@ theorem globalScaleIndex_mem_box {ι : Type*} [DecidableEq ι]
   apply Finset.mem_range.mpr
   exact Nat.lt_succ_of_le (normLogBin_mono (zero_lt_one.trans_le (globalScaleVector_ge_one p hp side x hk i)) (hU i))
 
-theorem sum_globalLogSector {ι M : Type*} [DecidableEq ι] [AddCommMonoid M]
-    (p : ι → O) (hp : ∀ i,p i ≠ 0) [∀ i,(Ideal.span {p i}).IsMaximal]
-    (s : Finset (GlobalSecondData ι)) (side : Bool) (U : Fin 10 → ℝ)
-    (hk : ∀ x∈s,x.source.frequency ≠ 0)
-    (hU : ∀ x∈s,∀ i,globalScaleVector p side x i ≤ U i) (f : GlobalSecondData ι → M) :
-    ∑ x∈s,f x=∑ j∈globalLogBox U,∑ x∈globalLogSector p s side j,f x := by
-  symm
-  exact Finset.sum_fiberwise_of_maps_to (fun x hx => globalScaleIndex_mem_box p hp side x (hk x hx) U (hU x hx)) f
-
 def globalPooledColumnScale (ell : ℝ) (j : GlobalLogIndex) : ℝ :=
   ell/(globalLogRep j 0*globalLogRep j 1*globalLogRep j 2*globalLogRep j 3*globalLogRep j 6*globalLogRep j 7)
 
@@ -345,7 +157,6 @@ theorem globalPooled_radial_ratio (K ell B F : ℝ) (hK : 0 < K) (hell : 0 < ell
 
 end SecondPassArithmetic
 
-open scoped BigOperators Classical SchwartzMap
 namespace CanonicalQuadraticSieve
 open ActualEisensteinCubic ConcretePrimeRowBridge IdealMobiusDivisorSum EisensteinSchwartzPoisson
 
@@ -481,7 +292,6 @@ theorem maskedDualTailFamily_bound (A : ℕ) :
 
 end CanonicalQuadraticSieve
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 
 section
@@ -773,20 +583,6 @@ theorem globalScaleVector_le_caps (ell B Y M Z : ℝ) (hell : 0 < ell) (hB : 0 �
   · exact hv
   · exact hrow
   · exact hactive
-
-include hp in
-
-theorem globalScaleIndex_mem_concrete_box (ell B Y M Z : ℝ) (hell : 0 < ell) (hB : 0 ≤ B)
-    (hY : 0 < Y) (hZ : 0 ≤ Z) (side : Bool) (x : GlobalSecondData ι) (hx : GlobalSecondAdmissible x)
-    (hs : SecondSourceSupport p (globalFirstColumnScale p ell x side/primeProductNorm p x.firstCommon) M x.source)
-    (hb₁ : ‖eisEmbedding (primeProduct p x.cube.support x.cube.leftExponent)‖^2 ≤ B)
-    (hb₂ : ‖eisEmbedding (primeProduct p x.cube.support x.cube.rightExponent)‖^2 ≤ B)
-    (hk0 : x.source.frequency ≠ 0)
-    (hk : x.source.frequency ∈ firstCoreSecondCutoff p x.firstCommon (globalFirstColumnScale p ell x side)
-      Y M Z x.source.sourceCommon x.source.divisor) :
-    globalScaleIndex p side x∈globalLogBox (globalNormCaps ell B Y M Z) :=
-  globalScaleIndex_mem_box p hp side x hk0 _
-    (globalScaleVector_le_caps p hp ell B Y M Z hell hB hY hZ side x hx hs hb₁ hb₂ hk)
 
 end SecondPassArithmetic
 

@@ -1,8 +1,9 @@
-import OAI.NumberTheory.DirichletL.Moments.SourceSupportedTailUniform
+import OAI.NumberTheory.DirichletL.Moments.SourceProfileMassUniform
+import OAI.NumberTheory.DirichletL.Moments.SupportedTailAggregate
+import OAI.NumberTheory.DirichletL.Moments.SourceZeroEnergy
 import OAI.NumberTheory.DirichletL.Moments.OriginalCommonHarmonic
 import OAI.NumberTheory.DirichletL.Moments.NaturalRadialCutoff
 import OAI.NumberTheory.DirichletL.Moments.ExceptionalAmplitudePair
-
 namespace OAI
 
 noncomputable section

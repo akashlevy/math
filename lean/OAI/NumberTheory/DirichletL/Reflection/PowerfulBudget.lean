@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Foundation
 import OAI.NumberTheory.DirichletL.Descent.Dyadic
-
 namespace OAI
 
 noncomputable section

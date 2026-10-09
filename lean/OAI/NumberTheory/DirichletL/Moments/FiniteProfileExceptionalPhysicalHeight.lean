@@ -1,5 +1,10 @@
-import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalCommonWindow
-
+import OAI.NumberTheory.DirichletL.Moments.CommonWindowColumn
+import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalCommonHeight
+import OAI.NumberTheory.DirichletL.Moments.LogDyadic
+import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalCommonSymmetry
+import OAI.NumberTheory.DirichletL.Moments.ExceptionalAsymmetricSource
+import OAI.NumberTheory.DirichletL.Moments.ExceptionalAmplitudePair
+import OAI.NumberTheory.DirichletL.Moments.SecondExceptionalCount
 namespace OAI
 noncomputable section
 open scoped Classical BigOperators

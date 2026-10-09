@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GramShell
 import OAI.NumberTheory.DirichletL.Detector.GramAnnularCount
-
 namespace OAI
 
 noncomputable section

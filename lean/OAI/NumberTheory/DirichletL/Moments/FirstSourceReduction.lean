@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstRetainedNorm
 import OAI.NumberTheory.DirichletL.Moments.SourceInputFirstRemainder
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.PrimeDyadicScale
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GramCommonLinear
 import OAI.NumberTheory.DirichletL.Moments.Canonical
-
 namespace OAI
 
 noncomputable section
@@ -26,10 +25,6 @@ def localExtension (P : Ideal O) [P.IsMaximal] (hg : goodLambda∉P)
   exact if n₁∈P ∧ n₂∈P then 0 else (Ideal.absNorm P:ℂ)^(c-1)*
     localCorrelation (actualSextic P hg^c) (Ideal.Quotient.mk P n₁)
       (Ideal.Quotient.mk P n₂) (Ideal.Quotient.mk P k)
-
-lemma localExtension_both_zero (P : Ideal O) [P.IsMaximal] (hg : goodLambda∉P)
-    (c : ℕ) (n₁ n₂ k : O) (h₁ : n₁∈P) (h₂ : n₂∈P) :
-    localExtension P hg c n₁ n₂ k=0 := by simp [localExtension,h₁,h₂]
 
 theorem localExtension_periodic (P : Ideal O) [P.IsMaximal] (hg : goodLambda∉P)
     (c : ℕ) (n₁ n₂ m₁ m₂ k l : O)

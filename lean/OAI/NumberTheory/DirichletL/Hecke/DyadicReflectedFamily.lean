@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.DyadicReflection
 import OAI.NumberTheory.DirichletL.Hecke.Conjugation
 import OAI.NumberTheory.DirichletL.Hecke.DeletionBounds
-
 namespace OAI
 
 noncomputable section

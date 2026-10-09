@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsCentralStrict
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstReferenceSource
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalLedger
-
 namespace OAI
 
 noncomputable section
@@ -15,7 +14,7 @@ open CenteredMomentFirstReferenceSource CenteredMomentFirstPhysicalDyadicAssembl
 open CenteredMomentFirstNonexceptionalWeightSum CenteredMomentFirstNonexceptionalLocalWeightSum
 open CenteredMomentFirstPhysicalDyadicCount CenteredMomentFirstScale CenteredMomentCanonicalFirst
 open CenteredMomentSectorLocalization CenteredMomentExceptionalAmplitudePair
-open CenteredMomentFirstPhysicalLedger CenteredMomentFirstExtractedLedger
+open CenteredMomentFirstPhysicalLedger
 local notation "O" => ActualEisensteinCubic.O
 variable {ι:Type*}[Fintype ι][DecidableEq ι]
 local instance : DecidableEq (ι⊕Fin 2):=Classical.decEq _
@@ -92,18 +91,6 @@ theorem source_amplifier_packet (A D ξcap Z:ℝ)(hZ:32≤Z)
         ring
   · rw [one_mul]
     exact (source_nominal_span s R seed K p E).le
-
-omit [DecidableEq ι] in
-lemma source_frequency_ledger (s:Input ι)(R seed:Ideal O)(K Z ξ:ℝ)(hK:0<K)(hZ:1<Z)
-    (p:Labels s R seed)(E:Finset (CommonIndex p.val.1 p.val.2))
-    (n:SourceBlocks s R seed K Z ξ p E):
-    Real.logb Z (dyadicScale (n 1))≤
-      Real.logb Z (firstNominalScale p.val.1 p.val.2 (∏P∈E,P.val) K (volume s.toData))+
-        frequencyLoss Z 1 ξ:=by
-  apply retained_first_dyad_enclosure _ Z 1 _ ξ hZ (by norm_num) _ (n 1)
-    (source_dyad_retained s R seed K Z ξ p E n)
-  rw [one_mul,Real.rpow_logb (zero_lt_one.trans hZ) hZ.ne'
-    (source_nominal_positive s R seed K hK p E)]
 
 theorem fixed_endpoint_radius (N:ℕ)(upper b₁ b₂ A Z:ℝ)
     (hu:1≤upper)(hb₁:0≤b₁)(hb₂:0≤b₂)(hZ:32≤Z)

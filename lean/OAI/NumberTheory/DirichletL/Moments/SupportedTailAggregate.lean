@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondTail
 import OAI.NumberTheory.DirichletL.Moments.FirstTailAggregate
 import OAI.NumberTheory.DirichletL.Moments.SecondHeightFamily
-
 namespace OAI
 
 noncomputable section
@@ -63,46 +62,6 @@ theorem second_discarded_energy_bound (Adec : ℕ) :
     (fun I J hi hj => ht W I J (Finset.mem_filter.mp I.property).2
       (Finset.mem_filter.mp J.property).2 K X H Tsec Z Csec ξ hK hX hZ hCs
       (hN I (Finset.mem_filter.mp I.property).1 hi) (hN J (Finset.mem_filter.mp J.property).1 hj) hsec hthreshold)
-  have hm : (∑ I : supportedColumns S,‖c I‖)≤∑ I∈S,‖c I‖ := by
-    rw [Finset.sum_coe_sort (supportedColumns S) (fun I => ‖c I‖)]
-    exact Finset.sum_le_sum_of_subset_of_nonneg (Finset.filter_subset _ _) (fun _ _ _ => norm_nonneg _)
-  apply hp.trans
-  convert mul_le_mul_of_nonneg_right
-    (pow_le_pow_left₀ (show 0 ≤ ∑ I : supportedColumns S, ‖c I‖ from
-      Finset.sum_nonneg (fun I _ => norm_nonneg (c I))) hm 2) hB using 1 ; dsimp only [B];ring
-
-theorem first_discarded_energy_bound (Adec : ℕ) (ε : ℝ) (hε : 0<ε) :
-    ∃ (s : Finset (ℕ×ℕ)) (C : ℝ),0<C ∧
-      ∀ (η : Character) (m A : O) (t : ℝ) (S : Finset (Ideal O)) (c : Ideal O → ℂ)
-        (W : 𝓢(ℝ,ℂ)) (K X H Tsec Z Csec ξ : ℝ),0<K → 0<X → 1<Z → 1≤Csec →
-      (∀ I∈S,c I≠0 → (Ideal.absNorm I:ℝ)≤Real.exp H*X) →
-      (∀ I : supportedColumns S,∀ J : supportedColumns S,c I≠0 → c J≠0 →
-        ∀ E∈inactiveSubsets I J,firstNominalScale I J (∏ P∈E,P.val) K X≤Tsec) →
-      (2*H/Real.log Z+Real.log (4*Csec)/Real.log Z<ξ/4) →
-      ‖discardedEnergy η m A t S c W K Tsec Z ξ‖≤
-        (∑ I∈S,‖c I‖)^2*(Real.exp H*X)^ε*K*(C*s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W)/
-          ((min 1 (kernelReference Tsec H))^2*(1+Z^(ξ/4))^Adec) := by
-  obtain ⟨s,C,hC,ht⟩ := canonical_discarded_pair_bound Adec ε hε
-  refine ⟨s,C,hC,?_⟩
-  intro η m A t S c W K X H Tsec Z Csec ξ hK hX hZ hCs hN hsec hthreshold
-  let B := (Real.exp H*X)^ε*K*(C*s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W)/
-    ((min 1 (kernelReference Tsec H))^2*(1+Z^(ξ/4))^Adec)
-  have hB : 0≤B := by dsimp only [B];positivity
-  have hpair (I J : supportedColumns S) (hi : c I≠0) (hj : c J≠0) :
-      ‖canonicalDiscardedPair I J (Finset.mem_filter.mp I.property).2
-        (Finset.mem_filter.mp J.property).2 W K Tsec Z ξ‖≤B := by
-    have hni := hN I (Finset.mem_filter.mp I.property).1 hi
-    have hnj := hN J (Finset.mem_filter.mp J.property).1 hj
-    apply (ht W I J (Finset.mem_filter.mp I.property).2 (Finset.mem_filter.mp J.property).2
-      K X H Tsec Z Csec ξ hK hX hZ hCs hni hnj (hsec I J hi hj) hthreshold).trans
-    apply div_le_div_of_nonneg_right _ (by positivity)
-    apply mul_le_mul_of_nonneg_right _ (by positivity)
-    exact mul_le_mul_of_nonneg_right (Real.rpow_le_rpow (Nat.cast_nonneg _) hni hε.le) hK.le
-  have hp := pair_mass (fun I : supportedColumns S => c I)
-    (fun I => CenteredMomentHeckeExpansion.rowWeight η m A 1 t I)
-    (fun I J => canonicalDiscardedPair I J (Finset.mem_filter.mp I.property).2
-      (Finset.mem_filter.mp J.property).2 W K Tsec Z ξ)
-    (fun I => rowWeight_norm_le_one η m A 1 t I (Finset.mem_filter.mp I.property).2.1) B hB hpair
   have hm : (∑ I : supportedColumns S,‖c I‖)≤∑ I∈S,‖c I‖ := by
     rw [Finset.sum_coe_sort (supportedColumns S) (fun I => ‖c I‖)]
     exact Finset.sum_le_sum_of_subset_of_nonneg (Finset.filter_subset _ _) (fun _ _ _ => norm_nonneg _)

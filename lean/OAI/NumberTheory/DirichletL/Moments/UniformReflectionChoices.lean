@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.UniformReflectionScale
 import OAI.NumberTheory.DirichletL.Moments.ReflectedChoiceEnergy
-
 namespace OAI
 
 noncomputable section

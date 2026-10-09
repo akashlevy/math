@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalSourceWindowCanonical
 import OAI.NumberTheory.DirichletL.Moments.SmoothedWindowEnergy
-
 namespace OAI
 
 noncomputable section
@@ -69,25 +68,6 @@ theorem column_window_energy (s:OriginalData ι)(Q C:Ideal O)(hQ:Q≠0)(hC:Suppo
       rw [column_unwindowed_energy s Q C hQ hC hQC]
       exact henergy v)
   simpa only [ha,element_span,element_norm] using hh
-
-theorem column_star_window_energy (s:OriginalData ι)(Q C:Ideal O)(hQ:Q≠0)(hC:Supported C)
-    (hQC:primeSupport Q=primeSupport C)(τ:Character)(t θ X:ℝ)(hX:0<X)
-    (V:ℝ→ℂ)(hVc:HasCompactSupport V)(hVs:ContDiff ℝ ∞ V)(L:Ideal O)
-    (a:columns Q C hC.1 s.columns→ℂ)
-    (ha:∀I:columns Q C hC.1 s.columns,
-      a I=(if L∣(I:Ideal O) then s.beta (C*I) else 0)*heightCoeff τ t I)
-    (U:𝓢(ℝ,ℂ))(K:ℝ)(hK:0<K)(hU:∀z:O,0≤(U (‖eisEmbedding z‖^2/K)).re)
-    (J:ℕ)(E:ℝ)(hE:0≤E)
-    (henergy:∀v:ℝ,(commonEnergy s C hC τ v L U K).re≤E*(1+‖v‖)^(2*J)):
-    (gaussEnergy Finset.univ (element Q C hC.1 s.columns) (element_supported Q C hC.1 s.columns)
-      (fun I=>a I*star (columnPhase V
-        (Real.log (‖eisEmbedding (element Q C hC.1 s.columns I)‖^2/X)) θ)) U K).re≤
-      (E*heightCost t (-θ)^(2*J))*(∫w:ℝ,(1+‖w‖)^J*
-        ‖columnDensity (fun x=>star (V x)) (conjugate_compact V hVc) (conjugate_smooth V hVs) w‖)^2:=by
-  simp only [star_columnPhase]
-  exact column_window_energy s Q C hQ hC hQC τ t (-θ) X hX
-    (fun x=>star (V x)) (conjugate_compact V hVc) (conjugate_smooth V hVs)
-    L a ha U K hK hU J E hE henergy
 
 end SevenEighths.CenteredMomentFirstPhysicalSource
 

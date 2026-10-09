@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondSourceEnergy
-
 namespace OAI
 
 noncomputable section

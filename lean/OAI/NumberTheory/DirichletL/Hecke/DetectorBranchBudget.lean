@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRowCountOptimization
-
 namespace OAI
 
 noncomputable section

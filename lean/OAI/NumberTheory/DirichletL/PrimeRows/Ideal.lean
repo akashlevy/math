@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.Unramified
 import OAI.NumberTheory.DirichletL.Detector.SourceExclusions
-
 namespace OAI
 
 noncomputable section
@@ -33,13 +32,6 @@ theorem localCorrection_unramified_ideal (η : Character) (u : FreeRow) (P : Pri
   unfold actualUnramifiedClosed at he
   rw [←idealCoeff_span η hp.ne_zero,←idealRowHom_prime u.val (Ideal.span {p}) hg.1,hspan] at he
   exact he
-
-theorem localCorrection_outside_unramified (S : Finset (Ideal O))
-    (hbad : fixedBadPrimes⊆S) (η : Character) (u : FreeRow)
-    (P : PrimeIdeal) (hP : P.val∉S) (hcop : IsCoprime P.val (Ideal.span {u.val}))
-    (x w z : ℂ) (hx : 3/2<x.re) (hw : 2<w.re) (hz : 1/6<z.re) :
-    localCorrection η u P x w z=idealUnramifiedCorrection η u P x w z :=
-  localCorrection_unramified_ideal η u P (outside_prime_supported S hbad P hP) hcop x w z hx hw hz
 
 theorem localCorrection_ramified (η : Character) (u : FreeRow) (P : PrimeIdeal)
     (hP : P.val∣Ideal.span {u.val}) (x w z : ℂ) :

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialRayAttachment
 import OAI.NumberTheory.DirichletL.Descent.MarkBounds
-
 namespace OAI
 
 noncomputable section

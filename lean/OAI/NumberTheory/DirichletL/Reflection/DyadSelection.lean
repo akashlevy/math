@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.TupleDyads
 import OAI.NumberTheory.DirichletL.Reflection.TupleMembers
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

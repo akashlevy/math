@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.PaidBands
-
 namespace OAI
 
 noncomputable section

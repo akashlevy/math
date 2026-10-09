@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstAnnularInput
-
 namespace OAI
 
 noncomputable section
@@ -24,11 +23,6 @@ lemma original_active (s:Input ι)(R seed:Ideal HeckeFamily.O):
   cases j <;> rfl
 
 lemma active_volume (s:Input ι):volume (activeInput s)=volume s:=rfl
-
-lemma active_normalized (s:Input ι)(R seed:Ideal HeckeFamily.O)(W:𝓢(ℝ,ℂ))(H:ℝ):
-    normalizedGaussSource (activeInput s) R seed W H=normalizedGaussSource s R seed W H:=by
-  rw [←normalized_input_coefficient,←normalized_input_coefficient,original_active]
-  exact congrArg Complex.re ((original s R seed).active_gaussEnergy s.η fixedBadMask s.t (volume s) W H)
 
 end SevenEighths.CenteredMomentFirstAnnularInput
 

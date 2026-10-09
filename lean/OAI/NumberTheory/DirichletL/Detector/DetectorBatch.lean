@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.DetectorMomentData
 import OAI.NumberTheory.DirichletL.Hecke.DetectorBatch
-
 namespace OAI
 
 noncomputable section

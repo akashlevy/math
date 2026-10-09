@@ -1,78 +1,25 @@
 import OAI.NumberTheory.DirichletL.MeanSquare.PoissonSource
 import OAI.NumberTheory.DirichletL.CubicSieve.QuantitativePassage
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical SchwartzMap
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 open FirstPassCubeLabels
@@ -212,12 +159,8 @@ theorem reopenedCanonicalRow_smoothed_expand
 
 end SecondPassArithmetic
 
-open scoped BigOperators Classical
 namespace CompletedGauss
 open ActualEisensteinCubic
-
-def completedDualScale (X r C K U B : ℝ) (D E : Ideal O) : ℝ :=
-  r^3*(Ideal.absNorm D:ℝ)*(Ideal.absNorm E:ℝ)^3*U*B^3*X/(K^2*C^2)
 
 theorem positive_log_scale_identity (k n b K U B R : ℝ)
     (hk : 0<k) (hn : 0<n) (hb : 0<b) (hK : 0<K) (hU : 0<U) (hB : 0<B) :
@@ -232,23 +175,8 @@ theorem positive_log_scale_identity (k n b K U B R : ℝ)
     Real.exp_add,Real.exp_add,Real.exp_neg,h2,h3,Real.exp_log (div_pos hn hU)]
   field_simp
 
-theorem completed_ideal_kernel_scale (X r C K U B : ℝ)
-    (D E I J H : Ideal O) (hI : I≠0) (hJ : J≠0) (hH : H≠0)
-    (hK : 0<K) (hU : 0<U) (hB : 0<B) :
-    completedDualScale X r C K U B D E *
-      Real.exp (-2*Real.log ((Ideal.absNorm H:ℝ)/K)+
-        Real.log ((Ideal.absNorm I:ℝ)/U)+3*Real.log ((Ideal.absNorm J:ℝ)/B)) =
-      r^3*(Ideal.absNorm (D*I):ℝ)*(Ideal.absNorm (E*J):ℝ)^3*X/
-        ((Ideal.absNorm H:ℝ)^2*C^2) := by
-  have hpos (lengthScale : Ideal O) (hL : lengthScale≠0) : 0<(Ideal.absNorm lengthScale:ℝ) := by
-    exact_mod_cast Nat.pos_of_ne_zero (fun hz => hL (Ideal.absNorm_eq_zero_iff.mp hz))
-  rw [positive_log_scale_identity _ _ _ _ _ _ _ (hpos H hH) (hpos I hI) (hpos J hJ) hK hU hB]
-  simp only [completedDualScale,map_mul,Nat.cast_mul]
-  field_simp
-
 end CompletedGauss
 
-open scoped BigOperators
 namespace CompletedDyadic
 
 theorem weighted_scale_identity (x t a s : ℝ) (hx : 0<x) (ht : 0<t) :
@@ -520,99 +448,6 @@ def completedSmoothDyadicBlock (V₀ V₁ V₂ W : ℝ→ℂ) (K Y ρ q : ℝ)
           Real.exp (-2*Real.log ((Ideal.absNorm k.val:ℝ)/K)+
             Real.log ((Ideal.absNorm n:ℝ)/(2:ℝ)^i.2.2)+
               3*Real.log ((Ideal.absNorm v:ℝ)/(2:ℝ)^i.2.1))))
-
-theorem completed_smooth_series
-    (V₀ V₁ V₂ : ℝ→ℂ) (M₀ M₁ M₂ : ℝ)
-    (hM₀ : 0≤M₀) (hM₁ : 0≤M₁) (hM₂ : 0≤M₂)
-    (hV₀ : ∀y,V₀ y≠0 → |y|≤M₀) (hV₁ : ∀y,V₁ y≠0 → |y|≤M₁)
-    (hV₂ : ∀y,V₂ y≠0 → |y|≤M₂)
-    (hV₀n : ∀y,‖V₀ y‖≤1) (hV₁n : ∀y,‖V₁ y‖≤1) (hV₂n : ∀y,‖V₂ y‖≤1)
-    (W : ℝ→ℂ) (a b : ℝ) (ha : 0<a)
-    (hsupp : Function.support W⊆Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    (deltaLoss ρ q : ℝ) (hδ : 0<deltaLoss) (hρ : 0<ρ) (hq : 1<q) :
-    ∃C : ℝ,0<C ∧ ∀K Y H : ℝ,1≤K → 0<Y → 0<H →
-    ∀S T : (ℕ×ℕ×ℕ)→Finset (Ideal O),
-      (∀i,∀I∈S i,I≠0 ∧ (Ideal.absNorm I:ℝ)≤(2:ℝ)^i.2.2) →
-      (∀i,∀I∈T i,I≠0 ∧ (Ideal.absNorm I:ℝ)≤(2:ℝ)^i.2.1) →
-    ∀β : (ℕ×ℕ×ℕ)→Ideal O→Ideal O→ℂ,
-      (∀i,∀n∈S i,∀v∈T i,‖β i n v‖≤
-        1/(Real.sqrt ((2:ℝ)^i.2.2)*(2:ℝ)^i.2.1*ramifiedScale ρ q i.1*Real.sqrt H)) →
-      (∀k,Summable (fun i => ‖completedSmoothDyadicBlock V₀ V₁ V₂ W K Y ρ q S T β i k‖)) ∧
-      (∑k : idealRange K,‖∑'i : ℕ×ℕ×ℕ,
-        completedSmoothDyadicBlock V₀ V₁ V₂ W K Y ρ q S T β i k‖^2)
-        ≤C*(K*Y)^(2*deltaLoss)*(K+Y)/H := by
-  obtain ⟨A,hA⟩ := exists_nat_gt (deltaLoss+1/2)
-  obtain ⟨Cq,hCq,hquad⟩ := completed_smooth_quadratic V₀ V₁ V₂ M₀ M₁ M₂
-    hM₀ hM₁ hM₂ hV₀ hV₁ hV₂ hV₀n hV₁n hV₂n W a b ha hsupp hW A (2*deltaLoss) (by positivity)
-  obtain ⟨Cs,hCs,hsum⟩ := normMajorant_sum_bound deltaLoss A ρ q hδ hA hρ hq
-  refine ⟨2*Cq*Cs^2,by positivity,?_⟩
-  intro K Y H hK hY hH S T hS hT β hβ
-  have hKp : 0<K := by linarith
-  have hqp : 0<q := by linarith
-  let g : (ℕ×ℕ×ℕ)→ℝ := fun i => Real.sqrt Cq *
-    normMajorant deltaLoss A K Y⁻¹ (ramifiedScale ρ q i.1) H ((2:ℝ)^i.2.2) ((2:ℝ)^i.2.1)
-  have hg0 (i : ℕ×ℕ×ℕ) : 0≤g i := by
-    dsimp [g]
-    exact mul_nonneg (Real.sqrt_nonneg _) (normMajorant_nonneg _ _ _ _ _ _ _ _
-      hKp (by positivity) (ramifiedScale_pos ρ q hρ hqp _) hH (by positivity) (by positivity))
-  have henergy (i : ℕ×ℕ×ℕ) :
-      (∑k : idealRange K,‖completedSmoothDyadicBlock V₀ V₁ V₂ W K Y ρ q S T β i k‖^2)
-        ≤(g i)^2 := by
-    let U : ℝ := (2:ℝ)^i.2.2
-    let B : ℝ := (2:ℝ)^i.2.1
-    let r : ℝ := ramifiedScale ρ q i.1
-    let R : ℝ := Y⁻¹*r^3*B^3*U
-    have hU : 1≤U := one_le_pow₀ (by norm_num)
-    have hB : 1≤B := one_le_pow₀ (by norm_num)
-    have hUp : 0<U := by positivity
-    have hBp : 0<B := by positivity
-    have hr : 0<r := ramifiedScale_pos ρ q hρ hqp _
-    have hR : 0<R := by dsimp [R]; positivity
-    have h := hquad K U B (1/(Real.sqrt U*B*r*Real.sqrt H)) R
-      hK hU hB (by positivity) hR (S i) (T i) (hS i) (hT i) (β i) (hβ i)
-      (fun k => Real.log ((Ideal.absNorm k.val:ℝ)/K))
-      (fun n => Real.log ((Ideal.absNorm n:ℝ)/U))
-      (fun v => Real.log ((Ideal.absNorm v:ℝ)/B))
-    change (∑k,‖completedSmoothDyadicBlock V₀ V₁ V₂ W K Y ρ q S T β i k‖^2)≤_ at h
-    apply h.trans
-    have he : Cq*(K*(U*B))^(2*deltaLoss)*(K+U*B)*(U*B)*
-        (1/(Real.sqrt U*B*r*Real.sqrt H))^2/(1+R)^(2*A)=
-        Cq*((K*(U*B))^(2*deltaLoss)*(K+U*B)/(B*r^2*H)/(1+R)^(2*(A:ℝ))) := by
-      rw [show 2*(A:ℝ)=((2*A:ℕ):ℝ) by norm_num,Real.rpow_natCast]
-      simp only [one_div,inv_pow,mul_pow,Real.sq_sqrt hUp.le,Real.sq_sqrt hH.le]
-      field_simp
-
-    rw [he]
-    have hm := smooth_energy_le_normMajorant_sq deltaLoss A K Y⁻¹ r H U B
-      hKp (by positivity) hr hH hUp hBp
-    calc
-      _ ≤ Cq*(normMajorant deltaLoss A K Y⁻¹ r H U B)^2 := mul_le_mul_of_nonneg_left hm hCq.le
-      _ = (g i)^2 := by dsimp [g,U,B,r]; rw [mul_pow,Real.sq_sqrt hCq.le]
-  obtain ⟨hs,hb⟩ := hsum K Y H hKp hY hH
-  have hm := finite_tsum_energy_bound
-    (completedSmoothDyadicBlock V₀ V₁ V₂ W K Y ρ q S T β) g hg0
-    (hs.mul_left (Real.sqrt Cq)) henergy
-  refine ⟨hm.1,hm.2.trans ?_⟩
-  have hb' : (∑'i,g i)≤Real.sqrt Cq*(Cs*(K*Y)^deltaLoss*(Real.sqrt K+Real.sqrt Y)/Real.sqrt H) := by
-    rw [show g=(fun i => Real.sqrt Cq*normMajorant deltaLoss A K Y⁻¹
-      (ramifiedScale ρ q i.1) H ((2:ℝ)^i.2.2) ((2:ℝ)^i.2.1)) from rfl,tsum_mul_left]
-    exact mul_le_mul_of_nonneg_left hb (Real.sqrt_nonneg _)
-  have hsq := pow_le_pow_left₀ (tsum_nonneg hg0) hb' 2
-  apply hsq.trans
-  have hroot : (Real.sqrt K+Real.sqrt Y)^2≤2*(K+Y) := by
-    nlinarith [Real.sq_sqrt hKp.le,Real.sq_sqrt hY.le,
-      sq_nonneg (Real.sqrt K-Real.sqrt Y)]
-  simp only [mul_pow,div_pow,Real.sq_sqrt hCq.le,Real.sq_sqrt hH.le]
-  have hp : ((K*Y)^deltaLoss)^2=(K*Y)^(2*deltaLoss) := by
-    rw [←Real.rpow_mul_natCast (mul_pos hKp hY).le]
-    congr 1
-    ring
-  rw [hp]
-  calc
-    _ ≤ Cq*(Cs^2*(K*Y)^(2*deltaLoss)*(2*(K+Y))/H) := by
-      apply mul_le_mul_of_nonneg_left _ hCq.le
-      exact div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_left hroot (by positivity)) hH.le
-    _ = _ := by ring
 
 end CompletedGauss
 

@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.LowActualIdealLists
 import OAI.NumberTheory.DirichletL.Detector.LowCentralGeometry
 import OAI.NumberTheory.DirichletL.Detector.GaussianPhysicalMass
-
 namespace OAI
 
 noncomputable section

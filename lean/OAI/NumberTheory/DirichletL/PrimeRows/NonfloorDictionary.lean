@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.SourceAmplitudeClasses
 import OAI.NumberTheory.DirichletL.Detector.CentralClassPartition
-
 namespace OAI
 
 noncomputable section

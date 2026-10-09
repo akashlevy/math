@@ -1,8 +1,9 @@
-import OAI.NumberTheory.DirichletL.Moments.CommonSectorColumn
+import OAI.NumberTheory.DirichletL.Moments.CommonLinearSource
+import OAI.NumberTheory.DirichletL.Moments.CommonHeightEnvelope
+import OAI.NumberTheory.DirichletL.Moments.SecondMaskedWindow
 import OAI.NumberTheory.DirichletL.Moments.CommonWindowColumn
 import OAI.NumberTheory.DirichletL.Moments.ReflectedSource
 import OAI.NumberTheory.DirichletL.Moments.SecondWindowSource
-
 namespace OAI
 
 noncomputable section

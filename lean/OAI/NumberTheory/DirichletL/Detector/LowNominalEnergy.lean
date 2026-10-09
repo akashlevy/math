@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LowSelectedBound
 import OAI.NumberTheory.DirichletL.Detector.LowCentralGeometry
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CanonicalRayCube
 import OAI.NumberTheory.DirichletL.Hecke.PrimeAmplitudeScale
-
 namespace OAI
 
 noncomputable section

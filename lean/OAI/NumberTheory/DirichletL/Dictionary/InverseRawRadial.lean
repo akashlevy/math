@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialDetectorSource
 import OAI.NumberTheory.DirichletL.Inversion.SecondChildWindows
-
 namespace OAI
 
 noncomputable section
@@ -38,48 +37,6 @@ theorem exists_raw_radial_majorant :
     change (((f x)^2:ℝ):ℂ)=1
     rw [(hone x).mp hx]
     norm_num
-
-private theorem admissible_one : Admissible (1:Ideal O) := by
-  refine ⟨one_ne_zero,squarefree_one,?_⟩
-  simp only [UniqueFactorizationMonoid.normalizedFactors_one,Multiset.notMem_zero,false_implies,forall_const]
-
-theorem finite_raw_le_initial_smoothed (Φ : 𝓢(ℝ,ℂ))
-    (hΦ : ∀x,0≤(Φ x).re) (hone : ∀x∈Set.Icc (0:ℝ) 1,Φ x=1)
-    (data : RowData) (W : ℝ→ℂ) (b Z r σ t H : ℝ)
-    (hZ : 0<Z) (hH : 0<H) (hW : ∀x,W x≠0 → x≤b)
-    (rows : Finset NonzeroElement)
-    (hrows : ∀u∈rows,((Ideal.span {u.val}).absNorm:ℝ)≤H) :
-    (∑u∈rows,‖polynomial (data.character u) true W (Z^r) σ t‖^2)≤
-      smoothedEnergy Φ H
-        (originalTotalPolynomial
-          ((ConcretePrimeRowBridge.idealsUpTo ⌈Z^r*b⌉₊).filter Supported)
-          1 (fixedBase data.η data.m data.f) (fun _=>1)
-          (twistedProfile W σ t) Z r 0) := by
-  let S:=(ConcretePrimeRowBridge.idealsUpTo ⌈Z^r*b⌉₊).filter Supported
-  let f:=originalTotalPolynomial S 1 (fixedBase data.η data.m data.f) (fun _=>1)
-    (twistedProfile W σ t) Z r 0
-  have hsum : Summable (fun u:O=>radialWeight Φ H u*‖f u‖^2) :=
-    (original_smoothed_overlap_triangle S admissible_one
-      (fun n hn _=>(Finset.mem_filter.mp hn).2) (fixedBase data.η data.m data.f)
-      (fun _=>1) (twistedProfile W σ t) hZ r 0 (fun _=>0) Φ (fun x _=>hΦ x) hH).1
-  have he (u : NonzeroElement) (hu : u∈rows) :
-      ‖polynomial (data.character u) true W (Z^r) σ t‖^2=
-        radialWeight Φ H u.val*‖f u.val‖^2 := by
-    have hn : ‖eisEmbedding u.val‖^2/H∈Set.Icc (0:ℝ) 1 := by
-      refine ⟨div_nonneg (sq_nonneg _) hH.le,?_⟩
-      apply (div_le_one hH).mpr
-      rw [eisEmbedding_norm_sq_eq_absNorm_span]
-      exact hrows u hu
-    rw [character_eq_initial data u W Z r σ t b hZ hW]
-    change ‖f u.val‖^2=(Φ (‖eisEmbedding u.val‖^2/H)).re*‖f u.val‖^2
-    rw [hone _ hn,Complex.one_re,one_mul]
-  calc
-    _=∑u∈rows,radialWeight Φ H u.val*‖f u.val‖^2:=Finset.sum_congr rfl he
-    _=∑u∈rows.image Subtype.val,radialWeight Φ H u*‖f u‖^2:=by
-      rw [Finset.sum_image (fun a _ b _ hab=>Subtype.val_injective hab)]
-    _≤∑'u:O,radialWeight Φ H u*‖f u‖^2:=hsum.sum_le_tsum _
-      (fun u _=>mul_nonneg (hΦ _) (sq_nonneg _))
-    _= _:=rfl
 
 end SevenEighths.DetectorDictionaryInverseRawRadial
 

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.CubeSource
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

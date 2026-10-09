@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.FrequencySupport
 import OAI.NumberTheory.DirichletL.Detector.PhysicalReopen
-
 namespace OAI
 
 noncomputable section

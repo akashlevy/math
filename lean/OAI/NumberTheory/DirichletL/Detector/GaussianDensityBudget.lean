@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GaussianTuple
-
 namespace OAI
 
 noncomputable section

@@ -1,76 +1,24 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.RamifiedNormWeights
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical SchwartzMap
 namespace CanonicalQuadraticSieve
 
 section
@@ -179,80 +127,6 @@ section
 open ActualEisensteinCubic ConcreteTraceCRT ConcretePrimeRowBridge
 open EisensteinSchwartzPoisson TruncatedPrincipalPoisson IdealCoprimeSieveOperator
 
-def lowPrincipalMain (I J : Ideal O) (W : SchwartzMap ℝ ℂ) (X Z : ℝ) : ℂ :=
-  (6 : ℂ)⁻¹ * principalTruncation (fun P : gcdMaskPrimes (I * J) => P.val) Finset.univ
-    (quadraticSquareProfile W) X Z
-
-def lowPrincipalMiddle (I J : Ideal O) (W : SchwartzMap ℝ ℂ) (X Y Z lengthScale : ℝ) : ℂ :=
-  (6 : ℂ)⁻¹ * middleTruncation (fun P : gcdMaskPrimes (I * J) => P.val) Finset.univ
-    (quadraticSquareProfile W) X Y Z lengthScale
-
-def lowPrincipalError (I J : Ideal O) (W : SchwartzMap ℝ ℂ) (X Y Z lengthScale : ℝ) : ℂ :=
-  (6 : ℂ)⁻¹ * truncationError (fun P : gcdMaskPrimes (I * J) => P.val) Finset.univ
-    (quadraticSquareProfile W) X Y Z lengthScale
-
-theorem lowPrincipalIdeal_truncated (I J : Ideal O) (hI : Admissible I) (hJ : Admissible J)
-    (W : SchwartzMap ℝ ℂ) (X Y Z lengthScale : ℝ) (hX : 0 < X) :
-    lowPrincipalIdeal I J W X =
-      lowPrincipalMain I J W X Z + lowPrincipalMiddle I J W X Y Z lengthScale + lowPrincipalError I J W X Y Z lengthScale := by
-  have he : lowPrincipalLattice I J W X =
-      ∑' z : O, rowCoprimeMask (fun P : gcdMaskPrimes (I * J) => P.val) Finset.univ z *
-        (if z = 0 then 0 else quadraticSquareProfile W (‖eisEmbedding z‖ ^ 2 / X)) := by
-    apply tsum_congr
-    intro z
-    by_cases hz : z = 0
-    · subst z
-      simp only [jointMask_zero, zero_mul]
-    · simp only [ite_eq_right hz, quadraticSquareProfile_apply]
-  rw [lowPrincipalIdeal_eq_lattice I J hI hJ W X hX, he]
-  unfold lowPrincipalMain lowPrincipalMiddle lowPrincipalError truncationError
-  ring
-
-theorem gcdMaskPrimes_card_le (D : Ideal O) :
-    (gcdMaskPrimes D).card ≤ 2 + (IdealMobiusDivisorSum.primeSupport D).card := by
-  change (fixedBadPrimes ∪ IdealMobiusDivisorSum.primeSupport D).card ≤ _
-  exact (Finset.card_union_le _ _).trans_eq (by rw [fixedBadPrimes_card])
-
-theorem gcdMaskPrimes_subsets_bound (ε : ℝ) (hε : 0 < ε) (D : Ideal O) (hD : D ≠ 0) :
-    (2 : ℝ) ^ (gcdMaskPrimes D).card ≤
-      4 * supportConstant ε hε * (Ideal.absNorm D : ℝ) ^ ε := by
-  calc
-    _ ≤ (2 : ℝ) ^ (2 + (IdealMobiusDivisorSum.primeSupport D).card) :=
-      pow_le_pow_right₀ (by norm_num) (gcdMaskPrimes_card_le D)
-    _ = 4 * (2 : ℝ) ^ (IdealMobiusDivisorSum.primeSupport D).card := by rw [pow_add]; norm_num
-    _ ≤ 4 * (supportConstant ε hε * (Ideal.absNorm D : ℝ) ^ ε) :=
-      mul_le_mul_of_nonneg_left (support_card_bound ε hε D hD) (by norm_num)
-    _ = _ := by ring
-
-theorem lowPrincipalError_bound (A : ℕ) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-      ∀ (ε : ℝ) (hε : 0 < ε) (I J : Ideal O) (_hI : Admissible I) (_hJ : Admissible J)
-        (W : SchwartzMap ℝ ℂ) (X Y Z lengthScale : ℝ),
-        0 < X → 0 < Y → Y ≤ X → X ≤ Z → 0 ≤ lengthScale →
-        ‖lowPrincipalError I J W X Y Z lengthScale‖ ≤
-          (4 * supportConstant ε hε * ((Ideal.absNorm I : ℝ) * (Ideal.absNorm J : ℝ)) ^ ε) *
-          (C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) (quadraticSquareProfile W)) *
-          ((Y / X) ^ A + 1 / (1 + Z / X) ^ A +
-            (X / Y) / ((min 1 (X / Z)) ^ 2 * (1 + X * lengthScale / Z) ^ A)) := by
-  obtain ⟨s, C, hC, hb⟩ := truncationError_bound A
-  refine ⟨s, C, hC, ?_⟩
-  intro ε hε I J hI hJ W X Y Z lengthScale hX hY hYX hXZ hL
-  have h := hb (fun P : gcdMaskPrimes (I * J) => P.val) Subtype.val_injective Finset.univ
-    (quadraticSquareProfile W) X Y Z lengthScale hX hY hYX hXZ hL
-  have hc := gcdMaskPrimes_subsets_bound ε hε (I * J) (mul_ne_zero hI.1 hJ.1)
-  simp only [Finset.card_univ, Fintype.card_coe] at h
-  simp only [map_mul, Nat.cast_mul] at hc
-  have hnorm : ‖lowPrincipalError I J W X Y Z lengthScale‖ ≤
-      ‖truncationError (fun P : gcdMaskPrimes (I * J) => P.val) Finset.univ
-        (quadraticSquareProfile W) X Y Z lengthScale‖ := by
-    unfold lowPrincipalError
-    rw [norm_mul]
-    apply mul_le_of_le_one_left (norm_nonneg _)
-    norm_num
-  apply hnorm.trans (h.trans ?_)
-  have hZ : 0 < Z := hX.trans_le hXZ
-  gcongr
-
 end
 
 open ActualEisensteinCubic ConcreteTraceCRT CompletedGauss
@@ -295,7 +169,6 @@ theorem originalPairLow_principal_finite
 
 end CanonicalQuadraticSieve
 
-open scoped BigOperators Classical SchwartzMap
 namespace SecondPassArithmetic
 
 section
@@ -324,53 +197,6 @@ theorem activeGaussRowFactor_norm_le_one
     (activeExponent_ne_zero S T) (activeExponent_lt_six S T)
   simp only [activeGaussRowFactor, norm_mul, norm_star, hGauss, one_mul]
   exact (mul_le_mul (hr e) (hr k) (norm_nonneg _) zero_le_one).trans_eq (one_mul 1)
-
-theorem secondPairRadialMode_tail
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2) (A : ℕ) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-    ∀ (S T : Finset ι) (e : O), e ≠ 0 → ∀ (W : 𝓢(ℝ, ℂ)) (Y H : ℝ),
-      0 < Y → 0 ≤ H →
-      let n := ∏ i : activeSupport T S, p i.val
-      let scale := Y / (‖eisEmbedding e‖^2 * ‖eisEmbedding n‖^2)
-      (∑' k : {k : O // H ≤ scale * ‖eisEmbedding k‖^2},
-        ‖secondPairRadialMode p hp hg hinj S T e k.val W Y‖) ≤
-      (Y / ‖eisEmbedding n‖) *
-        ((C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W) /
-          ((min 1 scale)^2 * (1+H)^A)) := by
-  obtain ⟨s,C,hC,hbound⟩ := EisensteinSchwartzPoisson.paperRadialFourier_lattice_tail A
-  refine ⟨s,C,hC,?_⟩
-  intro S T e he W Y H hY hH
-  dsimp only
-  let n := ∏ i : activeSupport T S, p i.val
-  let scale := Y / (‖eisEmbedding e‖^2 * ‖eisEmbedding n‖^2)
-  have hn : n ≠ 0 := Finset.prod_ne_zero_iff.mpr (fun i hi => hp i.val)
-  have hnorm : 0 < ‖eisEmbedding n‖ := norm_pos_iff.mpr (eisEmbedding_ne_zero hn)
-  have hscale : 0 < scale := div_pos hY
-    (mul_pos (sq_pos_of_pos (norm_pos_iff.mpr (eisEmbedding_ne_zero he))) (sq_pos_of_pos hnorm))
-  let tailSet : Set O := {k | H ≤ scale * ‖eisEmbedding k‖^2}
-  let c := Y / ‖eisEmbedding n‖
-  have hc0 : 0 ≤ c := (div_pos hY hnorm).le
-  have hpnt (k : tailSet) : ‖secondPairRadialMode p hp hg hinj S T e k.val W Y‖ ≤
-      c * ‖EisensteinSchwartzPoisson.paperRadialFourier W (scale * ‖eisEmbedding k.val‖^2)‖ := by
-    have ha : Y * ‖eisEmbedding k.val‖^2 / (‖eisEmbedding e‖^2 * ‖eisEmbedding n‖^2) =
-        scale * ‖eisEmbedding k.val‖^2 := by dsimp [scale]; ring
-    simp only [secondPairRadialMode, norm_mul]
-    change ‖(Y : ℂ) / (‖eisEmbedding n‖ : ℂ)‖ * _ * _ ≤ _
-    rw [ha, norm_div, Complex.norm_real, Complex.norm_real,
-      Real.norm_eq_abs, Real.norm_eq_abs, abs_of_pos hY, abs_of_pos hnorm]
-    exact mul_le_of_le_one_right (by positivity)
-      (activeGaussRowFactor_norm_le_one p hp hg hinj hc T S e k.val)
-  have hmajor : Summable (fun k : tailSet =>
-      c * ‖EisensteinSchwartzPoisson.paperRadialFourier W (scale * ‖eisEmbedding k.val‖^2)‖) :=
-    ((EisensteinSchwartzPoisson.paperRadialFourier_lattice_summable_norm W scale hscale).subtype tailSet).mul_left c
-  have hsmall : Summable (fun k : tailSet => ‖secondPairRadialMode p hp hg hinj S T e k.val W Y‖) :=
-    Summable.of_nonneg_of_le (fun _ => norm_nonneg _) hpnt hmajor
-  calc
-    _ ≤ ∑' k : tailSet, c * ‖EisensteinSchwartzPoisson.paperRadialFourier W
-          (scale * ‖eisEmbedding k.val‖^2)‖ := hsmall.tsum_le_tsum hpnt hmajor
-    _ = c * ∑' k : tailSet, ‖EisensteinSchwartzPoisson.paperRadialFourier W
-          (scale * ‖eisEmbedding k.val‖^2)‖ := tsum_mul_left
-    _ ≤ _ := mul_le_mul_of_nonneg_left (hbound W scale H hscale hH) hc0
 
 end
 section
@@ -518,43 +344,6 @@ open ActualEisensteinCubic
 open FirstPassCubeLabels (columnLog normalizedColumn jLabel)
 open JointLogSeparation (halfNormalizationCLM)
 
-theorem normalized_truncatedSecondSource_eq_raw_sectors {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1)
-    (B C D F : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (Ψ : O →* ℂ) (m : O) (X Y : ℝ) (hX : 0 < X)
-    (U : ℝ → ℂ) (hUc : HasCompactSupport U) (hUs : ContDiff ℝ ∞ U)
-    (g W : 𝓢(ℝ, ℂ)) (hU : ∀ t, g t ≠ 0 → U t = 1)
-    (K : Finset ι → Finset ι → Finset O) :
-    let c := primeSubsetGenerator (fun i => Ideal.span {p i}) C *
-      jLabel p B (fun i => v₁ i + v₂ i) ε₁ ε₂
-    let d := primeSubsetGenerator (fun i => Ideal.span {p i}) D
-    truncatedSecondSource p hp hg hinj F Ψ m c d
-      (fun A => normalizedColumn p (fun S => g (columnLog p X S)) A) W Y K =
-      ∑ z : SecondRayIndex, ∑ R ∈ F.powerset,
-        actualSecondRawVariableSector p hp hcop hg B v₁ v₂ ε₁ ε₂
-          ((secondExpansionSector F K R).image (expansionSupportData C D))
-          (secondExpansionPushWeight C D (secondExpansionSector F K R)
-            (secondNormalizedExpansionWeight p hp hcop hg Ψ m c d z X Y))
-          F (secondRayMinus Ψ z) (secondRayPlus Ψ z) m
-          (primeSubsetGenerator (fun i => Ideal.span {p i}) R)
-          (halfNormalizationCLM U g) (halfNormalizationCLM U g) W
-          (secondExpansionScale p X (primeSubsetGenerator (fun i => Ideal.span {p i}) R)) Y := by
-  dsimp only
-  rw [truncatedSecondSource_eq_fixed_sectors p hp hcop hg hinj hc hpr]
-  apply Finset.sum_congr rfl
-  intro z hz
-  apply Finset.sum_congr rfl
-  intro R hR
-  exact secondExpansionSource_eq_raw_variable_sector p hp hcop hg hinj hpr B C D F
-    v₁ v₂ ε₁ ε₂ Ψ m _ z (secondExpansionSector F K R)
-    (fun x hx => secondExpansionSector_valid p F K R x hx)
-    X Y hX U hUc hUs g g W hU hU
-
 end
 
 open ActualEisensteinCubic
@@ -588,38 +377,6 @@ theorem secondPairRadialMode_summable_norm (S T : Finset ι) (e : O) (he : e ≠
   rw [ha]
   exact mul_le_of_le_one_right (by positivity)
     (activeGaussRowFactor_norm_le_one p hp hg hinj hc T S e k)
-
-theorem secondPairRadialMode_remainder (A : ℕ) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-    ∀ (S T : Finset ι) (e : O), e ≠ 0 → ∀ (W : 𝓢(ℝ, ℂ)) (Y H : ℝ),
-      0 < Y → 0 ≤ H → ∀ K : Finset O,
-      let n := ∏ i : activeSupport T S, p i.val
-      let scale := Y / (‖eisEmbedding e‖^2 * ‖eisEmbedding n‖^2)
-      (∀ k : O, k ∉ K → H ≤ scale * ‖eisEmbedding k‖^2) →
-      ‖∑' k : {k : O // k ∉ K}, secondPairRadialMode p hp hg hinj S T e k.val W Y‖ ≤
-        (Y/‖eisEmbedding n‖) *
-          ((C*s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W)/((min 1 scale)^2*(1+H)^A)) := by
-  obtain ⟨s,C,hC,hb⟩ := secondPairRadialMode_tail p hp hg hinj hc A
-  refine ⟨s,C,hC,?_⟩
-  intro S T e he W Y H hY hH K
-  dsimp only
-  intro hK
-  let n := ∏ i : activeSupport T S, p i.val
-  let scale := Y / (‖eisEmbedding e‖^2 * ‖eisEmbedding n‖^2)
-  let small : Set O := {k | k ∉ K}
-  let large : Set O := {k | H ≤ scale * ‖eisEmbedding k‖^2}
-  let f : small → large := fun k => ⟨k.val,hK k.val k.property⟩
-  have hi : Function.Injective f := by
-    intro a b heq
-    exact Subtype.ext (congrArg (fun z : large => z.val) heq)
-  have hs := secondPairRadialMode_summable_norm p hp hg hinj hc S T e he W Y hY
-  calc
-    _ ≤ ∑' k : small, ‖secondPairRadialMode p hp hg hinj S T e k.val W Y‖ :=
-      norm_tsum_le_tsum_norm (hs.subtype small)
-    _ ≤ ∑' k : large, ‖secondPairRadialMode p hp hg hinj S T e k.val W Y‖ :=
-      (hs.subtype small).tsum_le_tsum_of_inj f hi (fun _ _ => norm_nonneg _) (fun _ => le_rfl)
-        (hs.subtype large)
-    _ ≤ _ := hb S T e he W Y H hY hH
 
 end SecondPassArithmetic
 

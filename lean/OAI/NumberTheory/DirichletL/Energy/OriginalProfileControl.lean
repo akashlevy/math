@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Energy.NaturalInputMatches
 import OAI.NumberTheory.DirichletL.Energy.ZeroComparison
 import OAI.NumberTheory.DirichletL.Moments.FirstReferenceEnergy
 import OAI.NumberTheory.DirichletL.Moments.SourceInputTailUniform
-
 namespace OAI
 
 noncomputable section
@@ -57,23 +56,6 @@ lemma lower_product (s:Input ι)(N:ℕ)(a:ℝ)(ha:0<a)
     _=∏_i:ι,min 1 a:=by simp
     _≤∏i,s.lo i:=Finset.prod_le_prod₀ (fun _ _=>hm) (fun i _=>(min_le_right _ _).trans (hlo i))
 
-omit [DecidableEq ι] in
-lemma source_factor_le (s:Input ι)(N:ℕ)(aslot a K:ℝ)(hs:0<aslot)(ha:0<a)(hK:0<K)
-    (hN:Fintype.card ι≤N)(hlo:∀i,aslot≤s.lo i):
-    sourceFactor s a a K≤
-      (Real.exp (Real.log 4)*fixedPresentationCost/((min 1 aslot)^N*a*a))*K*(s.η.modulus.absNorm:ℝ) := by
-  have hd:0<(min 1 aslot)^N*a*a:=by positivity
-  have hprod:=lower_product s N aslot hs hN hlo
-  have hden:(min 1 aslot)^N*a*a≤(∏i,s.lo i)*a*a:=
-    mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hprod ha.le) ha.le
-  have hdiv:=div_le_div_of_nonneg_left (Real.exp_pos (Real.log 4)).le hd hden
-  have hc:=fixedPresentationCost_pos
-  have hn:0≤(s.η.modulus.absNorm:ℝ):=Nat.cast_nonneg _
-  have hh:=mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right
-    (mul_le_mul_of_nonneg_right hdiv hc.le) hK.le) hn
-  unfold sourceFactor
-  convert hh using 1 ; ring
-
 local notation "O"=>HeckeFamily.O
 section Input
 variable {ι : Type*} [Fintype ι]
@@ -89,37 +71,6 @@ variable {Z Bmask bΦ a b : ℝ}
 variable (state : NaturalState Z Bmask bΦ) (p : Profiles a b) (ha : 0 < a)
 variable (t X₁ X₂ Y₁ Y₂ : ℝ) (hX₁ : 0 < X₁) (hX₂ : 0 < X₂)
 variable (hY₁ : 0 < Y₁) (hY₂ : 0 < Y₂) (hsame : Y₁ * Y₂ = X₁ * X₂)
-
-local notation "inp" => CenteredMomentEnergyNaturalInputMatches.input Q H hH η₀ θ W hW aslot bslot lo hi haslot hWs
-  w σ freq hσ state p ha t X₁ X₂ Y₁ Y₂ hX₁ hX₂ hY₁ hY₂ hsame
-
-theorem natural_plain_control (N:ℕ)(hN:Fintype.card ι≤N)(S:Finset (ℕ×ℕ)):
-    (plainControl inp (p.profile 0) (p.profile 1))^2≤
-      (profileBound W hW aslot bslot lo hi haslot hWs)^(2*N)*
-        (p.control (insert (0,0) S))^2 :=
-  plain_control_sq_le inp p S N _
-    (profileBound_ge_one W hW aslot bslot lo hi haslot hWs) hN (fun _=>le_refl _)
-
-theorem natural_zero_plain_control (N:ℕ)(hN:Fintype.card ι≤N)(S:Finset (ℕ×ℕ))
-    (hz₁:(inp).W₁ 0=0)(hz₂:(inp).W₂ 0=0):
-    (plainControl (zeroInput inp hz₁ hz₂) (p.profile 0) (p.profile 1))^2≤
-      (profileBound W hW aslot bslot lo hi haslot hWs)^(2*N)*
-        (p.control (insert (0,0) S))^2 :=
-  plain_control_sq_le (zeroInput inp hz₁ hz₂) p S N _
-    (profileBound_ge_one W hW aslot bslot lo hi haslot hWs) hN (fun _=>le_refl _)
-
-theorem natural_source_factor (N:ℕ)(hN:Fintype.card ι≤N)(K:ℝ)(hK:0<K):
-    sourceFactor inp a a K≤
-      (Real.exp (Real.log 4)*fixedPresentationCost/((min 1 aslot)^N*a*a))*K*
-        (state.character.modulus.absNorm:ℝ) :=
-  source_factor_le inp N aslot a K haslot ha hK hN (fun _=>le_refl _)
-
-theorem natural_zero_source_factor (N:ℕ)(hN:Fintype.card ι≤N)(K:ℝ)(hK:0<K)
-    (hz₁:(inp).W₁ 0=0)(hz₂:(inp).W₂ 0=0):
-    sourceFactor (zeroInput inp hz₁ hz₂) a a K≤
-      (Real.exp (Real.log 4)*fixedPresentationCost/((min 1 aslot)^N*a*a))*K*
-        (state.character.modulus.absNorm:ℝ) :=
-  source_factor_le (zeroInput inp hz₁ hz₂) N aslot a K haslot ha hK hN (fun _=>le_refl _)
 
 end Input
 end SevenEighths.CenteredMomentEnergyOriginalProfileControl

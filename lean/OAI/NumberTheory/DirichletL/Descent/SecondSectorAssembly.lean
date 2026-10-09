@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondCanonicalSplit
 import OAI.NumberTheory.DirichletL.Descent.SecondSupportedEnergy
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

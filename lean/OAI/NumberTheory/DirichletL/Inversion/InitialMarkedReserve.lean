@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Endpoint
-
 namespace OAI
 
 namespace SevenEighths.InverseInitialMarkedReserve

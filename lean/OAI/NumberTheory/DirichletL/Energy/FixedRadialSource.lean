@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.OriginalSource
-
 namespace OAI
 
 noncomputable section

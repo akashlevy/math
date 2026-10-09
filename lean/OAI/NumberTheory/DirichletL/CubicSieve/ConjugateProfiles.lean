@@ -1,76 +1,24 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.UnrestrictedCharacters
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical SchwartzMap ContDiff FourierTransform
 namespace SecondPassIntegration
 open JointLogSeparation FourierBridge
 
@@ -93,16 +41,6 @@ theorem normalized_conjugate_frequencyTwist (U : ℝ → ℂ) (hUc : HasCompactS
     conjugateProfile (halfNormalizationCLM U (frequencyTwist g t)) =
       frequencyTwist (conjugateProfile (halfNormalizationCLM U g)) (-t) := by
   rw [halfNormalization_twist U hUc hUs, conjugateProfile_frequencyTwist]
-
-theorem normalized_conjugate_profile_envelope (U : ℝ → ℂ) (hUc : HasCompactSupport U)
-    (hUs : ContDiff ℝ ∞ U) (g : 𝓢(ℝ, ℂ)) (t s : ℝ) (J : ℕ) :
-    ‖(𝓕 (conjugateProfile (halfNormalizationCLM U (frequencyTwist g t)))) s‖ ≤
-      fourierPointBound (J+2)
-        (twistSourceBound (conjugateProfile (halfNormalizationCLM U g)) (J+2)) *
-          (1 + ‖t‖)^(J+2) * FirstPassCubeLabels.firstLogDensity J s := by
-  rw [normalized_conjugate_frequencyTwist U hUc hUs]
-  simpa only [norm_neg] using
-    twisted_profile_fourier_envelope (conjugateProfile (halfNormalizationCLM U g)) (-t) s J
 
 end SecondPassIntegration
 
@@ -171,7 +109,6 @@ theorem seven_kernel_twisted_profiles (g₁ g₂ W : 𝓢(ℝ, ℂ))
 
 end JointLogSeparation
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 
 section
@@ -390,47 +327,11 @@ def secondExpansionScale (X : ℝ) (r : O) (x : SecondSupportData ι) : ℝ :=
 
 end
 
-def secondExpansionPushWeight {ι : Type*} [DecidableEq ι]
-    (C D : Finset ι) (s : Finset (SecondExpansionData ι))
-    (w : SecondExpansionData ι → ℂ) (y : SecondSupportData ι) : ℂ :=
-  ∑ x ∈ s, if expansionSupportData C D x = y then w x else 0
-
-theorem secondExpansionPushWeight_sum {ι : Type*} [DecidableEq ι]
-    (C D : Finset ι) (s : Finset (SecondExpansionData ι))
-    (w : SecondExpansionData ι → ℂ) (H : SecondSupportData ι → ℂ) :
-    (∑ y ∈ s.image (expansionSupportData C D), secondExpansionPushWeight C D s w y * H y) =
-      ∑ x ∈ s, w x * H (expansionSupportData C D x) := by
-  unfold secondExpansionPushWeight
-  simp only [Finset.sum_mul]
-  rw [Finset.sum_comm]
-  apply Finset.sum_congr rfl
-  intro x hx
-  rw [Finset.sum_eq_single_of_mem (expansionSupportData C D x) (Finset.mem_image.mpr ⟨x,hx,rfl⟩)]
-  · simp
-  · intro y hy hne
-    simp [Ne.symm hne]
-
 variable {ι : Type*} [DecidableEq ι]
   (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
   (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
   (hg : ∀ i, lambda ∉ Ideal.span {p i})
   (hinj : Function.Injective (fun i => Ideal.span {p i}))
-
-include hinj in
-
-theorem secondExpansionPushWeight_at_source
-    (C D : Finset ι) (r : O) (s : Finset (SecondExpansionData ι))
-    (hs : ∀ x ∈ s, InSecondQuotientSector p r x)
-    (w : SecondExpansionData ι → ℂ) (x : SecondExpansionData ι) (hx : x ∈ s) :
-    secondExpansionPushWeight C D s w (expansionSupportData C D x) = w x := by
-  unfold secondExpansionPushWeight
-  rw [Finset.sum_eq_single_of_mem x hx]
-  · simp
-  · intro y hy hne
-    have hf : expansionSupportData C D y ≠ expansionSupportData C D x := by
-      intro h
-      exact hne (expansionSupportData_injOn p hinj C D r (hs y hy) (hs x hx) h)
-    simp [hf]
 
 def secondExpansionSource
     (F : Finset ι) (Ψ : O →* ℂ) (m c d : O) (z : SecondRayIndex)
@@ -452,41 +353,6 @@ def secondNormalizedExpansionWeight
   ((Y : ℂ) * secondSourceCommonCoefficient p hg Ψ m c d x.sourceCommon x.divisor) *
     ((X : ℂ)⁻¹ * secondTotalWeight p hp hcop hg Ψ Ψ m (secondExpansionQuotient p x) c d
       (primeSubsetGenerator (fun i => Ideal.span {p i}) x.divisor) x.frequency (z,x.overlap))
-
-include hinj in
-
-theorem secondExpansionSource_eq_raw_variable_sector
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1)
-    (B C D F : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (Ψ : O →* ℂ) (m r : O) (z : SecondRayIndex)
-    (s : Finset (SecondExpansionData ι)) (hs : ∀ x ∈ s, InSecondQuotientSector p r x)
-    (X Y : ℝ) (hX : 0 < X)
-    (U : ℝ → ℂ) (hUc : HasCompactSupport U) (hUs : ContDiff ℝ ∞ U)
-    (g₁ g₂ W : 𝓢(ℝ, ℂ)) (hU₁ : ∀ t, g₁ t ≠ 0 → U t = 1)
-    (hU₂ : ∀ t, g₂ t ≠ 0 → U t = 1) :
-    let c := primeSubsetGenerator (fun i => Ideal.span {p i}) C *
-      jLabel p B (fun i => v₁ i + v₂ i) ε₁ ε₂
-    let d := primeSubsetGenerator (fun i => Ideal.span {p i}) D
-    secondExpansionSource p hp hcop hg F Ψ m c d z s
-      (fun A => normalizedColumn p (fun B => g₁ (columnLog p X B)) A)
-      (fun A => normalizedColumn p (fun B => g₂ (columnLog p X B)) A) W Y =
-    actualSecondRawVariableSector p hp hcop hg B v₁ v₂ ε₁ ε₂
-      (s.image (expansionSupportData C D))
-      (secondExpansionPushWeight C D s (secondNormalizedExpansionWeight p hp hcop hg Ψ m c d z X Y))
-      F (secondRayMinus Ψ z) (secondRayPlus Ψ z) m r
-      (halfNormalizationCLM U g₁) (halfNormalizationCLM U g₂) W (secondExpansionScale p X r) Y := by
-  dsimp only
-  unfold actualSecondRawVariableSector
-  rw [secondExpansionPushWeight_sum]
-  unfold secondExpansionSource
-  apply Finset.sum_congr rfl
-  intro x hx
-  obtain ⟨hE,hr⟩ := hs x hx
-  simp only [secondExpansionQuotient_of_subset p x hE, expansionSupportData,
-    secondNormalizedExpansionWeight, secondExpansionScale]
-  rw [weighted_secondRayChild_normalized p hp hcop hg hinj hpr x.sourceCommon x.divisor hE
-    F x.overlap Ψ Ψ m _ _ x.frequency r z hr X Y hX U hUc hUs g₁ g₂ W hU₁ hU₂]
-  simp only [mul_assoc]
 
 end
 
@@ -561,27 +427,7 @@ theorem secondNormalizedExpansionWeight_norm_le
     _ ≤ Y * 1 * ‖eisEmbedding r‖ ^ 2 / X ^ 2 * ‖secondRayCoefficient z‖ := by gcongr
     _ = _ := by ring
 
-include hinj in
-
-theorem secondNormalizedPushWeight_norm_le
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (C D : Finset ι) (Ψ : O →* ℂ) (m c d r : O) (z : SecondRayIndex)
-    (X Y : ℝ) (hX : 0 < X) (hY : 0 ≤ Y)
-    (s : Finset (SecondExpansionData ι)) (hs : ∀ x ∈ s, InSecondQuotientSector p r x)
-    (hΨG : ∀ x ∈ s, ‖Ψ (∏ i ∈ x.sourceCommon, p i)‖ ≤ 1)
-    (hΨV : ∀ x ∈ s, ‖Ψ (∏ i ∈ x.overlap, p i)‖ ≤ 1)
-    (y : SecondSupportData ι) (hy : y ∈ s.image (expansionSupportData C D)) :
-    ‖secondExpansionPushWeight C D s (secondNormalizedExpansionWeight p hp hcop hg Ψ m c d z X Y) y *
-      (secondExpansionScale p X r y : ℂ)⁻¹‖ ≤
-      Y * ‖eisEmbedding r‖ ^ 2 / X ^ 2 * ‖secondRayCoefficient z‖ := by
-  obtain ⟨x,hx,rfl⟩ := Finset.mem_image.mp hy
-  rw [secondExpansionPushWeight_at_source p hinj C D r s hs _ x hx]
-  exact secondNormalizedExpansionWeight_norm_le p hp hcop hg hinj hc C D Ψ m c d r z X Y hX hY
-    x (hΨG x hx) (hΨV x hx)
-
 end SecondPassArithmetic
-
-open scoped BigOperators Classical
 
 namespace CubicEisenstein
 open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal

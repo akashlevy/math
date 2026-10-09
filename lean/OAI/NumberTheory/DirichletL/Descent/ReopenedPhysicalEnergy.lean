@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.ReopenedPhysicalSplit
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

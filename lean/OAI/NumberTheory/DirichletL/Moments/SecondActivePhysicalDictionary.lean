@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondPhysicalBlock
 import OAI.NumberTheory.DirichletL.Moments.ActiveSource
-
 namespace OAI
 
 noncomputable section
@@ -95,24 +94,6 @@ local notation "O"=>HeckeFamily.O
         (commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U) K)*
         dyadicWeight (n 1) (normValue z)*dyadicWeight (n 2) (I.absNorm:ℝ)*
         dyadicWeight (n 3) (J.absNorm:ℝ):ℝ):ℂ)) _
-
- theorem normalizedBlock_active (η:Character)(t:ℝ)(S:Finset (Ideal O))(β:Ideal O→ℂ)
-    (C D:Ideal O)(hC:Supported C)(hD:Supported D)(U:Finset (CommonIndex C D))
-    (R:ℝ)(rows:Finset O)(W:𝓢(ℝ,ℂ))(K:ℝ)(n:Fin 4→ℤ):
-    normalizedBlock η t S β C D hC hD U R rows W K n=
-      normalizedBlock η t (activeSource S β) β C D hC hD U R rows W K n:=by
-  unfold normalizedBlock
-  apply Finset.sum_congr rfl
-  intro z hz
-  congr 1
-  exact sectorFrequency_active η t S β C D hC hD
-    (fun _ I J=>wholeKernel W (fun _=>logAnnulus)
-      (dyadicScale (n 0)*dyadicScale (n 1)/(dyadicScale (n 2)*dyadicScale (n 3)))
-      (Real.log (secondEffectiveScale C D
-        (commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U) K/dyadicScale (n 0)))
-      (Real.log (normValue z/dyadicScale (n 1)))
-      (Real.log ((I.absNorm:ℝ)/dyadicScale (n 2)))
-      (Real.log ((J.absNorm:ℝ)/dyadicScale (n 3)))) _
 
 end SevenEighths.CenteredMomentSecondActivePhysicalDictionary
 

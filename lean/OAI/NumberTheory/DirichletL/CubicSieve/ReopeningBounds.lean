@@ -1,115 +1,33 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.BarrierPotential
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
-
-variable {ι : Type*} [DecidableEq ι] (p : ι→ActualEisensteinCubic.O) (hp : ∀i,p i≠0)
-  [∀i,(Ideal.span {p i}).IsMaximal]
-  (hcop : Pairwise (Function.onFun IsCoprime (fun i=>Ideal.span {p i})))
-  (hg : ∀i,lambda∉Ideal.span {p i})
-
-theorem reopenedCanonicalRow_filter (pool : Finset ι) (Q : Finset (ι→₀ℕ))
-    (β : (ι→₀ℕ)→ℂ) (Ψ : ActualEisensteinCubic.O→*ℂ) (m f z : ActualEisensteinCubic.O) (H : Finset ι→ℂ)
-    (keep : (ι→₀ℕ)→Prop) [DecidablePred keep]
-    (hβ : ∀v∈Q,¬keep v→β v=0) :
-    reopenedCanonicalRow p hp hcop hg pool Q β Ψ m f H z=
-      reopenedCanonicalRow p hp hcop hg pool (Q.filter keep) β Ψ m f H z := by
-  unfold reopenedCanonicalRow
-  symm
-  apply Finset.sum_subset (Finset.filter_subset _ _)
-  intro v hv hvnot
-  have hn : ¬keep v := fun h=>hvnot (Finset.mem_filter.mpr ⟨hv,h⟩)
-  simp only [hβ v hv hn,zero_mul,Finset.sum_const_zero]
-
-theorem reopenedCanonicalRow_zero (pool : Finset ι) (Q : Finset (ι→₀ℕ))
-    (β : (ι→₀ℕ)→ℂ) (Ψ : ActualEisensteinCubic.O→*ℂ) (m f z : ActualEisensteinCubic.O) (H : Finset ι→ℂ)
-    (hβ : ∀v∈Q,β v=0) :
-    reopenedCanonicalRow p hp hcop hg pool Q β Ψ m f H z=0 := by
-  unfold reopenedCanonicalRow
-  apply Finset.sum_eq_zero
-  intro v hv
-  simp only [hβ v hv,zero_mul,Finset.sum_const_zero]
 
 end SecondPassArithmetic
 
 namespace CanonicalRowCompletion
 open ActualEisensteinCubic
 open CompletedGauss hiding O
-open ConcretePrimeRowBridge hiding O columnWeight
+open ConcretePrimeRowBridge hiding O
 open CanonicalQuadraticSieve hiding O
 open SecondPassArithmetic hiding O
 open CanonicalCubeSeparation
@@ -117,18 +35,6 @@ open CanonicalCubeSeparation
 def progressingCubes (S : Finset (Ideal ActualEisensteinCubic.O)) (D : ℕ) (H₀ : ℝ)
     (Q : Finset (primePool (InitialMeanSquare.outsideSquarefreeIdeals S D)→₀ℕ)) :=
   Q.filter (fun v=>H₀≤(Ideal.absNorm (cubeIdeal (InitialMeanSquare.outsideSquarefreeIdeals S D) v):ℝ))
-
-theorem separatedCubeCoefficient_eq_zero_of_small (S : Finset (Ideal ActualEisensteinCubic.O)) (D : ℕ)
-    (H₀ : ℝ) (Ψ : ActualEisensteinCubic.O→*ℂ) (B ξ : ℝ)
-    (v : primePool (InitialMeanSquare.outsideSquarefreeIdeals S D)→₀ℕ)
-    (hsmall : ¬H₀≤(Ideal.absNorm (cubeIdeal (InitialMeanSquare.outsideSquarefreeIdeals S D) v):ℝ)) :
-    separatedCubeCoefficient
-      (fun u=>reopenedCubeCoefficient H₀ Ψ (cubeIdeal (InitialMeanSquare.outsideSquarefreeIdeals S D) u))
-      (fun u=>(Ideal.absNorm (cubeIdeal (InitialMeanSquare.outsideSquarefreeIdeals S D) u):ℝ)) B ξ v=0 := by
-  have hz : reopenedCubeCoefficient H₀ Ψ (cubeIdeal (InitialMeanSquare.outsideSquarefreeIdeals S D) v)=0 := by
-    by_contra hn
-    exact hsmall (reopenedCubeCoefficient_support H₀ Ψ _ hn).2
-  simp only [separatedCubeCoefficient,hz,zero_mul]
 
 theorem outsideCanonicalBin_filter (S : Finset (Ideal ActualEisensteinCubic.O)) (D : ℕ)
     (hbad : fixedBadPrimes⊆S)
@@ -181,31 +87,6 @@ theorem outsideCanonicalBin_zero_of_empty_filter (S : Finset (Ideal ActualEisens
     outsideCanonicalBin S D hbad Q Ψ m f z W X H₀=0 := by
   rw [outsideCanonicalBin_filter S D hbad Q Ψ m f z W X H₀,hQ]
   simp only [outsideCanonicalBin,Finset.sum_empty]
-
-theorem reopenedCanonicalRow_progressing (S : Finset (Ideal ActualEisensteinCubic.O)) (D : ℕ)
-    (hbad : fixedBadPrimes⊆S)
-    (Q : Finset (primePool (InitialMeanSquare.outsideSquarefreeIdeals S D)→₀ℕ))
-    (Ψ Ξ : ActualEisensteinCubic.O→*ℂ) (m f z : ActualEisensteinCubic.O) (H₀ B ξ : ℝ)
-    (H : Finset (primePool (InitialMeanSquare.outsideSquarefreeIdeals S D))→ℂ) :
-    let F:=InitialMeanSquare.outsideSquarefreeIdeals S D
-    let hF:=InitialMeanSquare.outsideSquarefree_admissible S D hbad
-    letI : ∀i : primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-      fun i=>by rw [poolPrimary_span F hF i];infer_instance
-    let β:=separatedCubeCoefficient (fun v=>reopenedCubeCoefficient H₀ Ξ (cubeIdeal F v))
-      (fun v=>(Ideal.absNorm (cubeIdeal F v):ℝ)) B ξ
-    reopenedCanonicalRow (poolPrimary F) (poolPrimary_ne_zero F hF)
-      (poolPrimary_coprime F hF) (poolPrimary_good F hF) Finset.univ Q β Ψ m f H z=
-    reopenedCanonicalRow (poolPrimary F) (poolPrimary_ne_zero F hF)
-      (poolPrimary_coprime F hF) (poolPrimary_good F hF) Finset.univ
-      (progressingCubes S D H₀ Q) β Ψ m f H z := by
-  dsimp only
-  let F:=InitialMeanSquare.outsideSquarefreeIdeals S D
-  have hF:=InitialMeanSquare.outsideSquarefree_admissible S D hbad
-  let : ∀i : primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-    fun i=>by rw [poolPrimary_span F hF i];infer_instance
-  apply reopenedCanonicalRow_filter
-  intro v hv hsmall
-  exact separatedCubeCoefficient_eq_zero_of_small S D H₀ Ξ B ξ v hsmall
 
 end CanonicalRowCompletion
 
@@ -475,25 +356,6 @@ theorem globalFirstTailFactor_reopening_power (A M κ Z η X F Ksrc B : ℝ) (N 
         Real.rpow_sub hZ0]
       ring_nf
 
-theorem globalFirstTailFactor_reopening_arbitrary_decay (A M κ R : ℝ) (hκ : 0<κ) :
-    ∃N : ℕ,0<N ∧ ∀Z η X F Ksrc B : ℝ,
-      1≤Z → 0≤η → 1≤X → X≤Z^3 → 1≤F → F≤Z^3 →
-      1≤Ksrc → Ksrc≤Z^3 → 1≤B → B^3≤Real.exp A*X →
-      globalFirstTailFactor (Ksrc/Z^η) (X/B^3) (Real.exp 1*B) F
-        (reopeningAuxiliaryScale A M κ Z) (Z^κ) N ≤
-        (4096*(reopeningScaleConstant A M)^20)*Z^(-R) := by
-  obtain ⟨N,hN⟩ := exists_nat_gt (max 0 ((20*(κ+3)+R)/κ))
-  have hN0 : 0<N := by exact_mod_cast lt_of_le_of_lt (le_max_left _ _) hN
-  have hNR : (20*(κ+3)+R)/κ<(N:ℝ) := lt_of_le_of_lt (le_max_right _ _) hN
-  have hexp : 20*(κ+3)-κ*(N:ℝ)≤-R := by
-    have hm := (div_lt_iff₀ hκ).mp hNR
-    nlinarith
-  refine ⟨N,hN0,?_⟩
-  intro Z η X F Ksrc B hZ hη hX hXZ hF hFZ hK hKZ hB hactive
-  exact (globalFirstTailFactor_reopening_power A M κ Z η X F Ksrc B N hκ.le hZ hη
-    hX hXZ hF hFZ hK hKZ hB hactive).trans
-    (mul_le_mul_of_nonneg_left (Real.rpow_le_rpow_of_exponent_le hZ hexp) (by positivity))
-
 theorem globalFirstTailFactor_reopening_nat_decay (A M Z η X F Ksrc B : ℝ) (R : ℕ)
     (hZ : 1≤Z) (hη : 0≤η)
     (hX : 1≤X) (hXZ : X≤Z^3) (hF : 1≤F) (hFZ : F≤Z^3)
@@ -536,30 +398,6 @@ lemma reopening_cube_bound (A M Z X B : ℝ) (hZ : 1≤Z) (_hX : 1≤X)
     _ = Real.exp (A+1)*Z^3 := by rw [Real.exp_add]; ring
     _ ≤ _ := mul_le_mul_of_nonneg_right hC (by positivity)
 
-theorem reopening_diagonal_monomial (A M Z η X F Ksrc B deltaLoss ε : ℝ)
-    (hZ : 1≤Z) (hη : 0≤η) (hη1 : η≤1) (hX : 1≤X) (hXZ : X≤Z^3)
-    (hF : 1≤F) (hFZ : F≤Z^3) (hK : 1≤Ksrc) (hB : 1≤B)
-    (hactive : B^3≤Real.exp A*X) (hδ : 0≤deltaLoss) (hε : 0≤ε) :
-    (globalFirstRowCap (Ksrc/Z^η) (X/B^3) (Real.exp 1*B) F)^deltaLoss *
-      ((Real.exp 1*B)*(reopeningScaleConstant A M*Z^4))^ε ≤
-      (((Real.exp 1)^8)^deltaLoss*(reopeningScaleConstant A M^2)^ε)*Z^(13*deltaLoss+7*ε) := by
-  let C := reopeningScaleConstant A M
-  have hC : 1≤C := reopeningScaleConstant_one A M
-  have hb := reopening_cube_bound A M Z X B hZ hX hXZ hB hactive
-  have hprod : (Real.exp 1*B)*(C*Z^4)≤C^2*Z^7 := by
-    calc
-      _ ≤ (C*Z^3)*(C*Z^4) := mul_le_mul_of_nonneg_right hb (by positivity)
-      _ = _ := by ring
-  have hpow : ((Real.exp 1*B)*(C*Z^4))^ε≤(C^2)^ε*Z^(7*ε) := by
-    apply (Real.rpow_le_rpow (by positivity) hprod hε).trans_eq
-    rw [Real.mul_rpow (by positivity) (by positivity),←Real.rpow_natCast_mul (by linarith : 0≤Z)]
-    norm_num
-  have hcap := globalFirstRowCap_reopening_rpow Z η X F Ksrc B deltaLoss hZ hη hη1 hX hXZ hF hFZ hK hB hδ
-  calc
-    _ ≤ (((Real.exp 1)^8)^deltaLoss*Z^(13*deltaLoss))*((C^2)^ε*Z^(7*ε)) :=
-      mul_le_mul hcap hpow (Real.rpow_nonneg (by positivity) _) (by positivity)
-    _ = _ := by rw [Real.rpow_add (by linarith : 0<Z)]; dsimp [C]; ring
-
 theorem reopening_recursive_monomial (A M Z η X F Ksrc B deltaLoss ε : ℝ)
     (hZ : 1≤Z) (hη : 0≤η) (hη1 : η≤1) (hX : 1≤X) (hXZ : X≤Z^3)
     (hF : 1≤F) (hFZ : F≤Z^3) (hK : 1≤Ksrc) (hB : 1≤B)
@@ -584,20 +422,6 @@ theorem reopening_recursive_monomial (A M Z η X F Ksrc B deltaLoss ε : ℝ)
       rw [hh]
       simp only [Real.rpow_add (by linarith : 0<Z)]
       ring
-
-theorem reopening_diagonal_with_ratio (A M Z η X F Ksrc B deltaLoss ε : ℝ)
-    (hZ : 1≤Z) (hη : 0≤η) (hη1 : η≤1) (hX : 1≤X) (hXZ : X≤Z^3)
-    (hF : 1≤F) (hFZ : F≤Z^3) (hK : 1≤Ksrc) (hB : 1≤B)
-    (hactive : B^3≤Real.exp A*X) (hδ : 0≤deltaLoss) (hε : 0≤ε) :
-    (Ksrc/(Ksrc/Z^η))*((globalFirstRowCap (Ksrc/Z^η) (X/B^3) (Real.exp 1*B) F)^deltaLoss *
-      ((Real.exp 1*B)*(reopeningScaleConstant A M*Z^4))^ε) ≤
-      (((Real.exp 1)^8)^deltaLoss*(reopeningScaleConstant A M^2)^ε)*Z^(η+13*deltaLoss+7*ε) := by
-  rw [reopening_cutoff_ratio Z η Ksrc (by linarith) (by linarith)]
-  apply (mul_le_mul_of_nonneg_left (reopening_diagonal_monomial A M Z η X F Ksrc B deltaLoss ε
-    hZ hη hη1 hX hXZ hF hFZ hK hB hactive hδ hε) (by positivity)).trans_eq
-  rw [show η+13*deltaLoss+7*ε=η+(13*deltaLoss+7*ε) by ring]
-  simp only [Real.rpow_add (by linarith : 0<Z)]
-  ring
 
 theorem reopening_recursive_with_ratio (A M Z η X F Ksrc B deltaLoss ε : ℝ)
     (hZ : 1≤Z) (hη : 0≤η) (hη1 : η≤1) (hX : 1≤X) (hXZ : X≤Z^3)

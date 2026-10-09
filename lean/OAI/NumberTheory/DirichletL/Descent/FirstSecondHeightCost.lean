@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstHeightBudget
 import OAI.NumberTheory.DirichletL.Descent.FirstLabelCellStep
 import OAI.NumberTheory.DirichletL.Descent.FirstLiveCountBudget
-
 namespace OAI
 
 noncomputable section
@@ -29,12 +28,6 @@ lemma first_weight_one_le (J : ℕ) (z : Frequency×(Fin 9→ℝ)) :
 def stepBudget (C Cbin Czero Ctail A Z F eta tau pi epschild saving : ℝ) : ℝ :=
   Czero*Z^(F+17*eta+tau+pi)+
     C*A*(1+Cbin*Real.log Z)^4*Z^(F+48*eta+tau+pi+epschild)+Ctail*Z^(-saving)
-
-lemma stepBudget_nonneg (C Cbin Czero Ctail A Z F eta tau pi epschild saving : ℝ)
-    (hC : 0≤C) (hz : 0≤Czero) (ht : 0≤Ctail) (hA : 0≤A) (hZ : 0≤Z) :
-    0≤stepBudget C Cbin Czero Ctail A Z F eta tau pi epschild saving := by
-  unfold stepBudget
-  positivity
 
 theorem second_step_first_height (degree : ℕ) (negative : Bool)
     (C Cbin Czero Ctail A Z F eta tau pi epschild saving : ℝ)

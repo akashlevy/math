@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.MixedFubini
-
 namespace OAI
 
 noncomputable section

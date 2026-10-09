@@ -1,6 +1,5 @@
-import OAI.NumberTheory.DirichletL.Detector.FinalAssembly
+import OAI.NumberTheory.DirichletL.Detector.FinalAssemblyFixedHigh
 import OAI.NumberTheory.DirichletL.ParametersHighDataFine
-
 namespace OAI
 
 noncomputable section

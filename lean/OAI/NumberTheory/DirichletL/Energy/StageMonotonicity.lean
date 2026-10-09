@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Energy.BandMonotonicity
 import OAI.NumberTheory.DirichletL.Energy.ReferenceLowBands
 import OAI.NumberTheory.DirichletL.Energy.PositiveHighSourceBound
 import OAI.NumberTheory.DirichletL.Energy.ZeroGrowth
-
 namespace OAI
 
 noncomputable section
@@ -34,29 +33,6 @@ theorem zeroLowAt_transport (Q:Ideal O)(a b radial mask L Mcap eps Z:ℝ)
   have hd:=diagonalControl_nonneg s.radial.profile
   have ht:(1+‖t‖)^J≤(1+‖t‖)^J':=pow_le_pow_right₀ (by linarith [norm_nonneg t]) hJ
   have hz:Z^(s.width+eps)≤Z^(s.width+eps'):=Real.rpow_le_rpow_of_exponent_le hZ (by linarith)
-  have hCnew:0≤C':=hC.trans hCC
-  apply hh.trans
-  gcongr
-
-theorem zeroGrowthAt_transport (Q:Ideal O)(a b radial mask L Mcap eps Z:ℝ)
-    (a' b' radial' mask' L' Mcap' eps':ℝ)
-    (J J':ℕ)(S T:Finset (ℕ×ℕ))(C C':ℝ)
-    (hZ:1≤Z)(ha:a≤a')(hb:b'≤b)(hr:radial'≤radial)(hm:mask'≤mask)
-    (hL:L'≤L)(hM:Mcap'≤Mcap)(he:eps≤eps')(hJ:J≤J')(hS:S⊆T)
-    (hC:0≤C)(hCC:C≤C')
-    (h:ZeroGrowthAt Q a b radial mask L Mcap eps Z J S C):
-    ZeroGrowthAt Q a' b' radial' mask' L' Mcap' eps' Z J' T C':=by
-  intro s hQ hwidth p t X₁ X₂ hX₁ hX₂ hcap₁ hcap₂
-  have hcap:Z^L'≤Z^L:=Real.rpow_le_rpow_of_exponent_le hZ hL
-  have hh:=h (widenState s hm hr) hQ (hwidth.trans hM) (widenProfiles p ha hb)
-    t X₁ X₂ hX₁ hX₂ (hcap₁.trans hcap) (hcap₂.trans hcap)
-  change s.plainEnergy p t X₁ X₂≤C*diagonalControl s.radial.profile*(p.control S)^2*
-    (1+‖t‖)^J*Z^(max s.width (length Z X₁+length Z X₂)+eps) at hh
-  have hp:=profile_control_mono p hS
-  have hp0:=p.control_nonneg S
-  have hd:=diagonalControl_nonneg s.radial.profile
-  have ht:(1+‖t‖)^J≤(1+‖t‖)^J':=pow_le_pow_right₀ (by linarith [norm_nonneg t]) hJ
-  have hz:Z^(max s.width (length Z X₁+length Z X₂)+eps)≤Z^(max s.width (length Z X₁+length Z X₂)+eps'):=Real.rpow_le_rpow_of_exponent_le hZ (by linarith)
   have hCnew:0≤C':=hC.trans hCC
   apply hh.trans
   gcongr

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.NonfloorDictionary
 import OAI.NumberTheory.DirichletL.PrimeRows.NonfloorSourceCount
-
 namespace OAI
 
 noncomputable section

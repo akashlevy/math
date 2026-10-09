@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.CentralRepeatedProduct
 import OAI.NumberTheory.DirichletL.PrimeRows.RowPartition
-
 namespace OAI
 
 noncomputable section

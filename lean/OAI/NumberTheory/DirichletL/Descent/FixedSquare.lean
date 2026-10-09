@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.DyadicBlock
 import OAI.NumberTheory.DirichletL.Descent.MaskedGrid
 import OAI.NumberTheory.DirichletL.Descent.DivisorSum
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

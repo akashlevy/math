@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.InactiveEnergy
-import OAI.NumberTheory.DirichletL.Reflection.FixedLevel
-
+import OAI.NumberTheory.DirichletL.Reflection.MarkedLevel
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -11,10 +10,6 @@ local notation "Eis" => ActualEisensteinCubic.O
 
 def fullRaySector (N : Eis) (rows : Finset (Ideal Eis)) (r : Eis⧸Ideal.span {N^2}) : Finset (Ideal Eis) :=
   rows.filter (fun K => Ideal.Quotient.mk (Ideal.span {N^2}) (primaryGenerator K)=r)
-
-lemma mem_fullRaySector (N : Eis) (rows : Finset (Ideal Eis)) (r : Eis⧸Ideal.span {N^2}) (K : Ideal Eis) :
-    K∈fullRaySector N rows r ↔ K∈rows ∧ Ideal.Quotient.mk (Ideal.span {N^2}) (primaryGenerator K)=r :=
-  Finset.mem_filter
 
 lemma sum_fullRaySectors {M : Type*} [AddCommMonoid M] (N : Eis)
     [Fintype (Eis⧸Ideal.span {N^2})] (rows : Finset (Ideal Eis)) (f : Ideal Eis→M) :

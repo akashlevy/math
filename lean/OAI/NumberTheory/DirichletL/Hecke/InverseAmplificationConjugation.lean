@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationFamily
 import OAI.NumberTheory.DirichletL.Hecke.Conjugation
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationScale
-
 namespace OAI
 
 noncomputable section
@@ -53,17 +52,6 @@ theorem conjugate_profile_support (W : ℝ→ℂ) :
 theorem conjugate_profile_smooth (W : ℝ→ℂ) (hW : ContDiff ℝ ∞ W) :
     ContDiff ℝ ∞ (fun x => conj (W x)) := by
   exact Complex.conjCLE.contDiff.comp hW
-
-theorem scaleProfile_conjugate (W : ℝ→ℂ) (x : ℝ) :
-    scaleProfile (fun y => conj (W y)) x=conj (scaleProfile W x) := by
-  have hd : deriv (fun y => conj (W y)) x=conj (deriv W x) := by
-    simpa only [star_def] using (deriv.star (f:=W) (x:=x))
-  simp only [scaleProfile,hd,map_sub,map_div₀,map_neg,map_mul,conj_ofReal,map_ofNat]
-
-theorem logProfile_conjugate (W : ℝ→ℂ) (x : ℝ) :
-    HeckeDetectorRowwisePolynomial.logProfile (fun y => conj (W y)) x=
-      conj (HeckeDetectorRowwisePolynomial.logProfile W x) := by
-  simp only [HeckeDetectorRowwisePolynomial.logProfile,map_mul,conj_ofReal]
 
 end SevenEighths.HeckeInverseAmplification
 

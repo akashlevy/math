@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRowCountOptimization
 import OAI.NumberTheory.DirichletL.Endpoint
-
 namespace OAI
 
 noncomputable section
@@ -84,24 +83,6 @@ theorem high_bin_count {B C U δ r ε γ : ℝ}
     have hh := mul_le_mul_of_nonneg_left hr (show 0≤δ by linarith)
     have hh' := mul_le_mul_of_nonneg_right hδ' hγ
     nlinarith
-
-theorem high_bin_endpoint {δ q R loss : ℝ} (_hδ : 5/6≤δ)
-    (hq : q≤δ/2) (hR : R≤1-δ+loss) :
-    -(1/48 : ℝ)+(2/3)*δ+q/6-(13/16)*(1-R)≤
-      -1/48-δ/16+(13/16)*loss := by
-  linarith
-
-theorem balanced_endpoint_with_loss {δ x R loss : ℝ}
-    (hδ : 0≤δ) (hδ' : δ≤5/6) (hx : 0≤x) (hx' : x≤1/2)
-    (hR : R≤max (shortExponent δ x (Endpoint.balancedCutoff δ (1/2-x)))
-      (longExponent δ (Endpoint.balancedCutoff δ (1/2-x)))+loss) :
-    -(1/48 : ℝ)+(2/3)*δ+(δ*x)/6-(13/16)*(1-R)≤
-      -49/440640+(13/16)*loss := by
-  rw [balanced_count_identity hδ hδ' hx hx'] at hR
-  have hh := Endpoint.balanced_endpoint_margin hδ hδ'
-    (show 0≤1/2-x by linarith) (show 1/2-x≤1/2 by linarith)
-  unfold Endpoint.balancedExponent at hh
-  nlinarith
 
 end SevenEighths.HeckeDetectorRowCount
 

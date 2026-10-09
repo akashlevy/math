@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Energy.State
 import OAI.NumberTheory.DirichletL.Moments.FirstSourceReduction
 import OAI.NumberTheory.DirichletL.Moments.DetectorPlainSource
 import OAI.NumberTheory.DirichletL.Moments.AmplificationChildInput
-
 namespace OAI
 
 noncomputable section
@@ -102,31 +101,6 @@ lemma input_energy_hasSum (s : Input ι) (R : Ideal O) (Φ : 𝓢(ℝ,ℂ))
   simp only [Complex.mul_re,Complex.ofReal_re,Complex.ofReal_im,zero_mul,sub_zero] at hs
   simpa only [finiteHeckeEnergy_eq s.η fixedBadMask 1 s.t (dvd_mul_right _ _) (dvd_mul_left _ _),
     finite_hecke_sum_eq_rowPolynomial s.η fixedBadMask 1 _ s.t (dvd_mul_right _ _) (dvd_mul_left _ _)] using hs
-
-theorem kept_difference_energy (s : Input ι) (R : Ideal O)
-    (keep : O→Prop) (Φ : 𝓢(ℝ,ℂ)) (K : ℝ) :
-    (∑'z : O,if keep z then
-      ‖positiveSlotRow s.η (fixedBadMask*idealGenerator R) 1 z s.W₁ s.W₂ s.slots
-          s.toData.coefficient s.P s.t s.X₁ s.X₂-
-        positiveSlotRow s.η (fixedBadMask*idealGenerator R) 1 z s.W₁ s.W₂ s.slots
-          s.toData.coefficient s.P s.t s.Y₁ s.Y₂‖^2*
-        (Φ (‖ConcreteTraceCRT.eisEmbedding z‖^2/K)).re else 0)=
-      CenteredMomentRestrictedSource.sourceRestrictedEnergy keep
-        (finiteColumns (Fintype.piFinset s.pools)) (coefficient s R 1)
-        (CenteredMomentHeckeColumnWindow.heightCoeff s.η s.t) Φ K /
-          CenteredMomentAmplificationChildInput.volume s := by
-  unfold CenteredMomentRestrictedSource.sourceRestrictedEnergy
-    CenteredMomentRestrictedEnergy.restrictedEnergy
-  rw [←tsum_div_const]
-  apply tsum_congr
-  intro z
-  rw [height_source_row]
-  by_cases hk : keep z
-  · rw [ite_eq_left hk,ite_eq_left hk,normalized_input_difference,
-      CenteredMomentDivisorRawEnergy.normalized_norm_sq _
-        (CenteredMomentAmplificationChildInput.volume_pos s)]
-    ring
-  · simp only [ite_eq_right hk,zero_div]
 
 omit [DecidableEq ι] in
 lemma input_positive_summable (s : Input ι) (R : Ideal O) (keep : O→Prop)
@@ -269,24 +243,6 @@ def naturalInput : Input ι :=
     (CenteredMomentDetectorPlainSource.support_zero (p.profile 1) a b ha (p.support 1))
     (fun i I=>idealCoeff_norm_le_one (ν i) I) hWslot aslot bslot haslot
     (fun _=>le_refl _) (fun _=>le_refl _)
-
-theorem natural_energy_comparison :
-    let inp := naturalInput state p ha S hp ν Wslot P M hP hM aslot bslot haslot hsSlot hWslot
-      t X₁ X₂ Y₁ Y₂ hX₁ hX₂ hY₁ hY₂ hsame
-    CenteredMomentInductionEnergy.energy state.character state.mask 1 t
-      (p.profile 0) (p.profile 1) S
-      (fun i I=>idealCoeff (ν i) I*Wslot i ((Ideal.absNorm I:ℝ)/P i)) P X₁ X₂
-      state.radial.keep state.radial.profile state.radial.scale ≤
-    2*‖finiteHeckeEnergy state.character fixedBadMask 1 t
-      (finiteColumns (Fintype.piFinset inp.pools)) (coefficient inp state.puncture 1)
-      state.radial.profile state.radial.scale‖/(X₁*X₂*∏i,P i)+
-    2*CenteredMomentInductionEnergy.energy state.character state.mask 1 t
-      (p.profile 0) (p.profile 1) S
-      (fun i I=>idealCoeff (ν i) I*Wslot i ((Ideal.absNorm I:ℝ)/P i)) P Y₁ Y₂
-      state.radial.keep state.radial.profile state.radial.scale :=
-  positive_energy_comparison
-    (naturalInput state p ha S hp ν Wslot P M hP hM aslot bslot haslot hsSlot hWslot
-      t X₁ X₂ Y₁ Y₂ hX₁ hX₂ hY₁ hY₂ hsame) state.puncture state.radial
 
 end Natural
 end SevenEighths.CenteredMomentEnergyOriginalSource

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.Actual
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -65,20 +64,6 @@ theorem frozenBranchColumn_norm_le (F : PrimeFamily φ) (jF : φ → ℕ) (e : �
     _ ≤ _ := by
       rw [one_mul]
       exact reflectedBranch_norm_bound _ F.generator_good jF e _ _
-
-theorem frozenBranchColumn_normalized_bound (F : PrimeFamily φ) (jF : φ → ℕ) (e : φ → Fin 3)
-    (A : Ideal Eis → Ideal Eis → ℂ) (hA : ∀ n b, ‖A n b‖ ≤ 1)
-    (n b : Ideal Eis) (U B : ℝ) (hU : 0<U) (hB : 0<B) :
-    ‖frozenBranchColumn F jF e A n b‖ /
-      (Real.sqrt ((Ideal.absNorm (frozenExtracted F jF e 1):ℝ)*U)*
-        ((Ideal.absNorm (frozenExtracted F jF e 2):ℝ)*B)) ≤
-      1/(Real.sqrt U*B*Real.sqrt ((Ideal.absNorm (frozenExtracted F jF e 0):ℝ)*
-        (Ideal.absNorm (frozenExtracted F jF e 2):ℝ))) := by
-  apply (div_le_div_of_nonneg_right ?_ (by positivity)).trans
-    (reflectedBranch_normalized_bound (fun i => Ideal.span {F.generator i}) F.generator_good
-      jF e (primaryGenerator n) (primaryGenerator b) U B hU hB)
-  rw [frozenBranchColumn,norm_mul]
-  exact mul_le_of_le_one_left (norm_nonneg _) (hA n b)
 
 end
 end SevenEighths.InverseReflectedPhase

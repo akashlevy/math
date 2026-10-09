@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.ReopenedCommonMeasure
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

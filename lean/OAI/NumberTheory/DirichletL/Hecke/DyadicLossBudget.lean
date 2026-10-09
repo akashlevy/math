@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DyadicCentralBudget
-
 namespace OAI
 
 noncomputable section
@@ -15,24 +14,6 @@ theorem central_squared_exponents (R a e κ η ε r m : ℝ)
   have hEm : 0≤e*m := mul_nonneg he hm
   have hER : 0≤e*R := mul_nonneg he hR
   constructor <;> nlinarith
-
-theorem exists_central_loss_parameters (R ε : ℝ) (hR : 0≤R) (hε : 0<ε) :
-    ∃ e₀ κ η : ℝ, 0<e₀ ∧ e₀≤1/1000 ∧ 0<κ ∧ κ≤1 ∧ 0<η ∧
-      ∀ e : ℝ, 0<e → e<e₀ → 12*e*(R+2)+8*κ+2*η≤ε/2 := by
-  let e₀ : ℝ := min (1/1000) (ε/(96*(R+2)))
-  let κ : ℝ := min (1/2) (ε/64)
-  let η : ℝ := ε/16
-  have hRp : 0<R+2 := by linarith
-  have he₀ : 0<e₀ := lt_min (by norm_num) (div_pos hε (by positivity))
-  have hκ : 0<κ := lt_min (by norm_num) (div_pos hε (by norm_num))
-  refine ⟨e₀,κ,η,he₀,min_le_left _ _,hκ,(min_le_left _ _).trans (by norm_num),
-    div_pos hε (by norm_num),?_⟩
-  intro e he he'
-  have heb : e≤ε/(96*(R+2)) := he'.le.trans (min_le_right _ _)
-  have heb' := (le_div_iff₀ (by positivity : 0<96*(R+2))).mp heb
-  have hκb : κ≤ε/64 := min_le_right _ _
-  dsimp only [η]
-  nlinarith
 
 theorem indexed_height_bound (i I : ℕ) (hi : i≤I) (T : ℝ) (hT : 0≤T) :
     (3+(3*i+2 : ℕ)*T)^4≤(3*(I : ℝ)+5)^4*(1+T)^4 := by

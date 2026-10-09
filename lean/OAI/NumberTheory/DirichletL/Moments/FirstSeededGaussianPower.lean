@@ -6,8 +6,18 @@ import OAI.NumberTheory.DirichletL.Moments.SourceInputTailSeed
 import OAI.NumberTheory.DirichletL.Moments.SecondChildPowerBudget
 import OAI.NumberTheory.DirichletL.Moments.SourceInputReindex
 import OAI.NumberTheory.DirichletL.Moments.SecondSourceRemainder
-import OAI.NumberTheory.DirichletL.Moments.SecondNonexceptionalLiveSource
-
+import OAI.NumberTheory.DirichletL.Moments.SecondNonexceptionalChosenBlock
+import OAI.NumberTheory.DirichletL.Moments.SecondNonexceptionalScalar
+import OAI.NumberTheory.DirichletL.Moments.SecondNonexceptionalPhysical
+import OAI.NumberTheory.DirichletL.Moments.SecondExceptionalFamily
+import OAI.NumberTheory.DirichletL.Moments.SecondEnergySplit
+import OAI.NumberTheory.DirichletL.Moments.SecondDyadicRowSupport
+import OAI.NumberTheory.DirichletL.Moments.FirstAmplificationChoice
+import OAI.NumberTheory.DirichletL.Moments.OriginalCommonHarmonic
+import OAI.NumberTheory.DirichletL.Moments.SecondSupportedChildren
+import OAI.NumberTheory.DirichletL.Moments.SecondPhysicalCost
+import OAI.NumberTheory.DirichletL.Moments.ExceptionalAmplitudePair
+import OAI.NumberTheory.DirichletL.Moments.SecondNonexceptionalAggregate
 namespace OAI
 
 noncomputable section
@@ -17,7 +27,7 @@ open Filter
 namespace SevenEighths.CenteredMomentFirstSeededGaussianPower
 open HeckeFamily CanonicalQuadraticSieve CompletedGauss RayFourExpansion
 open CenteredMomentCommonRadialData CenteredMomentSourceMass CenteredMomentSourceProfileMass
-open CenteredMomentOriginalCommonHarmonic CenteredMomentSecondNonexceptionalCost
+open CenteredMomentOriginalCommonHarmonic
 open CenteredMomentSecondNonexceptionalChosenBlock CenteredMomentSecondNonexceptionalAggregate
 open CenteredMomentSecondExceptionalFamily CenteredMomentSecondRetainedAggregate
 open CenteredMomentSecondBlockAggregate CenteredMomentSecondBlockHarmonicMass
@@ -39,7 +49,7 @@ open CenteredMomentFiniteProfileExceptional CenteredMomentFiniteProfileException
 open CenteredMomentOriginalChildEnergy CenteredMomentSupportedTailAggregate
 open CenteredMomentSourceInputTailUniform EisensteinSchwartzPoisson
 
-open CenteredMomentLogDyadic CenteredMomentSecondWindowSource
+open CenteredMomentLogDyadic
 open MeasureTheory UniqueFactorizationMonoid CenteredMomentAllocatedDetectorAmplitude CenteredMomentCommonExceptionalCost
 
 open CenteredMomentSecondChildPowerBudget CenteredMomentFirstChildProfileControl
@@ -61,31 +71,6 @@ lemma normalized_source_le_norm (s : Input ι) (R seed : Ideal O)
           CenteredMomentAmplificationChildInput.volume s := by
   exact div_le_div_of_nonneg_right (Complex.re_le_norm _)
     (CenteredMomentAmplificationChildInput.volume_pos s).le
-
-omit [DecidableEq ι] in
-lemma allocated_source_le_norm (s : Input ι) (C R seed : Ideal O)
-    (B : actualAllocations s.pools C) (τ : Character) (t : ℝ)
-    (W : 𝓢(ℝ,ℂ)) (K : ℝ) :
-    childNormalizedGaussSource s C R seed B τ t W K≤
-      ‖sourceGaussEnergy
-        (finiteColumns (Fintype.piFinset (child s C R B τ t).pools))
-        (coefficient (child s C R B τ t) (R*C) seed)
-        (heightCoeff τ t) W K‖/CenteredMomentAmplificationChildInput.volume (child s C R B τ t) :=
-  normalized_source_le_norm (child s C R B τ t) (R*C) seed W K
-
-omit [DecidableEq ι] in
-lemma active_error_source_le_norm (s : Input ι) (C R seed : Ideal O)
-    (B : actualAllocations s.pools C) (τ : Character) (t : ℝ)
-    (Q : Ideal O) (k : ℕ)
-    (Bp : actualAllocations (activeInput (child s C R B τ t)).pools (Q^k))
-    (υ : Character) (v : ℝ) (W : 𝓢(ℝ,ℂ)) (K : ℝ) :
-    childNormalizedGaussSource (activeInput (child s C R B τ t)) (Q^k) (R*C) seed Bp υ v W K≤
-      ‖sourceGaussEnergy
-        (finiteColumns (Fintype.piFinset (errorInput s C R B τ t Q k Bp υ v).pools))
-        (coefficient (errorInput s C R B τ t Q k Bp υ v) ((R*C)*(Q^k)) seed)
-        (heightCoeff υ v) W K‖/
-          CenteredMomentAmplificationChildInput.volume (errorInput s C R B τ t Q k Bp υ v) :=
-  normalized_source_le_norm (errorInput s C R B τ t Q k Bp υ v) ((R*C)*(Q^k)) seed W K
 
 theorem actual_subsets_seeded_gaussian_power (wlo whi:ℝ)(hwlo:0<wlo)(hwhi:0≤whi)
     (lo hi:ι→ℝ)(hhi:∀i,0≤hi i)(W:𝓢(ℝ,ℂ))(J₁ J₂:ℕ)

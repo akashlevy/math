@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Hecke.Boundary
 import OAI.NumberTheory.DirichletL.LogarithmicControl
 import Mathlib.Analysis.Complex.LocallyUniformLimit
 import Mathlib.Analysis.SpecialFunctions.Complex.LogBounds
-
 namespace OAI
 
 noncomputable section
@@ -259,61 +258,6 @@ theorem principal_continued_inner_disk (a : Ideal O →*₀ ℂ) (ha : ∀ I, �
   · intro s hs
     exact principalEulerLog_norm_le a ha
       (inner_disk_re (closedBall_subset_closedBall (by norm_num) hs))
-
-theorem residue_continued_inner_disk (M : Ideal O) [Finite (O ⧸ M)]
-    (χ : MulChar (O ⧸ M) ℂ) (hχ : UnitInvariant M χ) (L : ℂ → ℂ)
-    (hL : ∀ s : ℂ, 1 < s.re → L s = series (ofResidue M χ hχ) s) (t : ℝ) :
-    DifferentiableOn ℂ (eulerLog (ofResidue M χ hχ))
-        (ball (2 + (t : ℂ) * Complex.I) (1 / 2)) ∧
-      EqOn (Complex.exp ∘ eulerLog (ofResidue M χ hχ)) L
-        (ball (2 + (t : ℂ) * Complex.I) (1 / 2)) ∧
-      ∀ s ∈ closedBall (2 + (t : ℂ) * Complex.I) (49 / 100),
-        ‖eulerLog (ofResidue M χ hχ) s‖ ≤ eulerLogBound :=
-  continued_inner_disk _ (norm_ofResidue_le_one M χ hχ) L hL t
-
-theorem continued_logarithmic_control {e M ε : ℝ}
-    (he : 0 < e) (he' : e < 1 / 1000) (hM : 1 ≤ M) (hε : 0 < ε) :
-    ∃ D : ℝ, 0 < D ∧ ∀ (b C t : ℝ) (a : Ideal O →*₀ ℂ),
-      (∀ I, ‖a I‖ ≤ 1) → ∀ L : ℂ → ℂ,
-      1 / 2 ≤ b → b ≤ 1 → Real.exp 1 ≤ C →
-      (∀ s : ℂ, 1 < s.re → L s = series a s) →
-      DifferentiableOn ℂ L (ball (2 + (t : ℂ) * Complex.I) (2 - b - 2 * e)) →
-      (∀ z ∈ ball (2 + (t : ℂ) * Complex.I) (2 - b - 2 * e), L z ≠ 0) →
-      (∀ z ∈ ball (2 + (t : ℂ) * Complex.I) (2 - b - 3 * e), ‖L z‖ ≤ C ^ M) →
-      (∀ z ∈ closedBall (2 + (t : ℂ) * Complex.I) (2 - b - 6 * e),
-        ‖L z‖ + ‖(L z)⁻¹‖ ≤ D * C ^ ε) ∧
-      (∀ z ∈ closedBall (2 + (t : ℂ) * Complex.I) (2 - b - 8 * e),
-        ‖deriv L z / L z‖ ≤
-          (LogarithmicControl.outerConstant e eulerLogBound M / (2 * e)) * Real.log C) := by
-  obtain ⟨D, hD, hbound⟩ := LogarithmicControl.logarithmic_control he he'
-    eulerLogBound_ge_one hM hε
-  refine ⟨D, hD, ?_⟩
-  intro b C t a ha L hb hb' hC hEq hL h0 hp
-  obtain ⟨hE, heq, hEb⟩ := continued_inner_disk a ha L hEq t
-  exact hbound b C L (eulerLog a) (2 + (t : ℂ) * Complex.I)
-    hb hb' hC hL h0 hp hE heq hEb
-
-theorem principal_continued_logarithmic_control {e M ε : ℝ}
-    (he : 0 < e) (he' : e < 1 / 1000) (hM : 1 ≤ M) (hε : 0 < ε) :
-    ∃ D : ℝ, 0 < D ∧ ∀ (b C t : ℝ) (a : Ideal O →*₀ ℂ),
-      (∀ I, ‖a I‖ ≤ 1) → ∀ L : ℂ → ℂ,
-      1 / 2 ≤ b → b ≤ 1 → Real.exp 1 ≤ C →
-      (∀ s : ℂ, 1 < s.re → L s = ((s - 1) / (s + 1)) * series a s) →
-      DifferentiableOn ℂ L (ball (2 + (t : ℂ) * Complex.I) (2 - b - 2 * e)) →
-      (∀ z ∈ ball (2 + (t : ℂ) * Complex.I) (2 - b - 2 * e), L z ≠ 0) →
-      (∀ z ∈ ball (2 + (t : ℂ) * Complex.I) (2 - b - 3 * e), ‖L z‖ ≤ C ^ M) →
-      (∀ z ∈ closedBall (2 + (t : ℂ) * Complex.I) (2 - b - 6 * e),
-        ‖L z‖ + ‖(L z)⁻¹‖ ≤ D * C ^ ε) ∧
-      (∀ z ∈ closedBall (2 + (t : ℂ) * Complex.I) (2 - b - 8 * e),
-        ‖deriv L z / L z‖ ≤
-          (LogarithmicControl.outerConstant e (3 + eulerLogBound) M / (2 * e)) * Real.log C) := by
-  have hA : 1 ≤ 3 + eulerLogBound := by linarith [eulerLogBound_ge_one]
-  obtain ⟨D, hD, hbound⟩ := LogarithmicControl.logarithmic_control he he' hA hM hε
-  refine ⟨D, hD, ?_⟩
-  intro b C t a ha L hb hb' hC hEq hL h0 hp
-  obtain ⟨hE, heq, hEb⟩ := principal_continued_inner_disk a ha L hEq t
-  exact hbound b C L (principalEulerLog a) (2 + (t : ℂ) * Complex.I)
-    hb hb' hC hL h0 hp hE heq hEb
 
 end SevenEighths.HeckeEulerLog
 

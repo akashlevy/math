@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.OriginalChoiceControl
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

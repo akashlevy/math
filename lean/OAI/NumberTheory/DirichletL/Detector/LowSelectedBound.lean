@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LowActualReflectedEnergy
 import OAI.NumberTheory.DirichletL.Reflection.LowOriginalEnergy
-
 namespace OAI
 
 noncomputable section

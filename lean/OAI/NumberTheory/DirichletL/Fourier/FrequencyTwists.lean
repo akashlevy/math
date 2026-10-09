@@ -1,75 +1,24 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.SecondPoisson
 import OAI.NumberTheory.DirichletL.Poisson.PrincipalTruncation
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 namespace JointLogSeparation
 
@@ -105,17 +54,6 @@ lemma logPhase_add_frequency (t s x : ℝ) :
 
 @[simp] lemma frequencyTwist_norm (g : 𝓢(ℝ, ℂ)) (t x : ℝ) :
     ‖frequencyTwist g t x‖ = ‖g x‖ := by simp [logPhase_norm]
-
-lemma frequencyTwist_tsupport (g : 𝓢(ℝ, ℂ)) (t : ℝ) :
-    tsupport (frequencyTwist g t) = tsupport g := by
-  apply congrArg (fun s : Set ℝ => closure s)
-  ext x
-  have hp : logPhase t x ≠ 0 := by
-    intro hz
-    have hn := logPhase_norm t x
-    rw [hz, norm_zero] at hn
-    norm_num at hn
-  simp only [Function.mem_support, frequencyTwist_apply, ne_eq, mul_eq_zero, hp, false_or]
 
 def phaseDerivative (t : ℝ) : ℂ := ((2 * Real.pi * t : ℝ) : ℂ) * Complex.I
 
@@ -276,8 +214,6 @@ end JointLogSeparation
 
 section
 
-open scoped BigOperators Classical SchwartzMap FourierTransform
-open MeasureTheory
 namespace JointLogSeparation
 open FourierBridge
 
@@ -489,7 +425,6 @@ theorem postCommonSmoothPair_uniform_fixed_tests
 end SecondPassArithmetic
 end
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 
 section
@@ -498,59 +433,11 @@ open ConcretePrimeRowBridge (idealGenerator span_idealGenerator)
 open SecondPassFiber (OldTuple newLabel newRow Valid)
 local instance : Fintype Oˣ := @Fintype.ofFinite _ PrimaryIdealUnitReindex.finite_units
 
-variable {ι : Type*} [DecidableEq ι]
-  (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-  (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-  (hg : ∀ i, lambda ∉ Ideal.span {p i})
-
-theorem labeled_child_second_energy_pushforward (ε : ℝ) (hε : 0 < ε) :
-    ∃ C : ℝ, 0 < C ∧ ∀ (s : Finset OldTuple) (t : Finset (Ideal O × O))
-      (b0 : Ideal O) (w : OldTuple → ℂ) (B lengthScale : ℝ) (label : OldTuple → O)
-      (F : Finset ι) (Ψ : O →* ℂ) (m : O) (H : Finset ι → ℂ) (negative : Bool),
-      b0 ≠ ⊥ → 0 ≤ B → 0 ≤ lengthScale →
-      (∀ x ∈ s, Valid x (newLabel x) b0 (newRow x)) →
-      (∀ x ∈ s, (newLabel x, newRow x) ∈ t) →
-      (∀ z ∈ t, z.1 ≠ ⊥) →
-      (∀ z ∈ t, (Ideal.absNorm z.1 : ℝ) ≤ lengthScale) →
-      (∀ x ∈ s, ‖w x‖ ≤ B) →
-      (∀ x ∈ s, Ideal.span {label x} = newLabel x) →
-      (∑ x ∈ s, ‖w x‖ *
-        ‖fixedChildRow p hp hcop hg F Ψ m H (label x)
-          (if negative then -newRow x else newRow x)‖ ^ 2) ≤
-      B * C * (lengthScale * Ideal.absNorm b0) ^ ε *
-        ∑ u : Oˣ, ∑ z ∈ t, ‖idealChildRow p hp hcop hg F Ψ m H negative u z‖ ^ 2 := by
-  obtain ⟨C, hC, hb⟩ := second_energy_selected_family (κ := Oˣ) ε hε
-  refine ⟨C, hC, ?_⟩
-  intro s t b0 w B lengthScale label F Ψ m H negative hb0 hB hL hvalid hmap ht hnorm hw hlabel
-  let sel : OldTuple → Oˣ := fun x => if hx : x ∈ s then
-    Classical.choose (exists_label_unit (label x) (newLabel x) (hlabel x hx)) else 1
-  have hsel (x : OldTuple) (hx : x ∈ s) : label x = (sel x : O) * idealGenerator (newLabel x) := by
-    simp only [sel, dite_eq_left hx]
-    exact Classical.choose_spec (exists_label_unit (label x) (newLabel x) (hlabel x hx))
-  have hh := hb s t b0 w B lengthScale (idealChildRow p hp hcop hg F Ψ m H negative)
-    sel hb0 hB hL hvalid hmap ht hnorm hw
-  convert hh using 1
-  apply Finset.sum_congr rfl
-  intro x hx
-  rw [hsel x hx]
-  rfl
-
-omit [DecidableEq ι] [∀ (i : ι), (span {p i}).IsMaximal] in
-theorem support_child_label_span (x : OldTuple) (V : Finset ι)
-    (hV : (∏ i ∈ V, Ideal.span {p i}) = x.v) :
-    Ideal.span {idealGenerator (x.core 0) * idealGenerator (x.core 1) *
-      idealGenerator (x.core 2) * ∏ i ∈ V, p i} = newLabel x := by
-  simp only [newLabel, ← Ideal.span_singleton_mul_span_singleton, span_idealGenerator]
-  rw [FiniteGaussPhase.span_finset_prod, hV]
-
 end
 
 open ActualEisensteinCubic
 open FirstCauchyArithmetic (supportMobius)
 open RayFourExpansion (RayCharacter gCoeff crossCoeff)
-
-lemma rayMonoid_norm_le_one (χ : RayCharacter) (a : O) : ‖rayMonoid χ a‖ ≤ 1 :=
-  FiniteRayExpansion.norm_char_le_one χ _
 
 lemma secondRayMinus_norm_le (Ψ : O →* ℂ) (z : SecondRayIndex) (a : O) :
     ‖secondRayMinus Ψ z a‖ ≤ ‖Ψ a‖ := by

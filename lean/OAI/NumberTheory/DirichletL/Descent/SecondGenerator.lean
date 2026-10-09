@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.GeneratorTransport
 import OAI.NumberTheory.DirichletL.Descent.SecondFreshAssembly
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -45,21 +44,6 @@ theorem secondCanonical_generator_transport
   change (u:Eis)^4*((v:Eis)*(primaryGenerator D*primaryGenerator E)*k) =
     primaryGenerator D*primaryGenerator E*(((u:Eis)^4*(v:Eis))*k)
   ring
-
-theorem secondCanonical_row_norm (D E : Ideal Eis) (u v : Eisˣ) (d e k : Eis)
-    (hd : d*e = (v:Eis)*(primaryGenerator D*primaryGenerator E)) :
-    ‖ConcreteTraceCRT.eisEmbedding
-      (primaryGenerator D*primaryGenerator E*secondUnitFrequency u v k)‖ =
-      ‖ConcreteTraceCRT.eisEmbedding (d*e*k)‖ := by
-  rw [hd]
-  have hl : primaryGenerator D*primaryGenerator E*secondUnitFrequency u v k =
-      ((u^4*v:Eisˣ):Eis)*(primaryGenerator D*primaryGenerator E*k) := by
-    unfold secondUnitFrequency
-    ring
-  rw [hl,GaussGeneratorTransport.norm_eisEmbedding_unit_mul]
-  have hr : (v:Eis)*(primaryGenerator D*primaryGenerator E)*k =
-      (v:Eis)*(primaryGenerator D*primaryGenerator E*k) := by ring
-  rw [hr,GaussGeneratorTransport.norm_eisEmbedding_unit_mul]
 
 theorem exists_second_generator_sectors (label d e : Eis) (L D E : Ideal Eis)
     (hl : Ideal.span {label} = L) (hd : Ideal.span {d} = D) (he : Ideal.span {e} = E)

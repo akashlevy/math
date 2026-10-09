@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialDyadicAssemblyTail
 import OAI.NumberTheory.DirichletL.Inversion.InitialHighFrequencyTailAnnulus
 import OAI.NumberTheory.DirichletL.Inversion.InitialHighFrequencyTailRapid
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.PhysicalNorms
-
 namespace OAI
 
 noncomputable section

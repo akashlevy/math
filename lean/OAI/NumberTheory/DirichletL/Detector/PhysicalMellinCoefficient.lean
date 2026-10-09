@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.PhysicalCoefficientScaling
 import OAI.NumberTheory.DirichletL.Detector.MellinPowers
-
 namespace OAI
 
 noncomputable section

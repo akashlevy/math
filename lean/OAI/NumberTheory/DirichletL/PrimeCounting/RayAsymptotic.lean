@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.RayQuotient
 import OAI.NumberTheory.DirichletL.IdealLogDerivative
-
 namespace OAI
 
 namespace SevenEighths.PNT.RayAsymptotic
@@ -11,44 +10,6 @@ open scoped BigOperators Classical Topology
 noncomputable section
 
 variable (M : Ideal O) [Finite (O ⧸ M)]
-
-def classCoeff (n : ℕ) : ℝ := IdealMangoldt.classCoeff (principalIdeals M) n
-
-theorem sum_coeff (n : ℕ) :
-    (∑ χ : rayCharacters M, IdealLogDerivative.coeff (idealCharacter M χ) n) =
-      (rayCard M : ℂ) * (classCoeff M n : ℂ) := by
-  unfold IdealLogDerivative.coeff ShortDraftHeckeBridge.normFiberCoeff
-  rw [Finset.sum_comm]
-  unfold classCoeff IdealMangoldt.classCoeff IdealMangoldt.coeff IdealMangoldt.normFiber
-  rw [Complex.ofReal_sum, Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro I hI
-  rw [← Finset.mul_sum, sum_idealCharacters]
-  by_cases hI : I ∈ principalIdeals M
-  · simp only [hI, ite_true, one_mul, mul_comm]
-  · simp only [hI, ite_false, zero_mul, Complex.ofReal_zero, mul_zero]
-
-theorem average_coeff (n : ℕ) :
-    (classCoeff M n : ℂ) =
-      (∑ χ : rayCharacters M, IdealLogDerivative.coeff (idealCharacter M χ) n) /
-        (rayCard M : ℂ) := by
-  rw [sum_coeff]
-  have hc : (rayCard M : ℂ) ≠ 0 := by exact_mod_cast (rayCard_pos M).ne'
-  exact (mul_div_cancel_left₀ _ hc).symm
-
-theorem classCoeff_LSeries (s : ℂ) (hs : 1 < s.re) :
-    LSeries (fun n => (classCoeff M n : ℂ)) s =
-      (∑ χ : rayCharacters M, LSeries (IdealLogDerivative.coeff (idealCharacter M χ)) s) /
-        (rayCard M : ℂ) := by
-  have heq : (fun n => (classCoeff M n : ℂ)) =
-      (rayCard M : ℂ)⁻¹ • ∑ χ : rayCharacters M, IdealLogDerivative.coeff (idealCharacter M χ) := by
-    funext n
-    rw [average_coeff]
-    simp only [Pi.smul_apply, Finset.sum_apply, smul_eq_mul, div_eq_mul_inv, mul_comm]
-  rw [heq, LSeries_smul, LSeries_sum]
-  · rw [div_eq_mul_inv, mul_comm]
-  · intro χ _
-    exact IdealLogDerivative.coeff_summable _ (norm_idealCharacter_le_one M χ) s hs
 
 def principalRegularization (F : ℂ → ℂ) (residue : ℂ) : ℂ → ℂ :=
   Function.update (fun s => (s - 1) * F s) 1 residue
@@ -96,11 +57,6 @@ def regularizedFamily (F : rayCharacters M → ℂ → ℂ) (residue : ℂ)
     (χ : rayCharacters M) : ℂ → ℂ :=
   if χ = 1 then principalRegularization (F χ) residue else F χ
 
-def remainder (F : rayCharacters M → ℂ → ℂ) (residue : ℂ) (s : ℂ) : ℂ :=
-  (∑ χ : rayCharacters M,
-    -deriv (regularizedFamily M F residue χ) s / regularizedFamily M F residue χ s) /
-      (rayCard M : ℂ)
-
 structure AnalyticFamily (F : rayCharacters M → ℂ → ℂ) (residue : ℂ) : Prop where
   eq_series : ∀ (χ : rayCharacters M) (s : ℂ), 1 < s.re →
     F χ s = IdealEuler.series (idealCharacter M χ) s
@@ -138,17 +94,6 @@ theorem regularizedFamily_ne_zero {F : rayCharacters M → ℂ → ℂ} {residue
   · rw [regularizedFamily, ite_eq_right hχ]
     exact hF.nonzero χ s hs (Or.inl hχ)
 
-theorem remainder_continuousOn {F : rayCharacters M → ℂ → ℂ} {residue : ℂ}
-    (hF : AnalyticFamily M F residue) :
-    ContinuousOn (remainder M F residue) {s : ℂ | 1 ≤ s.re} := by
-  intro s hs
-  apply ContinuousAt.continuousWithinAt
-  apply ContinuousAt.div_const
-  apply tendsto_finsetSum
-  intro χ _
-  have h := regularizedFamily_analyticAt M hF χ s hs
-  exact h.deriv.continuousAt.neg.div h.continuousAt (regularizedFamily_ne_zero M hF χ s hs)
-
 theorem regularizedFamily_logDeriv {F : rayCharacters M → ℂ → ℂ} {residue : ℂ}
     (hF : AnalyticFamily M F residue) (χ : rayCharacters M) (s : ℂ) (hs : 1 < s.re) :
     -deriv (regularizedFamily M F residue χ) s / regularizedFamily M F residue χ s =
@@ -159,38 +104,6 @@ theorem regularizedFamily_logDeriv {F : rayCharacters M → ℂ → ℂ} {residu
     exact principalRegularization_logDeriv _ _ hs1
       (hF.analytic χ s hs.le (Or.inr hs1)) (hF.nonzero χ s hs.le (Or.inr hs1))
   · simp only [regularizedFamily, hχ, ite_false, sub_zero]
-
-theorem remainder_eqOn {F : rayCharacters M → ℂ → ℂ} {residue : ℂ}
-    (hF : AnalyticFamily M F residue) :
-    Set.EqOn (remainder M F residue)
-      (fun s => LSeries (fun n => (classCoeff M n : ℂ)) s -
-        (rayCard M : ℂ)⁻¹ / (s - 1)) {s : ℂ | 1 < s.re} := by
-  intro s hs
-  change remainder M F residue s = LSeries (fun n => (classCoeff M n : ℂ)) s -
-    (rayCard M : ℂ)⁻¹ / (s - 1)
-  rw [remainder, classCoeff_LSeries M s hs]
-  simp_rw [regularizedFamily_logDeriv M hF _ s hs]
-  rw [Finset.sum_sub_distrib]
-  have hsum : (∑ χ : rayCharacters M, if χ = 1 then 1 / (s - 1) else (0 : ℂ)) =
-      1 / (s - 1) := by simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true]
-  rw [hsum]
-  have hlog (χ : rayCharacters M) : -deriv (F χ) s / F χ s =
-      LSeries (IdealLogDerivative.coeff (idealCharacter M χ)) s :=
-    (IdealLogDerivative.coeff_LSeries_eq_neg_logDeriv_of_eq _
-      (norm_idealCharacter_le_one M χ) (F χ) (hF.eq_series χ) s hs).symm
-  simp_rw [hlog]
-  ring
-
-theorem classCoeff_ratio_tendsto {F : rayCharacters M → ℂ → ℂ} {residue : ℂ}
-    (hF : AnalyticFamily M F residue) :
-    Tendsto (fun N : ℕ => cumsum (classCoeff M) N / N)
-      atTop (𝓝 ((rayCard M : ℝ)⁻¹)) := by
-  apply WienerIkeharaTheorem'
-    (IdealMangoldt.classCoeff_nonneg (principalIdeals M))
-    (fun σ hσ => IdealMangoldt.classCoeff_summable_nterm (principalIdeals M) hσ)
-    (IdealMangoldt.classCoeff_chebyshev (principalIdeals M))
-    (remainder_continuousOn M hF)
-  simpa only [classCoeff, Complex.ofReal_inv, Complex.ofReal_natCast] using remainder_eqOn M hF
 
 section Quotient
 

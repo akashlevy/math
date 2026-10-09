@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LocalSeries
 import OAI.NumberTheory.DirichletL.Detector.Euler
-
 namespace OAI
 
 noncomputable section

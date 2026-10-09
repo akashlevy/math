@@ -1,7 +1,7 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.BufferedTransport
 import OAI.NumberTheory.DirichletL.PrimeRows.BufferedJoins
-import OAI.NumberTheory.DirichletL.PrimeRows.OriginalHeightTail
-
+import OAI.NumberTheory.DirichletL.PrimeRows.TailIntegral
+import OAI.NumberTheory.DirichletL.PrimeRows.FirstTransport
 namespace OAI
 
 noncomputable section

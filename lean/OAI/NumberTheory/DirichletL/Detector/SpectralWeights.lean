@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.PrincipalEulerIdentity
-
 namespace OAI
 
 noncomputable section

@@ -1,79 +1,24 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.DualZeroMode
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace InitialMeanSquare
 open ActualEisensteinCubic ConcretePrimeRowBridge CanonicalQuadraticSieve
 
@@ -117,7 +62,6 @@ theorem outside_row_cutoff_stable (S : Finset (Ideal O)) (hbad : fixedBadPrimes 
 
 end InitialMeanSquare
 
-open scoped BigOperators Classical SchwartzMap
 namespace SecondPassArithmetic
 
 section
@@ -486,8 +430,6 @@ theorem canonicalSource_twoPassage_quantitative
 
 end SecondPassArithmetic
 
-open MeasureTheory
-open scoped BigOperators Classical
 namespace InitialMeanSquare
 open ActualEisensteinCubic SecondPassArithmetic SecondPassIntegration JointLogSeparation
 open FirstPassCubeLabels (firstLogDensity)
@@ -552,8 +494,6 @@ lemma initialErrorRowBound_ge_one (a b Z H : ℝ) (hZ : 1 ≤ Z) (hH : 1 ≤ H) 
 
 end InitialMeanSquare
 
-open MeasureTheory
-open scoped BigOperators Classical ContDiff
 namespace InitialMeanSquare
 open ActualEisensteinCubic ConcretePrimeRowBridge CanonicalQuadraticSieve
 open SecondPassArithmetic SecondPassIntegration JointLogSeparation
@@ -615,22 +555,6 @@ def outsideCanonicalDensity {q : ℕ} (χ : DirichletCharacter ℂ q)
     (secondRayMinus (conjugateMonoid (normCharacter χ)) ray)
     (secondRayPlus (conjugateMonoid (normCharacter χ)) ray)
     (primeSubsetGenerator (fun i => Ideal.span {outsidePrime S D i}) R) T V₁ V₂ X X (2*J)
-
-def HasInitialCanonicalDensity {q : ℕ} (χ : DirichletCharacter ℂ q)
-    (S : Finset (Ideal ActualEisensteinCubic.O)) (hbad : fixedBadPrimes ⊆ S) : Prop :=
-  ∀ deltaLoss : ℝ,0 < deltaLoss → ∀ P : ℕ,∃ J : ℕ,
-    ∀ V₁ V₂ : ℝ → ℂ,HasCompactSupport V₁ → HasCompactSupport V₂ →
-    ContDiff ℝ ∞ V₁ → ContDiff ℝ ∞ V₂ →
-    ∃ (C Cpool : ℝ) (E : ℕ),0 < C ∧ 1 ≤ Cpool ∧ P ≤ E ∧ ∀ (D : ℕ) (Z X lengthScale K : ℝ)
-      (R : Finset (OutsidePrimeIndex S D)) (ray : SecondRayIndex) (T : Finset (Ideal ActualEisensteinCubic.O × ActualEisensteinCubic.O)),
-      1 ≤ Z → Cpool*Z^E ≤ D → 1 ≤ X → 1 ≤ lengthScale → 1 ≤ K →
-      X ≤ Z^P → lengthScale ≤ Z^P → K ≤ Z^P →
-      initialExcludedNorm S*primeProductNorm (outsidePrime S D) R ≤ Z^P →
-      X*lengthScale ≤ Z^2 →
-      K*(initialExcludedNorm S*primeProductNorm (outsidePrime S D) R) ≤ X*lengthScale*Z^(-(1 : ℝ)/20) →
-      (∀ z ∈ T,Admissible z.1 ∧ (Ideal.absNorm z.1 : ℝ) ≤ lengthScale ∧
-        z.2 ≠ 0 ∧ ‖ConcreteTraceCRT.eisEmbedding z.2‖^2 ≤ K) →
-      outsideCanonicalDensity χ S hbad D ray R T V₁ V₂ X J ≤ C*Z^deltaLoss*(X*lengthScale)^2
 
 end InitialMeanSquare
 

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.OriginalSource
 import OAI.NumberTheory.DirichletL.Moments.AllocatedRayDictionary
-
 namespace OAI
 
 noncomputable section
@@ -23,12 +22,6 @@ lemma profile_support (W : ℝ → ℂ) (a b : ℝ)
   apply hWs
   intro hz
   exact hy (by simp only [profile, hz, zero_mul])
-
-lemma profile_zero (W : ℝ → ℂ) (a b : ℝ) (ha : 0 < a)
-    (hWs : Function.support W ⊆ Set.Icc a b) (σ freq : ℝ) :
-    profile W σ freq 0 = 0 := by
-  by_contra hn
-  exact (not_le_of_gt ha) ((profile_support W a b hWs σ freq hn).1)
 
 lemma profile_norm (W : ℝ → ℂ) (a b : ℝ) (ha : 0 < a)
     (hWs : Function.support W ⊆ Set.Icc a b) (σ freq y : ℝ) :
@@ -102,10 +95,6 @@ def input : Input ι :=
 local notation "inp" => input Q H hH η₀ θ W hW aslot bslot lo hi haslot hWs
   w σ freq hσ state p ha t X₁ X₂ Y₁ Y₂ hX₁ hX₂ hY₁ hY₂ hsame
 
-theorem input_matches :
-    CenteredMomentAllocatedRayDictionary.Matches Q H hH inp η₀ θ w σ freq W bslot Z := by
-  constructor <;> intros <;> rfl
-
 lemma lower_eq : (inp).lower = aslot := rfl
 lemma upper_eq : (inp).upper = bslot := rfl
 lemma slot_control_eq (i : ι) :
@@ -113,8 +102,6 @@ lemma slot_control_eq (i : ι) :
 lemma character_eq : (inp).η = state.character := rfl
 lemma mask_eq : (inp).m = state.mask := rfl
 lemma height_eq : (inp).t = t := rfl
-lemma first_rectangle_eq : (inp).X₁ = X₁ ∧ (inp).X₂ = X₂ := ⟨rfl, rfl⟩
-lemma second_rectangle_eq : (inp).Y₁ = Y₁ ∧ (inp).Y₂ = Y₂ := ⟨rfl, rfl⟩
 
 theorem coefficient_eq (i : ι) (I : Ideal O) :
     (inp).toData.coefficient i I =

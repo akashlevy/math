@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.DetectorZeros
-
 namespace OAI
 
 noncomputable section

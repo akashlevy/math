@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.LowBranchSum
 import OAI.NumberTheory.DirichletL.Reflection.LiteralNormalized
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

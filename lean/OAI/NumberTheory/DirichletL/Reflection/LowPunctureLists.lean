@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.PunctureLists
 import OAI.NumberTheory.DirichletL.Reflection.CanonicalPool
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

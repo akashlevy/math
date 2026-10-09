@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.ControlledMultiplier
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondEnergySplit
 import OAI.NumberTheory.DirichletL.Moments.SecondBlockHarmonicMass
 import OAI.NumberTheory.DirichletL.Moments.ExceptionalAmplitudePair
-
 namespace OAI
 
 noncomputable section

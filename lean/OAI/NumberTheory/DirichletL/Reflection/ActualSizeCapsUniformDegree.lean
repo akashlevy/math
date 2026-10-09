@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.ActualSizeCaps
 import OAI.NumberTheory.DirichletL.Reflection.TailEnergyBudgetUniformDegree
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

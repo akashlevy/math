@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.IdealQuotients
-
 namespace OAI
 
 noncomputable section
@@ -8,76 +7,23 @@ namespace FirstPassCubeLabels
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
 section
 
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory
-
 section
-open ActualEisensteinCubic
 open ConcreteTraceCRT (eisEmbedding)
 open EisensteinSchwartzPoisson (paperRadialFourier)
 
@@ -117,56 +63,9 @@ theorem firstColumnEnergy_nonneg {ι : Type*} [DecidableEq ι]
   exact mul_nonneg (mul_nonneg (norm_nonneg _) (norm_nonneg _))
     (rayIdealEnergy_nonneg _ _ _ _ _ _)
 
-theorem actual_first_kernel_energy_bound {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1) (F B : Finset ι) (hFB : Disjoint F B)
-    (v : ι → ℕ) (ε₁ ε₂ : ι → Bool) (C₁ C₂ : Finset ι → ℂ)
-    (W : 𝓢(ℝ, ℂ)) (V₁ V₂ : ℝ → ℂ) (X₁ X₂ : ℝ) (hX₁ : 0 < X₁) (hX₂ : 0 < X₂)
-    (M₁ M₂ : ℝ) (hM₁ : 0 ≤ M₁) (hM₂ : 0 ≤ M₂)
-    (hV₁ : ∀ x, V₁ x ≠ 0 → |x| ≤ M₁) (hV₂ : ∀ y, V₂ y ≠ 0 → |y| ≤ M₂)
-    (A J : ℕ) :
-    ∃ K : ℝ, 0 ≤ K ∧ ∀ lengthScale : ℝ, 0 < lengthScale → ∀ d h : O, d ≠ 0 → h ≠ 0 →
-      ∃ b : 𝓢(ℝ, ℂ),
-        Integrable (fun t : ℝ => (1 + ‖t‖) ^ J * ‖b t‖) volume ∧
-        (1 + firstDualScale p (cubeActiveSupport B v ε₁ ε₂) lengthScale X₁ X₂ d h) ^ A *
-          (∫ t : ℝ, (1 + ‖t‖) ^ J * ‖b t‖) ≤ K ∧
-        ‖actualFirstKernel p hp hcop hg F B v ε₁ ε₂ C₁ C₂ W V₁ V₂ X₁ X₂ lengthScale d h‖ ≤
-        (lengthScale / ‖eisEmbedding (∏ i ∈ cubeActiveSupport B v ε₁ ε₂, p i)‖) *
-          Real.sqrt (firstColumnEnergy p hp hcop hg F B v ε₁ ε₂ true C₁ V₁ X₁ d h b) *
-          Real.sqrt (firstColumnEnergy p hp hcop hg F B v ε₁ ε₂ false C₂ V₂ X₂ d h b) := by
-  obtain ⟨K, hK, hs⟩ := actual_first_kernel_to_ideal_rows p hp hinj hcop hg hc hpr F B hFB
-    v ε₁ ε₂ C₁ C₂ W V₁ V₂ X₁ X₂ hX₁ hX₂ M₁ M₂ hM₁ hM₂ hV₁ hV₂ A J
-  refine ⟨K, hK, ?_⟩
-  intro lengthScale hL d h hd hh
-  obtain ⟨b, hi, hb, _, he⟩ := hs lengthScale hL d h hd hh
-  refine ⟨b, hi, hb, ?_⟩
-  let D₁ := fun t => cubeLogCoefficient p hp hcop hg B v ε₁ ε₂ true
-    (normalizedColumn p C₁) V₁ (columnLog p X₁) t d
-  let D₂ := fun t => cubeLogCoefficient p hp hcop hg B v ε₁ ε₂ false
-    (normalizedColumn p C₂) V₂ (columnLog p X₂) t d
-  have hiE := cube_integral_norm_le_energy p hg F D₁ D₂
-    (cubeLogCoefficient_continuous p hp hcop hg B v ε₁ ε₂ true _ _ _ d)
-    (cubeLogCoefficient_continuous p hp hcop hg B v ε₁ ε₂ false _ _ _ d)
-    (fun t S => norm_cubeLogCoefficient_eq_zero p hp hcop hg B v ε₁ ε₂ true _ _ _ t d S)
-    (fun t S => norm_cubeLogCoefficient_eq_zero p hp hcop hg B v ε₁ ε₂ false _ _ _ t d S)
-    h b (cubeBaseFactor p hp hg B v ε₁ ε₂ d h)
-  change actualFirstKernel p hp hcop hg F B v ε₁ ε₂ C₁ C₂ W V₁ V₂ X₁ X₂ lengthScale d h = _ at he
-  rw [he, norm_mul]
-  have hn : ‖(lengthScale : ℂ) / (‖eisEmbedding (∏ i ∈ cubeActiveSupport B v ε₁ ε₂, p i)‖ : ℂ)‖ =
-      lengthScale / ‖eisEmbedding (∏ i ∈ cubeActiveSupport B v ε₁ ε₂, p i)‖ := by
-    simp only [norm_div, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hL.le,
-      abs_of_nonneg (norm_nonneg _)]
-  rw [hn, mul_assoc]
-  exact mul_le_mul_of_nonneg_left hiE (div_nonneg hL.le (norm_nonneg _))
-
 end
 
 section
-open ActualEisensteinCubic
 open FirstCauchyArithmetic (supportMobius supportRay supportConjugateSum)
 open RayFourExpansion (RayCharacter)
 
@@ -419,136 +318,13 @@ theorem normalized_originalLabelColumn {ι : Type*} (p : ι → O)
   simp only [normalizedColumn, originalLabelColumn, div_eq_mul_inv]
   ring
 
-theorem firstColumnEnergy_original_labels {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i}) (F B : Finset ι)
-    (v : ι → ℕ) (ε₁ ε₂ : ι → Bool) (hv : ∀ j ∈ B, 0 < v j)
-    (negative : Bool) (C : Finset ι → ℂ) (V : ℝ → ℂ) (X : ℝ)
-    (c d f h : O) (b : 𝓢(ℝ, ℂ)) :
-    firstColumnEnergy p hp hcop hg F B v ε₁ ε₂ negative
-      (originalLabelColumn p hg B ε₁ ε₂ negative C c f) V X d h b =
-    ∫ t : ℝ, ‖b t‖ * ‖cubeBaseFactor p hp hg B v ε₁ ε₂ d h‖ *
-      ∑ r : RayCharacter × RayCharacter, ∑ D ∈ F.powerset,
-        ‖rayPairWeight p r D h‖ *
-        (‖beforeDilationLabel (fun i => Ideal.span {p i}) hg p B v ε₁ ε₂ negative c d f D‖ ^ 2 *
-          ‖dilatedRayColumn p hg F D
-            (cubeCoreCoefficient p hp hcop hg B v ε₁ ε₂ negative
-              (normalizedColumn p C) V (columnLog p X) t)
-            negative (if negative then r.1 else r.2) p B v ε₁ ε₂ c d
-            (h * f ^ 2 * dilationLabel p B v ε₁ ε₂)‖ ^ 2) := by
-  unfold firstColumnEnergy
-  rw [normalized_originalLabelColumn]
-  apply integral_congr_ae
-  filter_upwards [] with t
-  congr 1
-  unfold rayIdealEnergy
-  apply Finset.sum_congr rfl
-  intro r hr
-  apply Finset.sum_congr rfl
-  intro D hD
-  rw [rayIdealRow_cube_labels p hp hinj hcop hg F D B v ε₁ ε₂ hv negative _
-    (normalizedColumn p C) V (columnLog p X) t c d f h, norm_mul, mul_pow]
-
 end
 
-open ActualEisensteinCubic
 open ConcreteTraceCRT (eisEmbedding)
-
-def firstDivisorWeight {ι : Type*} (p : ι → O)
-    [∀ i, (Ideal.span {p i}).IsMaximal] (E : Finset ι) : ℂ :=
-  (UniqueFactorizationMonoid.moebius (∏ i ∈ E, Ideal.span {p i}) : ℂ) /
-    (‖eisEmbedding (primeSubsetGenerator (fun i => Ideal.span {p i}) E)‖ ^ 2 : ℝ)
-
-theorem retained_first_kernel_energy_bound {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1) (F B : Finset ι) (hFB : Disjoint F B)
-    (v : ι → ℕ) (ε₁ ε₂ : ι → Bool) (C₁ C₂ : Finset ι → ℂ)
-    (W : 𝓢(ℝ, ℂ)) (V₁ V₂ : ℝ → ℂ) (X₁ X₂ : ℝ) (hX₁ : 0 < X₁) (hX₂ : 0 < X₂)
-    (M₁ M₂ : ℝ) (hM₁ : 0 ≤ M₁) (hM₂ : 0 ≤ M₂)
-    (hV₁ : ∀ x, V₁ x ≠ 0 → |x| ≤ M₁) (hV₂ : ∀ y, V₂ y ≠ 0 → |y| ≤ M₂)
-    (A J : ℕ) :
-    ∃ K : ℝ, 0 ≤ K ∧ ∀ lengthScale : ℝ, 0 < lengthScale →
-      ∀ (Ω : Finset (Finset ι × O)) (w : Finset ι × O → ℂ),
-      (∀ x ∈ Ω, x.2 ≠ 0) → ∃ b : (Finset ι × O) → 𝓢(ℝ, ℂ),
-      (∀ x ∈ Ω, Integrable (fun t : ℝ => (1 + ‖t‖) ^ J * ‖b x t‖) volume ∧
-        (1 + firstDualScale p (cubeActiveSupport B v ε₁ ε₂) lengthScale X₁ X₂
-          (primeSubsetGenerator (fun i => Ideal.span {p i}) x.1) x.2) ^ A *
-            (∫ t : ℝ, (1 + ‖t‖) ^ J * ‖b x t‖) ≤ K) ∧
-      ‖∑ x ∈ Ω, (w x * firstDivisorWeight p x.1) *
-        actualFirstKernel p hp hcop hg F B v ε₁ ε₂ C₁ C₂ W V₁ V₂ X₁ X₂ lengthScale
-          (primeSubsetGenerator (fun i => Ideal.span {p i}) x.1) x.2‖ ≤
-      (lengthScale / ‖eisEmbedding (∏ i ∈ cubeActiveSupport B v ε₁ ε₂, p i)‖) *
-        Real.sqrt (∑ x ∈ Ω, ‖w x * firstDivisorWeight p x.1‖ *
-          firstColumnEnergy p hp hcop hg F B v ε₁ ε₂ true C₁ V₁ X₁
-            (primeSubsetGenerator (fun i => Ideal.span {p i}) x.1) x.2 (b x)) *
-        Real.sqrt (∑ x ∈ Ω, ‖w x * firstDivisorWeight p x.1‖ *
-          firstColumnEnergy p hp hcop hg F B v ε₁ ε₂ false C₂ V₂ X₂
-            (primeSubsetGenerator (fun i => Ideal.span {p i}) x.1) x.2 (b x)) := by
-  obtain ⟨K, hK, hs⟩ := actual_first_kernel_energy_bound p hp hinj hcop hg hc hpr F B hFB
-    v ε₁ ε₂ C₁ C₂ W V₁ V₂ X₁ X₂ hX₁ hX₂ M₁ M₂ hM₁ hM₂ hV₁ hV₂ A J
-  refine ⟨K, hK, ?_⟩
-  intro lengthScale hL Ω w hΩ
-  let d := fun x : Finset ι × O => primeSubsetGenerator (fun i => Ideal.span {p i}) x.1
-  have hfam : ∀ x : Finset ι × O, ∃ b : 𝓢(ℝ, ℂ), x ∈ Ω →
-      Integrable (fun t : ℝ => (1 + ‖t‖) ^ J * ‖b t‖) volume ∧
-      (1 + firstDualScale p (cubeActiveSupport B v ε₁ ε₂) lengthScale X₁ X₂ (d x) x.2) ^ A *
-        (∫ t : ℝ, (1 + ‖t‖) ^ J * ‖b t‖) ≤ K ∧
-      ‖actualFirstKernel p hp hcop hg F B v ε₁ ε₂ C₁ C₂ W V₁ V₂ X₁ X₂ lengthScale (d x) x.2‖ ≤
-      (lengthScale / ‖eisEmbedding (∏ i ∈ cubeActiveSupport B v ε₁ ε₂, p i)‖) *
-        Real.sqrt (firstColumnEnergy p hp hcop hg F B v ε₁ ε₂ true C₁ V₁ X₁ (d x) x.2 b) *
-        Real.sqrt (firstColumnEnergy p hp hcop hg F B v ε₁ ε₂ false C₂ V₂ X₂ (d x) x.2 b) := by
-    intro x
-    by_cases hx : x ∈ Ω
-    · obtain ⟨b, hb⟩ := hs lengthScale hL (d x) x.2 (primeSubsetGenerator_ne_zero _ _) (hΩ x hx)
-      exact ⟨b, fun _ => hb⟩
-    · exact ⟨0, fun hx' => (hx hx').elim⟩
-  choose b hb using hfam
-  refine ⟨b, fun x hx => ⟨(hb x hx).1, (hb x hx).2.1⟩, ?_⟩
-  let U := fun x => firstColumnEnergy p hp hcop hg F B v ε₁ ε₂ true C₁ V₁ X₁ (d x) x.2 (b x)
-  let V := fun x => firstColumnEnergy p hp hcop hg F B v ε₁ ε₂ false C₂ V₂ X₂ (d x) x.2 (b x)
-  let a := fun x => ‖w x * firstDivisorWeight p x.1‖
-  let q := lengthScale / ‖eisEmbedding (∏ i ∈ cubeActiveSupport B v ε₁ ε₂, p i)‖
-  have hq : 0 ≤ q := div_nonneg hL.le (norm_nonneg _)
-  have hU (x) : 0 ≤ U x := firstColumnEnergy_nonneg p hp hcop hg F B v ε₁ ε₂ true C₁ V₁ X₁ _ _ _
-  have hV (x) : 0 ≤ V x := firstColumnEnergy_nonneg p hp hcop hg F B v ε₁ ε₂ false C₂ V₂ X₂ _ _ _
-  have hterm (x) : a x * (Real.sqrt (U x) * Real.sqrt (V x)) =
-      Real.sqrt (a x * U x) * Real.sqrt (a x * V x) := by
-    rw [Real.sqrt_mul (norm_nonneg _), Real.sqrt_mul (norm_nonneg _)]
-    calc
-      _ = (Real.sqrt (a x)) ^ 2 * (Real.sqrt (U x) * Real.sqrt (V x)) := by
-        rw [Real.sq_sqrt (norm_nonneg _)]
-      _ = _ := by ring
-  calc
-    _ ≤ ∑ x ∈ Ω, ‖(w x * firstDivisorWeight p x.1) *
-        actualFirstKernel p hp hcop hg F B v ε₁ ε₂ C₁ C₂ W V₁ V₂ X₁ X₂ lengthScale (d x) x.2‖ :=
-      norm_sum_le _ _
-    _ ≤ ∑ x ∈ Ω, q * (Real.sqrt (a x * U x) * Real.sqrt (a x * V x)) := by
-      apply Finset.sum_le_sum
-      intro x hx
-      rw [norm_mul, ← hterm]
-      calc
-        _ ≤ a x * (q * Real.sqrt (U x) * Real.sqrt (V x)) :=
-          mul_le_mul_of_nonneg_left (hb x hx).2.2 (norm_nonneg _)
-        _ = _ := by ring
-    _ = q * (∑ x ∈ Ω, Real.sqrt (a x * U x) * Real.sqrt (a x * V x)) :=
-      (Finset.mul_sum _ _ _).symm
-    _ ≤ q * (Real.sqrt (∑ x ∈ Ω, a x * U x) * Real.sqrt (∑ x ∈ Ω, a x * V x)) :=
-      mul_le_mul_of_nonneg_left (Real.sum_sqrt_mul_sqrt_le Ω
-        (fun x => mul_nonneg (norm_nonneg _) (hU x))
-        (fun x => mul_nonneg (norm_nonneg _) (hV x))) hq
-    _ = _ := (mul_assoc _ _ _).symm
 
 end
 
 section
-open scoped BigOperators Classical
-open ActualEisensteinCubic
 open RayFourExpansion (RayCharacter crossCoeff)
 
 theorem blockRow_norm_le_one {ι : Type*} (p : ι → O)
@@ -593,9 +369,6 @@ theorem rayPairWeight_norm_le {ι : Type*} [DecidableEq ι] (p : ι → O)
 
 end
 
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory
-open ActualEisensteinCubic
 open ConcreteTraceCRT (eisEmbedding eisEmbedding_ne_zero)
 open EisensteinSchwartzPoisson (paperRadialFourier)
 open FourierBridge (logPhase)
@@ -613,14 +386,6 @@ theorem firstLogDensity_integrable (J : ℕ) : Integrable (firstLogDensity J) vo
   funext t
   rw [Real.rpow_neg (by positivity), Real.rpow_natCast]
   rfl
-
-theorem firstLogDensity_moment_integrable (J : ℕ) :
-    Integrable (fun t : ℝ => (1 + ‖t‖) ^ J * firstLogDensity J t) volume := by
-  convert firstLogDensity_integrable 0 using 1
-  funext t
-  have ht : 1 + ‖t‖ ≠ 0 := ne_of_gt (by positivity)
-  simp only [firstLogDensity, zero_add, pow_add, mul_inv_rev]
-  field_simp
 
 theorem two_variable_radial_envelope (W : 𝓢(ℝ, ℂ)) (V₁ V₂ : ℝ → ℂ)
     (M₁ M₂ : ℝ) (hM₁ : 0 ≤ M₁) (hM₂ : 0 ≤ M₂)
@@ -702,53 +467,6 @@ theorem actualFirstKernel_eq_separated {ι : Type*} [DecidableEq ι]
             threeGaussRowFactor p hp hcop hg N P B v ε₁ ε₂ C₁ C₂ d h) := by ring
       _ = _ := by rw [hpre]; ring
   · simp [hNP]
-
-theorem actual_first_kernel_energy_envelope {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1) (F B : Finset ι) (hFB : Disjoint F B)
-    (v : ι → ℕ) (ε₁ ε₂ : ι → Bool) (C₁ C₂ : Finset ι → ℂ)
-    (W : 𝓢(ℝ, ℂ)) (V₁ V₂ : ℝ → ℂ) (X₁ X₂ : ℝ) (hX₁ : 0 < X₁) (hX₂ : 0 < X₂)
-    (M₁ M₂ : ℝ) (hM₁ : 0 ≤ M₁) (hM₂ : 0 ≤ M₂)
-    (hV₁ : ∀ x, V₁ x ≠ 0 → |x| ≤ M₁) (hV₂ : ∀ y, V₂ y ≠ 0 → |y| ≤ M₂)
-    (A J : ℕ) :
-    ∃ K : ℝ, 0 ≤ K ∧ ∀ lengthScale : ℝ, 0 < lengthScale → ∀ d h : O, d ≠ 0 → h ≠ 0 →
-      ∃ b : 𝓢(ℝ, ℂ),
-        (∀ t : ℝ, (1 + firstDualScale p (cubeActiveSupport B v ε₁ ε₂) lengthScale X₁ X₂ d h) ^ A *
-          ‖b t‖ ≤ K * firstLogDensity J t) ∧
-        ‖actualFirstKernel p hp hcop hg F B v ε₁ ε₂ C₁ C₂ W V₁ V₂ X₁ X₂ lengthScale d h‖ ≤
-        (lengthScale / ‖eisEmbedding (∏ i ∈ cubeActiveSupport B v ε₁ ε₂, p i)‖) *
-          Real.sqrt (firstColumnEnergy p hp hcop hg F B v ε₁ ε₂ true C₁ V₁ X₁ d h b) *
-          Real.sqrt (firstColumnEnergy p hp hcop hg F B v ε₁ ε₂ false C₂ V₂ X₂ d h b) := by
-  obtain ⟨K, hK, hs⟩ := two_variable_radial_envelope W V₁ V₂ M₁ M₂ hM₁ hM₂ hV₁ hV₂ A J
-  refine ⟨K, hK, ?_⟩
-  intro lengthScale hL d h hd hh
-  have hR : 0 < firstDualScale p (cubeActiveSupport B v ε₁ ε₂) lengthScale X₁ X₂ d h := by
-    unfold firstDualScale
-    exact div_pos (mul_pos hL (pow_pos (norm_pos_iff.mpr (eisEmbedding_ne_zero hh)) 2))
-      (mul_pos (mul_pos (mul_pos (pow_pos (norm_pos_iff.mpr (eisEmbedding_ne_zero hd)) 2)
-        (primeProductNorm_pos p hp _)) hX₁) hX₂)
-  obtain ⟨b, hsep, hb⟩ := hs _ hR
-  refine ⟨b, hb, ?_⟩
-  rw [actualFirstKernel_eq_separated p hp hinj hcop hg hc hpr F B hFB v ε₁ ε₂
-    C₁ C₂ W V₁ V₂ X₁ X₂ hX₁ hX₂ lengthScale d h b hsep, norm_mul]
-  have hi := cube_integral_norm_le_energy p hg F
-    (fun t => cubeLogCoefficient p hp hcop hg B v ε₁ ε₂ true
-      (normalizedColumn p C₁) V₁ (columnLog p X₁) t d)
-    (fun t => cubeLogCoefficient p hp hcop hg B v ε₁ ε₂ false
-      (normalizedColumn p C₂) V₂ (columnLog p X₂) t d)
-    (cubeLogCoefficient_continuous p hp hcop hg B v ε₁ ε₂ true _ _ _ d)
-    (cubeLogCoefficient_continuous p hp hcop hg B v ε₁ ε₂ false _ _ _ d)
-    (fun t S => norm_cubeLogCoefficient_eq_zero p hp hcop hg B v ε₁ ε₂ true _ _ _ t d S)
-    (fun t S => norm_cubeLogCoefficient_eq_zero p hp hcop hg B v ε₁ ε₂ false _ _ _ t d S)
-    h b (cubeBaseFactor p hp hg B v ε₁ ε₂ d h)
-  simp only [norm_div, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hL.le,
-    abs_of_nonneg (norm_nonneg _)]
-  rw [mul_assoc]
-  exact mul_le_mul_of_nonneg_left hi (div_nonneg hL.le (norm_nonneg _))
 
 end FirstPassCubeLabels
 

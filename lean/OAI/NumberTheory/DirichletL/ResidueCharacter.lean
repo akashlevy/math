@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.ConductorPresentation
-
 namespace OAI
 
 namespace SevenEighths.ResidueCharacter
@@ -16,11 +15,6 @@ def inflate {M L : Ideal A} (hML : M ≤ L) (χ : MulChar (A ⧸ L) ℂ) :
     MulChar (A ⧸ M) ℂ :=
   MulChar.ofUnitHom (χ.toUnitHom.comp
     (Units.map (Ideal.Quotient.factor hML).toMonoidHom))
-
-theorem inflate_toUnitHom {M L : Ideal A} (hML : M ≤ L) (χ : MulChar (A ⧸ L) ℂ) :
-    (inflate hML χ).toUnitHom =
-      χ.toUnitHom.comp (Units.map (Ideal.Quotient.factor hML).toMonoidHom) := by
-  simp only [inflate, MulChar.toUnitHom_eq, MulChar.ofUnitHom_eq, Equiv.apply_symm_apply]
 
 theorem inflate_apply_unit {M L : Ideal A} (hML : M ≤ L) (χ : MulChar (A ⧸ L) ℂ)
     (u : (A ⧸ M)ˣ) :
@@ -39,30 +33,6 @@ theorem inflate_mk {M L : Ideal A} (hML : M ≤ L) (χ : MulChar (A ⧸ L) ℂ) 
     inflate hML χ (Ideal.Quotient.mk M a) =
       if IsUnit (Ideal.Quotient.mk M a) then χ (Ideal.Quotient.mk L a) else 0 := by
   simpa only [Ideal.Quotient.factor_mk] using inflate_apply hML χ (Ideal.Quotient.mk M a)
-
-theorem inflate_factorsThrough {M L : Ideal A} [Finite (A ⧸ M)]
-    (hML : M ≤ L) (χ : MulChar (A ⧸ L) ℂ) :
-    FactorsThroughIdeal (inflate hML χ) (L.map (Ideal.Quotient.mk M)) := by
-  rw [factorsThroughIdeal_iff]
-  intro u hu
-  obtain ⟨a, ha⟩ := Ideal.Quotient.mk_surjective (u : A ⧸ M)
-  have haL : a - 1 ∈ L := by
-    apply (Ideal.mem_quotient_iff_mem hML).mp
-    simpa only [map_sub, map_one, ha] using hu
-  have ha1 : Ideal.Quotient.mk L a = 1 :=
-    (Ideal.Quotient.mk_eq_one_iff_sub_mem _).mpr haL
-  rw [inflate_apply_unit, ← ha, Ideal.Quotient.factor_mk, ha1, map_one]
-
-theorem inflate_trans {M L K : Ideal A} (hML : M ≤ L) (hLK : L ≤ K)
-    (χ : MulChar (A ⧸ K) ℂ) :
-    inflate hML (inflate hLK χ) = inflate (hML.trans hLK) χ := by
-  apply MulChar.ext
-  intro u
-  rw [inflate_apply_unit]
-  let v : (A ⧸ L)ˣ := Units.map (Ideal.Quotient.factor hML).toMonoidHom u
-  change inflate hLK χ (v : A ⧸ L) = _
-  rw [inflate_apply_unit, inflate_apply_unit]
-  exact congrArg χ (Ideal.Quotient.factor_comp_apply hML hLK (u : A ⧸ M))
 
 theorem inflate_global_units {M L : Ideal A} (hML : M ≤ L) (χ : MulChar (A ⧸ L) ℂ)
     (hχ : ∀ u : Aˣ, χ (Ideal.Quotient.mk L u) = 1) :
@@ -137,42 +107,6 @@ theorem product_global_units (I J : Ideal A) (χ : MulChar (A ⧸ I) ℂ)
   rw [product_mk, hχ, hψ, one_mul]
 
 section PrimitiveProduct
-
-variable [IsDedekindDomain A] [Infinite A]
-
-theorem exists_primitive_product (I J : Ideal A) [Finite (A ⧸ I)] [Finite (A ⧸ J)]
-    (χ : MulChar (A ⧸ I) ℂ) (ψ : MulChar (A ⧸ J) ℂ) :
-    ∃ (K : Ideal A) (φ : MulChar (A ⧸ K) ℂ),
-      I ⊓ J ≤ K ∧ K ≠ ⊥ ∧ IsPrimitiveOnIdeals φ ∧
-      K.absNorm ≤ I.absNorm * J.absNorm ∧
-      ∀ a : A, χ (Ideal.Quotient.mk I a) * ψ (Ideal.Quotient.mk J a) =
-        if IsUnit (Ideal.Quotient.mk I a) ∧ IsUnit (Ideal.Quotient.mk J a)
-          then φ (Ideal.Quotient.mk K a) else 0 := by
-  let : Finite (A ⧸ I ⊓ J) := finite_quotient_inf I J
-  obtain ⟨K, φ, hIK, hK, hprimitive, hnorm, hmask⟩ :=
-    exists_primitive_presentation (I ⊓ J) (product I J χ ψ)
-  refine ⟨K, φ, hIK, hK, hprimitive, hnorm.trans (absNorm_inf_le_mul I J), ?_⟩
-  intro a
-  simpa only [product_mk, isUnit_mk_inf_iff] using hmask a
-
-theorem exists_primitive_product_global_units
-    (I J : Ideal A) [Finite (A ⧸ I)] [Finite (A ⧸ J)]
-    (χ : MulChar (A ⧸ I) ℂ) (ψ : MulChar (A ⧸ J) ℂ)
-    (hχ : ∀ u : Aˣ, χ (Ideal.Quotient.mk I u) = 1)
-    (hψ : ∀ u : Aˣ, ψ (Ideal.Quotient.mk J u) = 1) :
-    ∃ (K : Ideal A) (φ : MulChar (A ⧸ K) ℂ),
-      I ⊓ J ≤ K ∧ K ≠ ⊥ ∧ IsPrimitiveOnIdeals φ ∧
-      K.absNorm ≤ I.absNorm * J.absNorm ∧
-      (∀ u : Aˣ, φ (Ideal.Quotient.mk K u) = 1) ∧
-      ∀ a : A, χ (Ideal.Quotient.mk I a) * ψ (Ideal.Quotient.mk J a) =
-        if IsUnit (Ideal.Quotient.mk I a) ∧ IsUnit (Ideal.Quotient.mk J a)
-          then φ (Ideal.Quotient.mk K a) else 0 := by
-  obtain ⟨K, φ, hIK, hK, hprimitive, hnorm, hmask⟩ := exists_primitive_product I J χ ψ
-  refine ⟨K, φ, hIK, hK, hprimitive, hnorm, ?_, hmask⟩
-  intro u
-  have h := hmask (u : A)
-  simpa only [hχ, hψ, one_mul, u.isUnit.map (Ideal.Quotient.mk I),
-    u.isUnit.map (Ideal.Quotient.mk J), and_self, ite_true] using h.symm
 
 end PrimitiveProduct
 

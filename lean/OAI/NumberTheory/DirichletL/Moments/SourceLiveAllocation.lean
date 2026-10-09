@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.RemainingBox
 import OAI.NumberTheory.DirichletL.Moments.CommonPuncture
-
 namespace OAI
 
 noncomputable section
@@ -42,12 +41,6 @@ theorem allocation_frozen_gate (S : (ι ⊕ Fin 2) → Finset (Ideal O))
   split_ifs at he with hm
   · rwa [he] at hvi
   · exact False.elim (hi he.symm)
-
-theorem live_residual_pool (S : (ι ⊕ Fin 2) → Finset (Ideal O))
-    (B : Tuple ι) (hB : ∀ i,B i≠0) (i : liveIndices B) :
-    residualPool (B (Sum.inl i.val)) (hB _) (S (Sum.inl i.val))=S (Sum.inl i.val) := by
-  ext I
-  rw [mem_residualPool,(Finset.mem_filter.mp i.property).2,one_mul]
 
 theorem residual_source_profile (S : (ι ⊕ Fin 2) → Finset (Ideal O))
     (hp : ∀ i,∀ I∈S (Sum.inl i),Prime I)

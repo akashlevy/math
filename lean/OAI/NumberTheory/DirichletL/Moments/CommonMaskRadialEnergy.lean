@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.CommonMaskEnergy
 import OAI.NumberTheory.DirichletL.Moments.UniformRadialComparison
-
 namespace OAI
 
 noncomputable section

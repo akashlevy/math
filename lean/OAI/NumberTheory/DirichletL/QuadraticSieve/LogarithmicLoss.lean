@@ -1,76 +1,24 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.SelectedExponents
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace CanonicalQuadraticSieve
 
 theorem lifting_annular_scale_bounds (j : Fin 7) : 1≤(2:ℝ)^j.val ∧ (2:ℝ)^j.val≤64 := by
@@ -224,7 +172,6 @@ theorem HasSieveExponent.low_threshold {α : ℝ} (hexp : HasSieveExponent α)
 
 end CanonicalQuadraticSieve
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 
 theorem globalCutoffRatio_le (K ell B F M H U : ℝ)
@@ -475,29 +422,6 @@ theorem sieveNorm_sharp :
     ∀ ε : ℝ, 0<ε → ∃ C : ℝ, 0<C ∧ ∀ M N : ℝ, 1≤M → 1≤N →
       sieveNorm M N≤C*(M*N)^ε*(M+N) := by
   simpa only [HasSieveExponent,Real.rpow_one] using hasSieveExponent_one
-
-theorem finite_family_quadratic_large_sieve :
-    ∀ ε : ℝ, 0<ε → ∃ C : ℝ, 0<C ∧
-    ∀ (M N : ℝ), 1≤M → 1≤N →
-    ∀ {m n : Type*} [Fintype m] [Fintype n],
-    ∀ (rows : m → Ideal O) (cols : n → Ideal O),
-      Function.Injective rows → Function.Injective cols →
-      (∀ i, Admissible (rows i) ∧ (Ideal.absNorm (rows i):ℝ)≤M) →
-      (∀ j, Admissible (cols j) ∧ (Ideal.absNorm (cols j):ℝ)≤N) →
-    ∀ a : n → ℂ,
-      (∑ i, ‖∑ j, quadraticRow (cols j) (primaryGenerator (rows i))*a j‖^2) ≤
-        C*(M*N)^ε*(M+N)*∑j,‖a j‖^2 := by
-  intro ε hε
-  obtain ⟨C,hC,hsharp⟩ := sieveNorm_sharp ε hε
-  refine ⟨C,hC,?_⟩
-  intro M N hM hN m n _ _ rows cols hr hc hrows hcols a
-  classical
-  have he := FiniteSieveOperator.energy_bound
-    (fun i j => quadraticRow (cols j) (primaryGenerator (rows i))) a
-  have hn := family_squared_norm_le rows cols hr hc M N hrows hcols
-  have hE : 0≤∑j,‖a j‖^2 := by positivity
-  exact he.trans ((mul_le_mul_of_nonneg_right hn hE).trans
-    (mul_le_mul_of_nonneg_right (hsharp M N hM hN) hE))
 
 end CanonicalQuadraticSieve
 

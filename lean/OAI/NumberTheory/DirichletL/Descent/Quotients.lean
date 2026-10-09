@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.Hybrid
 import OAI.NumberTheory.DirichletL.CubicSieve.Gcd
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

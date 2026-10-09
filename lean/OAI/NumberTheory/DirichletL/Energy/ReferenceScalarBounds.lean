@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.ReferenceDivisors
-
 namespace OAI
 
 noncomputable section

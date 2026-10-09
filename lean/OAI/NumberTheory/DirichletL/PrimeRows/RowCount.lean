@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.PhysicalBound
 import OAI.NumberTheory.DirichletL.Detector.HighAbsolute
-
 namespace OAI
 
 noncomputable section

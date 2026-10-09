@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialMarkedDictionary
-
 namespace OAI
 
 noncomputable section
@@ -60,47 +59,6 @@ theorem amplitude_product_eq_tuples {ι : Type*} [Fintype ι] (u : O)
           star (CanonicalRowCompletion.idealRowHom u (∏i,p i)) := by
   simp_rw [amplitude_eq_live M H _ _ _ _ _ _ hZ]
   rw [Finset.prod_mul_distrib,slot_normalization Z hZ,conjugate_mark_product]
-
-omit [NeZero M] in
-theorem physical_slots_norm_initial {ι : Type*} [Fintype ι]
-    (data : RowData) (u : NonzeroElement) (W : ℝ→ℂ) (V : ι→ℝ→ℂ)
-    (Z r σ freq bW : ℝ) (a b ell : ι→ℝ) (ζ : ι→ℂ) (hZ : 0<Z)
-    (hW : ∀x,W x≠0 → x≤bW) (hV : ∀i x,V i x≠0 → x∈Set.Icc (a i) (b i))
-    (hlarge : ∀i,((baseCharacter data).modulus.absNorm:ℝ)<a i*Z^(ell i)) :
-    ‖polynomial (data.character u) true W (Z^r) σ freq*
-      (∏i,HeckePrimeRow.canonicalPrimeAmplitude M H u.val (V i) (b i) (Z^(ell i)) (ζ i))‖=
-    ‖∑p∈Fintype.piFinset (fun i=>livePrimes M H (V i) (b i) (Z^(ell i))),
-      (star (∏i,primeProfile (V i) (Z^(ell i)) (ζ i) (p i))/
-        fixedBase data.η data.m data.f (∏i,p i))*
-      originalTotalPolynomial
-        ((ConcretePrimeRowBridge.idealsUpTo ⌈Z^r*bW⌉₊).filter CanonicalQuadraticSieve.Supported)
-        (∏i,p i) (fixedBase data.η data.m data.f) (fun _=>1)
-        (twistedProfile W σ freq) Z r (∑i,ell i) u.val‖ := by
-  let T := fun i=>livePrimes M H (V i) (b i) (Z^(ell i))
-  let A := fun p:ι→Ideal O=>∏i,primeProfile (V i) (Z^(ell i)) (ζ i) (p i)
-  have hn (p : ι→Ideal O) (hp : p∈Fintype.piFinset T) (_ha : A p≠0) :
-      fixedBase data.η data.m data.f (∏i,p i)≠0 := by
-    rw [map_prod]
-    apply Finset.prod_ne_zero_iff.mpr
-    intro i hi
-    have hpi := Fintype.mem_piFinset.mp hp i
-    have hd := livePrime_data M H (V i) (a i) (b i) (Z^(ell i))
-      (Real.rpow_pos_of_pos hZ _) (hV i) (p i) hpi
-    exact base_nonzero_prime data (p i) hd.1 ((hlarge i).trans_le hd.2.2.1)
-  have he := indexed_conjugate_mark_norm (Fintype.piFinset T) (fun p=>∏i,p i) A
-    (fixedBase data.η data.m data.f) (data.character u) u.val
-    (fixedBase_row data.η (data.character u) data.m data.f u.val (data.character_spec u))
-    W Z r (∑i,ell i) σ freq hZ (ConcretePrimeRowBridge.idealsUpTo ⌈Z^r*bW⌉₊)
-    (finite_source_cover W (Z^r) bW (Real.rpow_pos_of_pos hZ _) hW) hn
-  rw [amplitude_product_eq_tuples M H _ _ _ _ _ _ hZ,←mul_assoc]
-  change ‖polynomial (data.character u) true W (Z^r) σ freq*↑(Z^(-(∑i,ell i)/2))*
-    (∑p∈Fintype.piFinset T,A p*star (CanonicalRowCompletion.idealRowHom u (∏i,p i)))‖=_
-  rw [he]
-  congr 1
-  apply Finset.sum_congr rfl
-  intro p hp
-  rw [originalTotal_supported_source _ _ _
-    (fixedBase_zero_unsupported data.η data.m data.f data.lambda_dvd data.two_dvd)]
 
 omit [NeZero M] in
 theorem live_tuple_injective {ι : Type*} [Fintype ι]

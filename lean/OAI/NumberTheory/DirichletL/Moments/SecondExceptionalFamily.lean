@@ -1,8 +1,9 @@
-import OAI.NumberTheory.DirichletL.Moments.SecondLiveFamily
+import OAI.NumberTheory.DirichletL.Moments.SecondLiveBlock
+import OAI.NumberTheory.DirichletL.Moments.SecondBlockSupport
+import OAI.NumberTheory.DirichletL.Moments.SecondReducedPredicate
 import OAI.NumberTheory.DirichletL.Moments.ReflectedSource
 import OAI.NumberTheory.DirichletL.Moments.SecondRadicalBudget
 import OAI.NumberTheory.DirichletL.Hecke.PrimeScale
-
 namespace OAI
 
 noncomputable section
@@ -149,52 +150,6 @@ theorem inducing_iff (h:Family η C D hC hD U τ) (χ:RayCharacter)
       FixedInducingRow (τ χ) Q fixedBadMask 1 z :=
   actual_reduced_inducing_iff η (τ χ) χ C D hC U (h.element_eq χ) Q m z hm hz hml hm2
 
-theorem paired_inducing_iff (h:Family η C D hC hD U τ) (χ ξ:RayCharacter)
-    (Q:Ideal O) (hQ:Q≤Ideal.span {(72:O)}) (m z:O) (hm:m≠0) (hz:z≠0)
-    (hml:ConcretePrimeRowBridge.goodLambda∣m) (hm2:(2:O)∣m) :
-    FixedInducingRow (τ χ) Q fixedBadMask 1 z ↔
-      FixedInducingRow (τ ξ) Q fixedBadMask 1 (-z) :=
-  (h.inducing_iff χ Q m z hm hz hml hm2).symm.trans
-    ((CenteredMomentExceptionalReflection.fixedInducingRow_reflection_iff η χ ξ Q hQ m
-      (commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U) z hml hm2).trans
-      (h.inducing_iff ξ Q m (-z) hm (neg_ne_zero.mpr hz) hml hm2))
-
-theorem both_inducing (h:Family η C D hC hD U τ) (χ ξ:RayCharacter)
-    (Q:Ideal O) (hQ:Q≤Ideal.span {(72:O)}) (m z:O) (hm:m≠0) (hz:z≠0)
-    (hml:ConcretePrimeRowBridge.goodLambda∣m) (hm2:(2:O)∣m)
-    (hex:FixedInducingRow (childCharacter η χ) Q m
-      (commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U) z) :
-    FixedInducingRow (τ χ) Q fixedBadMask 1 z ∧
-      FixedInducingRow (reflected (τ ξ)) Q fixedBadMask 1 z := by
-  have hleft := (h.inducing_iff χ Q m z hm hz hml hm2).mp hex
-  refine ⟨hleft,?_⟩
-  exact (reflected_inducing (τ ξ) Q fixedBadMask 1 z (dvd_mul_right _ _) (dvd_mul_left _ _)).mp
-    ((h.paired_inducing_iff χ ξ Q hQ m z hm hz hml hm2).mp hleft)
-
-theorem reflected_height_eq (h:Family η C D hC hD U τ) (ξ:RayCharacter)
-    (I:Ideal O)(hI:Supported I)(hi:IsCoprime C I ∨ IsCoprime D I)(t:ℝ) :
-    heightCoeff (reflected (τ ξ)) t I=heightCoeff η t I*
-      idealRowHom (-(commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U)) I*
-      rayCharacter ξ (primaryGenerator I) := by
-  have hneg : idealRowHom (-(commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U)) I=
-      idealRowHom (-1) I*idealRowHom (commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U) I := by
-    rw [show -(commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U)=
-      (-1)*(commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U) by ring]
-    exact idealRowHom_argument_mul _ _ _
-  rw [reflected_height _ _ _ hI,h.height_eq ξ I hI hi t,hneg]
-  ring
-
-theorem live_both_inducing (h:Family η C D hC hD U τ) (χ ξ:RayCharacter)
-    (Q:Ideal O)(hQ:Q≤Ideal.span {(72:O)})(m z:O)(hm:m≠0)
-    (hml:ConcretePrimeRowBridge.goodLambda∣m)(hm2:(2:O)∣m)
-    (radius:ℝ)(rows:Finset O)(hz:z∈liveRows C D U radius rows)
-    (hex:FixedInducingRow (childCharacter η χ) Q m
-      (commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U) z) :
-    z≠0 ∧ FixedInducingRow (τ χ) Q fixedBadMask 1 z ∧
-      FixedInducingRow (reflected (τ ξ)) Q fixedBadMask 1 z := by
-  have hz0 := (liveRows_geometry C D U radius rows z hz).2.1
-  exact ⟨hz0,h.both_inducing χ ξ Q hQ m z hm hz0 hml hm2 hex⟩
-
 theorem physical_conductor_bounds (h:Family η C D hC hD U τ)
     (hCD:primeSupport C=primeSupport D)
     (t:ℝ)(S:Finset (Ideal O))(β:Ideal O→ℂ)(R:ℝ)(rows:Finset O)
@@ -254,42 +209,6 @@ theorem expanded_conductor_bounds {η:Character}{C D:Ideal O}{hC:Supported C}{hD
             gcongr
       _=_ := by unfold expandedFactor;ring
 
-theorem eventually_expanded_conductor_caps (η:Character)(ε:ℝ)(hε:0<ε) :
-    ∃Z₀:ℝ,1<Z₀ ∧ ∀Z:ℝ,Z₀≤Z→
-    ∀(C D:Ideal O)(hC:Supported C)(hD:Supported D),primeSupport C=primeSupport D→
-    ∀(U:Finset (CommonIndex C D))(τ:RayCharacter→Character),Family η C D hC hD U τ→
-    ∀(t:ℝ)(S:Finset (Ideal O))(β:Ideal O→ℂ)(radius:ℝ)(rows:Finset O)
-      (W:𝓢(ℝ,ℂ))(K:ℝ),0<K→∀n:Fin 4→ℤ,
-    physicalBlock η t S β C D hC hD U radius rows W K n≠0→
-    ∀(χ ξ:RayCharacter)(R:Ideal O)(z:O)(c d r m:ℝ),
-    (C.absNorm:ℝ)≤Z^c→(D.absNorm:ℝ)≤Z^d→(R.absNorm:ℝ)≤Z^r→normValue z≤Z^m→
-    (expandedConductor (τ χ) R C z:ℝ)≤Z^(c+d+r+m+ε) ∧
-    (expandedConductor (reflected (τ ξ)) R D z:ℝ)≤Z^(c+d+r+m+ε) := by
-  have he := (Filter.tendsto_atTop.1 (tendsto_rpow_atTop hε)) (expandedFactor η:ℝ)
-  obtain ⟨Z₀,hZ₀⟩ := Filter.eventually_atTop.1 he
-  refine ⟨max 2 Z₀,lt_of_lt_of_le (by norm_num) (le_max_left _ _),?_⟩
-  intro Z hZ C D hC hD hCD U τ h t S β radius rows W K hK n hne χ ξ R z c d r m hCN hDN hRN hzn
-  have hZpos : 0<Z := lt_of_lt_of_le (by norm_num) ((le_max_left _ _).trans hZ)
-  have hconstant := hZ₀ Z ((le_max_right _ _).trans hZ)
-  have hproduct : (expandedFactor η:ℝ)*R.absNorm*C.absNorm*D.absNorm*(Ideal.span {z}).absNorm≤
-      Z^(c+d+r+m+ε) := by
-    calc
-      _≤Z^ε*Z^r*Z^c*Z^d*Z^m := by
-        change (Ideal.absNorm (Ideal.span {z}):ℝ)≤_ at hzn
-        gcongr
-      _=Z^(c+d+r+m+ε) := by
-        rw [←Real.rpow_add hZpos,←Real.rpow_add hZpos,←Real.rpow_add hZpos,←Real.rpow_add hZpos]
-        congr 1
-        ring
-  obtain ⟨hl,hr⟩ := expanded_conductor_bounds h hCD t S β radius rows W K hK n hne χ ξ R z
-  constructor
-  · exact (show (expandedConductor (τ χ) R C z:ℝ)≤
-      (expandedFactor η:ℝ)*R.absNorm*C.absNorm*D.absNorm*(Ideal.span {z}).absNorm by
-        exact_mod_cast hl).trans hproduct
-  · exact (show (expandedConductor (reflected (τ ξ)) R D z:ℝ)≤
-      (expandedFactor η:ℝ)*R.absNorm*C.absNorm*D.absNorm*(Ideal.span {z}).absNorm by
-        exact_mod_cast hr).trans hproduct
-
 theorem live_norm_le_four_radius (C D:Ideal O)(U:Finset (CommonIndex C D))
     (radius:ℝ)(rows:Finset O)(z:O)(hz:z∈liveRows C D U radius rows) :
     normValue z≤4*radius := by
@@ -301,37 +220,6 @@ theorem live_norm_le_four_radius (C D:Ideal O)(U:Finset (CommonIndex C D))
   have hprod : 1≤normValue (commonFrequencyGenerator C D)*normValue (nonunitFrequencyGenerator C D U) := by
     nlinarith [mul_nonneg (sub_nonneg.mpr hG) (sub_nonneg.mpr hV)]
   exact hn.trans (div_le_self (by positivity) hprod)
-
-theorem eventually_live_expanded_conductor_caps (η:Character)(ε:ℝ)(hε:0<ε) :
-    ∃Z₀:ℝ,1<Z₀ ∧ ∀Z:ℝ,Z₀≤Z→
-    ∀(C D:Ideal O)(hC:Supported C)(hD:Supported D),primeSupport C=primeSupport D→
-    ∀(U:Finset (CommonIndex C D))(τ:RayCharacter→Character),Family η C D hC hD U τ→
-    ∀(t:ℝ)(S:Finset (Ideal O))(β:Ideal O→ℂ)(radius:ℝ)(rows:Finset O)
-      (W:𝓢(ℝ,ℂ))(K:ℝ),0<K→∀n:Fin 4→ℤ,
-    physicalBlock η t S β C D hC hD U radius rows W K n≠0→
-    ∀(χ ξ:RayCharacter)(R:Ideal O)(c d r m:ℝ),
-    (C.absNorm:ℝ)≤Z^c→(D.absNorm:ℝ)≤Z^d→(R.absNorm:ℝ)≤Z^r→ radius≤Z^m→
-    ∀z∈liveRows C D U radius rows,z≠0 ∧
-    (expandedConductor (τ χ) R C z:ℝ)≤Z^(c+d+r+m+ε) ∧
-    (expandedConductor (reflected (τ ξ)) R D z:ℝ)≤Z^(c+d+r+m+ε) := by
-  obtain ⟨Z₁,hZ₁,h₁⟩ := eventually_expanded_conductor_caps η (ε/2) (by positivity)
-  have he := (Filter.tendsto_atTop.1 (tendsto_rpow_atTop (show 0<ε/2 by positivity))) (4:ℝ)
-  obtain ⟨Z₂,h₂⟩ := Filter.eventually_atTop.1 he
-  refine ⟨max Z₁ Z₂,hZ₁.trans_le (le_max_left _ _),?_⟩
-  intro Z hZ C D hC hD hCD U τ h t S β radius rows W K hK n hne χ ξ R c d r m hCN hDN hRN hrad z hz
-  have hZpos : 0<Z := zero_lt_one.trans (hZ₁.trans_le ((le_max_left _ _).trans hZ))
-  have hfour := h₂ Z ((le_max_right _ _).trans hZ)
-  have hfreq : normValue z≤Z^(m+ε/2) := by
-    calc
-      _≤4*radius := live_norm_le_four_radius C D U radius rows z hz
-      _≤Z^(ε/2)*Z^m := mul_le_mul hfour hrad
-        (liveRows_geometry C D U radius rows z hz).1.le (Real.rpow_nonneg hZpos.le _)
-      _=Z^(m+ε/2) := by rw [←Real.rpow_add hZpos,add_comm]
-  have hc := h₁ Z ((le_max_left _ _).trans hZ) C D hC hD hCD U τ h t S β radius rows W K hK
-    n hne χ ξ R z c d r (m+ε/2) hCN hDN hRN hfreq
-  have hexp : c+d+r+(m+ε/2)+ε/2=c+d+r+m+ε := by ring
-  rw [hexp] at hc
-  exact ⟨(liveRows_geometry C D U radius rows z hz).2.1,hc⟩
 
 end SevenEighths.CenteredMomentSecondExceptionalFamily
 

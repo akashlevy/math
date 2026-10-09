@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.PrimeDyadicBuffered
 import OAI.NumberTheory.DirichletL.Hecke.DyadicScale
-
 namespace OAI
 
 noncomputable section

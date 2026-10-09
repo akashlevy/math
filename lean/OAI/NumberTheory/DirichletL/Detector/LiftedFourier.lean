@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.CongruenceScalar
-
 namespace OAI
 
 noncomputable section
@@ -22,19 +21,6 @@ theorem primePowerGauss_lift_add (p : O) (hp : Prime p)
       exact hd
     rw [primePowerGauss_zero_off_support _ _ _ _ _ hbig,
       primePowerGauss_zero_off_support _ _ _ _ _ hd, mul_zero]
-
-theorem primePowerGauss_add_period (p : O) (hp : p ≠ 0)
-    (χ : MulChar (O ⧸ Ideal.span {p}) ℂ) (n : ℕ) (h a : O) :
-    primePowerGauss p hp χ n (h+p^(n+1)*a) = primePowerGauss p hp χ n h := by
-  unfold primePowerGauss conductorFourier
-  apply tsum_congr
-  intro x
-  have hz : Ideal.Quotient.mk (Ideal.span {p*p^n}) (p^(n+1)*a) = 0 := by
-    apply Ideal.Quotient.eq_zero_iff_mem.mpr
-    apply Ideal.mem_span_singleton.mpr
-    refine ⟨a, ?_⟩
-    rw [pow_succ']
-  simp only [map_add, hz, add_zero]
 
 theorem gauss_exactQuotient_lift (p : O) (hp : Prime p)
     (χ : MulChar (O ⧸ Ideal.span {p}) ℂ) (n k : ℕ) (h : O) :

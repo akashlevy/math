@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.DivisorTensor
-
 namespace OAI
 
 noncomputable section
@@ -41,24 +40,6 @@ theorem selected_slot_bound (η : Character) (m A z : O) (t : ℝ)
 theorem selectedDivisor_empty (D : Ideal O) (s : Finset ι) (a : Allocation D s) (i : ι)
     (he : selectedPrimes D s a i=∅) : selectedDivisor D s a i=1 := by
   simp only [selectedDivisor,he,Finset.prod_empty]
-
-theorem allocated_slot_bound (η : Character) (m A z : O) (t : ℝ)
-    (D : Ideal O) (s : Finset ι) (a : Allocation D s) (i : ι)
-    (S : Finset (Ideal O)) (hS : ∀ I ∈ S, Prime I)
-    (β : Ideal O → ℂ) (M H : ℝ) (hM : 0 ≤ M) (hH : 0 ≤ H)
-    (hβ : ∀ I ∈ S, ‖β I‖ ≤ M)
-    (hN : ∀ I ∈ S, β I ≠ 0 → (Ideal.absNorm I:ℝ) ≤ H) :
-    ‖rowSlot η m A z S (fun I => if selectedDivisor D s a i∣I then β I else 0) t‖ ≤
-      if (selectedPrimes D s a i).Nonempty then M else 128*M*H := by
-  by_cases hn : (selectedPrimes D s a i).Nonempty
-  · rw [ite_eq_left hn]
-    obtain ⟨P,hP⟩ := hn
-    exact selected_slot_bound η m A z t (selectedDivisor D s a i) P (support_prime P.property)
-      (Finset.dvd_prod_of_mem _ hP) S hS β M hM hβ
-  · rw [ite_eq_right hn]
-    have he := selectedDivisor_empty D s a i (Finset.not_nonempty_iff_eq_empty.mp hn)
-    simp only [he,one_dvd,ite_true]
-    exact rowSlot_bound η m A z S β t H M hH hM hβ hN
 
 end SevenEighths.CenteredMomentDivisorSlots
 

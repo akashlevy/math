@@ -1,80 +1,24 @@
 import OAI.NumberTheory.DirichletL.RowCompletion.ControlledPrimeStrata
 import OAI.NumberTheory.DirichletL.RowCompletion.FreePrimePools
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
-
-open scoped BigOperators Classical ContDiff
+open scoped ContDiff
+open Set
 
 namespace CompletedGauss
 open ActualEisensteinCubic CubicEisenstein
@@ -99,19 +43,6 @@ lemma nonzeroDualDilation_residual_equiv (E:α⊕β≃ι)
   · rfl
   · apply Prod.ext <;> apply Subtype.ext <;>
       simp only [nonzeroDualDilation,reflectionExtractedDivisor_drop_residual_equiv E P j hj]
-
-lemma unextractedCuspCoefficient_residual_equiv (E:α⊕β≃ι)
-    (P:ι→Ideal Eis) [∀i,(P i).IsMaximal] (hg:∀i,lambda∉P i)
-    (j:ι→ℕ) (hj:∀i:α,j (E (Sum.inl i))=1) (e:β→Fin 3)
-    (ρ q:ℝ) (η:ℕ→Ideal Eis→Ideal Eis→ℂ) (σ:ℕ→ℂ) (m:ℕ) (I J:Ideal Eis) :
-    unextractedCuspCoefficient P hg j (residualLabelVia E e) ρ q η σ m I J=
-      (σ m*(∏i:α,LocalReflectionBrackets.bracket (actualSextic (P (E (Sum.inl i))) (hg (E (Sum.inl i)))) 1
-        (Ideal.Quotient.mk _ (primaryGenerator I*(primaryGenerator J)^3)))*
-        η m I J*reflectedBranch (fun i:β=>P (E (Sum.inr i))) (fun i=>hg (E (Sum.inr i)))
-          (fun i=>j (E (Sum.inr i))) e (primaryGenerator I) (primaryGenerator J))/
-        ((CompletedDyadic.ramifiedScale ρ q m*Real.sqrt (Ideal.absNorm I:ℝ)*(Ideal.absNorm J:ℝ):ℝ):ℂ) := by
-  rw [unextractedCuspCoefficient,reflectedBranch_drop_residual_equiv E P hg j hj]
-  ring
 
 end CompletedGauss
 
@@ -188,7 +119,7 @@ theorem smoothedValue_eq_nonresidual_equiv (E:α⊕β≃ι)
 end FixedFourierGeometry
 end CubicEisenstein
 
-open scoped BigOperators Classical MatrixGroups
+open scoped MatrixGroups
 
 namespace CubicEisenstein
 
@@ -396,8 +327,6 @@ theorem completedT_fixed_active_strata (Q:Ideal Eis)
 
 end CubicEisenstein
 
-open scoped BigOperators Classical ContDiff
-
 namespace CanonicalRowCompletion
 
 section
@@ -456,30 +385,6 @@ theorem fixedFree_completedT_eq_actualControlledSource (I Q:Ideal Eis) (hI:Suppo
     Q hcQ.le φ (freePrimeRow I hI Q) hφ (freePrimeRow_eq_primary_family I Q hI)
     (fixedFreeRow_norm I hI Q φ hφn) Qall (fixedFreeRow_periodic I hI Q φ hφ)
     call hcall hcallQ W lo hi hlo hsupp hW X hX
-
-theorem rowTwist_completedT_eq_actualControlledSource
-    (c:Eis) (hc:c≠0) [Fintype (Eis⧸Ideal.span {c})]
-    (Q:Ideal Eis) (hQ:Q≠0)
-    (hcQ:(Ideal.span {c}:Ideal Eis)=Ideal.span {(9:Eis)}*(Q*Ideal.span {(72:Eis)}))
-    (G:∀h:Eis⧸Ideal.span {c},FixedFourierGeometry c h)
-    (Ψ:Eis→*ℂ) (hΨ:CanonicalCoefficientClass.FactorsModulo Q Ψ) (hΨnorm:∀n,‖Ψ n‖≤1)
-    (m f z:Eis) (hm:m≠0) (hf:f≠0) (hz:z≠0) (hmLam:lambda∣m) (hm2:(2:Eis)∣m) :
-    ∃(I:Ideal Eis)(hI:Supported I)(φ:Eis→*ℂ),
-      CanonicalCoefficientClass.FactorsModulo (Q*Ideal.span {(72:Eis)}) φ ∧
-      (∀n,‖φ n‖≤1) ∧
-      (∀h:Eis⧸Ideal.span {c},‖fixedThetaRowCoeff c hc φ h‖≤1) ∧
-      ∀(W:ℝ→ℂ)(lo hi:ℝ),0<lo→Function.support W⊆Set.Icc lo hi→ContDiff ℝ ∞ W→
-        ∀X:ℝ,0<X→completedT (rowTwist Ψ m f z) W X=
-          actualControlledSource I (Q*Ideal.span {(72:Eis)}) hI c hc hcQ G φ W X := by
-  obtain ⟨I,hI,φ,hφ,hφn,hcop,hmod,hperiod,hnorm,hT⟩:=
-    exists_actual_coprime_completed_row Ψ Q hQ hΨ hΨnorm m f z hm hf hz hmLam hm2
-  refine ⟨I,hI,φ,hφ,hφn,fixedThetaRowCoeff_norm c hc φ hφn,?_⟩
-  intro W lo hi hlo hsupp hW X hX
-  rw [hT W X]
-  apply fixedFree_completedT_eq_actualControlledSource I _ hI _ c hc hcQ G φ hφ hφn W lo hi hlo hsupp hW X hX
-  apply mul_ne_zero hQ
-  simp only [ne_eq,Ideal.zero_eq_bot,Ideal.span_singleton_eq_bot]
-  norm_num
 
 end
 section
@@ -615,23 +520,6 @@ lemma primeFiberEquiv_exponent
     D.maskUnit D.maskLambda D.maskTwo D.maskGood D.maskSupported D.maskFactor
     D.numeratorUnit D.numeratorLambda D.numeratorTwo D.numeratorGood D.numeratorSupported
     D.numeratorFactor hbad hcop hA hT P
-
-local notation "splitIndex" => D.primeFiberEquiv R I F Q0 hR hI hF hm hf hz hbad hcop hA hT
-
-noncomputable def activePrimeEquiv (A:Finset (FreePrimeIndex D.movingIdeal Q0))
-    (hactive:∀P:PrimeIndex (rowResidualPart I (Ideal.span {m}*F)),splitIndex (Sum.inl P)∈A) :
-    PrimeIndex (rowResidualPart I (Ideal.span {m}*F)) ⊕ optionalPrimeActive splitIndex A ≃ A :=
-  activePrimeUnionEquiv splitIndex A hactive
-
-lemma activePrimeEquiv_exponent (A:Finset (FreePrimeIndex D.movingIdeal Q0))
-    (hactive:∀P:PrimeIndex (rowResidualPart I (Ideal.span {m}*F)),splitIndex (Sum.inl P)∈A)
-    (P:PrimeIndex (rowResidualPart I (Ideal.span {m}*F)) ⊕ optionalPrimeActive splitIndex A) :
-    (normalizedFactors D.movingIdeal).count
-      (D.activePrimeEquiv R I F Q0 hR hI hF hm hf hz hbad hcop hA hT A hactive P).val.val.val%6=
-      Sum.elim (fun _=>1) (fun S=>completedLocalExponent R F S.val.val) P := by
-  cases P with
-  | inl P=>exact D.primeFiberEquiv_exponent R I F Q0 hR hI hF hm hf hz hbad hcop hA hT (Sum.inl P)
-  | inr P=>exact D.primeFiberEquiv_exponent R I F Q0 hR hI hF hm hf hz hbad hcop hA hT (Sum.inr P.val)
 
 end GoodMaskRowData
 

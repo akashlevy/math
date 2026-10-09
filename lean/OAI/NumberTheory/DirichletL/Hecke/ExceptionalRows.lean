@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.RowClosure
-
 namespace OAI
 
 noncomputable section
@@ -38,17 +37,6 @@ theorem row_norm_bound (S : Finset (Ideal O)) (hS : ∀ P ∈ S, Prime P)
   apply Nat.pos_of_ne_zero
   rw [ne_eq, Ideal.absNorm_eq_zero_iff]
   exact pow_ne_zero _ (Finset.prod_ne_zero_iff.mpr (fun P hP => (hS P hP).ne_zero))
-
-theorem rows_subset_normDisk (S : Finset (Ideal O)) (hS : ∀ P ∈ S, Prime P) :
-    rows S ⊆ (ConcretePrimeRowBridge.rowNormDisk (bound S) : Set O) := by
-  intro u hu
-  apply ConcretePrimeRowBridge.mem_rowNormDisk.mpr
-  refine ⟨?_, row_norm_bound S hS hu⟩
-  apply Nat.pos_of_ne_zero
-  simpa only [ne_eq, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot] using hu.1
-
-theorem rows_finite (S : Finset (Ideal O)) (hS : ∀ P ∈ S, Prime P) : (rows S).Finite :=
-  (ConcretePrimeRowBridge.rowNormDisk (bound S)).finite_toSet.subset (rows_subset_normDisk S hS)
 
 end SevenEighths.HeckeExceptionalRows
 

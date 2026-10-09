@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.Conductor
 import OAI.NumberTheory.DirichletL.Hecke.LocalRamification
-
 namespace OAI
 
 noncomputable section
@@ -214,17 +213,6 @@ theorem rawRow_small_presentation (u : HeckeInverseAmplification.FreeRow) :
         one_ne_zero u.property.1 (dvd_mul_left _ _) (dvd_mul_right _ _))).2 n
     exact ho.trans (he n).symm
 
-theorem rawRow_primitive_radical (u : HeckeInverseAmplification.FreeRow) :
-    ∃ ψ : Character, (ProbeHighRowFamily.rawRow u).modulus ≤ ψ.modulus ∧
-      FiniteFourier.IsPrimitiveOnIdeals ψ.residue ∧
-      ψ.modulus.absNorm ≤ ProbeHighRowFamily.conductorConstant *
-        (Ideal.span {u.val} : Ideal O).radical.absNorm ∧
-      ∀ I : Ideal O, idealCoeff (ProbeHighRowFamily.rawRow u) I =
-        if IsCoprime I (ProbeHighRowFamily.rawRow u).modulus then idealCoeff ψ I else 0 := by
-  obtain ⟨θ, hn, he⟩ := rawRow_small_presentation u
-  obtain ⟨ψ, hle, hp, hb, hmask⟩ := primitive_of_equal_elements _ θ he
-  exact ⟨ψ, hle, hp, hb.trans hn, hmask⟩
-
 theorem equal_elements_excludePrimes (χ θ : Character)
     (he : ∀ n : O, elementCoeff χ n = elementCoeff θ n)
     (S : Finset (Ideal O)) (hS : ∀ P ∈ S, Prime P) (n : O) :
@@ -338,19 +326,6 @@ theorem rowCharacter_primitive_selected_deficit (S : Finset (Ideal O))
         ∏ i, (P i).absNorm ^ (e i-1) := Nat.mul_le_mul_right _ hn
     _ ≤ _ := by simpa only [mul_assoc] using Nat.mul_le_mul_left (fixedConductorConstant S) hb
 
-theorem canonicalCRT_radical_congr {ι : Type*} [Fintype ι]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hg : ∀ i, λ₀ ∉ P i) (e : ι → ℕ) (he : ∀ i, 1 ≤ e i)
-    (hcop : Pairwise (Function.onFun IsCoprime P)) (x y : O)
-    (hxy : x-y ∈ (∏ i, P i ^ e i).radical) :
-    CenteredMomentCanonical.canonicalCRTCharacter P hg e he hcop
-        (Ideal.Quotient.mk (∏ i, P i ^ e i) x) =
-      CenteredMomentCanonical.canonicalCRTCharacter P hg e he hcop
-        (Ideal.Quotient.mk (∏ i, P i ^ e i) y) := by
-  rw [CenteredMomentCanonical.canonicalCRTCharacter_mk,
-    CenteredMomentCanonical.canonicalCRTCharacter_mk]
-  exact idealRowHom_congr_radical _ x y hxy
-
 theorem fixedConductorConstant_pos (S : Finset (Ideal O))
     (hS : ∀ P ∈ S, Prime P) : 0 < fixedConductorConstant S := by
   have hnorm (I : Ideal O) (hI : I ≠ 0) : 0 < I.absNorm :=
@@ -360,46 +335,6 @@ theorem fixedConductorConstant_pos (S : Finset (Ideal O))
     (hnorm _ (Ideal.span_singleton_eq_bot.not.mpr ProbeHighRowFamily.rowMaskElement_ne_zero))
     (hnorm _ (Ideal.span_singleton_eq_bot.not.mpr (by norm_num))))
     (hnorm _ (Finset.prod_ne_zero_iff.mpr (fun P hP => (hS P hP).ne_zero)))
-
-theorem sourceRow_primitive_radical (S : Finset (Ideal O))
-    (hS : ∀ P ∈ S, Prime P) (hbad : CanonicalQuadraticSieve.fixedBadPrimes ⊆ S)
-    (u : HeckeInverseAmplification.FreeRow) :
-    ∃ ψ : Character, (ProbeHighRowFamily.rowCharacter S hS u).modulus ≤ ψ.modulus ∧
-      FiniteFourier.IsPrimitiveOnIdeals ψ.residue ∧
-      ψ.modulus.absNorm ≤ fixedConductorConstant S *
-        (Ideal.span {u.val} : Ideal O).radical.absNorm ∧
-      ∀ I : Ideal O, ProbePhysical.highExclusion S hS I * idealRowHom u.val I =
-        if IsCoprime I (ProbeHighRowFamily.rowCharacter S hS u).modulus
-        then idealCoeff ψ I else 0 := by
-  obtain ⟨ψ, hle, hp, hn, hm⟩ := rowCharacter_primitive_radical S hS u
-  refine ⟨ψ, hle, hp, hn, ?_⟩
-  intro I
-  rw [← ProbeHighRowFamily.rowCharacter_coeff S hS hbad u I]
-  exact hm I
-
-theorem rowCharacter_primitive_selected_div (S : Finset (Ideal O))
-    (hS : ∀ P ∈ S, Prime P) (u : HeckeInverseAmplification.FreeRow) :
-    ∃ ψ : Character, (ProbeHighRowFamily.rowCharacter S hS u).modulus ≤ ψ.modulus ∧
-      FiniteFourier.IsPrimitiveOnIdeals ψ.residue ∧
-      (∀ I : Ideal O, idealCoeff (ProbeHighRowFamily.rowCharacter S hS u) I =
-        if IsCoprime I (ProbeHighRowFamily.rowCharacter S hS u).modulus
-        then idealCoeff ψ I else 0) ∧
-      ∀ (k : ℕ) (P : Fin k → Ideal O), (∀ i, Prime (P i)) → Function.Injective P →
-        ∀ (e : Fin k → ℕ), (∀ i, 2 ≤ e i) →
-          (∀ i, P i ^ e i ∣ Ideal.span {u.val}) →
-          (ψ.modulus.absNorm : ℝ) ≤
-            ((fixedConductorConstant S : ℝ) * (Ideal.span {u.val} : Ideal O).absNorm) /
-              ∏ i, ((P i).absNorm : ℝ) ^ (e i-1) := by
-  obtain ⟨ψ, hle, hp, hm, hb⟩ := rowCharacter_primitive_selected_deficit S hS u
-  refine ⟨ψ, hle, hp, hm, ?_⟩
-  intro k P hP hdis e he hdiv
-  have hpos : 0 < ∏ i, ((P i).absNorm : ℝ) ^ (e i-1) := by
-    apply Finset.prod_pos
-    intro i _
-    apply pow_pos
-    exact_mod_cast Nat.pos_iff_ne_zero.mpr (Ideal.absNorm_eq_zero_iff.not.mpr (hP i).ne_zero)
-  apply (le_div_iff₀ hpos).mpr
-  exact_mod_cast hb k P hP hdis e he hdiv
 
 end SevenEighths.ProbeRowRadicalConductor
 

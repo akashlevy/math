@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.HeckeColumnWindow
-
 namespace OAI
 
 noncomputable section
@@ -20,15 +19,6 @@ theorem star_columnPhase (V : ℝ → ℂ) (u t : ℝ) :
   rw [columnPhase,star_mul,star_logPhase,columnPhase,mul_comm]
   congr 1
   simp only [rootWindow,Complex.star_def,map_div₀,Complex.conj_ofReal]
-
-theorem conjugate_compact (V : ℝ → ℂ) (hV : HasCompactSupport V) :
-    HasCompactSupport (fun x => star (V x)) := by
-  apply hV.comp_left
-  simp
-
-theorem conjugate_smooth (V : ℝ → ℂ) (hV : ContDiff ℝ ∞ V) :
-    ContDiff ℝ ∞ (fun x => star (V x)) := by
-  exact Complex.conjCLE.contDiff.comp hV
 
 end SevenEighths.CenteredMomentConjugateWindow
 

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Foundation
 import OAI.NumberTheory.DirichletL.Descent.IdealMasks
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -15,23 +14,6 @@ local notation "Eis" => ActualEisensteinCubic.O
 def markedCompletedT (Ψ : Eis →* ℂ) (W : ℝ → ℂ) (X : ℝ)
     (d : Ideal Eis → ℂ) : ℂ :=
   ∑' I : Ideal Eis, ∑' J : Ideal Eis, summand Ψ W X I J * d (I * J ^ 3)
-
-theorem markedCompletedT_one (Ψ : Eis →* ℂ) (W : ℝ → ℂ) (X : ℝ) :
-    markedCompletedT Ψ W X (fun _ => 1) = completedT Ψ W X := by
-  simp only [markedCompletedT, mul_one, completedT]
-
-theorem markedCompletedT_congr_nonzero (Ψ : Eis →* ℂ) (W : ℝ → ℂ) (X : ℝ)
-    (d e : Ideal Eis → ℂ) (h : ∀ A ≠ 0, d A = e A) :
-    markedCompletedT Ψ W X d = markedCompletedT Ψ W X e := by
-  apply tsum_congr
-  intro I
-  apply tsum_congr
-  intro J
-  by_cases hI : I = 0
-  · simp only [hI, summand_zero_left, zero_mul]
-  by_cases hJ : J = 0
-  · simp only [hJ, summand_zero_right, zero_mul]
-  rw [h (I * J ^ 3) (mul_ne_zero hI (pow_ne_zero 3 hJ))]
 
 theorem markedCompletedT_summable (Ψ : Eis →* ℂ) (W : ℝ → ℂ)
     (hW : HasCompactSupport W) (X : ℝ) (hX : 0 < X) (d : Ideal Eis → ℂ) :
@@ -60,33 +42,6 @@ theorem markedCompletedT_finset_sum {ι : Type*} (s : Finset ι)
       ∑ i ∈ s, markedCompletedT Ψ W X (d i) := by
   simp only [markedCompletedT_eq_tsum Ψ W hW X hX, Finset.mul_sum]
   exact Summable.tsum_finsetSum (fun i _ => markedCompletedT_summable Ψ W hW X hX (d i))
-
-theorem markedCompletedT_prime_priority {σ : Type*} [DecidableEq σ]
-    (slots : Finset σ) (L : σ → Finset (Ideal Eis))
-    (a : σ → Ideal Eis → ℂ) (H : Ideal Eis) (hH : H ≠ 0)
-    (Ψ : Eis →* ℂ) (W : ℝ → ℂ) (hW : HasCompactSupport W)
-    (X : ℝ) (hX : 0 < X) :
-    markedCompletedT Ψ W X
-      (fun A => primeMark slots L a (IdealMobiusDivisorSum.primeSupport (H ^ 3 * A))) =
-    ∑ J ∈ slots.powerset,
-      primeMark J L a (IdealMobiusDivisorSum.primeSupport H) *
-        markedCompletedT Ψ W X (fun A =>
-          primeMark (slots \ J)
-            (fun i => L i \ IdealMobiusDivisorSum.primeSupport H) a
-            (IdealMobiusDivisorSum.primeSupport A)) := by
-  have hmark (A : Ideal Eis) (hA : A ≠ 0) :
-      primeMark slots L a (IdealMobiusDivisorSum.primeSupport (H ^ 3 * A)) =
-      ∑ J ∈ slots.powerset,
-        primeMark J L a (IdealMobiusDivisorSum.primeSupport H) *
-          primeMark (slots \ J)
-            (fun i => L i \ IdealMobiusDivisorSum.primeSupport H) a
-            (IdealMobiusDivisorSum.primeSupport A) := by
-    rw [mul_comm (H ^ 3) A, ideal_primeSupport_mul_cube A H hA hH,
-      Finset.union_comm, primeMark_priority]
-    simp only [primeMark_residual_lists]
-  rw [markedCompletedT_congr_nonzero Ψ W X _ _ hmark,
-    markedCompletedT_finset_sum slots.powerset Ψ W hW X hX]
-  simp only [markedCompletedT_const_mul]
 
 def markedExpandedTerm (Ψ : Eis →* ℂ) (W : ℝ → ℂ) (X : ℝ)
     (d : Ideal Eis → ℂ) (I H J : Ideal Eis) : ℂ :=

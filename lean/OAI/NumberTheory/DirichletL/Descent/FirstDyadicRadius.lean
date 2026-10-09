@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.FirstGlobalCaps
 import OAI.NumberTheory.DirichletL.Descent.FirstLiveNorms
-import OAI.NumberTheory.DirichletL.Descent.FirstFullRapidTail
-
+import OAI.NumberTheory.DirichletL.Descent.FirstRapidPhysicalTail
 namespace OAI
 
 noncomputable section

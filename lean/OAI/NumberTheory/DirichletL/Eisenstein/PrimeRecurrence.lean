@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.ResidualOrthogonality
-
 namespace OAI
 
 noncomputable section
@@ -8,77 +7,22 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups InnerProductSpace
-open Finset AddChar MulChar EisensteinEmbedding
+open scoped MatrixGroups InnerProductSpace
 
 section
 local notation "O" => ActualEisensteinCubic.O
@@ -123,11 +67,6 @@ variable {H J : Subgroup (SL(2,ActualEisensteinCubic.O))}
 def kernelCoverLegAdjointFunction (f : IntegralOrbitQuotient H→ℂ) : KernelQuotient→ℂ :=
   integralCoverTraceFunction J globalKubotaKernel
     (fun q=>f (integralConjugateMap e.symm g⁻¹ (integralCoverIntertwines_inverse e g he) q))
-
-lemma kernelCoverLegAdjointFunction_measurable (f : IntegralOrbitQuotient H→ℂ)
-    (hf : Measurable f) : Measurable (kernelCoverLegAdjointFunction e g he f) :=
-  integralCoverTraceFunction_measurable J globalKubotaKernel _
-    (hf.comp (integralConjugateMap_measurable _ _ _))
 
 theorem kernelCoverLegAdjointFunction_represents (D : IntegralQuotientL2 H)
     (f : IntegralOrbitQuotient H→ℂ) (hf : Measurable f)
@@ -193,8 +132,7 @@ theorem commonCover_source_sum_eq_zero_of_inverse_cusp_decay
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups Pointwise
+open scoped MatrixGroups Pointwise
 
 local notation "Eis" => ActualEisensteinCubic.O
 
@@ -249,10 +187,9 @@ theorem integralQuotient_zero_continuous_lift (H:Subgroup (SL(2,Eis)))
 end
 
 section
-open Filter MeasureTheory
-open scoped Classical MatrixGroups BigOperators
+open scoped MatrixGroups
 
-open CubicKubota ConcreteTraceCRT
+open CubicKubota
 local notation "O" => ActualEisensteinCubic.O
 
 theorem cubeDifferenceL2_eq_zero (p : ActualEisensteinCubic.O) (hp : Prime p)
@@ -317,79 +254,14 @@ theorem sourceArithmeticResidue_prime_cube (p : ActualEisensteinCubic.O) (hp : P
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
+open scoped MatrixGroups
 
 section
-open ActualEisensteinCubic ConcreteTraceCRT CubicKubota
-local notation "Eis" => ActualEisensteinCubic.O
-
-lemma rational_inversion_complex :
-    integralComplexMatrix (rationalEmbedding ModularGroup.S)=complexWeyl := by
-  apply Matrix.SpecialLinearGroup.ext
-  intro i j
-  simp only [integralComplexMatrix_apply, rationalEmbedding,
-    Matrix.SpecialLinearGroup.map_apply_coe]
-  fin_cases i <;> fin_cases j <;> simp [ModularGroup.S, complexWeyl]
-
-theorem exists_nonzero_sourceResidualFourierCoefficient :
-    ∃h:Eis,h≠0 ∧ sourceResidualFourierCoefficient h≠0 := by
-  by_contra hn
-  have hz:∀h:Eis,h≠0→sourceResidualFourierCoefficient h=0:=by
-    intro h hh
-    by_contra hne
-    exact hn ⟨h,hh,hne⟩
-  let C:ℂ:=(3*(Real.pi:ℂ))*constantArithmeticResidue
-  have hC:C≠0:=mul_ne_zero
-    (mul_ne_zero (by norm_num) (Complex.ofReal_ne_zero.mpr Real.pi_ne_zero))
-    constantArithmeticResidue_ne_zero
-  have hprofile (z:ℂ) (v:ℝ) (hv:0<v) :
-      cubicSourceResidualFunction (upperPoint z v hv)=C*(v:ℂ)^(2/3:ℂ):=by
-    rw [cubicSourceResidualFunction_bessel]
-    have hsum:(∑'h:Eis,(if h=0 then 0 else sourceResidualFourierCoefficient h*(v:ℂ)*
-        schlafliBesselK (1/3) (4*Real.pi*‖cuspFrequency h‖*v))*
-          ShortDraftTrace.breveE (cuspFrequency h*z))=0:=by
-      calc
-        _=∑' (_:Eis),(0:ℂ):=by
-          apply tsum_congr
-          intro h
-          by_cases hh:h=0
-          · simp [hh]
-          · simp [hh,hz h hh]
-        _=0:=tsum_zero
-    rw [hsum,add_zero]
-  have hpoint: integralComplexMatrix (rationalEmbedding ModularGroup.S) •
-      upperPoint 0 2 (by norm_num)=upperPoint 0 (1/2) (by norm_num):=by
-    rw [rational_inversion_complex,complexWeyl_action]
-    apply upperPoint_congr <;> norm_num
-  have hi:=cubicSourceResidualFunction_rational_invariant ModularGroup.S
-    (upperPoint 0 2 (by norm_num))
-  rw [hpoint,hprofile,hprofile] at hi
-  have hc:(1/2:ℂ)^(2/3:ℂ)=(2:ℂ)^(2/3:ℂ):=by
-    exact mul_left_cancel₀ hC (by simpa only [Complex.ofReal_div,Complex.ofReal_one,
-      Complex.ofReal_ofNat] using hi)
-  have hr:(1/2:ℝ)^(2/3:ℝ)=(2:ℝ)^(2/3:ℝ):=by
-    apply Complex.ofReal_injective
-    have h1:=Complex.ofReal_cpow (show (0:ℝ)≤1/2 by norm_num) (2/3:ℝ)
-    have h2:=Complex.ofReal_cpow (show (0:ℝ)≤2 by norm_num) (2/3:ℝ)
-    norm_num only [Complex.ofReal_div,Complex.ofReal_one,Complex.ofReal_ofNat] at h1 h2
-    exact h1.trans (hc.trans h2.symm)
-  have hlt:(1/2:ℝ)^(2/3:ℝ)<(2:ℝ)^(2/3:ℝ):=
-    Real.rpow_lt_rpow (by norm_num) (by norm_num) (by norm_num)
-  exact hlt.ne hr
-
-theorem exists_nonzero_sourceArithmeticResidue :
-    ∃h:Eis,h≠0 ∧ sourceArithmeticResidue h≠0 := by
-  obtain ⟨h,hh,hn⟩:=exists_nonzero_sourceResidualFourierCoefficient
-  refine ⟨h,hh,?_⟩
-  intro hz
-  apply hn
-  simp only [sourceResidualFourierCoefficient,hz,mul_zero]
+open CubicKubota
 
 end
 
 section
-open ActualEisensteinCubic
 local notation "Eis" => ActualEisensteinCubic.O
 local instance : Fintype Eisˣ := @Fintype.ofFinite _ PrimaryIdealUnitReindex.finite_units
 
@@ -477,7 +349,7 @@ theorem sourceArithmeticResidue_eq_ramified_table (h:Eis) (hh:h≠0) :
 
 end
 
-open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal
+open CubicJacobiGlobal
 local notation "Eis" => ActualEisensteinCubic.O
 local instance : Fintype Eisˣ := @Fintype.ofFinite _ PrimaryIdealUnitReindex.finite_units
 
@@ -546,10 +418,9 @@ lemma sourceRayPhase_mul_primary (h p:Eis) (hprimary:lambda^2∣p-1) :
 
 end
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
+open scoped MatrixGroups
 
-open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal
+open CubicJacobiGlobal
 local notation "Eis" => ActualEisensteinCubic.O
 local instance : Fintype Eisˣ := @Fintype.ofFinite _ PrimaryIdealUnitReindex.finite_units
 

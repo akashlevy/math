@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LowColumnBounds
 import OAI.NumberTheory.DirichletL.Detector.LowCauchy
-
 namespace OAI
 
 noncomputable section

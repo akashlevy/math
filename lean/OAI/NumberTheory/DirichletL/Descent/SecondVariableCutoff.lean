@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondSourceAttachment
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -28,17 +27,6 @@ theorem second_variable_original_support {Jo : ℕ} (parent : SecondParentSource
   obtain ⟨hx,hlabel⟩ := Finset.mem_filter.mp hx
   obtain ⟨hx,hresidual⟩ := Finset.mem_filter.mp hx
   exact (mem_secondExpansionPool _ _ _).mp hx
-
-omit [∀ (i : ι), (Ideal.span {p i}).IsMaximal] in
-theorem second_variable_attached_rows {Jo : ℕ} (parent : SecondParentSource ι Jo)
-    (pool residual : Finset ι) (R : Finset ι → Finset ι → ℝ)
-    (label : Finset ι → SecondExpansionData ι → κ) (j : κ)
-    (x : MarkedSecondSource ι Jo 0)
-    (hx : x∈(secondDyadicSector pool (secondVariableCutoff p parent R) residual label j).image
-      (attachSecondExpansion parent)) :
-    x.second.frequency ∈ nonzeroChildFrequencyBall (actualSecondMultiplier p x) (R x.second.sourceCommon x.second.divisor) := by
-  obtain ⟨y,hy,rfl⟩ := Finset.mem_image.mp hx
-  exact (second_variable_original_support p parent pool residual R label j y hy).2.2.2
 
 theorem truncated_second_attached_variable [Fintype κ]
     (hinj : Function.Injective (fun i => Ideal.span {p i}))

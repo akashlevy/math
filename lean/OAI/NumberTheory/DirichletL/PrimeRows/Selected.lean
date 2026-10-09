@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.PrimeRows.MarkedCoordinates
 import OAI.NumberTheory.DirichletL.PrimeRows.Agreement
 import OAI.NumberTheory.DirichletL.Detector.HighRowsSelectedActual
 import OAI.NumberTheory.DirichletL.Detector.HighRowsSelectedRamified
-
 namespace OAI
 
 noncomputable section

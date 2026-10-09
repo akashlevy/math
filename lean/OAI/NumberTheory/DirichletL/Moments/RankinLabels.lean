@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.RankinRadical
 import OAI.NumberTheory.DirichletL.Moments.RankinSubset
-
 namespace OAI
 
 noncomputable section

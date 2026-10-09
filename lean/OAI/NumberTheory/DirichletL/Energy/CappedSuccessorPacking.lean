@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.CappedWidthInduction
 import OAI.NumberTheory.DirichletL.Energy.StageMonotonicity
-
 namespace OAI
 
 noncomputable section

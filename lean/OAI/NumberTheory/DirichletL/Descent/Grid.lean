@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.Dyadic
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -64,29 +63,6 @@ theorem HybridColumnData.gridIndex_injective_on_square (t : Ideal Eis) :
 
 def hybridGridSupport (D : Finset HybridColumnData) :
     Finset ((Ideal Eis × Ideal Eis) × Ideal Eis) := D.image HybridColumnData.gridIndex
-
-theorem hybrid_grid_reindex (D : Finset HybridColumnData) (t : Ideal Eis)
-    (hD : ∀ d ∈ D, d.square = t) (f : Ideal Eis → Ideal Eis → Ideal Eis → ℂ) :
-    (∑ d ∈ D, f d.common d.residualN d.residualB) =
-      ∑ p ∈ (hybridGridSupport D).image Prod.fst,
-        ∑ c ∈ gridCommonSupport (hybridGridSupport D) p.1,
-          if (p, c) ∈ hybridGridSupport D then f c p.1 p.2 else 0 := by
-  have he : (∑ d ∈ D, f d.common d.residualN d.residualB) =
-      ∑ u ∈ hybridGridSupport D, f u.2 u.1.1 u.1.2 := by
-    symm
-    apply Finset.sum_image
-    intro d hd e he hg
-    exact HybridColumnData.gridIndex_injective_on_square t (hD d hd) (hD e he) hg
-  rw [he]
-  exact finite_triple_support_reindex (hybridGridSupport D) _
-
-theorem gridCommonSupport_origin (D : Finset HybridColumnData) (m c : Ideal Eis)
-    (hc : c ∈ gridCommonSupport (hybridGridSupport D) m) :
-    ∃ d ∈ D, d.residualN = m ∧ d.common = c := by
-  obtain ⟨u, hu, huc⟩ := Finset.mem_image.mp hc
-  obtain ⟨huT, hum⟩ := Finset.mem_filter.mp hu
-  obtain ⟨d, hd, rfl⟩ := Finset.mem_image.mp huT
-  exact ⟨d, hd, hum, huc⟩
 
 end
 end SevenEighths.InverseMoment

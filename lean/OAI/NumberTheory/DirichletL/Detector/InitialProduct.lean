@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.InitialSubseries
 import Mathlib.MeasureTheory.Integral.Prod
-
 namespace OAI
 
 noncomputable section

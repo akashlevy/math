@@ -1,76 +1,24 @@
 import OAI.NumberTheory.DirichletL.Reciprocity.CubicJacobi
 import OAI.NumberTheory.DirichletL.GaussSum.ReflectionBrackets
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CubicRamified
 open ActualEisensteinCubic CubicJacobiGlobal CompletedGauss
@@ -427,7 +375,6 @@ theorem card_units_eq_six : Nat.card Oˣ = 6 := by
 
 end PrimaryIdealUnitReindex
 
-open scoped BigOperators Classical SchwartzMap
 namespace QuadraticUnitInvariance
 open ActualEisensteinCubic ConcreteTraceCRT FiniteGaussPhase ActualEisensteinCoordinates
 open GaussGeneratorTransport QuadraticGaussRay EisensteinSchwartzPoisson
@@ -442,67 +389,6 @@ theorem rowCoprimeMask_norm_le_one {α : Type*} (R : α → Ideal O)
     (S : Finset α) (z : O) : ‖rowCoprimeMask R S z‖ ≤ 1 := by
   unfold rowCoprimeMask
   split_ifs <;> simp
-
-theorem masked_two_rows_radial_summable
-    {ι κ α : Type*} [Fintype ι] [Fintype κ]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal] (hg : ∀ i, lambda ∉ P i) (j : ι → ℕ)
-    (Q : κ → Ideal O) [∀ i, (Q i).IsMaximal] (hgq : ∀ i, lambda ∉ Q i) (k : κ → ℕ)
-    (R : α → Ideal O) (S : Finset α) (W : 𝓢(ℝ, ℂ)) (M : ℝ) (hM : 0 < M) :
-    Summable (fun z : O => rowCoprimeMask R S z *
-      (finiteSexticRow P hg j z * finiteSexticRow Q hgq k z) *
-      W (‖eisEmbedding z‖ ^ 2 / M)) := by
-  have hW : Summable (fun z : O => ‖W (‖eisEmbedding z‖ ^ 2 / M)‖) := by
-    simpa only [scaledRadialTest_apply] using
-      actual_eisenstein_summable_norm (scaledRadialTest W M hM)
-  apply Summable.of_norm
-  apply Summable.of_nonneg_of_le (fun z => norm_nonneg _) _ hW
-  intro z
-  simp only [norm_mul]
-  calc
-    _ ≤ 1 * (1 * 1) * ‖W (‖eisEmbedding z‖ ^ 2 / M)‖ := by
-      gcongr
-      · exact rowCoprimeMask_norm_le_one R S z
-      · exact QuadraticInitialBound.finiteSexticRow_norm_le_one P hg j z
-      · exact QuadraticInitialBound.finiteSexticRow_norm_le_one Q hgq k z
-    _ = _ := by ring
-
-theorem quadratic_pair_lattice_eq_primary_ideal_sum
-    {ι κ α : Type*} [Fintype ι] [Fintype κ]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (q : κ → O) (hq : ∀ i, q i ≠ 0) [∀ i, (Ideal.span {q i}).IsMaximal]
-    (hcopq : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {q i})))
-    (hgq : ∀ i, lambda ∉ Ideal.span {q i})
-    (hcharq : ∀ i, ringChar (O ⧸ Ideal.span {q i}) ≠ 2)
-    (hray : residue (∏ i, p i) = residue (∏ i, q i))
-    (R : α → Ideal O) (S : Finset α) (W : 𝓢(ℝ, ℂ)) (M : ℝ) (hM : 0 < M) :
-    (∑' z : O, if lambda ∣ z then 0 else rowCoprimeMask R S z *
-      (finiteSexticRow (fun i => Ideal.span {p i}) hg (fun _ => 3) z *
-        finiteSexticRow (fun i => Ideal.span {q i}) hgq (fun _ => 3) z) *
-      W (‖eisEmbedding z‖ ^ 2 / M)) =
-    (Nat.card Oˣ : ℂ) * ∑' I : GoodIdeal,
-      rowCoprimeMask R S (primaryGenerator I.val) *
-      (finiteSexticRow (fun i => Ideal.span {p i}) hg (fun _ => 3) (primaryGenerator I.val) *
-        finiteSexticRow (fun i => Ideal.span {q i}) hgq (fun _ => 3) (primaryGenerator I.val)) *
-      W ((Ideal.absNorm I.val : ℝ) / M) := by
-  have hs := masked_two_rows_radial_summable (fun i => Ideal.span {p i}) hg (fun _ => 3)
-    (fun i => Ideal.span {q i}) hgq (fun _ => 3) R S W M hM
-  have hu (u : Oˣ) (I : GoodIdeal) :
-      rowCoprimeMask R S (u.val * primaryGenerator I.val) *
-      (finiteSexticRow (fun i => Ideal.span {p i}) hg (fun _ => 3) (u.val * primaryGenerator I.val) *
-        finiteSexticRow (fun i => Ideal.span {q i}) hgq (fun _ => 3) (u.val * primaryGenerator I.val)) *
-      W (‖eisEmbedding (u.val * primaryGenerator I.val)‖ ^ 2 / M) =
-      rowCoprimeMask R S (primaryGenerator I.val) *
-      (finiteSexticRow (fun i => Ideal.span {p i}) hg (fun _ => 3) (primaryGenerator I.val) *
-        finiteSexticRow (fun i => Ideal.span {q i}) hgq (fun _ => 3) (primaryGenerator I.val)) *
-      W (‖eisEmbedding (primaryGenerator I.val)‖ ^ 2 / M) := by
-    rw [rowCoprimeMask_unit_mul, quadratic_pair_unit_invariant p hp hcop hg hchar
-      q hq hcopq hgq hcharq hray, norm_eisEmbedding_unit_mul]
-  have ht := tsum_ramified_mask_unit_invariant _ hs hu
-  have hn (I : GoodIdeal) := primaryGenerator_norm_sq I.val I.property
-  simpa only [hn] using ht
 
 end QuadraticUnitInvariance
 
@@ -622,134 +508,8 @@ theorem same_ray_quadratic_pair_poisson
 
 end QuadraticUnitInvariance
 
-open scoped BigOperators Classical SchwartzMap
 namespace EisensteinSchwartzPoisson
 open ActualEisensteinCubic ConcreteTraceCRT
-
-theorem paperRadialFourier_nonzero_lattice_decay (A : ℕ) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-      ∀ (W : 𝓢(ℝ, ℂ)) (K : ℝ), 1 ≤ K →
-        (∑' h : {h : O // h ≠ 0}, ‖paperRadialFourier W (K * ‖eisEmbedding h.val‖ ^ 2)‖) ≤
-          (C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W) / (1 + K) ^ A := by
-  obtain ⟨s, C, hC, hb⟩ := paperRadialFourier_lattice_tail A
-  refine ⟨s, C, hC, ?_⟩
-  intro W K hK
-  have hK0 : 0 < K := lt_of_lt_of_le zero_lt_one hK
-  let F : O → ℝ := fun h => ‖paperRadialFourier W (K * ‖eisEmbedding h‖ ^ 2)‖
-  have hs := paperRadialFourier_lattice_summable_norm W K hK0
-  let f : {h : O // h ≠ 0} → {h : O // K ≤ K * ‖eisEmbedding h‖ ^ 2} :=
-    fun h => ⟨h.val, by nlinarith [one_le_eisenstein_norm_sq h.val h.property]⟩
-  have hf : Function.Injective f := by
-    intro a b hab
-    exact Subtype.ext (congrArg
-      (fun z : {h : O // K ≤ K * ‖eisEmbedding h‖ ^ 2} => z.val) hab)
-  have hi : (∑' h : {h : O // h ≠ 0}, F h.val) ≤
-      ∑' h : {h : O // K ≤ K * ‖eisEmbedding h‖ ^ 2}, F h.val := by
-    exact (hs.subtype (fun h => h ≠ 0)).tsum_le_tsum_of_inj f hf
-      (fun _ _ => norm_nonneg _) (fun _ => le_rfl) (hs.subtype _)
-  have ht := hb W K K hK0 hK0.le
-  simpa only [min_eq_left hK, one_pow, one_mul] using hi.trans ht
-
-theorem paperRadialFourier_nonzero_sum_decay (A : ℕ) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-      ∀ (W : 𝓢(ℝ, ℂ)) (K : ℝ), 1 ≤ K →
-        ‖∑' h : O, if h = 0 then 0 else paperRadialFourier W (K * ‖eisEmbedding h‖ ^ 2)‖ ≤
-          (C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W) / (1 + K) ^ A := by
-  obtain ⟨s, C, hC, hb⟩ := paperRadialFourier_nonzero_lattice_decay A
-  refine ⟨s, C, hC, ?_⟩
-  intro W K hK
-  have hs := paperRadialFourier_lattice_summable_norm W K (lt_of_lt_of_le zero_lt_one hK)
-  have he : (∑' h : O, if h = 0 then 0 else paperRadialFourier W (K * ‖eisEmbedding h‖ ^ 2)) =
-      ∑' h : {h : O // h ≠ 0}, paperRadialFourier W (K * ‖eisEmbedding h.val‖ ^ 2) := by
-    rw [← tsum_subtype_eq_of_support_subset (s := {h : O | h ≠ 0}) (by
-      intro h hh hz
-      subst h
-      exact hh (by simp))]
-    apply tsum_congr
-    intro h
-    simp only [ite_eq_right h.property]
-  rw [he]
-  exact (norm_tsum_le_tsum_norm (hs.subtype _)).trans (hb W K hK)
-
-theorem principal_tail_scalar (A : ℕ) (B x N M : ℝ)
-    (hB : 0 ≤ B) (hx : 0 < x) (hxN : x ≤ N) (hM : 0 < M) :
-    (M / x) * (B / (1 + M / x) ^ (A + 1)) ≤ B * (N / M) ^ A := by
-  have hu : 0 < M / x := div_pos hM hx
-  calc
-    _ ≤ (M / x) * (B / (M / x) ^ (A + 1)) := by
-      apply mul_le_mul_of_nonneg_left _ hu.le
-      exact div_le_div_of_nonneg_left hB (pow_pos hu _) (pow_le_pow_left₀ hu.le (by linarith) _)
-    _ = B * (x / M) ^ A := by
-      simp only [div_pow, pow_succ]
-      field_simp
-
-    _ ≤ B * (N / M) ^ A := by
-      gcongr
-
-theorem maskedPrincipalRemainder_large_scale (A : ℕ) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-      ∀ {α : Type*} [DecidableEq α] (P : α → Ideal O) [∀ i, (P i).IsMaximal]
-        (S : Finset α) (W : 𝓢(ℝ, ℂ)) (M : ℝ), 0 < M →
-        (Ideal.absNorm (∏ i ∈ S, P i) : ℝ) ≤ M →
-        ‖maskedPrincipalRemainder P S W M‖ ≤
-          (2 : ℝ) ^ S.card * (C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W) *
-            ((Ideal.absNorm (∏ i ∈ S, P i) : ℝ) / M) ^ A := by
-  obtain ⟨s, C, hC, hb⟩ := paperRadialFourier_nonzero_sum_decay (A + 1)
-  refine ⟨s, C, hC, ?_⟩
-  intro α _ P _ S W M hM hsize
-  let B := C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W
-  let N := (Ideal.absNorm (∏ i ∈ S, P i) : ℝ)
-  let n := fun E : Finset α => (Ideal.absNorm (∏ i ∈ E, P i) : ℝ)
-  have hB : 0 ≤ B := by dsimp [B]; positivity
-  have hn (E : Finset α) : 0 < n E := by
-    dsimp [n]
-    rw [← primeSubsetGenerator_norm_sq]
-    exact sq_pos_of_pos (norm_pos_iff.mpr (eisEmbedding_ne_zero (primeSubsetGenerator_ne_zero P E)))
-  have hnN (E : Finset α) (hE : E ∈ S.powerset) : n E ≤ N := by
-    have hd := Finset.prod_dvd_prod_of_subset E S P (Finset.mem_powerset.mp hE)
-    have hdN := map_dvd Ideal.absNorm hd
-    have hpos : 0 < Ideal.absNorm (∏ i ∈ S, P i) := by
-      have hh := hn S
-      dsimp only [n] at hh
-      exact_mod_cast hh
-    dsimp only [n, N]
-    exact_mod_cast Nat.le_of_dvd hpos hdN
-  have ht (E : Finset α) (hE : E ∈ S.powerset) :
-      ‖∑' h : O, if h = 0 then 0 else paperRadialFourier W
-        (M * ‖eisEmbedding h‖ ^ 2 / n E)‖ ≤ B / (1 + M / n E) ^ (A + 1) := by
-    have hscale : 1 ≤ M / n E := (le_div_iff₀ (hn E)).mpr (by simpa using (hnN E hE).trans hsize)
-    have h := hb W (M / n E) hscale
-    convert h using 1 ; congr 2 ; funext z ; congr 2 ; ring
-  let f := fun E : Finset α =>
-    ((UniqueFactorizationMonoid.moebius (∏ i ∈ E, P i) : ℂ) /
-      (Ideal.absNorm (∏ i ∈ E, P i) : ℂ)) *
-    ∑' h : O, if h = 0 then 0 else paperRadialFourier W (M * ‖eisEmbedding h‖ ^ 2 / n E)
-  have hf (E : Finset α) (hE : E ∈ S.powerset) :
-      ‖f E‖ ≤ (1 / n E) * (B / (1 + M / n E) ^ (A + 1)) := by
-    dsimp [f]
-    rw [norm_mul, norm_div, Complex.norm_natCast]
-    gcongr
-    · exact QuadraticInitialBound.norm_ideal_moebius_le_one _
-    · exact ht E hE
-  change ‖(M : ℂ) * ∑ E ∈ S.powerset, f E‖ ≤ _
-  rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hM]
-  calc
-    _ ≤ M * ∑ E ∈ S.powerset, ‖f E‖ := mul_le_mul_of_nonneg_left (norm_sum_le _ _) hM.le
-    _ ≤ M * ∑ E ∈ S.powerset, (1 / n E) * (B / (1 + M / n E) ^ (A + 1)) := by
-      gcongr with E hE
-      exact hf E hE
-    _ = ∑ E ∈ S.powerset, (M / n E) * (B / (1 + M / n E) ^ (A + 1)) := by
-      rw [Finset.mul_sum]
-      apply Finset.sum_congr rfl
-      intro E _
-      ring
-    _ ≤ ∑ E ∈ S.powerset, B * (N / M) ^ A := by
-      apply Finset.sum_le_sum
-      intro E hE
-      exact principal_tail_scalar A B (n E) N M hB (hn E) (hnN E hE) hM
-    _ = _ := by
-      simp only [Finset.sum_const, Finset.card_powerset, nsmul_eq_mul, Nat.cast_pow, Nat.cast_ofNat]
-      ring
 
 end EisensteinSchwartzPoisson
 

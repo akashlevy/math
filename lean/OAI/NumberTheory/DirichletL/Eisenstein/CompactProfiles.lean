@@ -1,74 +1,23 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.SelectedExponents
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 
@@ -345,7 +294,6 @@ theorem kernelL2Defect_entire (a b : ℝ) (ha : 0<a) (hab : a<b) :
 
 end CubicEisenstein
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace SecondPassIntegration
 open ActualEisensteinCubic JointLogSeparation FirstPassCubeLabels SecondPassArithmetic
 
@@ -506,87 +454,6 @@ theorem globalResidualScale_eq (ell : ℝ) (side : Bool) (x : GlobalSecondData �
   ring
 
 end
-
-theorem globalSecondLiteralTerm_fixed_profiles
-    (U : ℝ → ℂ) (hUc : HasCompactSupport U) (hUs : ContDiff ℝ ∞ U)
-    (g₁ g₂ W : 𝓢(ℝ,ℂ)) (A : ℝ) (hA : 0 ≤ A)
-    (hU₁ : ∀ t,g₁ t ≠ 0 → U t=1) (hU₂ : ∀ t,g₂ t ≠ 0 → U t=1)
-    (hg₁ : ∀ t,g₁ t ≠ 0 → |t| ≤ A) (hg₂ : ∀ t,g₂ t ≠ 0 → |t| ≤ A) :
-    ∃ (A₁ A₂ : 𝓢(ℝ,ℂ)) (windows : Fin 7 → ℝ → ℂ),
-      (∀ i,HasCompactSupport (windows i)) ∧ (∀ i,ContDiff ℝ ∞ (windows i)) ∧
-      (∀ i t,windows i t ≠ 0 → |t| ≤ A+6+1) ∧
-      ∀ {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i,p i ≠ 0)
-        [∀ i,(Ideal.span {p i}).IsMaximal]
-        (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-        (hg : ∀ i,lambda ∉ Ideal.span {p i})
-        (_hinj : Function.Injective (fun i => Ideal.span {p i}))
-        (_hpr : ∀ i,lambda^2 ∣ p i-1)
-        (F : Finset ι) (Ψ : O →* ℂ) (m : O) (ray : SecondRayIndex)
-        (ell Y : ℝ) (side : Bool) (x : GlobalSecondData ι),
-        0 < ell → x.source.divisor ⊆ x.source.sourceCommon → x.source.frequency ≠ 0 →
-        let j := globalScaleIndex p side x
-        globalSecondLiteralTerm p hp hcop hg F Ψ m ray g₁ g₂ W ell Y side x =
-          globalSecondOuterWeight p hp hcop hg Ψ m ray ell Y side x *
-          postCommonSmoothPair p hp hcop hg (globalSecondRawPool F x)
-            (secondRayMinus Ψ ray) (secondRayPlus Ψ ray) (globalSecondRawMask p m x)
-            (globalSecondLabel p x) (newRow (globalSecondTuple p x)) (-newRow (globalSecondTuple p x))
-            A₁ A₂ W windows (globalBinZ p ell side j x) (globalBinUd p j x)
-            (globalBinUe p j x) (globalBinUv p j x) (globalBinKap p j x)
-            (globalPooledColumnScale ell j) (globalPooledColumnScale ell j) (globalBinRadial ell Y j) := by
-  have h1 := SecondPassIntegration.halfNormalization_support_bound U hUc hUs g₁ A hg₁
-  have h2 := SecondPassIntegration.halfNormalization_support_bound U hUc hUs g₂ A hg₂
-  obtain ⟨A₁,A₂,windows,hwc,hws,hwb,hid⟩ := SecondPassIntegration.full_uniform_normalized_child_tests
-    (halfNormalizationCLM U g₁) (halfNormalizationCLM U g₂) W A 6 hA (by norm_num) h1 h2
-  refine ⟨A₁,A₂,windows,hwc,hws,hwb,?_⟩
-  intro ι _ p hp _ hcop hg hinj hpr F Ψ m ray ell Y side x hell hE hk
-  dsimp only
-  let j := globalScaleIndex p side x
-  let X := globalFirstColumnScale p ell x side/primeProductNorm p x.firstCommon
-  let r := primeSubsetGenerator (fun i => Ideal.span {p i}) (x.source.sourceCommon\x.source.divisor)
-  let c := secondBaseLabel p x.cube.support x.common x.cube.leftExponent x.cube.rightExponent x.cube.leftBit x.cube.rightBit
-  let d := primeSubsetGenerator (fun i => Ideal.span {p i}) x.firstDivisor
-  let e := primeSubsetGenerator (fun i => Ideal.span {p i}) x.source.divisor
-  let m' := m*b0Label p x.cube.support (fun i => x.cube.leftExponent i+x.cube.rightExponent i) x.cube.leftBit x.cube.rightBit
-  have hX : 0 < X := div_pos (globalFirstColumnScale_pos p hp ell hell x side)
-    (FirstPassCubeLabels.primeProductNorm_pos p hp _)
-  have hr : Ideal.span {secondMaskQuotient p x.source.divisor x.source.sourceCommon hE}=Ideal.span {r} := by
-    rw [secondMaskQuotient_span]
-    exact (ConcretePrimeRowBridge.span_idealGenerator _).symm
-  have hnorm := weighted_secondRayChild_normalized p hp hcop hg hinj hpr
-    x.source.sourceCommon x.source.divisor hE (globalSecondRawPool F x) x.source.overlap Ψ Ψ
-    m' c d x.source.frequency r ray hr X Y hX U hUc hUs g₁ g₂ W hU₁ hU₂
-  have hscale : X/(‖ConcreteTraceCRT.eisEmbedding e‖^2*‖ConcreteTraceCRT.eisEmbedding r‖^2)=
-      globalActualResidualScale p ell side x := globalResidualScale_eq p ell side x
-  dsimp only at hnorm
-  rw [hscale] at hnorm
-  have hcoords := globalPooled_log_coordinates p hp ell hell side x hk
-  have hid' := hid p hp hcop hg (globalLogRep j 5) (globalLogRep j 6) (globalLogRep j 7)
-    (globalActualResidualScale p ell side x) (globalPooledColumnScale ell j) (globalLogRep j 8) Y
-    (globalLogRep_pos j 5) (globalLogRep_pos j 6) (globalLogRep_pos j 7)
-    (globalActualResidualScale_pos p hp ell hell side x) (globalPooledColumnScale_pos ell hell j) (globalLogRep_pos j 8)
-    (globalSecondRawPool F x) x.source.overlap (secondRayMinus Ψ ray) (secondRayPlus Ψ ray)
-    m' r c d e x.source.frequency (primeSubsetGenerator_ne_zero _ _) (primeSubsetGenerator_ne_zero _ _) hk
-    hcoords.1 hcoords.2.1 hcoords.2.2.1 hcoords.2.2.2.1 hcoords.2.2.2.2
-  rw [hid'] at hnorm
-  have hgoal := congrArg (fun z : ℂ => (primeProductNorm p x.firstCommon : ℂ)⁻¹ *
-    ((Y : ℂ)*secondSourceCommonCoefficient p hg Ψ m' c d x.source.sourceCommon x.source.divisor) * z) hnorm
-  have hrow : newRow (globalSecondTuple p x) = d*e*x.source.frequency := rfl
-  have hlabel : globalSecondLabel p x = c*e*∏ i ∈ x.source.overlap,p i := rfl
-  have hmask : globalSecondRawMask p m x = m'*r := rfl
-  have hz : globalBinZ p ell side j x =
-      Real.log (primeProductNorm p x.source.overlap*globalPooledColumnScale ell j /
-        globalActualResidualScale p ell side x) := rfl
-  have hud : globalBinUd p j x = Real.log (SecondPassIntegration.elementNorm d/globalLogRep j 5) := rfl
-  have hue : globalBinUe p j x = Real.log (SecondPassIntegration.elementNorm e/globalLogRep j 6) := rfl
-  have huv : globalBinUv p j x = Real.log (primeProductNorm p x.source.overlap/globalLogRep j 7) := rfl
-  have hkap : globalBinKap p j x = Real.log (SecondPassIntegration.elementNorm (d*e*x.source.frequency)/globalLogRep j 8) := rfl
-  change globalSecondLiteralTerm p hp hcop hg F Ψ m ray g₁ g₂ W ell Y side x = _
-  rw [hrow,hlabel,hmask,hz,hud,hue,huv,hkap]
-  have hq := secondExpansionQuotient_of_subset p x.source hE
-  simp only [globalSecondLiteralTerm,secondExpansionSource,Finset.sum_singleton,hq,
-    globalSecondOuterWeight,secondNormalizedExpansionWeight,
-    globalResidualScale_eq p ell side x,globalBinRadial,m',c,d,e,r,X,j,mul_neg,mul_assoc] at hgoal ⊢
-  exact hgoal
 
 end
 

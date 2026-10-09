@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondHeightFamily
 import OAI.NumberTheory.DirichletL.Moments.RestrictedEnergy
-
 namespace OAI
 
 noncomputable section
@@ -12,30 +11,6 @@ open CenteredMomentSecondHeightFamily CenteredMomentSecondChildProfile CenteredM
 open CenteredMomentSourceRow CenteredMomentHeckeColumnWindow CenteredMomentHeckeExpansion
 open CenteredExceptionalProfile CenteredMomentRestrictedEnergy RayFourExpansion
 local notation "O" => ActualEisensteinCubic.O
-
-theorem row_presentation_height (η τ : Character) (χ : RayCharacter) (A : O)
-    (hτ : ∀ n,elementCoeff τ n=rowTwist (elementHom (childCharacter η χ)) fixedBadMask 1 A n)
-    (I : Ideal O) (hI : Supported I) (t : ℝ) :
-    heightCoeff τ t I=heightCoeff η t I*idealRowHom A I*rayCharacter χ (primaryGenerator I) := by
-  have he := idealCoeff_eq_row (childCharacter η χ) τ fixedBadMask 1 A hτ I
-  have he' : heightCoeff τ t I=rowWeight (childCharacter η χ) fixedBadMask 1 A t I := by
-    change idealCoeff τ I*(Ideal.absNorm I:ℂ)^(Complex.I*t)=_
-    rw [he]
-    simp only [rowWeight,MonoidWithZeroHom.coe_mk,ZeroHom.coe_mk,one_pow,one_mul,mul_one]
-  rw [he',rowWeight_split,←heightCoeff_eq_fixed_rowWeight (childCharacter η χ) t I hI]
-  simp only [heightCoeff,child_ideal_primary η χ I hI]
-  ring
-
-theorem exists_second_family_presentation (η : Character) (χ : RayCharacter)
-    (A : O) (hA : A≠0) :
-    ∃ τ : Character,
-      τ.modulus.absNorm≤rowConductorBound (childCharacter η χ) fixedBadMask 1 A ∧
-      (∀ n,elementCoeff τ n=rowTwist (elementHom (childCharacter η χ)) fixedBadMask 1 A n) ∧
-      ∀ I : Ideal O,Supported I → ∀ t : ℝ,
-        heightCoeff τ t I=heightCoeff η t I*idealRowHom A I*rayCharacter χ (primaryGenerator I) := by
-  obtain ⟨τ,hN,hτ⟩ := exists_row_character_with_conductor (childCharacter η χ) fixedBadMask 1 A
-    fixedBadMask_ne_zero one_ne_zero hA (dvd_mul_right _ _) (dvd_mul_left _ _)
-  exact ⟨τ,hN,hτ,fun I hI t => row_presentation_height η τ χ A hτ I hI t⟩
 
 theorem row_presentation_twist (η τ : Character) (χ : RayCharacter) (A : O)
     (hτ : ∀ n,elementCoeff τ n=rowTwist (elementHom (childCharacter η χ)) fixedBadMask 1 A n)
@@ -65,13 +40,6 @@ theorem fixedInducingRow_transport (η τ : Character) (χ : RayCharacter) (A : 
       FixedInducingRow (childCharacter η χ) Q fixedBadMask A z := by
   unfold FixedInducingRow
   simp only [one_mul,row_presentation_twist η τ χ A hτ]
-
-theorem nonexceptional_transport (η τ : Character) (χ : RayCharacter) (A : O)
-    (hτ : ∀ n,elementCoeff τ n=rowTwist (elementHom (childCharacter η χ)) fixedBadMask 1 A n)
-    (Q : Ideal O) (z : O) :
-    nonexceptional η χ Q fixedBadMask A z ↔
-      z≠0 ∧ ¬FixedInducingRow τ Q fixedBadMask 1 z := by
-  rw [nonexceptional,fixedInducingRow_transport η τ χ A hτ Q z]
 
 end SevenEighths.CenteredMomentSecondFamilyTransport
 

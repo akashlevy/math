@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.UniformRetainedEnergy
-
 namespace OAI
 
 noncomputable section

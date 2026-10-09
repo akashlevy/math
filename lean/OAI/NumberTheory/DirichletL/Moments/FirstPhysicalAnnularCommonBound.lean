@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalDyadicRows
 import OAI.NumberTheory.DirichletL.Moments.FirstAnnularMajorant
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalSourceCommonBound
-
 namespace OAI
 
 noncomputable section

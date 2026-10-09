@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondSourceSeededPowerDescent
 import OAI.NumberTheory.DirichletL.Moments.SecondNonexceptionalScalar
-
 namespace OAI
 
 noncomputable section

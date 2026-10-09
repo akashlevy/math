@@ -1,80 +1,25 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.RamifiedGaussSeries
 import OAI.NumberTheory.DirichletL.Reciprocity.KubotaCharacter
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace CubicEisenstein
 
 section
@@ -345,43 +290,10 @@ theorem rationalQuotient_surjective : Function.Surjective rationalQuotient := by
 
 def rationalCongruenceThree : Subgroup (SL(2,ℤ)) := rationalQuotient.ker
 
-instance rationalCongruenceThree_normal : rationalCongruenceThree.Normal := by
-  unfold rationalCongruenceThree
-  infer_instance
-
 theorem mem_rationalCongruenceThree (r : SL(2,ℤ)) :
     r∈rationalCongruenceThree ↔ rationalEmbedding r∈levelThree := by
   change QuotientGroup.mk' levelThreeInTwo (rationalLift r)=1 ↔ _
   exact QuotientGroup.eq_one_iff _
-
-def rationalQuotientEquiv : (SL(2,ℤ) ⧸ rationalCongruenceThree) ≃*
-    (levelTwo ⧸ levelThreeInTwo) :=
-  QuotientGroup.quotientKerEquivOfSurjective rationalQuotient rationalQuotient_surjective
-
-instance rationalCongruenceThree_finiteIndex : rationalCongruenceThree.FiniteIndex := by
-  have he : rationalCongruenceThree=levelThree.comap rationalEmbedding := by
-    ext r
-    exact mem_rationalCongruenceThree r
-  rw [he]
-  let : levelThree.FiniteIndex := levelThree_finiteIndex
-  infer_instance
-
-theorem finite_rational_representatives : ∃R : Finset (SL(2,ℤ)),
-    ∀g : levelTwo,∃r∈R,(g:SL(2,ActualEisensteinCubic.O))*(rationalEmbedding r)⁻¹∈levelThree := by
-  let : Fintype (levelTwo ⧸ levelThreeInTwo) := Fintype.ofFinite _
-  let sectionMap : (levelTwo ⧸ levelThreeInTwo)→SL(2,ℤ) :=
-    fun q => (rationalQuotient_surjective q).choose
-  have hsection : ∀q,rationalQuotient (sectionMap q)=q :=
-    fun q => (rationalQuotient_surjective q).choose_spec
-  refine ⟨Finset.univ.image sectionMap,fun g => ?_⟩
-  let q := QuotientGroup.mk' levelThreeInTwo g
-  refine ⟨sectionMap q,Finset.mem_image.mpr ⟨q,Finset.mem_univ _,rfl⟩,?_⟩
-  have he : QuotientGroup.mk' levelThreeInTwo (g*(rationalLift (sectionMap q))⁻¹)=1 := by
-    rw [map_mul,map_inv]
-    change q*(rationalQuotient (sectionMap q))⁻¹=1
-    rw [hsection,mul_inv_cancel]
-  exact (QuotientGroup.eq_one_iff (N:=levelThreeInTwo)
-    (g*(rationalLift (sectionMap q))⁻¹)).mp he
 
 end
 
@@ -471,53 +383,9 @@ lemma rationalBruhat_injective : Function.Injective
     (fun i : RationalBruhatIndex => rationalReductionThree (rationalBruhatRep i)) := by
   decide +kernel
 
-def rationalBruhatEquiv : RationalBruhatIndex ≃ SL(2,ZMod 3) :=
-  Equiv.ofBijective (fun i => rationalReductionThree (rationalBruhatRep i))
-    ⟨rationalBruhat_injective,rationalBruhat_complete⟩
-
-lemma card_SLThree : Fintype.card (SL(2,ZMod 3))=24 := by
-  rw [←Fintype.card_congr rationalBruhatEquiv]
-  decide
-
-lemma rationalCongruenceThree_eq_ker : rationalCongruenceThree=rationalReductionThree.ker := by
-  ext g
-  exact (rationalReductionThree_eq_one_iff g).symm
-
-def rationalCongruenceEquivSLThree : (SL(2,ℤ) ⧸ rationalCongruenceThree) ≃* SL(2,ZMod 3) :=
-  (QuotientGroup.quotientMulEquivOfEq rationalCongruenceThree_eq_ker).trans
-    (QuotientGroup.quotientKerEquivOfSurjective rationalReductionThree rationalReductionThree_surjective)
-
-def sourceQuotientEquivSLThree : (levelTwo ⧸ levelThreeInTwo) ≃* SL(2,ZMod 3) :=
-  rationalQuotientEquiv.symm.trans rationalCongruenceEquivSLThree
-
-lemma sourceQuotient_card : Nat.card (levelTwo ⧸ levelThreeInTwo)=24 := by
-  rw [Nat.card_congr sourceQuotientEquivSLThree.toEquiv,Nat.card_eq_fintype_card,card_SLThree]
-
-lemma levelThreeInTwo_index : levelThreeInTwo.index=24 := sourceQuotient_card
-
-theorem twentyFour_rational_representatives (g : levelTwo) :
-    ∃i : RationalBruhatIndex,
-      (g:SL(2,ActualEisensteinCubic.O))*(rationalEmbedding (rationalBruhatRep i))⁻¹∈levelThree := by
-  obtain ⟨r,hr⟩ := rationalQuotient_surjective (QuotientGroup.mk' levelThreeInTwo g)
-  obtain ⟨i,hi⟩ := rationalBruhat_complete (rationalReductionThree r)
-  refine ⟨i,?_⟩
-  have hred : rationalReductionThree (r*(rationalBruhatRep i)⁻¹)=1 := by
-    rw [map_mul,map_inv,hi,mul_inv_cancel]
-  have hker := (rationalReductionThree_eq_one_iff _).mp hred
-  have hquot : rationalQuotient r=rationalQuotient (rationalBruhatRep i) := by
-    have hz : rationalQuotient (r*(rationalBruhatRep i)⁻¹)=1 := hker
-    rw [map_mul,map_inv,mul_inv_eq_one] at hz
-    exact hz
-  have he : QuotientGroup.mk' levelThreeInTwo
-      (g*(rationalLift (rationalBruhatRep i))⁻¹)=1 := by
-    rw [map_mul,map_inv,←hr,hquot]
-    exact mul_inv_cancel _
-  exact (QuotientGroup.eq_one_iff (N:=levelThreeInTwo)
-    (g*(rationalLift (rationalBruhatRep i))⁻¹)).mp he
-
 end CubicKubota
 
-open scoped BigOperators Classical MatrixGroups
+open scoped MatrixGroups
 namespace CubicKubota
 open ActualEisensteinCubic
 open CubicEisenstein
@@ -609,35 +477,7 @@ theorem sourceProjection_automorphy (f : HyperbolicSpace→ℂ)
     (fun q => f (integralComplexMatrix (rationalEmbedding (sourceRationalSection q)) • w))]
   ring
 
-theorem sourceProjection_fixed (f : HyperbolicSpace→ℂ)
-    (hf : ∀g : levelTwo,∀w,f (integralComplexMatrix (g:SL(2,ActualEisensteinCubic.O)) • w)=
-      levelTwoComplexCharacter g*f w) (w : HyperbolicSpace) : sourceProjection f w=f w := by
-  unfold sourceProjection
-  have he : ∀q : levelTwo ⧸ levelThreeInTwo,
-      f (integralComplexMatrix (rationalEmbedding (sourceRationalSection q)) • w)=f w := by
-    intro q
-    have hh := hf (rationalLift (sourceRationalSection q)) w
-    rw [levelTwoComplexCharacter_rationalLift,one_mul] at hh
-    exact hh
-  simp only [he,Finset.sum_const,Finset.card_univ,nsmul_eq_mul]
-  have hc : Fintype.card (levelTwo ⧸ levelThreeInTwo)=24 := by
-    simpa only [Nat.card_eq_fintype_card] using sourceQuotient_card
-  rw [hc]
-  push_cast
-  ring
-
-lemma sourceProjection_idempotent (f : HyperbolicSpace→ℂ)
-    (hf : ∀n : levelThree,∀w,f (complexMatrix n • w)=complexCharacter n*f w) :
-    sourceProjection (sourceProjection f)=sourceProjection f := by
-  funext w
-  exact sourceProjection_fixed _ (sourceProjection_automorphy f hf) w
-
 def sourceEisenstein (s : ℂ) : HyperbolicSpace→ℂ := sourceProjection (hyperbolicEisenstein s)
-
-theorem sourceEisenstein_automorphy (s : ℂ) (hs : 2<s.re) (g : levelTwo) (w : HyperbolicSpace) :
-    sourceEisenstein s (integralComplexMatrix (g:SL(2,ActualEisensteinCubic.O)) • w)=
-      levelTwoComplexCharacter g*sourceEisenstein s w :=
-  sourceProjection_automorphy _ (fun n w => hyperbolicEisenstein_automorphy n s hs w) g w
 
 end CubicKubota
 

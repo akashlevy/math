@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalSourceFixedEnergy
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalSourceBound
 import OAI.NumberTheory.DirichletL.Moments.SecondIdealBlockBound
-
 namespace OAI
 
 noncomputable section

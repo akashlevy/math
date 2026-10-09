@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.PrimePower
-
 namespace OAI
 
 noncomputable section

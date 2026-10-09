@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.RankinCount
 import OAI.NumberTheory.DirichletL.Moments.SecondDiagonal
-
 namespace OAI
 
 noncomputable section

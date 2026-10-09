@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.MarkedProduct
 import OAI.NumberTheory.DirichletL.Detector.MarkedRational
 import Mathlib.Algebra.BigOperators.Ring.Finset
-
 namespace OAI
 
 noncomputable section

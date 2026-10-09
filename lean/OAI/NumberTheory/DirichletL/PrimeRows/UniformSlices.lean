@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CoarseAmplitude
 import OAI.NumberTheory.DirichletL.PrimeRows.SliceIntegral
-
 namespace OAI
 
 noncomputable section

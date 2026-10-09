@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.AmplificationSourcePolynomial
 import OAI.NumberTheory.DirichletL.Moments.AmplificationSourcePool
 import OAI.NumberTheory.DirichletL.Moments.AmplificationRectangle
 import OAI.NumberTheory.DirichletL.Moments.GaussNormalization
-
 namespace OAI
 
 noncomputable section

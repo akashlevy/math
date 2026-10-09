@@ -1,75 +1,24 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.SpatialDerivatives
 import OAI.NumberTheory.DirichletL.CubicSieve.FirstCoreCutoff
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 open Filter
@@ -81,11 +30,6 @@ lemma smoothEisenstein_eq_actual (s : ℂ) (p : SpatialCoordinates) (hv : 0<p 2)
     smoothEisenstein s p = upperEisenstein ((p 0:ℂ)+(p 1:ℂ)*Complex.I) (p 2) hv s := by
   unfold smoothEisenstein upperEisenstein eisenstein
   exact tsum_congr (fun r => smoothSummand_eq_actual s r p hv)
-
-lemma summable_smoothSummand (s : ℂ) (hs : 2<s.re) (p : SpatialCoordinates) (hv : 0<p 2) :
-    Summable (fun r => smoothSummand s r p) :=
-  (summable_summand (upperSection ((p 0:ℂ)+(p 1:ℂ)*Complex.I) (p 2) hv) s hs).congr
-    (fun r => (smoothSummand_eq_actual s r p hv).symm)
 
 theorem eisenstein_axis_termwise (s : ℂ) (hs : 2<s.re)
     (p : SpatialCoordinates) (hv : 0<p 2) (j : Fin 3) :
@@ -198,24 +142,8 @@ lemma axisLaplacian_congr_positive (f g : SpatialCoordinates → ℂ)
   intro j hj
   exact (h j).deriv.deriv_eq
 
-def upperEisensteinField (s : ℂ) (p : SpatialCoordinates) : ℂ :=
-  if hv : 0<p 2 then upperEisenstein ((p 0:ℂ)+(p 1:ℂ)*Complex.I) (p 2) hv s else 0
-
-lemma upperEisensteinField_eq_smooth (s : ℂ) (p : SpatialCoordinates) (hv : 0<p 2) :
-    upperEisensteinField s p=smoothEisenstein s p := by
-  rw [upperEisensteinField,dite_eq_left hv]
-  exact (smoothEisenstein_eq_actual s p hv).symm
-
-theorem upperEisenstein_eigenfunction (s : ℂ) (hs : 2<s.re)
-    (p : SpatialCoordinates) (hv : 0<p 2) :
-    axisLaplacian (upperEisensteinField s) p = s*(s-2)*upperEisensteinField s p := by
-  rw [axisLaplacian_congr_positive (upperEisensteinField s) (smoothEisenstein s)
-    (fun q hq => upperEisensteinField_eq_smooth s q hq) p hv,
-    smoothEisenstein_eigenfunction s hs p hv,upperEisensteinField_eq_smooth s p hv]
-
 end CubicEisenstein
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace SecondPassArithmetic
 
 section
@@ -225,135 +153,6 @@ open ConcreteTraceCRT (eisEmbedding)
 open EisensteinSchwartzPoisson (paperRadialFourier)
 open RayFourExpansion (RayCharacter)
 open SecondPassIntegration (densityChildEnergy)
-
-lemma firstCoreModeHeight_norm (negative : Bool) (t : ℝ) :
-    ‖firstCoreModeHeight negative t‖ = ‖t‖ := by
-  cases negative <;> simp [firstCoreModeHeight]
-
-theorem firstCoreInputRow_finite_second_transfer
-    {ι κ : Type*} [DecidableEq ι] [DecidableEq κ] [Fintype κ]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1)
-    (U : ℝ → ℂ) (hUc : HasCompactSupport U) (hUs : ContDiff ℝ ∞ U)
-    (g V : 𝓢(ℝ, ℂ)) (negative : Bool) (hU : ∀ t, g t ≠ 0 → U t = 1)
-    (M H : ℝ) (hM : 0 ≤ M) (hH : 0 ≤ H) (hgM : ∀ t, g t ≠ 0 → |t| ≤ M)
-    (ε : ℝ) (hε : 0 < ε) (decayOrder J : ℕ) :
-    ∃ (windows : Fin 7 → ℝ → ℂ) (Cₐ Cₛ Cw : ℝ),
-      0 < Cₐ ∧ 0 ≤ Cₛ ∧ 0 ≤ Cw ∧
-      ∀ (D₀ E₀ V₀ X₀ K₀ : Finset ι → κ → ℝ) (Y : ℝ),
-        (∀ R j, 0 < D₀ R j) → (∀ R j, 0 < E₀ R j) → (∀ R j, 0 < V₀ R j) →
-        (∀ R j, 0 < X₀ R j) → (∀ R j, 0 < K₀ R j) → 0 < Y →
-      ∀ (A₀ B C D F : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-        (χ : RayCharacter) (Ψ : O →* ℂ) (m : O) (r₁ : FirstCoreIndex)
-        (X Z t : ℝ) (Srows : Finset O)
-        (label : Finset ι → SecondExpansionData ι → κ)
-        (T : Finset ι → κ → Finset (Ideal O × O)) (lengthScale : Finset ι → κ → ℝ),
-        (∀ i ∈ B, 0 < v₁ i + v₂ i) → Disjoint C B → D ⊆ C ∪ B →
-        (∀ a : O, ‖Ψ a‖ ≤ 1) → 0 < X → 0 ≤ Z →
-        (∀ z ∈ Srows, (Ideal.absNorm (Ideal.span {z}) : ℝ) ≤ Y) →
-        (∀ z ∈ Srows, z ≠ 0) →
-        (∀ R ∈ (F\A₀).powerset, ∀ j, 0 ≤ lengthScale R j) →
-        (∀ R ∈ (F\A₀).powerset, ∀ j,
-          ∀ x ∈ secondDyadicSector (F\A₀) (firstCoreSecondCutoff p A₀ X Y M Z) R label j,
-          |secondSectorZ p
-            (secondExpansionScale p (X / primeProductNorm p A₀)
-              (primeSubsetGenerator (fun i => Ideal.span {p i}) R) (expansionSupportData C D x))
-            (X₀ R j) (expansionSupportData C D x)| ≤ H) →
-        (∀ R ∈ (F\A₀).powerset, ∀ j,
-          ∀ x ∈ secondDyadicSector (F\A₀) (firstCoreSecondCutoff p A₀ X Y M Z) R label j,
-          |secondSectorUd p (D₀ R j) (expansionSupportData C D x)| ≤ H) →
-        (∀ R ∈ (F\A₀).powerset, ∀ j,
-          ∀ x ∈ secondDyadicSector (F\A₀) (firstCoreSecondCutoff p A₀ X Y M Z) R label j,
-          |secondSectorUe p (E₀ R j) (expansionSupportData C D x)| ≤ H) →
-        (∀ R ∈ (F\A₀).powerset, ∀ j,
-          ∀ x ∈ secondDyadicSector (F\A₀) (firstCoreSecondCutoff p A₀ X Y M Z) R label j,
-          |secondSectorUv p (V₀ R j) (expansionSupportData C D x)| ≤ H) →
-        (∀ R ∈ (F\A₀).powerset, ∀ j,
-          ∀ x ∈ secondDyadicSector (F\A₀) (firstCoreSecondCutoff p A₀ X Y M Z) R label j,
-          |secondSectorKap p (K₀ R j) (expansionSupportData C D x)| ≤ H) →
-        (∀ R ∈ (F\A₀).powerset, ∀ j,
-          ∀ x ∈ secondDyadicSector (F\A₀) (firstCoreSecondCutoff p A₀ X Y M Z) R label j,
-          (secondSupportNewLabel p B v₁ v₂ ε₁ ε₂ (expansionSupportData C D x),
-            secondSupportRow p (expansionSupportData C D x)) ∈ T R j) →
-        (∀ R ∈ (F\A₀).powerset, ∀ j, ∀ q ∈ T R j, q.1 ≠ ⊥) →
-        (∀ R ∈ (F\A₀).powerset, ∀ j, ∀ q ∈ T R j, (Ideal.absNorm q.1 : ℝ) ≤ lengthScale R j) →
-        let v := fun i => v₁ i + v₂ i
-        let c := primeSubsetGenerator (fun i => Ideal.span {p i}) C
-        let d := primeSubsetGenerator (fun i => Ideal.span {p i}) D
-        let Ψ' := firstCoreTwist negative χ Ψ r₁
-        let m' := m * b0Label p B v ε₁ ε₂
-        let c' := c * jLabel p B v ε₁ ε₂
-        let X' := X / primeProductNorm p A₀
-        let Hbase := normalizedColumn p (fun S => firstCoreBaseProfile g V negative (columnLog p X' S))
-        let Hmode := normalizedColumn p (fun S => firstCoreModeProfile g V negative t (columnLog p X' S))
-        (∑ z ∈ Srows, ‖firstCoreInputRow p hg F A₀ B v ε₁ ε₂ negative χ Ψ m
-          (normalizedColumn p (fun S => g (columnLog p X S))) V (columnLog p X) c d r₁ t z‖ ^ 2) +
-          ‖firstCoreTest (normalizedColumn p (fun S => g (columnLog p X S))) V (columnLog p X)
-            negative t A₀ ∅‖ ^ 2 ≤
-        (primeProductNorm p A₀)⁻¹ *
-          (|Y| * ‖paperRadialFourier rowMajorant 0‖ *
-              (∑ G ∈ (F\A₀).powerset, ‖secondInputCoefficient p hg Ψ' m' c' d Hbase G‖ ^ 2) +
-            (∑ z : SecondRayIndex, ∑ R ∈ (F\A₀).powerset, ∑ j : κ,
-              (Y * ‖eisEmbedding (primeSubsetGenerator (fun i => Ideal.span {p i}) R)‖ ^ 2 /
-                  X' ^ 2 * ‖secondRayCoefficient z‖ * Cw * Cₐ *
-                (lengthScale R j * Ideal.absNorm (Ideal.span {b0Label p B v ε₁ ε₂}))^ε) *
-              (Cₛ*(1+‖t‖)^(J+2)*(1+‖t‖)^(J+2) /
-                (1+Y*K₀ R j/(D₀ R j*(E₀ R j)^2*(V₀ R j)^2*(X₀ R j)^2))^decayOrder) *
-              densityChildEnergy p hp hcop hg (F\A₀) (secondRayMinus Ψ' z) (secondRayPlus Ψ' z)
-                (m' * primeSubsetGenerator (fun i => Ideal.span {p i}) R) (T R j)
-                (windows 5) (windows 6) (X₀ R j) (X₀ R j) J) +
-            ‖secondSourceTail p hp hg hinj (F\A₀) Ψ' m' c' d Hmode rowMajorant Y
-              (firstCoreSecondCutoff p A₀ X Y M Z)‖) := by
-  have hUbase : ∀ s, firstCoreBaseProfile g V negative s ≠ 0 → U s = 1 := by
-    intro s hs
-    apply hU s
-    intro hz
-    apply hs
-    simp only [firstCoreBaseProfile_apply, hz, zero_mul]
-  have hMbase : ∀ s, firstCoreBaseProfile g V negative s ≠ 0 → |s| ≤ M := by
-    intro s hs
-    apply hgM s
-    intro hz
-    apply hs
-    simp only [firstCoreBaseProfile_apply, hz, zero_mul]
-  obtain ⟨windows,Cₐ,Cₛ,Cw,hCₐ,hCₛ,hCw,htrans⟩ :=
-    normalized_truncated_second_density_transfer (κ := κ) p hp hcop hg hinj hc hpr U hUc hUs
-      (firstCoreBaseProfile g V negative) rowMajorant hUbase M H hM hH hMbase ε hε decayOrder J
-  refine ⟨windows,Cₐ,Cₛ,Cw,hCₐ,hCₛ,hCw,?_⟩
-  intro D₀ E₀ V₀ X₀ K₀ Y hD₀ hE₀ hV₀ hX₀ hK₀ hY
-    A₀ B C D F v₁ v₂ ε₁ ε₂ χ Ψ m r₁ X Z t Srows label T lengthScale hv hCB hD hΨ hX hZ hSrows hSrows0
-    hL hz hud hue huv hkap hmap hT hnorm
-  dsimp only
-  have hX' : 0 < X / primeProductNorm p A₀ :=
-    div_pos hX (FirstPassCubeLabels.primeProductNorm_pos p hp A₀)
-  have hΨ' : ∀ a : O, ‖firstCoreTwist negative χ Ψ r₁ a‖ ≤ 1 :=
-    fun a => (firstCoreTwist_norm_le negative χ Ψ r₁ a).trans (hΨ a)
-  have hcut : ∀ G ∈ (F\A₀).powerset, ∀ E ∈ G.powerset,
-      (0 : O) ∈ firstCoreSecondCutoff p A₀ X Y M Z G E := by
-    intro G hG E hE
-    exact firstCoreSecondCutoff_zero p A₀ X Y M Z G E
-  have hb := htrans D₀ E₀ V₀ X₀ K₀ Y hD₀ hE₀ hV₀ hX₀ hK₀ hY (firstCoreModeHeight negative t)
-    B C D (F\A₀) v₁ v₂ ε₁ ε₂ (firstCoreTwist negative χ Ψ r₁)
-    (m * b0Label p B (fun i => v₁ i+v₂ i) ε₁ ε₂) (X / primeProductNorm p A₀)
-    (firstCoreSecondCutoff p A₀ X Y M Z) label T lengthScale hv hCB hD hΨ' hX' hcut hL
-    hz hud hue huv hkap hmap hT hnorm
-  simp only [firstCoreModeHeight_norm] at hb
-  have hf := firstCoreInputRow_finite_le_truncated_tail p hp hg hinj hc F A₀ B
-    (fun i => v₁ i+v₂ i) ε₁ ε₂ negative χ Ψ m g V X hX Y hY
-    (primeSubsetGenerator (fun i => Ideal.span {p i}) C)
-    (primeSubsetGenerator (fun i => Ideal.span {p i}) D) r₁ t Srows hSrows hSrows0
-    (firstCoreSecondCutoff p A₀ X Y M Z)
-  simp only [firstCoreModeProfile] at hf ⊢
-  apply hf.trans
-  apply mul_le_mul_of_nonneg_left
-  · apply add_le_add
-    · exact hb
-    · exact le_rfl
-  · exact inv_nonneg.mpr (FirstPassCubeLabels.primeProductNorm_pos p hp A₀).le
 
 end
 
@@ -394,56 +193,8 @@ theorem residualTailCost_frequencyTwist
 
 end
 
-theorem firstCoreSecondCutoff_tail_bound
-    {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2) (A : ℕ) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-    ∀ (F D : Finset ι) (Ψ : O →* ℂ) (m c d : O) (g V W : 𝓢(ℝ, ℂ))
-      (negative : Bool) (t X Y M H : ℝ),
-      0 < X → 0 < Y → 0 ≤ H → (∀ u, g u ≠ 0 → |u| ≤ M) →
-      let X' := X / primeProductNorm p D
-      let Hbase := normalizedColumn p (fun S => firstCoreBaseProfile g V negative (columnLog p X' S))
-      let Hmode := normalizedColumn p (fun S => firstCoreModeProfile g V negative t (columnLog p X' S))
-      ‖secondSourceTail p hp hg hinj (F\D) Ψ m c d Hmode W Y (firstCoreSecondCutoff p D X Y M H)‖ ≤
-      ∑ G ∈ (F\D).powerset, ∑ E : G.powerset,
-        ‖secondSourceCommonCoefficient p hg Ψ m c d G E.val‖ *
-        residualTailCost p hg (F\D) G Ψ Ψ m c d (fun S => Hbase (G∪S)) (fun S => Hbase (G∪S))
-          (primeSubsetGenerator (fun i => Ideal.span {p i}) E.val) Y H A
-          (C*s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W) := by
-  obtain ⟨s,C,hC,hb⟩ := secondSourceTail_bound p hp hg hinj hc A
-  refine ⟨s,C,hC,?_⟩
-  intro F D Ψ m c d g V W negative t X Y M H hX hY hH hgM
-  dsimp only
-  have hcut : ∀ G ∈ (F\D).powerset, ∀ E : G.powerset,
-      ∀ S ∈ ((F\D)\G).powerset, ∀ T ∈ ((F\D)\G).powerset, Disjoint S T →
-      residualPairWeight p hg Ψ Ψ m c d
-        (fun U => normalizedColumn p (fun R => firstCoreModeProfile g V negative t
-          (columnLog p (X / primeProductNorm p D) R)) (G∪U))
-        (fun U => normalizedColumn p (fun R => firstCoreModeProfile g V negative t
-          (columnLog p (X / primeProductNorm p D) R)) (G∪U)) S T ≠ 0 →
-      ∀ k : O, k ∉ firstCoreSecondCutoff p D X Y M H G E.val →
-        H ≤ (Y / (‖eisEmbedding (primeSubsetGenerator (fun i => Ideal.span {p i}) E.val)‖^2 *
-          ‖eisEmbedding (∏ i : activeSupport T S, p i.val)‖^2)) * ‖eisEmbedding k‖^2 := by
-    intro G hG E S hS T hT hST hw k hk
-    have hGS : Disjoint G S := Finset.disjoint_of_subset_right
-      (Finset.mem_powerset.mp hS) disjoint_sdiff_self_right
-    have hGT : Disjoint G T := Finset.disjoint_of_subset_right
-      (Finset.mem_powerset.mp hT) disjoint_sdiff_self_right
-    obtain ⟨hs,ht⟩ := residualPairWeight_test_ne_zero p hg Ψ Ψ m c d _ _ S T hw
-    exact firstCoreSecondCutoff_uniform p hp g V negative t M hgM D G E.val S T hGS hGT hST
-      X Y H hX hY hs ht k hk
-  have h := hb (F\D) Ψ m c d
-    (normalizedColumn p (fun S => firstCoreModeProfile g V negative t
-      (columnLog p (X / primeProductNorm p D) S))) W Y H hY hH
-    (firstCoreSecondCutoff p D X Y M H) hcut
-  simpa only [firstCoreModeProfile, residualTailCost_frequencyTwist] using h
-
 end SecondPassArithmetic
 
-open scoped BigOperators Classical
 namespace CanonicalQuadraticSieve
 
 section

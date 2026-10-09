@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CompactProfileFamily
-
 namespace OAI
 
 noncomputable section

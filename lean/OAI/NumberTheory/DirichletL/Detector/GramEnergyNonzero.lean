@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.GramFrequencyConvergence
 import OAI.NumberTheory.DirichletL.Detector.GramNonzeroFrequency
 import OAI.NumberTheory.DirichletL.Detector.LowGramDiagonal
-
 namespace OAI
 
 noncomputable section

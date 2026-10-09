@@ -1,77 +1,25 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.FourierCoefficients
 import OAI.NumberTheory.DirichletL.CubicSieve.FrequencyBlocks
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical SchwartzMap
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 open FirstPassCubeLabels (columnLog)
@@ -89,26 +37,8 @@ theorem secondGaussTerm_test_factors (Ψ₁ Ψ₂ : O →* ℂ) (m r c d e k : O
   simp only [secondGaussTerm, secondInputCoefficient, star_mul, mul_one]
   ring
 
-theorem secondFrequencyKernel_log_tests (F : Finset ι)
-    (Ψ₁ Ψ₂ : O →* ℂ) (m r c d e k : O)
-    (V₁ V₂ : ℝ → ℂ) (X₁ X₂ Y : ℝ) (W : 𝓢(ℝ, ℂ)) :
-    secondFrequencyKernel p hp hg hinj F Ψ₁ Ψ₂ m r c d e k
-      (fun S => V₁ (columnLog p X₁ S)) (fun T => V₂ (columnLog p X₂ T)) W Y =
-    actualSecondKernel p hp hg hinj F Ψ₁ Ψ₂ m r c d e k W V₁ V₂ X₁ X₂ Y := by
-  unfold secondFrequencyKernel actualSecondKernel
-  apply Finset.sum_congr rfl
-  intro S hS
-  apply Finset.sum_congr rfl
-  intro T hT
-  by_cases hd : Disjoint S T
-  · simp only [ite_eq_left hd]
-    rw [secondGaussTerm_test_factors]
-    ring
-  · simp [hd]
-
 end SecondPassArithmetic
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace SecondPassIntegration
 
 section
@@ -248,53 +178,6 @@ end
 
 open ActualEisensteinCubic JointLogSeparation FirstPassCubeLabels SecondPassArithmetic
 
-theorem exists_fixed_normalized_child_tests {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (g₁ g₂ W : 𝓢(ℝ, ℂ)) (A B : ℝ) (hA : 0 ≤ A) (hB : 0 ≤ B)
-    (hg₁ : ∀ s, g₁ s ≠ 0 → |s| ≤ A) (hg₂ : ∀ s, g₂ s ≠ 0 → |s| ≤ A) :
-    ∃ (A₁ A₂ : 𝓢(ℝ, ℂ)) (windows : Fin 7 → ℝ → ℂ),
-      (∀ j, HasCompactSupport (windows j)) ∧
-      (∀ j, ContDiff ℝ ∞ (windows j)) ∧
-      (∀ j s, windows j s ≠ 0 → |s| ≤ A+B+1) ∧
-      ∀ (D E V₀ X X₀ K Y : ℝ), 0 < D → 0 < E → 0 < V₀ → 0 < X → 0 < X₀ → 0 < K →
-      ∀ (F V : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m r c d e k : O),
-        d ≠ 0 → e ≠ 0 → k ≠ 0 →
-        |Real.log (primeProductNorm p V * X₀ / X)| ≤ B →
-        |Real.log (elementNorm d / D)| ≤ B →
-        |Real.log (elementNorm e / E)| ≤ B →
-        |Real.log (primeProductNorm p V / V₀)| ≤ B →
-        |Real.log (elementNorm (d*e*k) / K)| ≤ B →
-        secondChildKernelPair p hp hcop hg F V Ψ₁ Ψ₂ m r c d e k (-k)
-          (radialPairKernel p e k W g₁ g₂ X X Y) =
-        (X : ℂ)⁻¹ * postCommonSmoothPair p hp hcop hg F Ψ₁ Ψ₂ (m*r)
-          (c*e*∏ i ∈ V, p i) (d*e*k) (d*e*(-k)) A₁ A₂ W windows
-          (Real.log (primeProductNorm p V * X₀ / X)) (Real.log (elementNorm d / D))
-          (Real.log (elementNorm e / E)) (Real.log (primeProductNorm p V / V₀))
-          (Real.log (elementNorm (d*e*k) / K)) X₀ X₀ (Y*K/(D*E^2*V₀^2*X₀^2)) := by
-  obtain ⟨U, hUc, hUs, hUone, hUsupp, hUzero⟩ :=
-    FourierBridge.exists_complex_smooth_cutoff A hA
-  have hU₁ : ∀ s, g₁ s ≠ 0 → U s = 1 := fun s hs => hUone s (hg₁ s hs)
-  have hU₂ : ∀ s, g₂ s ≠ 0 → U s = 1 := fun s hs => hUone s (hg₂ s hs)
-  let A₁ := conjugateProfile (halfNormalizationCLM U g₁)
-  let A₂ := halfNormalizationCLM U g₂
-  have hA₁ : ∀ s, A₁ s ≠ 0 → |s| ≤ A := by
-    intro s hs
-    apply halfNormalization_support_bound U hUc hUs g₁ A hg₁ s
-    intro hz
-    exact hs (by simp [A₁, hz])
-  have hA₂ : ∀ s, A₂ s ≠ 0 → |s| ≤ A :=
-    halfNormalization_support_bound U hUc hUs g₂ A hg₂
-  obtain ⟨windows, hwc, hws, hwb, hwo, hwt⟩ := exists_fixed_sector_windows A B hA hB
-  refine ⟨A₁, A₂, windows, hwc, hws, hwb, ?_⟩
-  intro D E V₀ X X₀ K Y hD hE hV₀ hX hX₀ hK F V Ψ₁ Ψ₂ m r c d e k hd he hk hz hud hue huv hkap
-  apply secondChildKernelPair_eq_postCommon p hp hcop hg F V Ψ₁ Ψ₂ m r c d e k hd he hk
-    D E V₀ X X₀ K Y hD hE hV₀ hX hX₀ hK U hUc hUs g₁ g₂ W hU₁ hU₂ windows
-  · exact hwo _ _ _ _ _ hz hud hue huv hkap
-  · exact fun a ha => hwt A₁ _ hA₁ hz 5 a ha
-  · exact fun a ha => hwt A₂ _ hA₂ hz 6 a ha
-
 end SecondPassIntegration
 
 namespace SecondPassArithmetic
@@ -302,67 +185,7 @@ namespace SecondPassArithmetic
 section
 open ActualEisensteinCubic
 open FirstPassCubeLabels (jLabel)
-open SecondPassIntegration (exists_fixed_normalized_child_tests elementNorm)
-
-variable {ι : Type*} [DecidableEq ι]
-  (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-  (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-  (hg : ∀ i, lambda ∉ Ideal.span {p i})
-
-def actualSecondRawSector
-    (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (s : Finset (SecondSupportData ι)) (w : SecondSupportData ι → ℂ)
-    (F : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m r : O)
-    (g₁ g₂ W : 𝓢(ℝ, ℂ)) (X Y : ℝ) : ℂ :=
-  ∑ x ∈ s, w x *
-    secondChildKernelPair p hp hcop hg F x.overlap Ψ₁ Ψ₂ m r
-      (primeSubsetGenerator (fun i => Ideal.span {p i}) x.common *
-        jLabel p B (fun i => v₁ i + v₂ i) ε₁ ε₂)
-      (primeSubsetGenerator (fun i => Ideal.span {p i}) x.firstDivisor)
-      (primeSubsetGenerator (fun i => Ideal.span {p i}) x.secondDivisor)
-      x.frequency (-x.frequency)
-      (radialPairKernel p (primeSubsetGenerator (fun i => Ideal.span {p i}) x.secondDivisor)
-        x.frequency W g₁ g₂ X X Y)
-
-theorem actualSecondRawSector_fixed_profiles
-    (g₁ g₂ W : 𝓢(ℝ, ℂ)) (A H : ℝ) (hA : 0 ≤ A) (hH : 0 ≤ H)
-    (hg₁ : ∀ t, g₁ t ≠ 0 → |t| ≤ A) (hg₂ : ∀ t, g₂ t ≠ 0 → |t| ≤ A) :
-    ∃ (A₁ A₂ : 𝓢(ℝ, ℂ)) (windows : Fin 7 → ℝ → ℂ),
-      (∀ j, HasCompactSupport (windows j)) ∧
-      (∀ j, ContDiff ℝ ∞ (windows j)) ∧
-      (∀ j t, windows j t ≠ 0 → |t| ≤ A+H+1) ∧
-      ∀ (D E V₀ X X₀ K Y : ℝ), 0 < D → 0 < E → 0 < V₀ → 0 < X → 0 < X₀ → 0 < K →
-      ∀ (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-        (s : Finset (SecondSupportData ι)) (w : SecondSupportData ι → ℂ)
-        (F : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m r : O),
-        (∀ x ∈ s, x.frequency ≠ 0) →
-        (∀ x ∈ s, |secondSectorZ p X X₀ x| ≤ H) →
-        (∀ x ∈ s, |secondSectorUd p D x| ≤ H) →
-        (∀ x ∈ s, |secondSectorUe p E x| ≤ H) →
-        (∀ x ∈ s, |secondSectorUv p V₀ x| ≤ H) →
-        (∀ x ∈ s, |secondSectorKap p K x| ≤ H) →
-        actualSecondRawSector p hp hcop hg B v₁ v₂ ε₁ ε₂ s w F Ψ₁ Ψ₂ m r g₁ g₂ W X Y =
-          (X : ℂ)⁻¹ * actualSecondSectorSource p hp hcop hg B v₁ v₂ ε₁ ε₂ s w F Ψ₁ Ψ₂ (m*r)
-            A₁ A₂ W windows D E V₀ X X₀ K Y := by
-  obtain ⟨A₁, A₂, windows, hwc, hws, hwb, hid⟩ :=
-    exists_fixed_normalized_child_tests p hp hcop hg g₁ g₂ W A H hA hH hg₁ hg₂
-  refine ⟨A₁, A₂, windows, hwc, hws, hwb, ?_⟩
-  intro D E V₀ X X₀ K Y hD hE hV₀ hX hX₀ hK B v₁ v₂ ε₁ ε₂ s w F Ψ₁ Ψ₂ m r hk hz hud hue huv hkap
-  simp only [actualSecondRawSector, actualSecondSectorSource, Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro x hx
-  have heq := hid D E V₀ X X₀ K Y hD hE hV₀ hX hX₀ hK F x.overlap Ψ₁ Ψ₂ m r
-    (primeSubsetGenerator (fun i => Ideal.span {p i}) x.common *
-      jLabel p B (fun i => v₁ i + v₂ i) ε₁ ε₂)
-    (primeSubsetGenerator (fun i => Ideal.span {p i}) x.firstDivisor)
-    (primeSubsetGenerator (fun i => Ideal.span {p i}) x.secondDivisor) x.frequency
-    (primeSubsetGenerator_ne_zero _ _) (primeSubsetGenerator_ne_zero _ _) (hk x hx)
-    (hz x hx) (hud x hx) (hue x hx) (huv x hx) (hkap x hx)
-  rw [heq]
-  simp only [secondSupportLabel, secondSupportRow, actualSecondRow,
-    secondSectorZ, secondSectorUd, secondSectorUe, secondSectorUv, secondSectorKap,
-    elementNorm, mul_neg]
-  ring
+open SecondPassIntegration (elementNorm)
 
 end
 
@@ -437,9 +260,6 @@ theorem secondFrequencyKernel_zero (F : Finset ι)
   · simp
 
 end SecondPassArithmetic
-
-open MeasureTheory Set Filter
-open scoped BigOperators Classical
 
 namespace CubicEisenstein
 open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal
@@ -572,9 +392,6 @@ theorem arithmeticResidueSum_ne_zero_forces_trivial (c : O) (hc : c ≠ 0)
   rw [arithmeticResidueSum_constant_eigen c hc hlevel t ht,one_mul]
 
 end CubicEisenstein
-
-open MeasureTheory Set Filter
-open scoped BigOperators Classical
 
 namespace CubicEisenstein
 open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal

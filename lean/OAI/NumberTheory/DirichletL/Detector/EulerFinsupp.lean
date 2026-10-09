@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.IdealFactorization
 import Mathlib.Analysis.Normed.Group.Tannery
-
 namespace OAI
 
 noncomputable section

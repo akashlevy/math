@@ -1,76 +1,24 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.ProductColumns
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace CanonicalQuadraticSieve
 open ActualEisensteinCubic CompletedGauss IdealMobiusDivisorSum
 
@@ -121,7 +69,6 @@ theorem product_quadratic_norm_all :
 
 end CanonicalQuadraticSieve
 
-open scoped BigOperators Classical SchwartzMap
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 open ConcreteTraceCRT (eisEmbedding eisEmbedding_ne_zero)
@@ -415,7 +362,6 @@ theorem full_uniform_firstCoreSecondCutoff_tail_fixed_source (A : ℕ) (g V W : 
 
 end SecondPassArithmetic
 
-open scoped BigOperators Classical
 namespace InitialMeanSquare
 open IdealMobiusDivisorSum
 
@@ -470,35 +416,8 @@ theorem element_fiber_card_le (gen : Ideal O→O) (hgen : ∀D,Ideal.span {gen D
   · intro x hx z hz he
     exact element_divisor_injective_on_fiber gen y f hy (Finset.mem_filter.mp hx).2 (Finset.mem_filter.mp hz).2 he
 
-theorem element_weighted_energy_pushforward (ε : ℝ) (hε : 0<ε) :
-    ∃ C : ℝ,0<C ∧ ∀ (gen : Ideal O→O), (∀D,Ideal.span {gen D}=D) →
-      ∀ (s : Finset ElementDatum) (t : Finset (O×O)) (w : ElementDatum→ℂ)
-        (P : O×O→ℂ) (A K : ℝ),
-      0≤A → 0≤K → (∀x∈s,elementObservation gen x∈t) →
-      (∀y∈t,y.1≠0) → (∀y∈t,(Ideal.absNorm (Ideal.span {y.1}):ℝ)≤K) →
-      (∀x∈s,‖w x‖≤A) →
-      (∑x∈s,‖w x‖*‖P (elementObservation gen x)‖^2)≤A*C*K^ε*∑y∈t,‖P y‖^2 := by
-  obtain ⟨C,hC,hdiv⟩ := IdealDivisorBound.ideal_divisor_small_power ε hε
-  refine ⟨C,hC,?_⟩
-  intro gen hgen s t w P A K hA hK hmap ht hnorm hw
-  apply (DescentWeightedCauchy.bounded_energy_pushforward s t (elementObservation gen) w P A hmap hw).trans
-  rw [Finset.mul_sum]
-  apply Finset.sum_le_sum
-  intro y hy
-  have hyI : (Ideal.span {y.1}:Ideal O)≠0 := by intro hz; exact ht y hy (Ideal.span_singleton_eq_bot.mp hz)
-  have hcard : ((s.filter (fun x => elementObservation gen x=y)).card:ℝ)≤C*K^ε := by
-    calc
-      _ ≤ ((idealDivisors (Ideal.span {y.1})).card:ℝ) := by
-        exact_mod_cast element_fiber_card_le gen hgen s y.1 y.2 (ht y hy)
-      _ ≤ C*(Ideal.absNorm (Ideal.span {y.1}):ℝ)^ε := hdiv _ hyI
-      _ ≤ C*K^ε := mul_le_mul_of_nonneg_left
-        (Real.rpow_le_rpow (Nat.cast_nonneg _) (hnorm y hy) hε.le) hC.le
-  have hh := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hcard hA) (sq_nonneg ‖P y‖)
-  simpa only [mul_assoc] using hh
-
 end InitialMeanSquare
 
-open scoped BigOperators Classical SchwartzMap
 namespace SecondPassArithmetic
 
 section

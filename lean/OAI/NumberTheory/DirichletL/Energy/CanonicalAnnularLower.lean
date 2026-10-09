@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.CanonicalAnnularPower
-
 namespace OAI
 
 noncomputable section

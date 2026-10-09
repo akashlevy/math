@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstLocalization
 import OAI.NumberTheory.DirichletL.Moments.ZeroMode
-
 namespace OAI
 
 noncomputable section
@@ -319,58 +318,6 @@ theorem zeroEnergy_eq_original (η : HeckeFamily.Character) (m A : O) (t : ℝ)
   exact canonical_ideal_zero_sum (CenteredMomentSourceRow.supportedColumns S)
     (fun _ h => (Finset.mem_filter.mp h).2)
     (fun I => c I * CenteredMomentHeckeExpansion.rowWeight η m A 1 t I) W K
-
-theorem productColumnCoefficient_mul_whole (S T : Finset (Ideal O))
-    (β : Ideal O → Ideal O → ℂ) (w : Ideal O → ℂ) (I : Ideal O) :
-    productColumnCoefficient S T (fun J L => β J L * w (J*L)) I =
-      productColumnCoefficient S T β I * w I := by
-  rw [productColumnCoefficient, productColumnCoefficient, Finset.sum_mul]
-  apply Finset.sum_congr rfl
-  intro p hp
-  rw [(Finset.mem_filter.mp hp).2]
-
-theorem zeroEnergy_product_eq (η : HeckeFamily.Character) (m A : O) (t : ℝ)
-    (S T : Finset (Ideal O)) (hS : ∀ I ∈ S, Supported I) (hT : ∀ J ∈ T, Supported J)
-    (β : Ideal O → Ideal O → ℂ) (W : 𝓢(ℝ,ℂ)) (K : ℝ) :
-    zeroEnergy η m A t ((S ×ˢ T).image (fun p : Ideal O × Ideal O => p.1*p.2))
-      (productColumnCoefficient S T β) W K =
-    CenteredMomentZeroMode.productZeroEnergy S T hS hT
-      (fun I J => β I J * CenteredMomentHeckeExpansion.rowWeight η m A 1 t (I*J)) K *
-      paperRadialFourier W 0 := by
-  let P := (S ×ˢ T).image (fun p : Ideal O × Ideal O => p.1*p.2)
-  have hp := CenteredMomentZeroMode.productColumns_supported S T hS hT
-  have hs : CenteredMomentSourceRow.supportedColumns P = P := Finset.filter_eq_self.mpr hp
-  have hh := zeroEnergy_eq_original η m A t P (productColumnCoefficient S T β) W K
-  simp only [hs] at hh
-  rw [hh]
-  congr 1
-  unfold CenteredMomentZeroMode.productZeroEnergy
-  congr 1
-  funext I
-  exact (productColumnCoefficient_mul_whole S T β
-    (CenteredMomentHeckeExpansion.rowWeight η m A 1 t) I).symm
-
-theorem normalized_zeroEnergy_product_bound (ε : ℝ) (hε : 0 < ε) :
-    ∃ C : ℝ, 0 < C ∧ ∀ (η : HeckeFamily.Character) (m A : O) (t : ℝ)
-      (S T : Finset (Ideal O)) (_hS : ∀ I ∈ S, Supported I) (_hT : ∀ J ∈ T, Supported J)
-      (β : Ideal O → Ideal O → ℂ) (W : 𝓢(ℝ,ℂ)) (X K B : ℝ),
-      1 ≤ X → 0 ≤ K → 0 ≤ B →
-      (∀ I ∈ S, ∀ J ∈ T, (Ideal.absNorm (I*J) : ℝ) ≤ X) →
-      (∀ I ∈ S, ∀ J ∈ T, ‖β I J‖ ≤ B) →
-      ‖((X⁻¹ : ℝ) : ℂ) *
-        zeroEnergy η m A t ((S ×ˢ T).image (fun p : Ideal O × Ideal O => p.1*p.2))
-          (productColumnCoefficient S T β) W K‖ ≤
-        C * K * B^2 * ‖paperRadialFourier W 0‖ * X^ε := by
-  obtain ⟨C,hC,hc⟩ := CenteredMomentZeroMode.normalized_product_zero_mode_bound ε hε
-  refine ⟨C,hC,?_⟩
-  intro η m A t S T hS hT β W X K B hX hK hB hN hβ
-  rw [zeroEnergy_product_eq η m A t S T hS hT]
-  apply hc S T hS hT _ W X K B hX hK hB hN
-  intro I hi J hj
-  rw [norm_mul]
-  exact (mul_le_mul (hβ I hi J hj)
-    (CenteredMomentFirstTailAggregate.rowWeight_norm_le_one η m A 1 t (I*J)
-      (mul_ne_zero (hS I hi).1 (hT J hj).1)) (norm_nonneg _) hB).trans_eq (mul_one B)
 
 end SevenEighths.CenteredMomentZeroMeanBridge
 

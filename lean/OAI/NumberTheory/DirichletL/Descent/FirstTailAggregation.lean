@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstWholeCanonicalTail
 import OAI.NumberTheory.DirichletL.Descent.CubeSupportNorm
-
 namespace OAI
 
 noncomputable section

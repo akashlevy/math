@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Descent.FirstDyadicRetainedEnergy
 import OAI.NumberTheory.DirichletL.Descent.FirstLiveCountBudget
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLiveAggregate
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLiveEnergy
-
 namespace OAI
 
 noncomputable section

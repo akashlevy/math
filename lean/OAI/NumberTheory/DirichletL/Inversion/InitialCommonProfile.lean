@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialCommonLists
 import OAI.NumberTheory.DirichletL.Inversion.InitialCommonRatios
 import OAI.NumberTheory.DirichletL.Inversion.InitialOverlapIdealFourier
-
 namespace OAI
 
 noncomputable section

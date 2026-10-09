@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.MobiusRegroup
 import OAI.NumberTheory.DirichletL.Moments.DyadicCount
-
 namespace OAI
 
 noncomputable section
@@ -11,16 +10,6 @@ namespace SevenEighths.CenteredMomentWholeDivisorShell
 open IdealMobiusDivisorSum UniqueFactorizationMonoid
 open CenteredMomentMobiusRegroup CenteredMomentDyadicCount CenteredMomentSectorLocalization
 local notation "O" => ActualEisensteinCubic.O
-
-lemma divisorPool_nonzero_norm {α : Type*} (T : Finset α) (B : α→Ideal O)
-    (hB : ∀j∈T,B j≠0) (Y : ℝ) (hY : ∀j∈T,(Ideal.absNorm (B j):ℝ)≤Y)
-    (D : Ideal O) (hD : D∈divisorPool T B) : D≠0 ∧ (D.absNorm:ℝ)≤Y := by
-  obtain ⟨j,hj,hd⟩:=Finset.mem_biUnion.mp hD
-  have hdiv := (mem_idealDivisors (hB j hj)).mp hd
-  have hn : 0<(B j).absNorm := Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr (hB j hj))
-  have hle : (D.absNorm:ℝ)≤(B j).absNorm := by
-    exact_mod_cast Nat.le_of_dvd hn (map_dvd Ideal.absNorm hdiv)
-  exact ⟨IdealDivisorBound.divisor_ne_zero (hB j hj) hd,hle.trans (hY j hj)⟩
 
 lemma moebius_norm_le_one (D : Ideal O) : ‖(moebius D:ℂ)‖≤1 := by
   by_cases hD : Squarefree D
@@ -41,16 +30,6 @@ lemma live_squarefree (Ds : Finset (Ideal O)) (D : Ideal O) (hD : D∈live Ds) :
 
 lemma live_norm_one (Ds : Finset (Ideal O)) (D : Ideal O) (hD : D∈live Ds) : 1≤(D.absNorm:ℝ) := by
   exact_mod_cast Nat.one_le_iff_ne_zero.mpr (Ideal.absNorm_eq_zero_iff.not.mpr (live_squarefree Ds D hD).ne_zero)
-
-theorem sum_moebius_live (Ds : Finset (Ideal O)) (f : Ideal O→ℂ) :
-    (∑D∈Ds,(moebius D:ℂ)*f D)=∑D∈live Ds,(moebius D:ℂ)*f D := by
-  symm
-  apply Finset.sum_subset (Finset.filter_subset _ _)
-  intro D hD hn
-  have hz : (moebius D:ℂ)=0 := by
-    by_contra hne
-    exact hn ((mem_live Ds D).mpr ⟨hD,hne⟩)
-  rw [hz,zero_mul]
 
 theorem sum_norm_moebius_live (Ds : Finset (Ideal O)) (f : Ideal O→ℝ) :
     (∑D∈Ds,‖(moebius D:ℂ)‖*f D)=∑D∈live Ds,‖(moebius D:ℂ)‖*f D := by
@@ -86,36 +65,6 @@ lemma mem_shell_iff (Ds : Finset (Ideal O)) (n : ℤ) (D : Ideal O) :
   · rintro ⟨hd,hm,hlo,hhi⟩
     exact ⟨(mem_live Ds D).mpr ⟨hd,hm⟩,
       (normKey_eq_iff D (squarefree_of_moebius_ne_zero D hm).ne_zero n).mpr ⟨hlo,hhi⟩⟩
-
-lemma shell_disjoint (Ds : Finset (Ideal O)) (m n : ℤ) (hmn : m≠n) :
-    Disjoint (shell Ds m) (shell Ds n) := by
-  apply Finset.disjoint_left.mpr
-  intro D hm hn
-  exact hmn ((Finset.mem_filter.mp hm).2.symm.trans (Finset.mem_filter.mp hn).2)
-
-lemma shell_nonempty_iff (Ds : Finset (Ideal O)) (n : ℤ) :
-    (shell Ds n).Nonempty ↔ n∈selectedShells Ds := by
-  constructor
-  · rintro ⟨D,hD⟩
-    exact Finset.mem_image.mpr ⟨D,(Finset.mem_filter.mp hD).1,(Finset.mem_filter.mp hD).2⟩
-  · rintro hn
-    obtain ⟨D,hD,hk⟩:=Finset.mem_image.mp hn
-    exact ⟨D,Finset.mem_filter.mpr ⟨hD,hk⟩⟩
-
-lemma biUnion_shell (Ds : Finset (Ideal O)) :
-    (selectedShells Ds).biUnion (shell Ds)=live Ds := by
-  ext D
-  simp only [Finset.mem_biUnion,shell,Finset.mem_filter]
-  constructor
-  · rintro ⟨n,hn,hd,hk⟩;exact hd
-  · intro hd
-    exact ⟨normKey D,Finset.mem_image.mpr ⟨D,hd,rfl⟩,hd,rfl⟩
-
-theorem sum_moebius_shells (Ds : Finset (Ideal O)) (f : Ideal O→ℂ) :
-    (∑D∈Ds,(moebius D:ℂ)*f D)=
-      ∑n∈selectedShells Ds,∑D∈shell Ds n,(moebius D:ℂ)*f D := by
-  rw [sum_moebius_live]
-  exact (Finset.sum_fiberwise_of_maps_to (fun D hD=>Finset.mem_image.mpr ⟨D,hD,rfl⟩) _).symm
 
 theorem sum_norm_moebius_shells (Ds : Finset (Ideal O)) (f : Ideal O→ℝ) :
     (∑D∈Ds,‖(moebius D:ℂ)‖*f D)=
@@ -181,23 +130,6 @@ theorem selected_card_subpower (B δ : ℝ) (hB : 0≤B) (hδ : 0<δ) :
   dsimp [C]
   nlinarith [mul_le_mul_of_nonneg_left hp hk]
 
-theorem divisorPool_card_log {α : Type*} (T : Finset α) (B : α→Ideal O)
-    (hB : ∀j∈T,B j≠0) (L Z : ℝ) (hL : 0≤L) (hZ : 1≤Z)
-    (hN : ∀j∈T,(Ideal.absNorm (B j):ℝ)≤Z^L) :
-    ((selectedShells (divisorPool T B)).card:ℝ)≤(3+L/Real.log 2)*(1+Real.log Z) :=
-  selected_card_log L Z hL hZ _ (fun D hD _=>(divisorPool_nonzero_norm T B hB _ hN D hD).2)
-
-theorem divisorPool_card_subpower (L δ : ℝ) (hL : 0≤L) (hδ : 0<δ) :
-    ∃C:ℝ,0<C ∧ ∀ᶠZ:ℝ in atTop,1<Z ∧ ∀{α:Type*}(T:Finset α)(B:α→Ideal O),
-      (∀j∈T,B j≠0) → (∀j∈T,(Ideal.absNorm (B j):ℝ)≤Z^L) →
-      ((selectedShells (divisorPool T B)).card:ℝ)≤C*Z^δ := by
-  obtain ⟨C,hC,hbound⟩:=selected_card_subpower L δ hL hδ
-  refine ⟨C,hC,?_⟩
-  filter_upwards [hbound] with Z hz
-  refine ⟨hz.1,?_⟩
-  intro α T B hB hN
-  exact hz.2 _ (fun D hD _=>(divisorPool_nonzero_norm T B hB _ hN D hD).2)
-
 lemma shell_member_data (Ds : Finset (Ideal O)) (n : ℤ) (D : Ideal O)
     (hD : D∈shell Ds n) :
     D∈Ds ∧ (moebius D:ℂ)≠0 ∧ Squarefree D ∧ D≠0 ∧
@@ -205,20 +137,6 @@ lemma shell_member_data (Ds : Finset (Ideal O)) (n : ℤ) (D : Ideal O)
   have hh:=(mem_shell_iff Ds n D).mp hD
   have hs:=squarefree_of_moebius_ne_zero D hh.2.1
   exact ⟨hh.1,hh.2.1,hs,hs.ne_zero,hh.2.2⟩
-
-theorem finite_pair_mobius_shells {α β : Type*} (S : Finset α) (T : Finset β)
-    (A : α→Ideal O) (B : β→Ideal O) (hB : ∀j∈T,B j≠0) (F : α→β→ℂ) :
-    (∑i∈S,∑j∈T,if IsCoprime (A i) (B j) then F i j else 0)=
-      ∑n∈selectedShells (divisorPool T B),∑D∈shell (divisorPool T B) n,
-        (moebius D:ℂ)*∑i∈S,∑j∈T,if D∣A i ∧ D∣B j then F i j else 0 := by
-  rw [finite_pair_mobius S T A B hB F]
-  exact sum_moebius_shells _ _
-
-theorem divisorPool_weighted_shells {α : Type*} (T : Finset α) (B : α→Ideal O)
-    (f : Ideal O→ℝ) :
-    (∑D∈divisorPool T B,‖(moebius D:ℂ)‖*f D)=
-      ∑n∈selectedShells (divisorPool T B),∑D∈shell (divisorPool T B) n,
-        ‖(moebius D:ℂ)‖*f D := sum_norm_moebius_shells _ _
 
 end SevenEighths.CenteredMomentWholeDivisorShell
 

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.ExceptionalIndexedWindow
-
 namespace OAI
 
 noncomputable section

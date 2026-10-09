@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.ReopenedBins
 import OAI.NumberTheory.DirichletL.Descent.FirstDyadicFullEnergy
-
 namespace OAI
 
 noncomputable section

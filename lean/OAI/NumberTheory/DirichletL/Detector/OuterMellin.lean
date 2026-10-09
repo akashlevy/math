@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.InitialScales
-
 namespace OAI
 
 noncomputable section

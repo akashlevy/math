@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.CommonAllocation
 import OAI.NumberTheory.DirichletL.Moments.FirstSectors
-
 namespace OAI
 
 noncomputable section

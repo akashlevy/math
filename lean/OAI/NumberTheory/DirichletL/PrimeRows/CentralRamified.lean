@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsCentralRamifiedQuotient
 import OAI.NumberTheory.DirichletL.PrimeRows.SelectedBounds
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Foundation
-
 namespace OAI
 
 namespace SevenEighths.HeckeDetectorProfiles
@@ -41,11 +40,6 @@ lemma expNeg_derivative_decay (n i : ℕ) (x : ℝ) (hx : 0 ≤ x) :
     _ = _ := by
       rw [mul_right_comm, ← Real.exp_add, show (1+x)+(-x) = 1 by ring]
       ring
-
-def productProfile (Ω V T : ℝ → ℂ) (A B C s : ℝ) : ℂ :=
-  Ω s*(1-V (A*s))*expNeg (B*s)*T (C*s)
-
-def inverseProfile (W V : ℝ → ℂ) (R x : ℝ) : ℂ := W x*V (R*x)
 
 def logSourceFun (Ω V T : ℝ → ℂ) (A B C y : ℝ) : ℂ :=
   Ω y*(1-V (A*Real.exp y))*expNeg (B*Real.exp y)*T (C*Real.exp y)

@@ -3,7 +3,6 @@ import OAI.NumberTheory.DirichletL.Hecke.Dyadic
 import OAI.NumberTheory.DirichletL.Hecke.LogarithmicInput
 import OAI.NumberTheory.DirichletL.Hecke.DeletionBounds
 import Mathlib.Analysis.Complex.RemovableSingularity
-
 namespace OAI
 
 noncomputable section
@@ -94,10 +93,6 @@ theorem cancelledKernel_eq_literal {f g : ℂ → ℂ} {Y : ℝ} (hf0 : f 0 = 0)
   rw [Gamma_add_one z hz, dslope_of_ne f hz]
   simp only [slope, sub_zero, hf0, smul_eq_mul, vsub_eq_sub]
   field_simp
-
-theorem cancelledKernel_at_zero (f g : ℂ → ℂ) (Y : ℝ) :
-    cancelledKernel f g Y 0 = deriv f 0 * g 0 := by
-  simp [cancelledKernel, Complex.cpow_zero, Complex.Gamma_one]
 
 theorem dslope_entire {f : ℂ → ℂ} (hf : Differentiable ℂ f) :
     Differentiable ℂ (dslope f 0) := by
@@ -333,27 +328,6 @@ def cutoff (χ : Character) (V : ℝ → ℂ) (D : ℝ) (s : ℂ) : ℂ :=
     cutoffTerm χ V D 0 s = 0 := by
   simp [cutoffTerm, CubicEisenstein.fullIdealWeight]
 
-theorem cutoffTerm_eq (χ : Character) (V : ℝ → ℂ) (D : ℝ) {J : Ideal O}
-    (hJ : J ≠ 0) (s : ℂ) :
-    cutoffTerm χ V D J s = (UniqueFactorizationMonoid.moebius J : ℂ) *
-      idealCoeff χ J * V ((J.absNorm : ℝ)/D) * (J.absNorm : ℂ)^(-s) := by
-  rw [cutoffTerm, CubicEisenstein.fullIdealWeight, ite_eq_right hJ]
-  rfl
-
-theorem cutoff_eq_tsum (χ : Character) (V : ℝ → ℂ) {D : ℝ} (hD : 0 < D)
-    (hV : ∀ x : ℝ, 2 ≤ x → V x = 0) (s : ℂ) :
-    cutoff χ V D s = ∑' J : Ideal O, cutoffTerm χ V D J s := by
-  symm
-  apply tsum_eq_sum
-  intro J hJ
-  by_cases hzero : J = 0
-  · subst J; exact cutoffTerm_zero χ V D s
-  · have hn : 2*D < (J.absNorm : ℝ) := by
-      by_contra h
-      exact hJ ((mem_cutoffSet hD.le).mpr ⟨hzero, le_of_not_gt h⟩)
-    have hv := hV ((J.absNorm : ℝ)/D) ((le_div_iff₀ hD).mpr hn.le)
-    simp [cutoffTerm, hv]
-
 theorem cutoffTerm_entire (χ : Character) (V : ℝ → ℂ) (D : ℝ) (J : Ideal O) :
     Differentiable ℂ (cutoffTerm χ V D J) := by
   by_cases hJ : J = 0
@@ -461,22 +435,6 @@ def detectorIntegrand (χ : Character) (V : ℝ → ℂ) (D Y : ℝ) (ρ z : ℂ
 def detectorIntegral (χ : Character) (V : ℝ → ℂ) (D Y : ℝ) (ρ : ℂ) : ℂ :=
   ((2*Real.pi : ℝ) : ℂ)⁻¹ * ∫ t : ℝ, detectorIntegrand χ V D Y ρ (2+t*I)
 
-theorem detector_contour_shift (χ : Character) (hχ : χ.residue ≠ 1)
-    (V : ℝ → ℂ) (hV : ∀ x : ℝ, ‖V x‖ ≤ 1) {D Y : ℝ}
-    (hD : 1 ≤ D) (hY : 1 ≤ Y) {ρ : ℂ} (hρ : (51/100 : ℝ) ≤ ρ.re)
-    (hzero : LFunction χ ρ = 0) :
-    (∫ t : ℝ, detectorIntegrand χ V D Y ρ (2+t*I)) =
-      ∫ t : ℝ, detectorIntegrand χ V D Y ρ (-(1/4)+t*I) := by
-  obtain ⟨C,hC,hgrowth⟩ := shifted_original_growth
-  apply literal_contour_shift (A := C*(χ.modulus.absNorm : ℝ)^2*(3+|ρ.im|)^2) (B := 256*D)
-    ((LFunction_entire_nonprincipal χ hχ).comp (differentiable_const ρ |>.add differentiable_id))
-    ((cutoff_entire χ V D).comp (differentiable_const ρ |>.add differentiable_id))
-    (by simpa using hzero) hY 2 (by positivity) (by positivity : 0 ≤ 256*D)
-  · intro z hz _
-    exact hgrowth χ hχ ρ z hρ hz
-  · intro z hz _
-    exact cutoff_norm_le χ V hD hV (s := ρ+z) (by simp only [add_re]; linarith)
-
 theorem detector_integral_bound :
     ∃ K : ℝ, 0 < K ∧ ∀ (χ : Character), χ.residue ≠ 1 →
       ∀ (V : ℝ → ℂ), (∀ x : ℝ, ‖V x‖ ≤ 1) → ∀ (D Y : ℝ),
@@ -500,45 +458,6 @@ theorem detector_integral_bound :
   apply (mul_le_mul_of_nonneg_left hb (inv_nonneg.mpr (by positivity))).trans_eq
   field_simp
   ring
-
-theorem detector_integrable (χ : Character) (hχ : χ.residue ≠ 1)
-    (V : ℝ → ℂ) (hV : ∀ x : ℝ, ‖V x‖ ≤ 1) {D Y : ℝ}
-    (hD : 1 ≤ D) (hY : 1 ≤ Y) {ρ : ℂ} (hρ : (51/100 : ℝ) ≤ ρ.re)
-    (hzero : LFunction χ ρ = 0) {x : ℝ} (hx : x ∈ Icc (-(1/4)) 2) (hx0 : x ≠ 0) :
-    Integrable (fun t : ℝ => detectorIntegrand χ V D Y ρ ((x : ℂ)+t*I)) := by
-  obtain ⟨C,hC,hgrowth⟩ := shifted_original_growth
-  let f : ℂ → ℂ := fun z => LFunction χ (ρ+z)
-  let g : ℂ → ℂ := fun z => cutoff χ V D (ρ+z)
-  have hf : Differentiable ℂ f :=
-    (LFunction_entire_nonprincipal χ hχ).comp (differentiable_const ρ |>.add differentiable_id)
-  have hg : Differentiable ℂ g :=
-    (cutoff_entire χ V D).comp (differentiable_const ρ |>.add differentiable_id)
-  have hf0 : f 0 = 0 := by simpa [f] using hzero
-  obtain ⟨B,_,hb⟩ := cancelledKernel_strip_bound (b := 2) hf hg hf0 hY
-    (by norm_num : (-1 : ℝ) < -(1/4)) 2
-    (A := C*(χ.modulus.absNorm : ℝ)^2*(3+|ρ.im|)^2) (B := 256*D)
-    (by positivity) (by positivity)
-    (fun z hz _ => hgrowth χ hχ ρ z hρ hz)
-    (fun z hz _ => cutoff_norm_le χ V hD hV (s := ρ+z) (by simp only [add_re]; linarith))
-  have hi := cancelledKernel_vertical_integrable hf hg (by linarith : 0 < Y)
-    (by norm_num : (-1 : ℝ) < -(1/4)) hx hb
-  apply hi.congr
-  filter_upwards [] with t
-  apply cancelledKernel_eq_literal hf0
-  intro hz
-  apply hx0
-  simpa using congrArg Complex.re hz
-
-theorem detectorIntegral_contour_normalization (χ : Character) (V : ℝ → ℂ)
-    (D Y : ℝ) (ρ : ℂ) :
-    detectorIntegral χ V D Y ρ = ((2*Real.pi : ℂ)*I)⁻¹ *
-      ∫ t : ℝ, detectorIntegrand χ V D Y ρ (2+t*I)*I := by
-  rw [MeasureTheory.integral_mul_const, mul_inv_rev]
-  simp only [detectorIntegral, ofReal_mul, ofReal_ofNat]
-  have hi : I⁻¹*I = 1 := inv_mul_cancel₀ I_ne_zero
-  calc
-    _ = (I⁻¹*I)*(((2*Real.pi : ℂ))⁻¹ * ∫ t : ℝ, detectorIntegrand χ V D Y ρ (2+t*I)) := by rw [hi, one_mul]
-    _ = _ := by ring
 
 theorem detector_power_bound :
     ∃ K : ℝ, 0 < K ∧ ∀ (R θ : ℝ), 0 ≤ R → 0 ≤ θ →

@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.NonprincipalGate
 import OAI.NumberTheory.DirichletL.Hecke.MaskDescent
 import OAI.NumberTheory.DirichletL.Hecke.PrimeRay
-
 namespace OAI
 
 noncomputable section

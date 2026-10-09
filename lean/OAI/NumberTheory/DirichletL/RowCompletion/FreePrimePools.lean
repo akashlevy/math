@@ -1,80 +1,25 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.ReflectionFibers
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open scoped BigOperators Classical
 
 namespace CanonicalRowCompletion
 
@@ -84,10 +29,6 @@ local notation "Eis" => ActualEisensteinCubic.O
 
 def freePrimePool (lengthScale Q0:Ideal Eis) : Finset (Ideal Eis) :=
   (CompletedGauss.primeSupport lengthScale).filter (fun P=>¬Q0≤P)
-
-lemma mem_freePrimePool (lengthScale Q0 P:Ideal Eis) :
-    P∈freePrimePool lengthScale Q0 ↔ P∈CompletedGauss.primeSupport lengthScale ∧ ¬Q0≤P := by
-  simp only [freePrimePool,Finset.mem_filter]
 
 lemma residual_nonresidual_disjoint (I Q Q0:Ideal Eis) :
     Disjoint (CompletedGauss.primeSupport (rowResidualPart I Q)) (FreeReflection.pool I Q Q0) := by
@@ -195,16 +136,6 @@ lemma primeUnionEquiv_val (lengthScale Q0 k:Ideal Eis) (T:Finset (Ideal Eis))
     (hd:Disjoint (CompletedGauss.primeSupport k) T) (P:PrimeIndex k⊕T) :
     (primeUnionEquiv lengthScale Q0 k T hs hd P).val.val=Sum.elim Subtype.val Subtype.val P := rfl
 
-theorem prod_freePrimeIndex_eq {M:Type*} [CommMonoid M]
-    (lengthScale Q0 k:Ideal Eis) (T:Finset (Ideal Eis))
-    (hs:freePrimePool lengthScale Q0=CompletedGauss.primeSupport k∪T)
-    (hd:Disjoint (CompletedGauss.primeSupport k) T) (f:Ideal Eis → M) :
-    (∏P:FreePrimeIndex lengthScale Q0,f P.val.val)=(∏P:PrimeIndex k,f P.val)*(∏P:T,f P.val) := by
-  calc
-    _=(∏P:PrimeIndex k⊕T,f (Sum.elim Subtype.val Subtype.val P)):=
-      (Fintype.prod_equiv (primeUnionEquiv lengthScale Q0 k T hs hd) _ _ (fun P=>rfl)).symm
-    _=_:=Fintype.prod_sum_type _
-
 end
 
 section
@@ -265,19 +196,6 @@ lemma goodMaskFreePrimeEquiv_nonresidual_exponent
     (FreeReflection.pool_good I (Ideal.span {m}*F) Q0 P)
     (FreeReflection.pool_odd I (Ideal.span {m}*F) Q0 P)
 
-theorem goodMaskFreePrimeEquiv_exponent
-    (P:PrimeIndex (rowResidualPart I (Ideal.span {m}*F)) ⊕ FreeReflection.pool I (Ideal.span {m}*F) Q0) :
-    (normalizedFactors (goodMaskMovingIdeal g r)).count
-      (goodMaskFreePrimeEquiv I F Q0 hI hF m f z hm0 hf hz um am bm g hg hm u a b r hr hx hbad hcop P).val.val%6=
-      Sum.elim (fun _=>1) (fun R=>completedLocalExponent I F R.val) P := by
-  cases P with
-  | inl P=>
-    exact goodMaskFreePrimeEquiv_residual_exponent I F Q0 hI hF m f z hm0 hf hz
-      um am bm g hg hm u a b r hr hx hbad hcop P
-  | inr P=>
-    exact goodMaskFreePrimeEquiv_nonresidual_exponent I F Q0 hI hF m f z hm0 hf hz
-      um am bm g hg hm u a b r hr hx hbad hcop P
-
 end
 
 section
@@ -332,33 +250,6 @@ lemma activePrimeUnionEquiv_inr (e:α⊕β ≃ γ) (A:Finset γ)
     (hA:∀a:α,e (Sum.inl a)∈A) (b:optionalPrimeActive e A) :
     (activePrimeUnionEquiv e A hA (Sum.inr b)).val=e (Sum.inr b.val) := rfl
 
-omit [Fintype γ] in
-theorem prod_activePrimeUnionEquiv {M:Type*} [CommMonoid M]
-    (e:α⊕β ≃ γ) (A:Finset γ) (hA:∀a:α,e (Sum.inl a)∈A) (f:A → M) :
-    (∏a:A,f a)=
-      (∏a:α,f (activePrimeUnionEquiv e A hA (Sum.inl a)))*
-        (∏b:optionalPrimeActive e A,f (activePrimeUnionEquiv e A hA (Sum.inr b))) := by
-  calc
-    _=(∏x:α⊕optionalPrimeActive e A,f (activePrimeUnionEquiv e A hA x)):=
-      (Fintype.prod_equiv (activePrimeUnionEquiv e A hA) _ _ (fun _=>rfl)).symm
-    _=_:=Fintype.prod_sum_type _
-
-omit [Fintype γ] in
-theorem sum_activePrimeUnionEquiv {M:Type*} [AddCommMonoid M]
-    (e:α⊕β ≃ γ) (A:Finset γ) (hA:∀a:α,e (Sum.inl a)∈A) (f:A → M) :
-    (∑a:A,f a)=
-      (∑a:α,f (activePrimeUnionEquiv e A hA (Sum.inl a)))+
-        (∑b:optionalPrimeActive e A,f (activePrimeUnionEquiv e A hA (Sum.inr b))) := by
-  calc
-    _=(∑x:α⊕optionalPrimeActive e A,f (activePrimeUnionEquiv e A hA x)):=
-      (Fintype.sum_equiv (activePrimeUnionEquiv e A hA) _ _ (fun _=>rfl)).symm
-    _=_:=Fintype.sum_sum_type _
-
-theorem sum_prime_active_sets {M:Type*} [AddCommMonoid M]
-    (e:α⊕β ≃ γ) (f:Finset γ → M) :
-    (∑A:Finset γ,f A)=∑A:Finset (α⊕β),f (A.map e.toEmbedding) := by
-  exact (Fintype.sum_equiv e.finsetCongr _ _ (fun _=>rfl)).symm
-
 end
 
 section
@@ -409,12 +300,6 @@ noncomputable def goodMaskFreePrimeFiberEquiv :
       (mul_ne_zero (Ideal.span_singleton_eq_bot.not.mpr hm0) hF.ne_zero) hA hT)).trans
     (goodMaskFreePrimeEquiv I F Q0 hI hF m f z hm0 hf hz um am bm g hg hm u a b r hr hx hbad hcop)
 
-lemma goodMaskFreePrimeFiberEquiv_val
-    (P:PrimeIndex (rowResidualPart I (Ideal.span {m}*F)) ⊕ FreeReflection.pool R (Ideal.span {m}*F) Q0) :
-    (goodMaskFreePrimeFiberEquiv R I F Q0 hR hI hF m f z hm0 hf hz um am bm g hg hm u a b r hr hx
-      hbad hcop hA hT P).val.val=Sum.elim Subtype.val Subtype.val P := by
-  cases P <;> rfl
-
 theorem goodMaskFreePrimeFiberEquiv_exponent
     (P:PrimeIndex (rowResidualPart I (Ideal.span {m}*F)) ⊕ FreeReflection.pool R (Ideal.span {m}*F) Q0) :
     (normalizedFactors (goodMaskMovingIdeal g r)).count
@@ -450,44 +335,6 @@ variable (R I F Q0:Ideal Eis) (hR:R≠0) (hI:I≠0) (hF:Squarefree F)
     (hA:rowPowerfulPart R=rowPowerfulPart I)
     (hT:rowMaskPart R (Ideal.span {m}*F)=rowMaskPart I (Ideal.span {m}*F))
 include R I F Q0 hR hI hF m f z hm0 hf hz um am bm g hg hm u a b r hr hx hbad hcop hA hT
-
-local notation "splitIndex" => (goodMaskFreePrimeFiberEquiv R I F Q0 hR hI hF m f z hm0 hf hz um am bm g hg hm u a b r hr hx hbad hcop hA hT)
-
-noncomputable def goodMaskActivePrimeEquiv
-    (A:Finset (FreePrimeIndex (goodMaskMovingIdeal g r) Q0))
-    (hactive:∀P:PrimeIndex (rowResidualPart I (Ideal.span {m}*F)),splitIndex (Sum.inl P)∈A) :
-    PrimeIndex (rowResidualPart I (Ideal.span {m}*F)) ⊕ optionalPrimeActive splitIndex A ≃ A :=
-  activePrimeUnionEquiv splitIndex A hactive
-
-lemma goodMaskActivePrimeEquiv_residual_val
-    (A:Finset (FreePrimeIndex (goodMaskMovingIdeal g r) Q0))
-    (hactive:∀P:PrimeIndex (rowResidualPart I (Ideal.span {m}*F)),splitIndex (Sum.inl P)∈A)
-    (P:PrimeIndex (rowResidualPart I (Ideal.span {m}*F))) :
-    (goodMaskActivePrimeEquiv R I F Q0 hR hI hF m f z hm0 hf hz um am bm g hg hm u a b r hr hx
-      hbad hcop hA hT A hactive (Sum.inl P)).val.val.val=P.val := rfl
-
-lemma goodMaskActivePrimeEquiv_nonresidual_val
-    (A:Finset (FreePrimeIndex (goodMaskMovingIdeal g r) Q0))
-    (hactive:∀P:PrimeIndex (rowResidualPart I (Ideal.span {m}*F)),splitIndex (Sum.inl P)∈A)
-    (P:optionalPrimeActive splitIndex A) :
-    (goodMaskActivePrimeEquiv R I F Q0 hR hI hF m f z hm0 hf hz um am bm g hg hm u a b r hr hx
-      hbad hcop hA hT A hactive (Sum.inr P)).val.val.val=P.val.val := rfl
-
-theorem goodMaskActivePrimeEquiv_exponent
-    (A:Finset (FreePrimeIndex (goodMaskMovingIdeal g r) Q0))
-    (hactive:∀P:PrimeIndex (rowResidualPart I (Ideal.span {m}*F)),splitIndex (Sum.inl P)∈A)
-    (P:PrimeIndex (rowResidualPart I (Ideal.span {m}*F)) ⊕ optionalPrimeActive splitIndex A) :
-    (normalizedFactors (goodMaskMovingIdeal g r)).count
-      (goodMaskActivePrimeEquiv R I F Q0 hR hI hF m f z hm0 hf hz um am bm g hg hm u a b r hr hx
-        hbad hcop hA hT A hactive P).val.val.val%6=
-      Sum.elim (fun _=>1) (fun S=>completedLocalExponent R F S.val.val) P := by
-  cases P with
-  | inl P=>
-    exact goodMaskFreePrimeFiberEquiv_exponent R I F Q0 hR hI hF m f z hm0 hf hz
-      um am bm g hg hm u a b r hr hx hbad hcop hA hT (Sum.inl P)
-  | inr P=>
-    exact goodMaskFreePrimeFiberEquiv_exponent R I F Q0 hR hI hF m f z hm0 hf hz
-      um am bm g hg hm u a b r hr hx hbad hcop hA hT (Sum.inr P.val)
 
 end
 
@@ -533,16 +380,6 @@ theorem sum_labels_drop_residual (f:(α⊕β→Fin 3)→ℂ)
     exact ⟨i,hi⟩
   · simp
 
-lemma reflectedBranch_residual_label_zero
-    (P:α⊕β→Ideal Eis) [∀i,(P i).IsMaximal] (hg:∀i,lambda∉P i)
-    (j:α⊕β→ℕ) (hj:∀i:α,j (Sum.inl i)=1)
-    (e:α⊕β→Fin 3) (hbad:∃i:α,e (Sum.inl i)≠0) (n b:Eis) :
-    reflectedBranch P hg j e n b=0 := by
-  obtain ⟨i,hi⟩:=hbad
-  unfold reflectedBranch
-  apply Finset.prod_eq_zero (Finset.mem_univ (Sum.inl i))
-  simp only [reflectedLocalPiece,hj,show (1:ℕ)≠4 by decide,ite_false,ite_eq_right hi]
-
 lemma reflectionExtractedDivisor_drop_residual
     (P:α⊕β→Ideal Eis) (j:α⊕β→ℕ) (hj:∀i:α,j (Sum.inl i)=1)
     (e:α⊕β→Fin 3) (v:Fin 3) :
@@ -572,8 +409,6 @@ lemma reflectedBranch_drop_residual
 
 end CompletedGauss
 end
-
-open scoped BigOperators Classical
 
 local instance (priority := 2000) residualEquivDecidableEq (A B:Type*) : DecidableEq (A⊕B) :=
   Classical.decEq _

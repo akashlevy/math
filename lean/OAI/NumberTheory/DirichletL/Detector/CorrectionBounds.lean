@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Detector.Euler
 import OAI.NumberTheory.DirichletL.Detector.Local
 import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 import Mathlib.Analysis.Complex.LocallyUniformLimit
-
 namespace OAI
 
 noncomputable section

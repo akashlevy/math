@@ -1,6 +1,6 @@
-import OAI.NumberTheory.DirichletL.Descent.SecondModeEnergy
+import OAI.NumberTheory.DirichletL.Descent.SecondModeCanonical
+import OAI.NumberTheory.DirichletL.Descent.SecondPhysicalRows
 import OAI.NumberTheory.DirichletL.Inversion.InitialClippedColumns
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

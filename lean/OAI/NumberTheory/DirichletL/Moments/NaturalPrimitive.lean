@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.ModulusRefinement
 import OAI.NumberTheory.DirichletL.Hecke.Dyadic
-
 namespace OAI
 
 noncomputable section
@@ -18,20 +17,6 @@ lemma redundantSet_prime (M C : Ideal O) : ∀P∈redundantSet M C,Prime P :=
 
 lemma redundantSet_subset (M C : Ideal O) : redundantSet M C⊆primeSupport M :=
   Finset.sdiff_subset
-
-lemma prime_mem_support_iff (M P : Ideal O) (hM : M≠0) (hP : Prime P) :
-    P∈primeSupport M ↔ P∣M := by
-  simp only [primeSupport,Multiset.mem_toFinset,Ideal.mem_normalizedFactors_iff hM]
-  exact ⟨fun h=>Ideal.dvd_iff_le.mpr h.2,fun h=>⟨Ideal.isPrime_of_prime hP,Ideal.dvd_iff_le.mp h⟩⟩
-
-lemma mem_redundantSet (M C P : Ideal O) (hC : C≠0) :
-    P∈redundantSet M C ↔ P∈primeSupport M ∧ ¬P∣C := by
-  constructor
-  · intro h
-    obtain ⟨hp,hc⟩ := Finset.mem_sdiff.mp h
-    exact ⟨hp,fun hd=>hc ((prime_mem_support_iff C P hC (support_prime hp)).mpr hd)⟩
-  · rintro ⟨hp,hc⟩
-    exact Finset.mem_sdiff.mpr ⟨hp,fun h=>hc ((prime_mem_support_iff C P hC (support_prime hp)).mp h)⟩
 
 lemma redundantIdeal_squarefree (M C : Ideal O) : Squarefree (redundantIdeal M C) :=
   squarefree_support_product (redundantSet_subset M C)
@@ -98,19 +83,6 @@ theorem idealCoeff_natural_deletion (χ ψ : Character) (hmod : χ.modulus≤ψ.
     simp only [hC,true_and]
   · have hz : idealCoeff ψ I=0 := by simpa only [hC,ite_false] using idealCoeff_source_mask ψ I
     simp only [hz,ite_self]
-
-theorem polynomial_natural_deletion (χ ψ : Character) (hmod : χ.modulus≤ψ.modulus)
-    (hmask : ∀I : Ideal O,idealCoeff χ I=if IsCoprime I χ.modulus then idealCoeff ψ I else 0)
-    (inverse : Bool) (W : ℝ→ℂ) (D σ t : ℝ) :
-    HeckeDyadic.polynomial χ inverse W D σ t=
-      HeckeDyadic.polynomial (ψ.excludePrimes (redundantSet χ.modulus ψ.modulus)
-        (redundantSet_prime χ.modulus ψ.modulus)) inverse W D σ t := by
-  unfold HeckeDyadic.polynomial
-  congr 1
-  apply tsum_congr
-  intro I
-  unfold HeckeDyadic.summand HeckeDyadic.coefficient
-  rw [idealCoeff_natural_deletion χ ψ hmod hmask I.val]
 
 theorem exists_natural_primitive (χ : Character) :
     ∃ψ : Character,χ.modulus≤ψ.modulus ∧

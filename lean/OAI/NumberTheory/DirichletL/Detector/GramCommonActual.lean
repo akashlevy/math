@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.GramCommonSum
 import OAI.NumberTheory.DirichletL.Detector.GramCommonLinear
 import OAI.NumberTheory.DirichletL.Moments.SupportedCorrelation
-
 namespace OAI
 
 noncomputable section
@@ -32,21 +31,6 @@ lemma actualCommon_parameter (C : O) (hC : Supported (Ideal.span {C})) (n₁ n�
       Ideal.Quotient.mk _ b*Ideal.Quotient.mk _ n₂=1 := by rw [←map_mul,←map_mul,←map_add,hab,map_one]
   rw [actualCommon,fullCorrelation_bezout _ _ _ _ _ hh]
   simp only [map_mul,map_neg]
-
-theorem actualCommon_norm (C : O) (hC : Supported (Ideal.span {C})) (n₁ n₂ k : O)
-    (hn : IsCoprime n₁ n₂) : ‖actualCommon C hC n₁ n₂ k‖≤(Ideal.absNorm (Ideal.span {C}):ℝ) := by
-  obtain ⟨a,b,hab⟩ := hn
-  let := finite_quotient_span (supported_element_ne_zero C hC)
-  let : Fintype (ResidueQ C) := Fintype.ofFinite _
-  have hh : Ideal.Quotient.mk (Ideal.span {C}) a*Ideal.Quotient.mk _ n₁+
-      Ideal.Quotient.mk _ b*Ideal.Quotient.mk _ n₂=1 := by rw [←map_mul,←map_mul,←map_add,hab,map_one]
-  have hc (x : ResidueQ C) : ‖supportedModulusCharacter C hC x‖≤1 := by
-    obtain ⟨x,rfl⟩ := Ideal.Quotient.mk_surjective x
-    exact idealRowHom_norm _ _
-  have hd := fullCorrelation_bezout_norm (Ideal.Quotient.mk (Ideal.span {C}) n₁)
-    (Ideal.Quotient.mk _ n₂) _ _ (Ideal.Quotient.mk _ k) hh
-    (supportedModulusCharacter C hC) (supportedModulusCharacter C hC) hc hc
-  simpa only [actualCommon,Ideal.absNorm_apply,Submodule.cardQuot_apply,Nat.card_eq_fintype_card] using hd
 
 theorem actual_common_lift_bezout (C n₁ n₂ a b k : O)
     (hC : Supported (Ideal.span {C})) (h₁ : Supported (Ideal.span {n₁}))

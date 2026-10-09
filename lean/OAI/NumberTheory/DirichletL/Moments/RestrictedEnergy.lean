@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.PlainChildEnergy
 import OAI.NumberTheory.DirichletL.Moments.ExceptionalReflection
-
 namespace OAI
 
 noncomputable section

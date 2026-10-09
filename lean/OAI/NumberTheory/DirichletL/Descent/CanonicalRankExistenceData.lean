@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalCompleteRankNormalized
 import OAI.NumberTheory.DirichletL.Descent.CanonicalCompleteBudget
 import OAI.NumberTheory.DirichletL.Descent.CanonicalRankPuncture
-
 namespace OAI
 
 noncomputable section

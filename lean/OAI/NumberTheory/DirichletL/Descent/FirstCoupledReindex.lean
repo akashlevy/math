@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstActualEnergy
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

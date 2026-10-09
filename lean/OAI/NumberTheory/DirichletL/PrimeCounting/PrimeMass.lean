@@ -1,5 +1,4 @@
-import OAI.NumberTheory.DirichletL.PrimeCounting.Progressions
-
+import PrimeNumberTheoremAnd.Wiener
 namespace OAI
 
 namespace SevenEighths.PNT
@@ -40,37 +39,6 @@ theorem cumsum_div_tendsto_zero_of_summable_div {f : ℕ → ℝ}
     intro n hn
     simp [F, Finset.mem_range.mp hn]
   simpa only [heq, tsum_zero] using h
-
-theorem retained_ratio_tendsto {f : ℕ → ℝ} {A : ℝ} (keep : ℕ → Prop)
-    [DecidablePred keep] (hf : ∀ n, 0 ≤ f n) (hzero : f 0 = 0)
-    (hmass : Tendsto (fun N : ℕ => cumsum f N / N) atTop (𝓝 A))
-    (hremainder : Summable (fun n => (if keep n then 0 else f n) / n)) :
-    Tendsto (fun N : ℕ => cumsum (fun n => if keep n then f n else 0) N / N)
-      atTop (𝓝 A) := by
-  have hrem := cumsum_div_tendsto_zero_of_summable_div
-    (f := fun n => if keep n then 0 else f n)
-    (fun n => by split_ifs <;> first | exact le_rfl | exact hf n)
-    (by simp [hzero]) hremainder
-  have h := hmass.sub hrem
-  have heq (N : ℕ) :
-      cumsum f N / N - cumsum (fun n => if keep n then 0 else f n) N / N =
-      cumsum (fun n => if keep n then f n else 0) N / N := by
-    rw [← sub_div]
-    congr 1
-    simp only [cumsum, ← Finset.sum_sub_distrib]
-    apply Finset.sum_congr rfl
-    intro n hn
-    split_ifs <;> simp
-  simpa only [heq, sub_zero] using h
-
-theorem prime_residueClass_ratio_tendsto {q : ℕ} [NeZero q]
-    (a : ZMod q) (ha : IsUnit a) :
-    Tendsto (fun N : ℕ =>
-      cumsum (fun n => if n.Prime then vonMangoldt.residueClass a n else 0) N / N)
-      atTop (𝓝 ((q.totient : ℝ)⁻¹)) :=
-  retained_ratio_tendsto Nat.Prime (vonMangoldt.residueClass_nonneg a)
-    (vonMangoldt.residueClass_apply_zero a) (residueClass_ratio_tendsto a ha)
-    (vonMangoldt.summable_residueClass_non_primes_div a)
 
 end SevenEighths.PNT
 

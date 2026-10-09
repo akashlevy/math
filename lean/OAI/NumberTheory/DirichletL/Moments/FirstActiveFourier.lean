@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstReduced
-
 namespace OAI
 
 noncomputable section
@@ -71,37 +70,6 @@ theorem tripleFourier_active {ι : Type*} [Fintype ι]
   dsimp only at hs
   rw [tsum_fintype] at hs
   rw [hs]
-
-theorem tripleFourier_active_norm_le {ι : Type*} [Fintype ι]
-    (P : ι → Ideal O) [∀ i,(P i).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime P))
-    (hg : ∀ i,ConcretePrimeRowBridge.goodLambda ∉ P i)
-    (hchar : ∀ i,ringChar (O ⧸ P i)≠2)
-    (j : ι → ℕ) (hj0 : ∀ i,j i≠0) (hj6 : ∀ i,j i<6)
-    (a b : O) (ha : a≠0) (hb : b≠0)
-    (har : IsCoprime a (b*finitePrimeModulus P)) (hbr : IsCoprime b (finitePrimeModulus P))
-    (χa : MulChar (Residue a) ℂ) (χb : MulChar (Residue b) ℂ) (h : O) :
-    let r := finitePrimeModulus P
-    let G := principalSexticRow P hcop hg j r (span_finitePrimeModulus P)
-    ‖tripleFourier a b r ha hb (finitePrimeModulus_ne_zero P) χa χb G h‖ ≤
-      ‖eisEmbedding r‖*‖residueGauss a ha χa (Ideal.Quotient.mk _ h)‖*
-        ‖residueGauss b hb χb (Ideal.Quotient.mk _ h)‖ := by
-  dsimp only
-  let := finite_quotient_span ha
-  let := finite_quotient_span hb
-  let : Fintype (Residue a) := Fintype.ofFinite _
-  let : Fintype (Residue b) := Fintype.ofFinite _
-  rw [tripleFourier_active P hcop hg hchar j hj0 hj6 a b ha hb har hbr]
-  simp only [norm_mul,norm_star,norm_canonicalGaussSum P hcop hg hchar j hj0 hj6]
-  have hχa := QuadraticInitialBound.norm_finite_character_le_one χa (Ideal.Quotient.mk _ (b*finitePrimeModulus P))
-  have hχb := QuadraticInitialBound.norm_finite_character_le_one χb (Ideal.Quotient.mk _ (a*finitePrimeModulus P))
-  have hv := QuadraticInitialBound.finiteSexticRow_norm_le_one P hg j (a*b)
-  have hh := QuadraticInitialBound.finiteSexticRow_norm_le_one P hg j h
-  calc
-    _ ≤ 1*1*‖residueGauss a ha χa (Ideal.Quotient.mk _ h)‖*
-      ‖residueGauss b hb χb (Ideal.Quotient.mk _ h)‖*(1*1*‖eisEmbedding (finitePrimeModulus P)‖) := by
-        gcongr
-    _ = _ := by ring
 
 end SevenEighths.CenteredMomentFirstActiveFourier
 

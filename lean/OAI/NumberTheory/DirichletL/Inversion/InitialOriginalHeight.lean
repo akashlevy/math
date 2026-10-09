@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialTotalFourier
-
 namespace OAI
 
 noncomputable section

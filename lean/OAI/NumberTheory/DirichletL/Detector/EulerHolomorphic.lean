@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.EulerRegion
-
 namespace OAI
 
 noncomputable section
@@ -39,34 +38,6 @@ lemma unramifiedClosed_differentiableAt (Q : ℝ) (hQ : 0 < Q) (A eta v x w z : 
   unfold unramifiedClosed ProbeLocal.continuedCorrection
   dsimp only
   fun_prop (disch := assumption)
-
-theorem principalClosed_analytic (Q : ℝ) (hQ : 4 ≤ Q) (A eta : ℂ)
-    (hA : ‖A‖ ≤ 1) (heta : ‖eta‖ ≤ 1) :
-    AnalyticOnNhd ℂ (fun s : ℂ => unramifiedClosed Q A eta 1 s 1 (1/6))
-      {s : ℂ | 7/8 < s.re} := by
-  have hQ0 : 0 < Q := by linarith
-  have hQ1 : 1 ≤ Q := by linarith
-  have hv : 1-coordV Q (1/6) ≠ 0 := by
-    apply ProbeLocal.one_sub_ne_zero_of_norm_le_half
-    rw [coordV_norm Q hQ0]
-    apply rpow_le_half Q _ hQ
-    norm_num
-  have hdif : DifferentiableOn ℂ (fun s : ℂ => unramifiedClosed Q A eta 1 s 1 (1/6))
-      {s : ℂ | 7/8 < s.re} := by
-    intro s hs
-    apply (unramifiedClosed_differentiableAt Q hQ0 A eta 1 s 1 (1/6) ?_ hv ?_).differentiableWithinAt
-    · apply ProbeLocal.one_sub_ne_zero_of_norm_le_half
-      apply (coordR_norm_le Q hQ0 A s (1/6) hA).trans
-      apply rpow_le_half Q _ hQ
-      norm_num
-      change (7/8:ℝ) < s.re at hs
-      linarith
-    · apply ProbeLocal.one_sub_ne_zero_of_norm_le_half
-      apply (coordD_norm_le Q hQ0 eta 1 s heta (by simp)).trans
-      apply rpow_le_half Q _ hQ
-      change (7/8:ℝ) < s.re at hs
-      linarith
-  exact hdif.analyticOnNhd (isOpen_lt continuous_const Complex.continuous_re)
 
 end SevenEighths.ProbeEuler
 end

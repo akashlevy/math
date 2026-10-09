@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.RestoreCorrection
 import OAI.NumberTheory.DirichletL.PrimeRows.CentralNormalized
 import OAI.NumberTheory.DirichletL.PrimeRows.CentralRamified
-
 namespace OAI
 
 noncomputable section

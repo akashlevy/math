@@ -1,5 +1,4 @@
-import OAI.NumberTheory.DirichletL.PrimeRows.CentralExpansion
-
+import OAI.NumberTheory.DirichletL.PrimeRows.CentralProduct
 namespace OAI
 
 noncomputable section

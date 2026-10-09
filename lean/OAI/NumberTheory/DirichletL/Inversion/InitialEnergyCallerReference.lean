@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerUniform
-
 namespace OAI
 
 noncomputable section

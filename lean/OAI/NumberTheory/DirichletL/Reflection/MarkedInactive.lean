@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.MarkedRestriction
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -44,24 +43,6 @@ lemma mixed_inactive_weight (P : PrimeFamily ι)
   intro i hi
   exact mixed_inactive_coefficient P hodd j hj S i
 
-lemma mixed_inactive_zero_of_omitted (P : PrimeFamily ι)
-    (hodd : ∀ i, ringChar (Eis⧸P.ideal i)≠2) (j : ι→ℕ) (hj : ∀ i, j i<6)
-    (S A : Finset ι) (i : ι) (hi : i∉S) (hji : j i≠0) (hiA : i∉A) :
-    localInactiveWeight P.generator P.generator_ne_zero
-      (mixedPrimeFunction P.generator P.generator_good j S) A=0 := by
-  rw [mixed_inactive_weight P hodd j hj]
-  apply Finset.prod_eq_zero (Finset.mem_sdiff.mpr ⟨Finset.mem_univ i,hiA⟩)
-  simp only [hi,hji,ite_false]
-
-lemma mixed_inactive_nonzero_requires (P : PrimeFamily ι)
-    (hodd : ∀ i, ringChar (Eis⧸P.ideal i)≠2) (j : ι→ℕ) (hj : ∀ i, j i<6)
-    (S A : Finset ι)
-    (h : localInactiveWeight P.generator P.generator_ne_zero
-      (mixedPrimeFunction P.generator P.generator_good j S) A≠0) :
-    ∀ i, i∉S → j i≠0 → i∈A := by
-  intro i hi hji
-  by_contra hiA
-  exact h (mixed_inactive_zero_of_omitted P hodd j hj S A i hi hji hiA)
 end
 end SevenEighths.InverseReflectedPhase
 

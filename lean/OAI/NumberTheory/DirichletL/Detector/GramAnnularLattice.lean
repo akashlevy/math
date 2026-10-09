@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Foundation
 import OAI.NumberTheory.DirichletL.Detector.GramLatticeDecay
-
 namespace OAI
 
 noncomputable section

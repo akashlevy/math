@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.PrimePowers
 import OAI.NumberTheory.DirichletL.PrimeLogProfile
-
 namespace OAI
 
 noncomputable section

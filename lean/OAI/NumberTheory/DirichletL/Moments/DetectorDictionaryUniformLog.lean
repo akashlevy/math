@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.DetectorDictionaryUniform
 import OAI.NumberTheory.DirichletL.Moments.Lattice
-
 namespace OAI
 
 noncomputable section

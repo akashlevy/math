@@ -1,75 +1,23 @@
 import OAI.NumberTheory.DirichletL.GaussSum.CompletedExpansion
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace RayFourExpansion
 open ActualEisensteinCubic ConcreteTraceCRT FiniteGaussPhase QuadraticGaussRay
@@ -156,46 +104,6 @@ namespace MixedCrossSeparation
 open ActualEisensteinCubic ConcreteTraceCRT FiniteGaussPhase MixedGaussConversion
 open QuadraticGaussRay ActualEisensteinCoordinates GaussGeneratorTransport
 
-theorem converted_active_row_observations
-    {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hprimary : ∀ i, lambda ^ 2 ∣ p i - 1) (S T : Finset ι) (d h : O) :
-    let q : activeSupport S T → O := fun i => p i.val
-    let hq : ∀ i, q i ≠ 0 := fun i => hp i.val
-    let hgood : ∀ i, lambda ∉ Ideal.span {q i} := fun i => hg i.val
-    let A : Finset (activeSupport S T) := Finset.univ.filter fun i => i.val ∈ S \ T
-    let B : Finset (activeSupport S T) := Finset.univ.filter fun i => i.val ∉ S \ T
-    let P : ι → Ideal O := fun i => Ideal.span {p i}
-    let row := finiteSexticRow (activePrimes P S T) (fun i => hg i.val) (activeExponent S T)
-    let cA := star (convertedColumnBlock q hq hgood A true) *
-      finiteSquarefreeRow P hg (S \ T) d
-    let cB := convertedColumnBlock q hq hgood B false *
-      finiteSquarefreeRow P hg (T \ S) d
-    activeConvertedGauss p hp hg S T * (row d * star (row h)) =
-      quadraticRayPair (residue (∏ i ∈ A, q i)) (residue (∏ i ∈ B, q i)) *
-        star (cA * star (finiteSquarefreeRow P hg (S \ T) h)) *
-        (cB * star (finiteSquarefreeRow P hg (T \ S) h)) := by
-  dsimp only
-  have hqcop : Pairwise (Function.onFun IsCoprime
-      (fun i : activeSupport S T => Ideal.span {p i.val})) := by
-    intro i k hik
-    exact hcop (fun he => hik (Subtype.ext he))
-  have hd : Disjoint
-      (Finset.univ.filter (fun i : activeSupport S T => i.val ∈ S \ T))
-      (Finset.univ.filter (fun i : activeSupport S T => i.val ∉ S \ T)) := by
-    apply Finset.disjoint_left.mpr
-    intro i hi hj
-    exact (Finset.mem_filter.mp hj).2 (Finset.mem_filter.mp hi).2
-  rw [activeConvertedGauss_separated p hp hg hprimary S T]
-  rw [quadraticCrossPhase_eq_rayPair (fun i : activeSupport S T => p i.val)
-    (fun i => hp i.val) hqcop (fun i => hg i.val) (fun i => hchar i.val) _ _ hd]
-  rw [active_dual_row_factorization (fun i => Ideal.span {p i}) hg S T d h]
-  simp only [star_mul, star_star]
-  ring
-
 theorem convertedColumnBlock_image
     {ι κ : Type*} [DecidableEq ι] [DecidableEq κ]
     (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
@@ -264,20 +172,6 @@ theorem activeConvertedGauss_eq_columnBlocks
     convertedColumnBlock_image p hp hg Subtype.val Subtype.val_injective,
     quadraticCrossPhase_image p hg Subtype.val Subtype.val_injective,
     negative_active_image, positive_active_image]
-
-theorem activeConvertedGauss_disjoint_mod_four
-    {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hprimary : ∀ i, lambda ^ 2 ∣ p i - 1) (S T : Finset ι) (hd : Disjoint S T) :
-    activeConvertedGauss p hp hg S T =
-      convertedColumnBlock p hp hg S true * convertedColumnBlock p hp hg T false *
-        quadraticRayPair (residue (∏ i ∈ S, p i)) (residue (∏ i ∈ T, p i)) := by
-  rw [activeConvertedGauss_eq_columnBlocks p hp hg hprimary S T,
-    Finset.sdiff_eq_self_of_disjoint hd, Finset.sdiff_eq_self_of_disjoint hd.symm,
-    quadraticCrossPhase_eq_rayPair p hp hcop hg hchar S T hd]
 
 end MixedCrossSeparation
 
@@ -378,63 +272,6 @@ theorem coprime_pair_sum_reindexed
     simpa only [mul_assoc] using ht U V hU hV
   rw [heq]
   ring
-
-theorem finite_phase_coprime_reindex
-    {ι R : Type*} [DecidableEq ι] [Fintype R] [DecidableEq R]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hprime : ∀ i, Prime (P i)) (hinj : Function.Injective P)
-    (hg : ∀ i, lambda ∉ P i) (B : Finset ι)
-    (σ : Finset ι → R) (phase : R → R → ℂ) (C₁ C₂ : Finset ι → ℂ) (h : O) :
-    (∑ S ∈ B.powerset, ∑ T ∈ B.powerset,
-      if Disjoint S T then phase (σ S) (σ T) *
-        star (supportMobius P S * C₁ S * star (finiteSquarefreeRow P hg S h)) *
-          (supportMobius P T * C₂ T * star (finiteSquarefreeRow P hg T h)) else 0) =
-    ∑ r : R × R, phase r.1 r.2 *
-      ∑ D ∈ B.powerset, supportMobius P D * rowCoprimeMask P D h *
-        star (supportConjugateSum P hg (B \ D)
-          (fun U => if σ (D ∪ U) = r.1 then C₁ (D ∪ U) else 0) h) *
-        supportConjugateSum P hg (B \ D)
-          (fun V => if σ (D ∪ V) = r.2 then C₂ (D ∪ V) else 0) h := by
-  let Z (r : R × R) (S T : Finset ι) : ℂ :=
-    if Disjoint S T then
-      star (supportMobius P S * (if σ S = r.1 then C₁ S else 0) *
-        star (finiteSquarefreeRow P hg S h)) *
-      (supportMobius P T * (if σ T = r.2 then C₂ T else 0) *
-        star (finiteSquarefreeRow P hg T h)) else 0
-  have ht (S T : Finset ι) :
-      (if Disjoint S T then phase (σ S) (σ T) *
-        star (supportMobius P S * C₁ S * star (finiteSquarefreeRow P hg S h)) *
-          (supportMobius P T * C₂ T * star (finiteSquarefreeRow P hg T h)) else 0) =
-      ∑ r : R × R, phase r.1 r.2 * Z r S T := by
-    by_cases hd : Disjoint S T
-    · simp only [Z, ite_eq_left hd, Fintype.sum_prod_type]
-      simp only [ mul_zero, ite_mul, zero_mul, apply_ite, star_zero]
-      simp
-      ring
-    · simp [Z, hd]
-  calc
-    _ = ∑ S ∈ B.powerset, ∑ T ∈ B.powerset,
-        ∑ r : R × R, phase r.1 r.2 * Z r S T := by
-      apply Finset.sum_congr rfl
-      intro S hS
-      exact Finset.sum_congr rfl (fun T hT => ht S T)
-    _ = ∑ r : R × R, phase r.1 r.2 *
-        ∑ S ∈ B.powerset, ∑ T ∈ B.powerset, Z r S T := by
-      simp only [Finset.mul_sum]
-      calc
-        _ = ∑ S ∈ B.powerset, ∑ r : R × R,
-            ∑ T ∈ B.powerset, phase r.1 r.2 * Z r S T := by
-          apply Finset.sum_congr rfl
-          intro S hS
-          exact Finset.sum_comm
-        _ = _ := Finset.sum_comm
-    _ = _ := by
-      apply Finset.sum_congr rfl
-      intro r hr
-      congr 1
-      exact coprime_pair_sum_reindexed P hprime hinj hg B
-        (fun S => if σ S = r.1 then C₁ S else 0)
-        (fun T => if σ T = r.2 then C₂ T else 0) h
 
 end
 section

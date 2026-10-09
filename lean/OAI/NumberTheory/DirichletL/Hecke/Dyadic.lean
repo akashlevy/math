@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.ReciprocalBound
-
 namespace OAI
 
 noncomputable section
@@ -47,24 +46,6 @@ def summand (χ : Character) (inverse : Bool) (W : ℝ → ℂ)
 
 def polynomial (χ : Character) (inverse : Bool) (W : ℝ → ℂ) (D σ ω : ℝ) : ℂ :=
   (D : ℂ)^(-(1/2 : ℂ)) * ∑' I : NonzeroIdeal, summand χ inverse W D σ ω I
-
-theorem summand_finite_support (χ : Character) (inverse : Bool) (W : ℝ → ℂ)
-    (a b D σ ω : ℝ) (hD : 0 < D) (hW : Function.support W ⊆ Icc a b) :
-    (Function.support (summand χ inverse W D σ ω)).Finite := by
-  have hfin := Ideal.finite_setOfPred_absNorm_le (S := O) ⌈D*b⌉₊
-  apply (Set.Finite.preimage (f := fun I : NonzeroIdeal => I.val) Subtype.val_injective.injOn hfin).subset
-  intro I hI
-  have hw : W (norm I/D) ≠ 0 := by
-    intro h
-    exact hI (by simp [summand, h])
-  have hupper := (hW hw).2
-  have hq : norm I ≤ D*b := by
-    have h := (div_le_iff₀ hD).mp hupper
-    linarith
-  have hr : norm I ≤ (⌈D*b⌉₊ : ℝ) := hq.trans (Nat.le_ceil _)
-  change I.val.absNorm ≤ ⌈D*b⌉₊
-  dsimp [norm] at hr
-  exact_mod_cast hr
 
 def series (χ : Character) (inverse : Bool) (s : ℂ) : ℂ :=
   if inverse then HeckeReciprocal.reciprocal χ s else LFunction χ s

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialArithmetic
 import OAI.NumberTheory.DirichletL.Descent.SecondGenerator
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -118,39 +117,6 @@ theorem originalSecondTuple_injective
   · funext i
     apply hinj
     exact congrArg (fun z : SecondTuple Jo Jn => (z.newAssigned i).val) hxy
-
-theorem original_second_source_fiber_bound (hp : ∀ i, p i ≠ 0)
-    (hpr : ∀ i, ConcretePrimeRowBridge.goodLambda^2 ∣ p i - 1)
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    {Jo Jn : ℕ} (u v : Eisˣ) (source : Finset (SecondOriginalSource ι Jo Jn))
-    (hs : ∀ x ∈ source, SecondOriginalValid x)
-    (γ : OuterTriple) (f : Ideal Eis) (k : Eis)
-    (hf : f ≠ 0) (hq : γ.q0 ≠ 0) (ht : γ.quotient ≠ 0) (hr : γ.residual ≠ 0)
-    (K : ℕ) (ho : Jo ≤ 2*K) (hn : Jn ≤ 2*K) :
-    (source.filter (fun x => secondChild (originalSecondTuple p u v x) = (γ,f,k))).card ≤
-      (IdealMobiusDivisorSum.idealDivisors f).card^(9+4*K) *
-      (IdealMobiusDivisorSum.idealDivisors γ.q0).card^(5+2*K) *
-      (IdealMobiusDivisorSum.idealDivisors γ.quotient).card^(2*K) *
-      (IdealMobiusDivisorSum.idealDivisors γ.residual).card^(2*K) := by
-  classical
-  let S := source.filter (fun x => secondChild (originalSecondTuple p u v x) = (γ,f,k))
-  have hv : ∀ y ∈ S.image (originalSecondTuple p u v), Valid y γ f k := by
-    intro y hy
-    obtain ⟨x,hx,rfl⟩ := Finset.mem_image.mp hy
-    obtain ⟨hxs,he⟩ := Finset.mem_filter.mp hx
-    have hh := originalSecondTuple_valid p hp hpr u v x (hs x hxs)
-    simpa only [he] using hh
-  have hb := valid_tuple_card_le_slot_cap (S.image (originalSecondTuple p u v))
-    γ f k hf hq ht hr hv K ho hn
-  rw [Finset.card_image_of_injective S (originalSecondTuple_injective p hinj u v)] at hb
-  exact hb
-
-theorem originalSecondTuple_row_norm {Jo Jn : ℕ} (u v : Eisˣ)
-    (x : SecondOriginalSource ι Jo Jn) (d e : Eis)
-    (hde : d*e = (v:Eis)*(primaryGenerator x.dK*primaryGenerator (sourceIdeal p x.divisor))) :
-    ‖ConcreteTraceCRT.eisEmbedding (secondChild (originalSecondTuple p u v x)).2.2‖ =
-      ‖ConcreteTraceCRT.eisEmbedding (d*e*x.frequency)‖ := by
-  exact secondCanonical_row_norm x.dK (sourceIdeal p x.divisor) u v d e x.frequency hde
 
 end
 end SevenEighths.InverseMoment

@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.ContinuationInversion
 import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-
 namespace OAI
 
 noncomputable section

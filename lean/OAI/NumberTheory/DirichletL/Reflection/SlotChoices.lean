@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.InactiveEnergy
 import OAI.NumberTheory.DirichletL.Reflection.TupleFamily
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -32,20 +31,6 @@ lemma slot_choice_inactive_weight (L : σ→Finset (Ideal Eis)) (T : Finset σ)
       ∏ i : {i // i∉T}, (Ideal.absNorm ((slotChoiceSplit L T p).2 i).val:ℂ)⁻¹ := by
   exact Finset.prod_subtype (Finset.univ\T) (fun i => by simp)
     (fun i => (Ideal.absNorm (p i).val:ℂ)⁻¹)
-
-theorem sum_slot_choices (L : σ→Finset (Ideal Eis)) (T : Finset σ)
-    (H : (∀ i, L i)→ℂ) :
-    (∑ p : ∀ i, L i, (∏ i∈(Finset.univ:Finset σ)\T,(Ideal.absNorm (p i).val:ℂ)⁻¹)*H p)=
-    ∑ b : ∀ i : {i // i∉T}, L i.val,
-      (∏ i : {i // i∉T}, (Ideal.absNorm (b i).val:ℂ)⁻¹)*
-        ∑ a : ∀ i : T, L i.val, H ((slotChoiceSplit L T).symm (a,b)) := by
-  simp_rw [slot_choice_inactive_weight L T]
-  rw [← (slotChoiceSplit L T).symm.sum_comp]
-  simp only [Equiv.apply_symm_apply,Fintype.sum_prod_type]
-  rw [Finset.sum_comm]
-  apply Finset.sum_congr rfl
-  intro b hb
-  rw [Finset.mul_sum]
 
 lemma slot_choice_coprime_split (L : σ→Finset (Ideal Eis)) (T : Finset σ)
     (a : ∀ i : T, L i.val) (b : ∀ i : {i // i∉T}, L i.val) (K : Ideal Eis) :

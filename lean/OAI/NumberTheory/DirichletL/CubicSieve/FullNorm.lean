@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.Gcd
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve
@@ -58,16 +57,6 @@ lemma sieveNorm_le_elementSieveNorm (M N : ℝ) : sieveNorm M N ≤ elementSieve
       exact (mem_idealRange.mp I.property).2⟩
   · intro J
     exact mem_idealRange.mp J.property
-
-lemma elementSieveNorm_mono {M N M' N' : ℝ} (hM : M ≤ M') (hN : N ≤ N') :
-    elementSieveNorm M N ≤ elementSieveNorm M' N' := by
-  apply element_family_squared_norm_le (fun z : elementRange M => z.val)
-    (fun I : idealRange N => I.val) Subtype.val_injective Subtype.val_injective
-  · intro z
-    exact ⟨((mem_elementRange M z.val).mp z.property).1,
-      ((mem_elementRange M z.val).mp z.property).2.trans hM⟩
-  · intro I
-    exact ⟨(mem_idealRange.mp I.property).1, (mem_idealRange.mp I.property).2.trans hN⟩
 
 theorem element_coprime_bilinear_bound {m n : Type*} [Fintype m] [Fintype n]
     [DecidableEq m] [DecidableEq n]

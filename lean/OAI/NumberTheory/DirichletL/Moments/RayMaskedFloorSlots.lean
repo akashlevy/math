@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.NaturalFixedRaySourceRayPrime
 import OAI.NumberTheory.DirichletL.Moments.CommonMaskEnergy
-
 namespace OAI
 
 noncomputable section

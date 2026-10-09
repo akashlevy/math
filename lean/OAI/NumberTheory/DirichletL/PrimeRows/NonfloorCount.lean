@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorFixedAmplitudeCount
 import OAI.NumberTheory.DirichletL.Hecke.DetectorHighBatchCount
 import OAI.NumberTheory.DirichletL.Detector.CentralMixedMargins
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.EisensteinTheta
 import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Summable
-
 namespace OAI
 
 noncomputable section

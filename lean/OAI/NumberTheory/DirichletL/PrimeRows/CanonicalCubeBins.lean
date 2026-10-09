@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CanonicalCubeReduction
-
 namespace OAI
 
 noncomputable section

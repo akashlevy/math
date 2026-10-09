@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseMarkedReferenceEnergy
 import OAI.NumberTheory.DirichletL.Dictionary.InverseAssignedCount
-
 namespace OAI
 
 noncomputable section

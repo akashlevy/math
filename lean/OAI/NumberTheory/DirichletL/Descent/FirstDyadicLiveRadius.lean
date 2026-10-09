@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstDyadicCell
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLivePartition
-
 namespace OAI
 
 noncomputable section

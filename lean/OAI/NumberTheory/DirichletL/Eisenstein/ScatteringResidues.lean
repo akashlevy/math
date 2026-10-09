@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.SourceProjection
 import OAI.NumberTheory.DirichletL.Eisenstein.ResidualFourierSeries
-
 namespace OAI
 
 noncomputable section
@@ -9,76 +8,21 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
 
 section
 
@@ -235,10 +179,6 @@ theorem kernelCuspHeightFourier_residue_full (a b : ℝ) (ha : 0<a)
 
 end
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
-open Finset AddChar MulChar EisensteinEmbedding
-
 local notation "O" => ActualEisensteinCubic.O
 
 def cubicResidualFunction (w : HyperbolicSpace) : ℂ :=
@@ -290,35 +230,6 @@ lemma cubicResidualFunction_fourier (v : ℝ) (hv : 0<v) (k : ActualEisensteinCu
     ring
   · simp only [ite_eq_right hk,mul_zero,zero_add]
 
-lemma cubicResidualFunction_heightFourier (a b : ℝ) (ha : 0<a)
-    (ρ : BoundedContinuousFunction ℝ ℂ) (h : ActualEisensteinCubic.O) :
-    (∫w in cuspPeriodStrip a b,cubicResidualFunction w*cuspWeightedFourierPhase ρ h w∂hyperbolicVolume)=
-      ((9*Real.sqrt 3/2:ℝ):ℂ)*(∫v in Set.Icc a b,ρ v*
-        ((if h=0 then (3*Real.pi:ℂ)*constantArithmeticResidue*(v:ℂ)^(2/3:ℂ)
-          else cubicResidualModeAmplitude v h)/(v:ℂ)^3)) := by
-  let g : HyperbolicSpace→ℂ := fun w => cubicResidualFunction w*cuspWeightedFourierPhase ρ h w
-  have hg : Continuous g := cubicResidualFunction_continuous.mul (cuspWeightedFourierPhase_continuous ρ h)
-  rw [cuspPeriodStrip_integral_coordinates_of_pos a b ha g hg.aestronglyMeasurable
-    (cuspCoordinateLift_weighted_integrable_of_pos a b ha g hg),←integral_const_mul]
-  apply setIntegral_congr_fun measurableSet_Icc
-  intro v hv
-  have hpos := ha.trans_le hv.1
-  have hinner : (∫z in periodDomain,g (cuspCoordinateLift (v,z)))=
-      ρ v*(((9*Real.sqrt 3/2:ℝ):ℂ)*(if h=0 then
-        (3*Real.pi:ℂ)*constantArithmeticResidue*(v:ℂ)^(2/3:ℂ) else cubicResidualModeAmplitude v h)) := by
-    simp_rw [g,cuspCoordinateLift_positive v _ hpos,cuspWeightedFourierPhase,
-      hyperbolicHeight_upperPoint,cuspFourierPhase,hyperbolicHorizontal_upperPoint]
-    calc
-      _ = ρ v*(∫z in periodDomain,cubicResidualFunction (upperPoint z v hpos)*
-          ShortDraftTrace.breveE (-cuspFrequency h*z)) := by
-        rw [←integral_const_mul]
-        apply integral_congr_ae
-        exact Eventually.of_forall (fun z => by ring)
-      _ = _ := by rw [cubicResidualFunction_fourier v hpos h]
-  dsimp only
-  rw [hinner]
-  ring
-
 lemma cubicResidualFunction_period (v : ℝ) (hv : 0<v) (z : ℂ) (n : ActualEisensteinCubic.O) :
     cubicResidualFunction (upperPoint (z+3*ConcreteTraceCRT.eisEmbedding n) v hv)=
       cubicResidualFunction (upperPoint z v hv) := by
@@ -328,9 +239,7 @@ lemma cubicResidualFunction_period (v : ℝ) (hv : 0<v) (z : ℂ) (n : ActualEis
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ENNReal
-open Finset AddChar MulChar EisensteinEmbedding
+open scoped ENNReal
 
 lemma kernelCuspHeightPullback_memLp (a b : ℝ) (ha : 0<a) (F : KernelQuotientL2) :
     MemLp (fun w => F (integralOrbitProjection globalKubotaKernel w)) 2
@@ -453,9 +362,8 @@ end
 
 section
 
-open scoped BigOperators Classical
 open EisensteinEmbedding (omega3)
-open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal CompletedGauss CubicRamified
+open CubicJacobiGlobal CompletedGauss CubicRamified
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma third_character_eq_one_iff_basis (ψ:AddChar (Eis⧸Ideal.span {(3:Eis)}) ℂ) :
@@ -531,9 +439,8 @@ lemma trace_third_coordinate (k:Eis) :
 
 end
 
-open scoped BigOperators Classical
 open EisensteinEmbedding (omega3)
-open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal CompletedGauss CubicRamified
+open CubicJacobiGlobal CompletedGauss CubicRamified
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma ramified_symbol_primaryCoord (u:Eisˣ) (n j:ℕ)

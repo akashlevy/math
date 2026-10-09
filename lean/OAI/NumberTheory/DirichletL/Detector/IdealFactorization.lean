@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.IdealMultiplicative
 import Mathlib.RingTheory.UniqueFactorizationDomain.Finsupp
-
 namespace OAI
 
 noncomputable section

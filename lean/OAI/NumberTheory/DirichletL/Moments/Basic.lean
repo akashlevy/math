@@ -7,7 +7,6 @@ import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Algebra.Group.Commute.Units
-
 namespace OAI
 
 open scoped BigOperators NNReal
@@ -15,86 +14,6 @@ namespace SevenEighths.CenteredMoment
 noncomputable section
 
 variable {M R : Type*} [CommMonoid M] [CommRing R]
-
-structure MaskedCharacter (M R : Type*) [CommMonoid M] [CommRing R] where
-  residue : M →* R
-  character : MulChar R ℂ
-  keep : M → Prop
-  keep_mul : ∀ a b, keep (a * b) ↔ keep a ∧ keep b
-
-def ofResidueMask {S : Type*} [CommRing S] (ρ : M →* R)
-    (χ : MulChar R ℂ) (puncture : M →* S) : MaskedCharacter M R where
-  residue := ρ
-  character := χ
-  keep a := IsUnit (puncture a)
-  keep_mul a b := by
-    rw [map_mul]
-    exact (Commute.all _ _).isUnit_mul_iff
-
-@[simp] theorem ofResidueMask_keep_one {S : Type*} [CommRing S]
-    (ρ : M →* R) (χ : MulChar R ℂ) (puncture : M →* S) :
-    (ofResidueMask ρ χ puncture).keep 1 := by
-  change IsUnit (puncture 1)
-  simp only [map_one, isUnit_one]
-
-def MaskedCharacter.value (d : MaskedCharacter M R) (a : M) : ℂ :=
-  @ite ℂ (d.keep a) (Classical.propDecidable _) (d.character (d.residue a)) 0
-
-@[simp] theorem MaskedCharacter.value_mul (d : MaskedCharacter M R) (a b : M) :
-    d.value (a * b) = d.value a * d.value b := by
-  classical
-  simp only [MaskedCharacter.value, d.keep_mul, map_mul]
-  split_ifs <;> simp_all
-
-def normTwist (N : M →* ℝ≥0) (t : ℝ) (a : M) : ℂ :=
-  ((N a : ℝ) : ℂ) ^ (Complex.I * t)
-
-@[simp] theorem normTwist_mul (N : M →* ℝ≥0) (t : ℝ) (a b : M) :
-    normTwist N t (a * b) = normTwist N t a * normTwist N t b := by
-  simp only [normTwist, map_mul, NNReal.coe_mul, Complex.ofReal_mul]
-  exact Complex.mul_cpow_ofReal_nonneg (N a).coe_nonneg (N b).coe_nonneg _
-
-def coefficient (d : MaskedCharacter M R) (N : M →* ℝ≥0) (t : ℝ) (a : M) : ℂ :=
-  d.value a * normTwist N t a
-
-@[simp] theorem coefficient_mul (d : MaskedCharacter M R) (N : M →* ℝ≥0)
-    (t : ℝ) (a b : M) :
-    coefficient d N t (a * b) = coefficient d N t a * coefficient d N t b := by
-  simp only [coefficient, MaskedCharacter.value_mul, normTwist_mul]
-  ring
-
-def plainSum (d : MaskedCharacter M R) (N : M →* ℝ≥0) (t : ℝ)
-    (s : Finset M) (W : ℝ → ℂ) (X : ℝ) : ℂ :=
-  ∑ a ∈ s, coefficient d N t a * W ((N a : ℝ) / X)
-
-def rectangle (N : M →* ℝ≥0) (W₁ W₂ : ℝ → ℂ)
-    (X₁ X₂ Y₁ Y₂ : ℝ) (a b : M) : ℂ :=
-  W₁ ((N a : ℝ) / X₁) * W₂ ((N b : ℝ) / X₂) -
-    W₁ ((N a : ℝ) / Y₁) * W₂ ((N b : ℝ) / Y₂)
-
-theorem rectangle_sum_eq (d : MaskedCharacter M R) (N : M →* ℝ≥0) (t : ℝ)
-    (s₁ s₂ : Finset M) (W₁ W₂ : ℝ → ℂ) (X₁ X₂ Y₁ Y₂ : ℝ) :
-    (∑ a ∈ s₁, ∑ b ∈ s₂,
-      coefficient d N t (a * b) * rectangle N W₁ W₂ X₁ X₂ Y₁ Y₂ a b) =
-      plainSum d N t s₁ W₁ X₁ * plainSum d N t s₂ W₂ X₂ -
-        plainSum d N t s₁ W₁ Y₁ * plainSum d N t s₂ W₂ Y₂ := by
-  simp only [plainSum, Finset.sum_mul_sum, ← Finset.sum_sub_distrib]
-  apply Finset.sum_congr rfl
-  intro a _
-  apply Finset.sum_congr rfl
-  intro b _
-  simp only [coefficient_mul, rectangle]
-  ring
-
-theorem slot_rectangle_sum_eq (d : MaskedCharacter M R) (N : M →* ℝ≥0) (t : ℝ)
-    (p : M) (s₁ s₂ : Finset M) (W₁ W₂ : ℝ → ℂ) (X₁ X₂ Y₁ Y₂ : ℝ) :
-    (∑ a ∈ s₁, ∑ b ∈ s₂,
-      coefficient d N t (p * (a * b)) * rectangle N W₁ W₂ X₁ X₂ Y₁ Y₂ a b) =
-      coefficient d N t p *
-        (plainSum d N t s₁ W₁ X₁ * plainSum d N t s₂ W₂ X₂ -
-          plainSum d N t s₁ W₁ Y₁ * plainSum d N t s₂ W₂ Y₂) := by
-  rw [← rectangle_sum_eq]
-  simp only [coefficient_mul, Finset.mul_sum, mul_assoc]
 
 def volumeTerm (c I : ℂ) (t X : ℝ) : ℂ :=
   c * (X : ℂ) ^ (1 + Complex.I * t) * I
@@ -197,48 +116,6 @@ theorem centered_saving_of_approx
     _ ≤ E * C * (X₁ + X₂ + Y₁ + Y₂) := h
     _ ≤ E * C * (4 * (T / L)) := mul_le_mul_of_nonneg_left hs (mul_nonneg hE hC)
     _ = _ := by ring
-
-theorem extracted_volume_phase (X D t : ℝ) (hX : 0 ≤ X) (hD : 0 < D) :
-    (D : ℂ) ^ (Complex.I * t) * ((X / D : ℝ) : ℂ) ^ (1 + Complex.I * t) =
-      (X : ℂ) ^ (1 + Complex.I * t) / (D : ℂ) := by
-  have hDc : (D : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (ne_of_gt hD)
-  have hp : (D : ℂ) ^ (Complex.I * t) ≠ 0 :=
-    Complex.cpow_ne_zero_iff.mpr (Or.inl hDc)
-  rw [Complex.ofReal_div, Complex.div_cpow_ofReal_nonneg hX hD.le,
-    Complex.cpow_add _ _ hDc, Complex.cpow_one]
-  field_simp
-
-theorem extracted_volume_sum {D : Type*} (s : Finset D) (a : D → ℂ)
-    (norm : D → ℝ) (hnorm : ∀ d ∈ s, 0 < norm d)
-    (c I : ℂ) (t X : ℝ) (hX : 0 ≤ X) :
-    (∑ d ∈ s, a d * (norm d : ℂ) ^ (Complex.I * t) *
-      volumeTerm c I t (X / norm d)) =
-      volumeTerm (c * ∑ d ∈ s, a d / (norm d : ℂ)) I t X := by
-  unfold volumeTerm
-  rw [Finset.mul_sum, Finset.sum_mul, Finset.sum_mul]
-  apply Finset.sum_congr rfl
-  intro d hd
-  have h := extracted_volume_phase X (norm d) t hX (hnorm d hd)
-  calc
-    _ = a d * c * I * ((norm d : ℂ) ^ (Complex.I * t) *
-        ((X / norm d : ℝ) : ℂ) ^ (1 + Complex.I * t)) := by ring
-    _ = _ := by rw [h]; ring
-
-theorem centered_volume_fallback (A₁ A₂ B₁ B₂ : ℂ)
-    (X₁ X₂ Y₁ Y₂ T C : ℝ)
-    (hA₁ : ‖A₁‖ ≤ C * X₁) (hA₂ : ‖A₂‖ ≤ C * X₂)
-    (hB₁ : ‖B₁‖ ≤ C * Y₁) (hB₂ : ‖B₂‖ ≤ C * Y₂)
-    (hprodX : X₁ * X₂ = T) (hprodY : Y₁ * Y₂ = T) :
-    ‖A₁ * A₂ - B₁ * B₂‖ ≤ 2 * C ^ 2 * T := by
-  have hA := mul_le_mul hA₁ hA₂ (norm_nonneg A₂) ((norm_nonneg A₁).trans hA₁)
-  have hB := mul_le_mul hB₁ hB₂ (norm_nonneg B₂) ((norm_nonneg B₁).trans hB₁)
-  have h := norm_sub_le (A₁ * A₂) (B₁ * B₂)
-  rw [norm_mul, norm_mul] at h
-  have heX : C * X₁ * (C * X₂) = C ^ 2 * T := by rw [← hprodX]; ring
-  have heY : C * Y₁ * (C * Y₂) = C ^ 2 * T := by rw [← hprodY]; ring
-  rw [heX] at hA
-  rw [heY] at hB
-  linarith
 
 theorem normalized_centered_saving (D : ℂ) (T L C E : ℝ)
     (hT : 0 < T) (hbound : ‖D‖ ≤ 4 * E * C * (T / L)) :

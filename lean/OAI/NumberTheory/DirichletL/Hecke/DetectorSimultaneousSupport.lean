@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorDyadicGeometry
 import OAI.NumberTheory.DirichletL.Hecke.DetectorDyadicLengths
-
 namespace OAI
 
 noncomputable section

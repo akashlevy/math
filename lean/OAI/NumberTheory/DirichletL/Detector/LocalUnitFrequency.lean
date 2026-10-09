@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.SixthFrequency
 import OAI.NumberTheory.DirichletL.Detector.PhysicalLocalEuler
-
 namespace OAI
 
 noncomputable section
@@ -69,33 +68,6 @@ theorem bareCongruenceCoefficient_unit_frequency (A s : O)
   rw [he]
   ring
 
-lemma idealRowHom_norm_one_of_coprime (s b : O)
-    (hs : Supported (Ideal.span {s})) (hcop : IsCoprime b s) :
-    ‖idealRowHom b (Ideal.span {s})‖ = 1 := by
-  have h6 := idealRowHom_sixth_mask b (Ideal.span {s}) hs
-  rw [idealRowHom_argument_pow _ _ _ hs,
-    ite_eq_left ((Ideal.isCoprime_span_singleton_iff s b).mpr hcop.symm)] at h6
-  exact Complex.norm_eq_one_of_pow_eq_one h6 (by decide : (6 : ℕ) ≠ 0)
-
-theorem bareCongruenceCoefficient_unit_frequency_norm (A s : O)
-    (hA : Supported (Ideal.span {A})) (hs : Supported (Ideal.span {s}))
-    (b H : O) (hcop : IsCoprime b (A*s)) :
-    ‖bareCongruenceCoefficient A s (supportedElement_ne_zero A hA) (b*H)‖ =
-      ‖bareCongruenceCoefficient A s (supportedElement_ne_zero A hA) H‖ := by
-  rw [bareCongruenceCoefficient_unit_frequency A s hA hs b H hcop,
-    norm_mul, norm_mul, norm_inv,
-    idealRowHom_norm_one_of_coprime A b hA hcop.of_mul_right_left,
-    idealRowHom_norm_one_of_coprime s b hs hcop.of_mul_right_right,
-    inv_one, one_mul, one_mul]
-
-theorem bareCongruenceCoefficient_unit_frequency_eq_zero_iff (A s : O)
-    (hA : Supported (Ideal.span {A})) (hs : Supported (Ideal.span {s}))
-    (b H : O) (hcop : IsCoprime b (A*s)) :
-    bareCongruenceCoefficient A s (supportedElement_ne_zero A hA) (b*H) = 0 ↔
-      bareCongruenceCoefficient A s (supportedElement_ne_zero A hA) H = 0 := by
-  rw [← norm_eq_zero, bareCongruenceCoefficient_unit_frequency_norm A s hA hs b H hcop,
-    norm_eq_zero]
-
 lemma supported_element_power (p : O) (hs : Supported (Ideal.span {p})) (n : ℕ) :
     Supported (Ideal.span {p^n}) := by
   rw [← Ideal.span_singleton_pow]
@@ -106,58 +78,6 @@ lemma idealRowHom_prime_power_value (p b : O) [(Ideal.span {p} : Ideal O).IsMaxi
     idealRowHom b (Ideal.span {p^n}) =
       (actualSextic (Ideal.span {p}) hg (Ideal.Quotient.mk _ b))^n := by
   rw [← Ideal.span_singleton_pow, map_pow, idealRowHom_prime _ _ hg]
-
-lemma actualSextic_unit_power_ne_zero (p b : O) [(Ideal.span {p} : Ideal O).IsMaximal]
-    (hg : goodLambda ∉ Ideal.span {p}) (hcop : IsCoprime b p) (t : ℕ) :
-    (actualSextic (Ideal.span {p}) hg (Ideal.Quotient.mk _ b))^t ≠ 0 := by
-  apply pow_ne_zero
-  exact (actualSextic (Ideal.span {p}) hg).apply_ne_zero_iff.mpr
-    ((isUnit_quotient_span_iff p b).mpr hcop.symm)
-
-theorem bareCongruenceCoefficient_prime_power_unit_frequency (p : O) (hp : Prime p)
-    [(Ideal.span {p} : Ideal O).IsMaximal] (hs : Supported (Ideal.span {p}))
-    (hg : goodLambda ∉ Ideal.span {p}) (b : O) (hcop : IsCoprime b p) (t k j : ℕ) :
-    bareCongruenceCoefficient (p^t) (p^k) (pow_ne_zero _ hp.ne_zero) (b*p^j) =
-      ((actualSextic (Ideal.span {p}) hg (Ideal.Quotient.mk _ b))^k /
-        (actualSextic (Ideal.span {p}) hg (Ideal.Quotient.mk _ b))^t) *
-          bareCongruenceCoefficient (p^t) (p^k) (pow_ne_zero _ hp.ne_zero) (p^j) := by
-  have he := bareCongruenceCoefficient_unit_frequency (p^t) (p^k)
-    (supported_element_power p hs t) (supported_element_power p hs k) b (p^j)
-    (hcop.pow_right.mul_right hcop.pow_right)
-  simpa only [idealRowHom_prime_power_value p b hg, div_eq_mul_inv, mul_comm] using he
-
-theorem bareCongruenceCoefficient_all_prime_powers_unit (p : O) (hp : Prime p)
-    [(Ideal.span {p} : Ideal O).IsMaximal] (hs : Supported (Ideal.span {p}))
-    (hg : goodLambda ∉ Ideal.span {p}) (b : O) (hcop : IsCoprime b p) (t k j : ℕ) :
-    bareCongruenceCoefficient (p^t) (p^k) (pow_ne_zero _ hp.ne_zero) (b*p^j) =
-      ((actualSextic (Ideal.span {p}) hg (Ideal.Quotient.mk _ b))^k /
-        (actualSextic (Ideal.span {p}) hg (Ideal.Quotient.mk _ b))^t) *
-          sourceScalar p hp hg t k j := by
-  rw [bareCongruenceCoefficient_prime_power_unit_frequency p hp hs hg b hcop t k j,
-    bareCongruenceCoefficient_all_prime_powers p hp hg t k j]
-
-theorem barePhysicalFourier_all_prime_powers_unit (p : O) (hp : Prime p)
-    [(Ideal.span {p} : Ideal O).IsMaximal] (hs : Supported (Ideal.span {p}))
-    (hg : goodLambda ∉ Ideal.span {p}) (b : O) (hcop : IsCoprime b p) (t k j : ℕ) :
-    barePhysicalFourier (p^t) (p^k) (pow_ne_zero _ hp.ne_zero)
-        (pow_ne_zero _ hp.ne_zero) (b*p^j) =
-      (Ideal.absNorm (Ideal.span {p^k}) : ℂ) *
-        (((actualSextic (Ideal.span {p}) hg (Ideal.Quotient.mk _ b))^k /
-          (actualSextic (Ideal.span {p}) hg (Ideal.Quotient.mk _ b))^t) *
-            sourceScalar p hp hg t k j) := by
-  rw [barePhysicalFourier_eq,
-    bareCongruenceCoefficient_all_prime_powers_unit p hp hs hg b hcop t k j]
-
-theorem bareCongruenceCoefficient_all_prime_powers_unit_norm (p : O) (hp : Prime p)
-    [(Ideal.span {p} : Ideal O).IsMaximal] (hs : Supported (Ideal.span {p}))
-    (hg : goodLambda ∉ Ideal.span {p}) (b : O) (hcop : IsCoprime b p) (t k j : ℕ) :
-    ‖bareCongruenceCoefficient (p^t) (p^k) (pow_ne_zero _ hp.ne_zero) (b*p^j)‖ =
-      ‖sourceScalar p hp hg t k j‖ := by
-  have he := bareCongruenceCoefficient_unit_frequency_norm (p^t) (p^k)
-    (supported_element_power p hs t) (supported_element_power p hs k) b (p^j)
-    (hcop.pow_right.mul_right hcop.pow_right)
-  rw [bareCongruenceCoefficient_all_prime_powers p hp hg t k j] at he
-  exact he
 
 end SevenEighths.ProbePhysical
 end

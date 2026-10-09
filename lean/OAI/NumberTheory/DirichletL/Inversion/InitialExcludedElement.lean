@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialExcludedPeriod
 import OAI.NumberTheory.DirichletL.Inversion.InitialRayAttachment
-
 namespace OAI
 
 noncomputable section

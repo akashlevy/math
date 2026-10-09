@@ -1,12 +1,11 @@
-import OAI.NumberTheory.DirichletL.Reflection.PhysicalBranchMeasure
-
+import OAI.NumberTheory.DirichletL.Reflection.PhysicalIntegral
+import OAI.NumberTheory.DirichletL.Reflection.WeightedMeasurable
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
 open scoped Classical BigOperators
 open MeasureTheory FourierBridge
 noncomputable section
-local notation "Eis" => ActualEisensteinCubic.O
 
 lemma weightedKernelCoordinate_norm (windows : Fin 4→ℝ→ℂ) (M : Fin 4→ℝ)
     (hw : ∀ i y, ‖windows i y‖≤1) (hs : ∀ i y, windows i y≠0 → |y|≤M i)

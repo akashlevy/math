@@ -1,5 +1,4 @@
-import OAI.NumberTheory.DirichletL.Reflection.Common
-
+import OAI.NumberTheory.DirichletL.Reflection.SectorIndependence
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -73,41 +72,6 @@ theorem exists_controlled [Fintype ι] (N a c : Eis) (mode : Bool)
   · exact G.generator_coprime_period N hNp
 
 end PrimeFamily
-
-theorem canonical_common_reflected_coefficients {α κ : Type*} [Fintype κ]
-    {ι : α → Type*} [∀ x, Fintype (ι x)] (G : ∀ x, PrimeFamily (ι x))
-    (N a c : Eis) (mode : Bool)
-    (s : FixedCuspShape (ControlledStratumArithmetic.fixedCusp a c mode))
-    (hc : c ≠ 0) (hN : (9:Eis)*c ∣ N)
-    (hbase : if mode then λ₀^2 ∣ a-1 else λ₀^2 ∣ c-1) (hac : IsCoprime a c)
-    (hcop : ∀ x, Pairwise (Function.onFun IsCoprime (G x).ideal))
-    (hNp : ∀ x i, IsCoprime (Ideal.span {N}) ((G x).ideal i))
-    (j : ∀ x, ι x → ℕ) (f : ∀ x, κ → ι x) (hf : ∀ x, Function.Injective (f x))
-    (hfixed : ∀ x y i, (G x).ideal (f x i)=(G y).ideal (f y i))
-    (hjfixed : ∀ x y i, j x (f x i)=j y (f y i)) (F : Finset κ)
-    (fixedIdeal : Ideal Eis) (row slot : α → Ideal Eis)
-    (hprod : ∀ x, (∏ i, (G x).ideal i) = fixedIdeal*row x*slot x) :
-    ∃ E : ∀ x, ControlledStratumArithmetic (G x).generator N a c mode,
-      ∃ (γ : ((Eis ⧸ Ideal.span {N^2}) × (Eis ⧸ Ideal.span {N^2})) → Eisˣ → ℕ → ℂ)
-        (β : ((Eis ⧸ Ideal.span {N^2}) × (Eis ⧸ Ideal.span {N^2})) →
-          Eisˣ → ℕ → Ideal Eis → Ideal Eis → ℂ),
-        (∀ x u m, sourceFrozenPhase (E x) s (G x).generator_ne_zero (G x).generator_good
-          (j x) (F.image (f x)) u m =
-          γ (separateSector N (primaryGenerator (row x)) (primaryGenerator (slot x))) u m) ∧
-        ∀ x u m n b, sourceColumn (E x) s hc (G x).generator_good (j x) (F.image (f x)) u m n b =
-          β (separateSector N (primaryGenerator (row x)) (primaryGenerator (slot x))) u m n b := by
-  let D : ∀ x, ControlledStratumArithmetic (G x).generator N a c mode := fun x =>
-    Classical.choice ((G x).exists_controlled N a c mode hc hN hbase hac (hcop x) (hNp x))
-  have hproduct (x : α) : (∏ i, (G x).generator i) =
-      primaryGenerator fixedIdeal*primaryGenerator (row x)*primaryGenerator (slot x) := by
-    rw [(G x).generator_product,hprod x,primaryGenerator_mul,primaryGenerator_mul]
-  obtain ⟨E,_,_,_,_,γ,β,hγ,hβ⟩ := exists_separate_common_reflected_coefficients
-    (fun x => (G x).generator) N a c mode D s (fun x => (G x).generator_ne_zero) hc
-    (fun x => (G x).generator_good) hN (fun x => (G x).generator_product_primary) hbase
-    (fun x => (G x).generator_product_coprime_period N c ((dvd_mul_left c 9).trans hN) (hNp x))
-    j f hf (fun x y i => congrArg primaryPrime (hfixed x y i)) hjfixed F
-    (primaryGenerator fixedIdeal) (fun x => primaryGenerator (row x)) (fun x => primaryGenerator (slot x)) hproduct
-  exact ⟨E,γ,β,hγ,hβ⟩
 
 end
 end SevenEighths.InverseReflectedPhase

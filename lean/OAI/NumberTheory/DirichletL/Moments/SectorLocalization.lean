@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.Tail
 import OAI.NumberTheory.DirichletL.Moments.DescentLedger
-
 namespace OAI
 
 noncomputable section
@@ -58,9 +57,6 @@ theorem dyadicScale_add (n : ℤ) : dyadicScale (n+1)=2*dyadicScale n := by
   ring
 
 def dyadicWeight (n : ℤ) (q : ℝ) : ℝ := annulus (q/dyadicScale n)
-
-theorem dyadicWeight_smooth (n : ℤ) : ContDiff ℝ ∞ (dyadicWeight n) :=
-  annulus_smooth.comp (contDiff_id.div_const _)
 
 theorem dyadicWeight_bounds (n : ℤ) (q : ℝ) :
     0 ≤ dyadicWeight n q ∧ dyadicWeight n q ≤ 1 := annulus_bounds _
@@ -239,10 +235,6 @@ theorem discardedWeight_zero_below (R q : ℝ) (hq : q ≤ R) : discardedWeight 
 theorem discardedWeight_support (R q : ℝ) (hq : discardedWeight R q ≠ 0) : R < q :=
   lt_of_not_ge (fun h => hq (discardedWeight_zero_below R q h))
 
-theorem retainedWeight_one_below (R q : ℝ) (hq : 0 < q) (hR : q ≤ R) : retainedWeight R q=1 := by
-  have h := retained_add_discarded R q hq
-  rwa [discardedWeight_zero_below R q hR,add_zero] at h
-
 theorem finite_retained_integral_dyads (R : ℝ) :
     {n : ℤ | Retained R n ∧ ∃ q : ℝ, 1 ≤ q ∧ dyadicWeight n q ≠ 0}.Finite := by
   obtain ⟨k,hk⟩ := pow_unbounded_of_one_lt (4*R) (by norm_num : (1:ℝ) < 2)
@@ -283,16 +275,6 @@ theorem dyadicWeight_tsupport_eq (n : ℤ) :
   rw [tsupport,dyadicWeight_support_eq,closure_Ioo]
   linarith [dyadicScale_pos n]
 
-theorem retained_iff_scale (R : ℝ) (n : ℤ) : Retained R n ↔ dyadicScale n ≤ 4*R := by
-  refine ⟨retained_scale_le R n,fun hn => ?_⟩
-  refine ⟨dyadicScale n/4,div_pos (dyadicScale_pos n) (by norm_num),by linarith,?_⟩
-  rw [dyadicWeight_tsupport_eq]
-  exact ⟨le_rfl,by linarith [dyadicScale_pos n]⟩
-
-theorem retained_boundary (n : ℤ) : Retained (dyadicScale n/4) n := by
-  rw [retained_iff_scale]
-  linarith
-
 def normValue (h : O) : ℝ := Ideal.absNorm (Ideal.span {h})
 
 theorem normValue_eq_embedding (h : O) : normValue h=‖eisEmbedding h‖^2 :=
@@ -310,10 +292,6 @@ theorem normValue_ge_one (h : O) (hh : h ≠ 0) : 1 ≤ normValue h := by
   unfold normValue
   exact_mod_cast Nat.one_le_iff_ne_zero.mpr (Ideal.absNorm_eq_zero_iff.not.mpr
     (Ideal.span_singleton_eq_bot.not.mpr hh))
-
-theorem retained_pullback (R : ℝ) (v h : O) :
-    retainedWeight R (normValue (v*h))=retainedWeight R (normValue v*normValue h) := by
-  rw [normValue_mul]
 
 theorem retained_norm_enclosure (R : ℝ) (v h : O) (hv : v ≠ 0)
     (hne : retainedWeight R (normValue (v*h)) ≠ 0) : normValue h ≤ 4*R/normValue v := by
@@ -343,39 +321,6 @@ theorem source_enclosure_power (Z Csec L ξ Nv : ℝ) (hZ : 1 < Z) (hC : 0 < Cse
   · exact hNv
   · positivity
 
-theorem actual_retained_row_enclosure (Tsec Z Csec L ξ : ℝ)
-    (hZ : 1 < Z) (hC : 0 < Csec) (hT : Tsec ≤ Csec*Z^L)
-    (v h : O) (hv : v ≠ 0)
-    (hne : retainedWeight (frequencyRadius Tsec Z ξ) (normValue (v*h)) ≠ 0) :
-    normValue h ≤ Z^(L-Real.logb Z (normValue v)+frequencyLoss Z Csec ξ) := by
-  have hb := retained_norm_enclosure (frequencyRadius Tsec Z ξ) v h hv hne
-  apply hb.trans
-  rw [← source_enclosure_power Z Csec L ξ (normValue v) hZ hC (normValue_pos v hv)]
-  apply div_le_div_of_nonneg_right _ (normValue_pos v hv).le
-  dsimp only [frequencyRadius]
-  nlinarith [mul_le_mul_of_nonneg_right hT (Real.rpow_nonneg (zero_lt_one.trans hZ).le (ξ/2))]
-
-theorem actual_nonempty_width (Tsec Z Csec L ξ : ℝ)
-    (hZ : 1 < Z) (hC : 0 < Csec) (hT : Tsec ≤ Csec*Z^L)
-    (v h : O) (hv : v ≠ 0) (hh : h ≠ 0)
-    (hne : retainedWeight (frequencyRadius Tsec Z ξ) (normValue (v*h)) ≠ 0) :
-    0 ≤ L-Real.logb Z (normValue v)+frequencyLoss Z Csec ξ := by
-  have he := (normValue_ge_one h hh).trans (actual_retained_row_enclosure Tsec Z Csec L ξ hZ hC hT v h hv hne)
-  by_contra hn
-  have hh := Real.rpow_lt_one_of_one_lt_of_neg hZ (lt_of_not_ge hn)
-  linarith
-
-theorem actual_declared_width_drop (Tsec Z Csec L ξ M J g g₂ t₂ σ q' : ℝ)
-    (hZ : 1 < Z) (hC : 0 < Csec) (hT : Tsec ≤ Csec*Z^L)
-    (v h : O) (hv : v ≠ 0) (hh : h ≠ 0)
-    (hne : retainedWeight (frequencyRadius Tsec Z ξ) (normValue (v*h)) ≠ 0)
-    (hwidth : (L-Real.logb Z (normValue v))+q'=M+J-g-g₂+t₂)
-    (hg : J+σ ≤ g) (hcommon : t₂ ≤ g₂) :
-    max 0 (L-Real.logb Z (normValue v)+frequencyLoss Z Csec ξ)+q' ≤
-      M-σ+frequencyLoss Z Csec ξ :=
-  CenteredMomentDescentLedger.declared_width_drop M J g g₂ t₂ σ _ q' _ hwidth hg hcommon
-    (actual_nonempty_width Tsec Z Csec L ξ hZ hC hT v h hv hh hne)
-
 theorem retained_first_dyad_enclosure (Tsec Z Csec L ξ : ℝ)
     (hZ : 1 < Z) (hC : 0 < Csec) (hT : Tsec ≤ Csec*Z^L)
     (n : ℤ) (hn : Retained (frequencyRadius Tsec Z ξ) n) :
@@ -394,13 +339,6 @@ def kernelReference (Tsec H : ℝ) : ℝ := Real.exp (-2*H)/Tsec
 
 theorem kernelReference_pos (Tsec H : ℝ) (hT : 0 < Tsec) : 0 < kernelReference Tsec H :=
   div_pos (Real.exp_pos _) hT
-
-theorem frequencyLoss_lt (Z Csec H ξ : ℝ) (hZ : 1 < Z) (hH : 0 ≤ H) (hξ : 0 < ξ)
-    (hthreshold : 2*H/Real.log Z+Real.log (4*Csec)/Real.log Z < ξ/4) :
-    frequencyLoss Z Csec ξ < ξ := by
-  have h := div_nonneg (show 0 ≤ 2*H by linarith) (Real.log_pos hZ).le
-  unfold frequencyLoss Real.logb
-  linarith
 
 theorem discarded_kernel_argument (Tsec Z Csec H ξ q : ℝ)
     (hT : 0 < Tsec) (hZ : 1 < Z) (hC : 1 ≤ Csec)
@@ -422,17 +360,6 @@ theorem discarded_kernel_argument (Tsec Z Csec H ξ q : ℝ)
     field_simp
   rw [hid] at hm
   exact hs.trans hm
-
-theorem retained_pullback_zero_extension (Tsec Z Csec L ξ : ℝ)
-    (hZ : 1 < Z) (hC : 0 < Csec) (hT : Tsec ≤ Csec*Z^L)
-    (v h : O) (hv : v ≠ 0) :
-    retainedWeight (frequencyRadius Tsec Z ξ) (normValue (v*h)) =
-      if normValue h ≤ Z^(L-Real.logb Z (normValue v)+frequencyLoss Z Csec ξ)
-      then retainedWeight (frequencyRadius Tsec Z ξ) (normValue (v*h)) else 0 := by
-  split_ifs with hb
-  · rfl
-  · by_contra hn
-    exact hb (actual_retained_row_enclosure Tsec Z Csec L ξ hZ hC hT v h hv hn)
 
 theorem actual_discarded_lattice_tail (A : ℕ) :
     ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
@@ -487,70 +414,10 @@ theorem actual_discarded_second_tail (A : ℕ) :
   exact ht W Tsec Z Csec H ξ K (normValue u*normValue v) hT hZ hCsec hthreshold hK
     (by unfold normValue; positivity) _ (fun h => CenteredMomentTail.actualCorrelation_norm_le u v hu hv (-h))
 
-theorem actual_discarded_first_tail (A : ℕ) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-      ∀ (W : 𝓢(ℝ,ℂ)) (Tsec Z Csec H ξ K : ℝ),
-      0 < Tsec → 1 < Z → 1 ≤ Csec →
-      (2*H/Real.log Z+Real.log (4*Csec)/Real.log Z < ξ/4) →
-      kernelReference Tsec H ≤ K →
-      ∀ {ι : Type*} (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-        (hinj : Function.Injective P) (hg : ∀ i, ConcretePrimeRowBridge.goodLambda ∉ P i)
-        (_hchar : ∀ i, ringChar (O ⧸ P i) ≠ 2) (B : Finset ι) (c d : ι → ℕ)
-        (a b : O) (ha : a ≠ 0) (hb : b ≠ 0)
-        (χa : MulChar (Residue a) ℂ) (χb : MulChar (Residue b) ℂ),
-      let r := CenteredMomentInitial.activeModulus P B c d
-      let χr := CenteredMomentInitial.commonCharacter P hinj hg B c d
-      ‖∑' h : O,(discardedWeight (frequencyRadius Tsec Z ξ) (normValue h):ℂ)*
-        (normalizedResidueGauss r (CenteredMomentInitial.activeModulus_ne_zero P B c d) χr
-            (Ideal.Quotient.mk _ h)*
-          (normalizedResidueGauss a ha χa (Ideal.Quotient.mk _ h)/
-            (Real.sqrt (normValue a):ℂ))*
-          star (normalizedResidueGauss b hb χb (Ideal.Quotient.mk _ (-h))/
-            (Real.sqrt (normValue b):ℂ)))*paperRadialFourier W (K*normValue h)‖ ≤
-      (C*s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W)/
-        ((min 1 (kernelReference Tsec H))^2*(1+Z^(ξ/4))^A) := by
-  obtain ⟨s,C,hC,ht⟩ := actual_discarded_lattice_tail A
-  refine ⟨s,C,hC,?_⟩
-  intro W Tsec Z Csec H ξ K hT hZ hCsec hthreshold hK ι P _ hinj hg hchar B c d a b ha hb χa χb
-  dsimp only
-  simpa only [one_mul] using ht W Tsec Z Csec H ξ K 1 hT hZ hCsec hthreshold hK zero_le_one _ (by
-    intro h
-    rw [norm_mul,norm_mul,norm_star]
-    calc
-      _ ≤ (1*1)*1 := mul_le_mul
-        (mul_le_mul (CenteredMomentInitial.common_gauss_norm_le_one P hinj hg hchar B c d h)
-          (CenteredMomentTail.normalizedResidueGauss_div_root_norm_le_one a ha χa _)
-          (norm_nonneg _) zero_le_one)
-        (CenteredMomentTail.normalizedResidueGauss_div_root_norm_le_one b hb χb _)
-        (norm_nonneg _) (by norm_num)
-      _ = 1 := by norm_num)
-
 theorem retained_product_ne_zero (R : ℝ) (v h : O)
     (hne : retainedWeight R (normValue (v*h)) ≠ 0) : v ≠ 0 ∧ h ≠ 0 := by
   have hp := (retainedWeight_enclosure R _ hne).1
   constructor <;> intro hz <;> simp [hz,normValue] at hp
-
-theorem actual_nonempty_width_of_weight (Tsec Z Csec L ξ : ℝ)
-    (hZ : 1 < Z) (hC : 0 < Csec) (hT : Tsec ≤ Csec*Z^L) (v h : O)
-    (hne : retainedWeight (frequencyRadius Tsec Z ξ) (normValue (v*h)) ≠ 0) :
-    0 ≤ L-Real.logb Z (normValue v)+frequencyLoss Z Csec ξ := by
-  obtain ⟨hv,hh⟩ := retained_product_ne_zero _ v h hne
-  exact actual_nonempty_width Tsec Z Csec L ξ hZ hC hT v h hv hh hne
-
-theorem actual_second_pullback (R : ℝ) (Gc V h : O) :
-    retainedWeight R (normValue ((Gc*V)*h))=
-      retainedWeight R ((normValue Gc*normValue V)*normValue h) := by
-  simp only [normValue_mul]
-
-theorem retained_integral_empty (R : ℝ) (hR : 4*R < 1) (h : O) :
-    retainedWeight R (normValue h)=0 := by
-  by_contra hn
-  have hh : h ≠ 0 := by
-    intro hz
-    subst h
-    exact hn (by simpa [normValue] using retainedWeight_zero_nonpos R 0 le_rfl)
-  have hb := (retainedWeight_enclosure R _ hn).2
-  linarith [normValue_ge_one h hh]
 
 theorem finite_retained_above (R a : ℝ) (ha : 0 < a) :
     {n : ℤ | Retained R n ∧ ∃ q : ℝ, a ≤ q ∧ dyadicWeight n q ≠ 0}.Finite := by
@@ -567,40 +434,6 @@ theorem finite_retained_above (R a : ℝ) (ha : 0 < a) :
   · have h : (2:ℝ)^n < (2:ℝ)^(l:ℤ) := by
       simpa only [zpow_natCast,dyadicScale] using hu.trans_lt hl
     exact ((zpow_lt_zpow_iff_right₀ (by norm_num : (1:ℝ) < 2)).mp h).le
-
-theorem retainedWeight_finite_formula (R a : ℝ) (ha : 0 < a) :
-    ∃ S : Finset ℤ, ∀ q : ℝ, a ≤ q →
-      retainedWeight R q=∑ n ∈ S, if Retained R n then dyadicWeight n q else 0 := by
-  let hs := finite_retained_above R a ha
-  refine ⟨hs.toFinset,fun q hq => ?_⟩
-  apply tsum_eq_sum
-  intro n hn
-  split_ifs with hr
-  · by_contra hne
-    exact hn (hs.mem_toFinset.mpr ⟨hr,q,hq,hne⟩)
-  · rfl
-
-theorem retainedWeight_smooth_positive (R q : ℝ) (hq : 0 < q) :
-    ContDiffAt ℝ ∞ (retainedWeight R) q := by
-  obtain ⟨S,hS⟩ := retainedWeight_finite_formula R (q/2) (by linarith)
-  have hc : ContDiff ℝ ∞ (fun x : ℝ => ∑ n ∈ S, if Retained R n then dyadicWeight n x else 0) := by
-    apply ContDiff.sum
-    intro n hn
-    by_cases hr : Retained R n
-    · simpa [hr] using dyadicWeight_smooth n
-    · simpa [hr] using (contDiff_const : ContDiff ℝ ∞ (fun _x : ℝ => (0:ℝ)))
-  apply hc.contDiffAt.congr_of_eventuallyEq
-  filter_upwards [Ioi_mem_nhds (show q/2 < q by linarith)] with x hx
-  exact hS x hx.le
-
-theorem discardedWeight_smooth_positive (R q : ℝ) (hq : 0 < q) :
-    ContDiffAt ℝ ∞ (discardedWeight R) q := by
-  have hc : ContDiffAt ℝ ∞ (fun x => (1:ℝ)-retainedWeight R x) q :=
-    contDiffAt_const.sub (retainedWeight_smooth_positive R q hq)
-  apply hc.congr_of_eventuallyEq
-  filter_upwards [Ioi_mem_nhds hq] with x hx
-  have he := retained_add_discarded R x hx
-  linarith
 
 end SevenEighths.CenteredMomentSectorLocalization
 

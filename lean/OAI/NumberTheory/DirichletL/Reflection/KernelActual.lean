@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.KernelSource
 import OAI.NumberTheory.DirichletL.Descent.ReflectedDual
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

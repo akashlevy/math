@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.Fourier
-
 namespace OAI
 
 noncomputable section

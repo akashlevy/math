@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstPhysicalCutoff
 import OAI.NumberTheory.DirichletL.Descent.FirstWholeTail
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

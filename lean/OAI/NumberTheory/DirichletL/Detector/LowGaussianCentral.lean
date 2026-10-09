@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowGaussianRemote
-
 namespace OAI
 
 noncomputable section

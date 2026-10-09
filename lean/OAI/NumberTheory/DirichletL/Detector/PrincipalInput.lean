@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.PrincipalSplit
 import OAI.NumberTheory.DirichletL.Detector.FiniteProductBounds
-
 namespace OAI
 
 noncomputable section

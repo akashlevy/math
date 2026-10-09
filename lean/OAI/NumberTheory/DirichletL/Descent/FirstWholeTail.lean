@@ -1,5 +1,5 @@
-import OAI.NumberTheory.DirichletL.Descent.MarkedTails
-
+import OAI.NumberTheory.DirichletL.Descent.MarkBounds
+import OAI.NumberTheory.DirichletL.Foundation
 namespace OAI
 
 namespace SevenEighths.InverseMoment

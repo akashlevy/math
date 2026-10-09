@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.WholeRow
 import OAI.NumberTheory.DirichletL.Reflection.FamilyTail
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.Local
-
 namespace OAI
 
 noncomputable section

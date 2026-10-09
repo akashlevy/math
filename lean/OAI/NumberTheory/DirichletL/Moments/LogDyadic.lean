@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SectorLocalization
 import OAI.NumberTheory.DirichletL.Moments.SecondWholeKernel
-
 namespace OAI
 
 noncomputable section

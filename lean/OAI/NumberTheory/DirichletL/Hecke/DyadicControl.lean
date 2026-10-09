@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.LogarithmicActual
 import OAI.NumberTheory.DirichletL.Hecke.ReciprocalGrowth
 import OAI.NumberTheory.DirichletL.Hecke.DetectorZeros
-
 namespace OAI
 
 noncomputable section

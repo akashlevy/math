@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.ClippedUniform
 import OAI.NumberTheory.DirichletL.Descent.SecondCellPhysical
 import OAI.NumberTheory.DirichletL.Inversion.AmbientProfileTower
-
 namespace OAI
 
 noncomputable section

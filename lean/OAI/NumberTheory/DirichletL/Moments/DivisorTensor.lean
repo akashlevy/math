@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.DivisorExtraction
-
 namespace OAI
 
 noncomputable section
@@ -49,26 +48,6 @@ theorem allocationTerm_eq_product (D : Ideal O) (s : Finset ι) (v : ι → Idea
     push Not at hh
     obtain ⟨i,hi,hnd⟩ := hh
     rw [Finset.prod_eq_zero hi (by simp only [ite_eq_right hnd]),mul_zero]
-
-theorem selected_plain_sum (η : Character) (m A z : O) (t : ℝ)
-    (D : Ideal O) (hD : D ≠ 0) (W : ℝ → ℂ) (X : ℝ) :
-    (∑' I : Ideal O, if D∣I then rowWeight η m A z t I*W ((Ideal.absNorm I:ℝ)/X) else 0) =
-      rowWeight η m A z t D*rowTwistedSum η m A z W t (X/Ideal.absNorm D) := by
-  rw [tsum_ideal_divisible D hD, rowTwistedSum_eq_weight,← tsum_mul_left]
-  apply tsum_congr
-  intro I
-  rw [map_mul]
-  have he : (Ideal.absNorm (D*I):ℝ)/X = (Ideal.absNorm I:ℝ)/(X/(Ideal.absNorm D:ℝ)) := by
-    simp only [map_mul,Nat.cast_mul,div_div_eq_mul_div]
-    ring
-  rw [he]
-  ring
-
-theorem selected_plain_scales (D₁ D₂ : Ideal O) (X₁ X₂ Y₁ Y₂ T : ℝ)
-    (hX : X₁*X₂=T) (hY : Y₁*Y₂=T) :
-    (X₁/Ideal.absNorm D₁)*(X₂/Ideal.absNorm D₂)=T/(Ideal.absNorm D₁*Ideal.absNorm D₂:ℝ) ∧
-    (Y₁/Ideal.absNorm D₁)*(Y₂/Ideal.absNorm D₂)=T/(Ideal.absNorm D₁*Ideal.absNorm D₂:ℝ) :=
-  CenteredMomentExtraction.extracted_product_scale X₁ X₂ Y₁ Y₂ T D₁ D₂ hX hY
 
 end SevenEighths.CenteredMomentDivisorTensor
 

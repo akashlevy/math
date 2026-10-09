@@ -1,7 +1,6 @@
-import OAI.NumberTheory.DirichletL.Reflection.CommonMeasure
+import OAI.NumberTheory.DirichletL.Reflection.WeightedMeasurable
 import OAI.NumberTheory.DirichletL.Inversion.TerminalWidths
 import OAI.NumberTheory.DirichletL.Inversion.KernelSourceUniform
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedNormalization

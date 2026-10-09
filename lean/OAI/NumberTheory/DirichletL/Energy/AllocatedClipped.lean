@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.AllocatedPaid
 import OAI.NumberTheory.DirichletL.Energy.AllocatedZero
-
 namespace OAI
 
 noncomputable section

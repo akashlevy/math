@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorWitnessArithmetic
-
 namespace OAI
 
 noncomputable section
@@ -272,27 +271,6 @@ theorem terminal_sum_identity (χ : Character) (V T : ℝ → ℂ)
   rw [hi,hf.tsum_sub hr]
   rw [show (∑' I, f I) = (∑' I, exponentialTerm χ V D s Y I)-Complex.exp (-1/(Y : ℂ)) from
     exponential_sum_tail_unconditional χ V B D Y hB hVbound hD hY hV hVzero s hs]
-
-theorem terminal_sum_finite (χ : Character) (V T : ℝ → ℂ) (D Y U : ℝ)
-    (hU : 0 < U) (hTzero : ∀ x : ℝ, 2 ≤ x → T x = 0) (s : ℂ) :
-    (∑' I : Ideal O, terminalTerm χ V T D Y U s I) =
-      ∑ I ∈ ConcretePrimeRowBridge.idealsUpTo ⌈2*U⌉₊, terminalTerm χ V T D Y U s I := by
-  apply tsum_eq_sum
-  intro I hI
-  by_cases hI0 : I = 0
-  · simp [terminalTerm,exponentialTerm,cutoffCoefficient,hI0]
-  have hN : (⌈2*U⌉₊ : ℝ) < Ideal.absNorm I := by
-    have hn : ¬Ideal.absNorm I ≤ ⌈2*U⌉₊ := by
-      intro hh
-      apply hI
-      exact ConcretePrimeRowBridge.mem_idealsUpTo.mpr
-        ⟨Nat.one_le_iff_ne_zero.mpr (Ideal.absNorm_eq_zero_iff.not.mpr hI0),hh⟩
-    exact_mod_cast lt_of_not_ge hn
-  have ht : T ((Ideal.absNorm I : ℝ)/U)=0 := by
-    apply hTzero
-    apply (le_div_iff₀ hU).mpr
-    linarith [Nat.le_ceil (2*U)]
-  simp only [terminalTerm,ht,mul_zero]
 
 end SevenEighths.HeckeDetectorTail
 

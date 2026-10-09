@@ -1,6 +1,12 @@
 import OAI.NumberTheory.DirichletL.Moments.RadialSourceDictionary
-import OAI.NumberTheory.DirichletL.Moments.ActiveCanonicalSource
-
+import OAI.NumberTheory.DirichletL.Moments.SourceRectangleEnergy
+import OAI.NumberTheory.DirichletL.Moments.ActiveAllocation
+import OAI.NumberTheory.DirichletL.Moments.PositiveSummability
+import OAI.NumberTheory.DirichletL.Moments.CanonicalRetainedSource
+import OAI.NumberTheory.DirichletL.Moments.SecondLiveEnergy
+import OAI.NumberTheory.DirichletL.Moments.RestrictedSourceNormalization
+import OAI.NumberTheory.DirichletL.Moments.SourceRectangle
+import OAI.NumberTheory.DirichletL.Moments.CommonRawScale
 namespace OAI
 
 noncomputable section

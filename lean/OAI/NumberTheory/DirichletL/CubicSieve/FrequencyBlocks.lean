@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.PrimePools
-
 namespace OAI
 
 noncomputable section
@@ -8,76 +7,23 @@ namespace SecondPassArithmetic
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 section
 
-open scoped BigOperators Classical SchwartzMap
-
 section
-open ActualEisensteinCubic
 open ConcreteTraceCRT (eisEmbedding)
 open RayFourExpansion (RayCharacter)
 
@@ -118,39 +64,8 @@ theorem inputConjugateRow_smoothed_frequency_blocks
     (Finset.mem_powerset.mp E.property) Ψ Ψ m c d
     (fun U => H (G ∪ U)) (fun U => H (G ∪ U)) k W Y
 
-theorem firstCoreInputRow_finite_le_frequency_blocks
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (F D B : Finset ι) (v : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (negative : Bool) (χ : RayCharacter) (Ψ : O →* ℂ) (m : O)
-    (H : Finset ι → ℂ) (V : ℝ → ℂ) (y : Finset ι → ℝ) (c d : O)
-    (r : FirstCoreIndex) (t : ℝ) (T : Finset O) (Y : ℝ) (hY : 0 < Y)
-    (hT : ∀ z ∈ T, (Ideal.absNorm (Ideal.span {z}) : ℝ) ≤ Y) :
-    let Ψ' := firstCoreTwist negative χ Ψ r
-    let m' := m * FirstPassCubeLabels.b0Label p B v ε₁ ε₂
-    let c' := c * FirstPassCubeLabels.jLabel p B v ε₁ ε₂
-    let H' := firstCoreTest H V y negative t D
-    (∑ z ∈ T, ‖firstCoreInputRow p hg F D B v ε₁ ε₂ negative χ Ψ m H V y c d r t z‖ ^ 2) ≤
-      (∑ G ∈ (F \ D).powerset,
-        (↑(‖secondInputCoefficient p hg Ψ' m' c' d (fun _ => 1) G‖ ^ 2) : ℂ) *
-        ∑ E : G.powerset,
-          ((UniqueFactorizationMonoid.moebius (∏ i ∈ E.val, Ideal.span {p i}) : ℂ) /
-            (‖eisEmbedding (primeSubsetGenerator (fun i => Ideal.span {p i}) E.val)‖ ^ 2 : ℝ)) *
-          ∑' k : O,
-            secondFrequencyKernel p hp hg hinj (F \ D) Ψ' Ψ' m'
-              (secondMaskQuotient p E.val G (Finset.mem_powerset.mp E.property)) c' d
-              (primeSubsetGenerator (fun i => Ideal.span {p i}) E.val) k
-              (fun U => H' (G ∪ U)) (fun U => H' (G ∪ U)) rowMajorant Y).re := by
-  dsimp only
-  have h := finite_row_energy_le_rowMajorant
-    (firstCoreInputRow p hg F D B v ε₁ ε₂ negative χ Ψ m H V y c d r t) T Y hY hT
-  rw [firstCoreInputRow_smoothed_sign p hg F D B v ε₁ ε₂ negative χ Ψ m H V y c d r t rowMajorant Y,
-    inputConjugateRow_smoothed_frequency_blocks p hp hg hinj hc] at h
-  · exact h
-  · exact hY
-
 end
 
-open ActualEisensteinCubic
 open ConcreteTraceCRT (eisEmbedding)
 open FirstCauchyArithmetic (supportConjugateSum supportMobius)
 open RayFourExpansion (RayCharacter)
@@ -286,73 +201,15 @@ end
 
 section
 
-open scoped BigOperators Classical
-open MeasureTheory
-open ActualEisensteinCubic
 open ConcreteTraceCRT (eisEmbedding)
 open RayFourExpansion (RayCharacter)
-
-lemma firstCoreTest_empty_mass {ι : Type*} [DecidableEq ι]
-    (H : Finset ι → ℂ) (V : ℝ → ℂ) (y : Finset ι → ℝ)
-    (negative : Bool) (t : ℝ) (D : Finset ι) :
-    ‖firstCoreTest H V y negative t D ∅‖ ^ 2 = ‖H D‖ ^ 2 * ‖V (y D)‖ ^ 2 := by
-  cases negative <;> simp only [firstCoreTest, Finset.union_empty, Bool.false_eq_true,
-    ite_false, ite_true, norm_mul, norm_star, FourierBridge.logPhase_norm, mul_one, mul_pow]
-
-theorem firstCoreInputRow_integrated_le_corrected_source
-    {ι : Type*} [DecidableEq ι]
-    (p : ι → O) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (F D B : Finset ι) (v : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (negative : Bool) (χ : RayCharacter) (Ψ : O →* ℂ) (m : O)
-    (H : Finset ι → ℂ) (V : ℝ → ℂ) (y : Finset ι → ℝ) (c d : O)
-    (r : FirstCoreIndex) (T : Finset O) (Y : ℝ) (hY : 0 < Y)
-    (hT : ∀ z ∈ T, (Ideal.absNorm (Ideal.span {z}) : ℝ) ≤ Y)
-    (hT0 : ∀ z ∈ T, z ≠ 0)
-    {k : ℝ → ℝ} (hk : Integrable k volume) (hk0 : ∀ t, 0 ≤ k t) :
-    (∫ t : ℝ, k t * ∑ z ∈ T,
-      ‖firstCoreInputRow p hg F D B v ε₁ ε₂ negative χ Ψ m H V y c d r t z‖ ^ 2) ≤
-    (∫ t : ℝ, k t *
-      (∑' z : O, rowMajorant (‖eisEmbedding z‖ ^ 2 / Y) *
-        (↑(‖firstCoreInputRow p hg F D B v ε₁ ε₂ negative χ Ψ m H V y c d r t z‖ ^ 2) : ℂ)).re) -
-      (‖H D‖ ^ 2 * ‖V (y D)‖ ^ 2) * ∫ t : ℝ, k t := by
-  let mass := ‖H D‖ ^ 2 * ‖V (y D)‖ ^ 2
-  let source := fun t : ℝ =>
-    (∑' z : O, rowMajorant (‖eisEmbedding z‖ ^ 2 / Y) *
-      (↑(‖firstCoreInputRow p hg F D B v ε₁ ε₂ negative χ Ψ m H V y c d r t z‖ ^ 2) : ℂ)).re
-  have isource : Integrable (fun t : ℝ => k t * source t) volume :=
-    firstCoreInputRow_majorant_integrable p hg F D B v ε₁ ε₂ negative χ Ψ m H V y c d r Y hY hk
-  have icorr : Integrable (fun t : ℝ => k t * (source t - mass)) volume := by
-    simp only [mul_sub]
-    exact isource.sub (hk.mul_const mass)
-  have hpoint (t : ℝ) : k t * (∑ z ∈ T,
-      ‖firstCoreInputRow p hg F D B v ε₁ ε₂ negative χ Ψ m H V y c d r t z‖ ^ 2) ≤
-      k t * (source t - mass) := by
-    have h := firstCoreInputRow_finite_le_corrected_source p hg F D B v ε₁ ε₂ negative χ Ψ m H V y c d r t T Y hY hT hT0
-    rw [firstCoreTest_empty_mass] at h
-    exact mul_le_mul_of_nonneg_left h (hk0 t)
-  calc
-    _ ≤ ∫ t : ℝ, k t * (source t - mass) := by
-      apply integral_mono _ icorr hpoint
-      simp only [Finset.mul_sum]
-      exact integrable_finsetSum _ (fun z hz =>
-        firstCoreInputRow_integrable p hg F D B v ε₁ ε₂ negative χ Ψ m H V y c d r z hk)
-    _ = _ := by
-      simp only [mul_sub]
-      rw [integral_sub isource (hk.mul_const mass), integral_mul_const]
-      dsimp only [source, mass]
-      ring
 
 end
 
 section
 
-open scoped BigOperators Classical
-
 section
-open ActualEisensteinCubic
-open FirstPassCubeLabels (primeProduct cubeRadical aLabel jLabel j2Label squarefreeLabel b0Label
-  bit retained parity b0Exponent)
+open FirstPassCubeLabels (primeProduct cubeRadical aLabel jLabel j2Label squarefreeLabel b0Label bit retained parity b0Exponent)
 
 lemma span_dvd_of_element_dvd {a b : O} (h : a ∣ b) :
     (Ideal.span {a} : Ideal O) ∣ Ideal.span {b} := by
@@ -484,7 +341,6 @@ theorem actualSecondLabel_span
 
 end
 
-open ActualEisensteinCubic
 open FirstPassCubeLabels (jLabel b0Label primeProductNorm)
 
 @[ext] structure SecondSupportData (ι : Type*) where
@@ -495,14 +351,8 @@ open FirstPassCubeLabels (jLabel b0Label primeProductNorm)
   frequency : O
   deriving DecidableEq
 
-instance {ι : Type*} : Inhabited (SecondSupportData ι) := ⟨⟨∅, ∅, ∅, ∅, 0⟩⟩
-
 variable {ι : Type*} [DecidableEq ι]
   (p : ι → O) [∀ i, (Ideal.span {p i}).IsMaximal]
-
-def secondSupportTuple (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (x : SecondSupportData ι) : SecondPassFiber.OldTuple :=
-  actualSecondTuple p B x.common x.firstDivisor x.secondDivisor x.overlap v₁ v₂ ε₁ ε₂ x.frequency
 
 def secondSupportLabel (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
     (x : SecondSupportData ι) : O :=
@@ -518,50 +368,10 @@ def secondSupportRow (x : SecondSupportData ι) : O :=
   actualSecondRow p x.firstDivisor x.secondDivisor x.frequency
 
 omit [DecidableEq ι] [∀ (i : ι), (span {p i}).IsMaximal] in
-@[simp] theorem secondSupportTuple_newLabel
-    (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool) (x : SecondSupportData ι) :
-    SecondPassFiber.newLabel (secondSupportTuple p B v₁ v₂ ε₁ ε₂ x) =
-      secondSupportNewLabel p B v₁ v₂ ε₁ ε₂ x := rfl
-
-omit [DecidableEq ι] [∀ (i : ι), (span {p i}).IsMaximal] in
-@[simp] theorem secondSupportTuple_newRow
-    (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool) (x : SecondSupportData ι) :
-    SecondPassFiber.newRow (secondSupportTuple p B v₁ v₂ ε₁ ε₂ x) = secondSupportRow p x := rfl
-
-omit [DecidableEq ι] [∀ (i : ι), (span {p i}).IsMaximal] in
 theorem secondSupportLabel_span
     (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool) (x : SecondSupportData ι) :
     Ideal.span {secondSupportLabel p B v₁ v₂ ε₁ ε₂ x} = secondSupportNewLabel p B v₁ v₂ ε₁ ε₂ x :=
   actualSecondLabel_span p B x.common x.secondDivisor x.overlap v₁ v₂ ε₁ ε₂
-
-theorem secondSupportTuple_injective
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool) :
-    Function.Injective (secondSupportTuple p B v₁ v₂ ε₁ ε₂) := by
-  intro x y h
-  have hC := congrArg (fun z : SecondPassFiber.OldTuple => z.core 1) h
-  have hD := congrArg (fun z : SecondPassFiber.OldTuple => z.core 7) h
-  have hE := congrArg (fun z : SecondPassFiber.OldTuple => z.core 2) h
-  have hV := congrArg SecondPassFiber.OldTuple.v h
-  have hk := congrArg SecondPassFiber.OldTuple.row h
-  apply SecondSupportData.ext
-  · exact FirstCauchyArithmetic.family_product_injective _ hinj hC
-  · exact FirstCauchyArithmetic.family_product_injective _ hinj hD
-  · exact FirstCauchyArithmetic.family_product_injective _ hinj hE
-  · exact FirstCauchyArithmetic.family_product_injective _ hinj hV
-  · exact hk
-
-omit [∀ (i : ι), (span {p i}).IsMaximal] in
-theorem secondSupportTuple_valid
-    (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (hv : ∀ i ∈ B, 0 < v₁ i + v₂ i) (x : SecondSupportData ι)
-    (hCB : Disjoint x.common B) (hD : x.firstDivisor ⊆ x.common ∪ B) :
-    SecondPassFiber.Valid (secondSupportTuple p B v₁ v₂ ε₁ ε₂ x)
-      (SecondPassFiber.newLabel (secondSupportTuple p B v₁ v₂ ε₁ ε₂ x))
-      (Ideal.span {b0Label p B (fun i => v₁ i + v₂ i) ε₁ ε₂})
-      (SecondPassFiber.newRow (secondSupportTuple p B v₁ v₂ ε₁ ε₂ x)) :=
-  actualSecondTuple_valid p B x.common x.firstDivisor x.secondDivisor x.overlap hCB hD
-    v₁ v₂ ε₁ ε₂ hv x.frequency
 
 omit [DecidableEq ι] [∀ (i : ι), (span {p i}).IsMaximal] in
 theorem sector_b0_ne_bot (hp : ∀ i, p i ≠ 0)
@@ -587,119 +397,9 @@ def secondSectorKap (K : ℝ) (x : SecondSupportData ι) : ℝ :=
 
 end
 
-open MeasureTheory
-open scoped BigOperators Classical SchwartzMap FourierTransform
-open ActualEisensteinCubic
-open SecondPassIntegration (tupleSourceSum tupleSource_uniform_transfer childGeometricMean)
+open SecondPassIntegration (tupleSourceSum childGeometricMean)
 open JointLogSeparation
 open FirstPassCubeLabels (b0Label)
-
-variable {ι : Type*} [DecidableEq ι]
-  (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-  (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-  (hg : ∀ i, lambda ∉ Ideal.span {p i})
-
-def actualSecondSectorSource
-    (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (s : Finset (SecondSupportData ι)) (w : SecondSupportData ι → ℂ)
-    (F : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m : O)
-    (A₁ A₂ W : 𝓢(ℝ, ℂ)) (windows : Fin 7 → ℝ → ℂ)
-    (D₀ E₀ V₀ X X₀ K Y : ℝ) : ℂ :=
-  ∑ x ∈ s, w x * postCommonSmoothPair p hp hcop hg F Ψ₁ Ψ₂ m
-    (secondSupportLabel p B v₁ v₂ ε₁ ε₂ x) (secondSupportRow p x) (-secondSupportRow p x)
-    A₁ A₂ W windows (secondSectorZ p X X₀ x) (secondSectorUd p D₀ x)
-    (secondSectorUe p E₀ x) (secondSectorUv p V₀ x) (secondSectorKap p K x)
-    X₀ X₀ (Y*K/(D₀*E₀^2*V₀^2*X₀^2))
-
-theorem actual_second_sector_uniform_transfer
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (ε : ℝ) (hε : 0 < ε) (A₁ A₂ W : 𝓢(ℝ, ℂ))
-    (windows : Fin 7 → ℝ → ℂ) (M : Fin 7 → ℝ)
-    (hM : ∀ j, 0 ≤ M j) (hwindows : ∀ j x, windows j x ≠ 0 → |x| ≤ M j) (A J : ℕ) :
-    ∃ Cₐ : ℝ, 0 < Cₐ ∧ ∃ Cₛ : ℝ, 0 ≤ Cₛ ∧
-      ∀ D₀ E₀ V₀ X X₀ K Y : ℝ,
-      0 < D₀ → 0 < E₀ → 0 < V₀ → 0 < X → 0 < X₀ → 0 < K → 0 < Y →
-      ∃ b : 𝓢(ℝ, ℂ),
-      (∀ t₁ t₂ t₃ : ℝ,
-        (1 + Y*K/(D₀*E₀^2*V₀^2*X₀^2))^A * ‖(𝓕 A₁) t₁ * (𝓕 A₂) t₂ * b t₃‖ ≤
-          Cₛ * FirstPassCubeLabels.firstLogDensity J t₁ *
-            FirstPassCubeLabels.firstLogDensity J t₂ * FirstPassCubeLabels.firstLogDensity J t₃) ∧
-      ∀ (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-        (s : Finset (SecondSupportData ι)) (T : Finset (Ideal O × O))
-        (w : SecondSupportData ι → ℂ) (Bnd lengthScale : ℝ)
-        (F : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m : O),
-        (∀ i ∈ B, 0 < v₁ i + v₂ i) →
-        (∀ x ∈ s, Disjoint x.common B) →
-        (∀ x ∈ s, x.firstDivisor ⊆ x.common ∪ B) →
-        0 ≤ Bnd → 0 ≤ lengthScale →
-        (∀ x ∈ s, (secondSupportNewLabel p B v₁ v₂ ε₁ ε₂ x, secondSupportRow p x) ∈ T) →
-        (∀ z ∈ T, z.1 ≠ ⊥) → (∀ z ∈ T, (Ideal.absNorm z.1 : ℝ) ≤ lengthScale) →
-        (∀ x ∈ s, ‖w x‖ * ‖outerWindow windows
-          (secondSectorZ p X X₀ x) (secondSectorUd p D₀ x) (secondSectorUe p E₀ x)
-          (secondSectorUv p V₀ x) (secondSectorKap p K x)‖ ≤ Bnd) →
-        ‖actualSecondSectorSource p hp hcop hg B v₁ v₂ ε₁ ε₂ s w F Ψ₁ Ψ₂ m
-          A₁ A₂ W windows D₀ E₀ V₀ X X₀ K Y‖ ≤
-        (Bnd * Cₐ * (lengthScale * Ideal.absNorm (Ideal.span {b0Label p B (fun i => v₁ i + v₂ i) ε₁ ε₂}))^ε) *
-        (∫ t₁ : ℝ, ∫ t₂ : ℝ, ∫ t₃ : ℝ,
-          ‖tripleCoefficient (𝓕 A₁) (𝓕 A₂) b (t₁,t₂,t₃)‖ *
-            childGeometricMean p hp hcop hg F Ψ₁ Ψ₂ m T (windows 5) (windows 6) X₀ X₀ (t₁,t₂,t₃)) := by
-  obtain ⟨Cₐ, hCₐ, Cₛ, hCₛ, htrans⟩ :=
-    tupleSource_uniform_transfer p hp hcop hg ε hε A₁ A₂ W windows M hM hwindows A J
-  refine ⟨Cₐ, hCₐ, Cₛ, hCₛ, ?_⟩
-  intro D₀ E₀ V₀ X X₀ K Y hD₀ hE₀ hV₀ hX hX₀ hK hY
-  have hR : 0 < Y*K/(D₀*E₀^2*V₀^2*X₀^2) := by positivity
-  obtain ⟨b, hb, hbound⟩ := htrans _ hR
-  refine ⟨b, hb, ?_⟩
-  intro B v₁ v₂ ε₁ ε₂ s T w Bnd lengthScale F Ψ₁ Ψ₂ m hv hCB hD hBnd hL hmap hT0 hnorm hw
-  let encode := secondSupportTuple p B v₁ v₂ ε₁ ε₂
-  have hi : Function.Injective encode := secondSupportTuple_injective p hinj B v₁ v₂ ε₁ ε₂
-  let decode := Function.invFun encode
-  have hdec (x : SecondSupportData ι) : decode (encode x) = x := Function.leftInverse_invFun hi x
-  let s' := s.image encode
-  let w' := fun x => w (decode x)
-  let label' := fun x => secondSupportLabel p B v₁ v₂ ε₁ ε₂ (decode x)
-  let z' := fun x => secondSectorZ p X X₀ (decode x)
-  let ud' := fun x => secondSectorUd p D₀ (decode x)
-  let ue' := fun x => secondSectorUe p E₀ (decode x)
-  let uv' := fun x => secondSectorUv p V₀ (decode x)
-  let kap' := fun x => secondSectorKap p K (decode x)
-  have hsvalid : ∀ x ∈ s', SecondPassFiber.Valid x (SecondPassFiber.newLabel x)
-      (Ideal.span {b0Label p B (fun i => v₁ i + v₂ i) ε₁ ε₂}) (SecondPassFiber.newRow x) := by
-    intro x hx
-    obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hx
-    exact secondSupportTuple_valid p B v₁ v₂ ε₁ ε₂ hv a (hCB a ha) (hD a ha)
-  have hsmap : ∀ x ∈ s', (SecondPassFiber.newLabel x, SecondPassFiber.newRow x) ∈ T := by
-    intro x hx
-    obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hx
-    exact hmap a ha
-  have hsw : ∀ x ∈ s', ‖w' x‖ * ‖outerWindow windows (z' x) (ud' x) (ue' x) (uv' x) (kap' x)‖ ≤ Bnd := by
-    intro x hx
-    obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hx
-    dsimp only [w', z', ud', ue', uv', kap']
-    rw [hdec]
-    exact hw a ha
-  have hslabel : ∀ x ∈ s', Ideal.span {label' x} = SecondPassFiber.newLabel x := by
-    intro x hx
-    obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hx
-    dsimp only [label']
-    rw [hdec]
-    exact secondSupportLabel_span p B v₁ v₂ ε₁ ε₂ a
-  have hout := hbound s' T (Ideal.span {b0Label p B (fun i => v₁ i + v₂ i) ε₁ ε₂})
-    w' Bnd lengthScale label' F Ψ₁ Ψ₂ m z' ud' ue' uv' kap' X₀ X₀
-    (sector_b0_ne_bot p hp B v₁ v₂ ε₁ ε₂) hBnd hL hsvalid hsmap hT0 hnorm hsw hslabel
-  have hsource : tupleSourceSum p hp hcop hg s' w' label' F Ψ₁ Ψ₂ m
-      A₁ A₂ W windows z' ud' ue' uv' kap' X₀ X₀ (Y*K/(D₀*E₀^2*V₀^2*X₀^2)) =
-      actualSecondSectorSource p hp hcop hg B v₁ v₂ ε₁ ε₂ s w F Ψ₁ Ψ₂ m
-        A₁ A₂ W windows D₀ E₀ V₀ X X₀ K Y := by
-    unfold tupleSourceSum actualSecondSectorSource
-    rw [Finset.sum_image (fun a ha c hc h => hi h)]
-    apply Finset.sum_congr rfl
-    intro a ha
-    dsimp only [w', label', z', ud', ue', uv', kap']
-    rw [hdec]
-    rfl
-  rw [hsource] at hout
-  exact hout
 
 end SecondPassArithmetic
 

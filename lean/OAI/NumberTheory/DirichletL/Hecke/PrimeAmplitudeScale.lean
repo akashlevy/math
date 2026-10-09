@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.PrimeAmplitudeBins
 import OAI.NumberTheory.DirichletL.Hecke.DetectorDyadicGeometry
-
 namespace OAI
 
 noncomputable section

@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.ReflectionTailMass
 import OAI.NumberTheory.DirichletL.Moments.ReflectedTruncation
 import OAI.NumberTheory.DirichletL.Moments.TwistedReflection
-
 namespace OAI
 
 noncomputable section
@@ -13,7 +12,6 @@ open CenteredMomentSectorLocalization CenteredMomentReflectedTruncation
 open CenteredMomentReflectedAnnuli CenteredMomentNaturalPrimitive CenteredMomentNaturalReflection
 open EisensteinSchwartzPoisson
 local notation "O" => HeckeFamily.O
-local notation "NI" => UnrestrictedIdealReindex.NonzeroIdeal
 
 lemma masked_decayTwo (F : ℝ→ℂ) (hF : DecayTwo F) (w : ℝ→ℝ)
     (hw : ∀x,0≤w x ∧ w x≤1) : DecayTwo (fun x=>(w x:ℂ)*F x) := by

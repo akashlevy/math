@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.FirstHighGaussianUniformPowers
 import OAI.NumberTheory.DirichletL.Energy.FirstNormalizedGaussianPowers
-
 namespace OAI
 
 noncomputable section

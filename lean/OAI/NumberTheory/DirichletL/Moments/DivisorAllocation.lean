@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.HeckeExpansion
 import OAI.NumberTheory.DirichletL.Moments.MobiusRegroup
-
 namespace OAI
 
 noncomputable section
@@ -101,17 +100,6 @@ theorem squarefree_mask_allocation (D : Ideal O) (hD : Squarefree D)
   simp_rw [hl]
   exact Fintype.prod_sum _
 
-theorem allocationTerm_norm_le_one (D : Ideal O) (s : Finset ι) (v : ι → Ideal O)
-    (a : Allocation D s) : ‖allocationTerm D s v a‖ ≤ 1 := by
-  unfold allocationTerm
-  rw [norm_prod]
-  apply Finset.prod_le_one₀ (fun _ _ => norm_nonneg _)
-  intro P hP
-  rw [norm_mul,norm_pow,norm_neg,norm_one,one_pow,one_mul,norm_prod]
-  apply Finset.prod_le_one₀ (fun _ _ => norm_nonneg _)
-  intro i hi
-  split_ifs <;> norm_num
-
 theorem allocation_card_bound (D : Ideal O) (s : Finset ι) :
     Fintype.card (Allocation D s) ≤ (2^(primeSupport D).card)^s.card := by
   have hc : (nonemptySelections s).card ≤ 2^s.card := by
@@ -122,27 +110,6 @@ theorem allocation_card_bound (D : Ideal O) (s : Finset ι) :
   calc
     _ ≤ (2^s.card)^(primeSupport D).card := Nat.pow_le_pow_left hc _
     _ = _ := by simp only [← pow_mul,Nat.mul_comm]
-
-theorem allocation_mass_small_power (N : ℕ) (hN : 0 < N) (ε : ℝ) (hε : 0 < ε) :
-    ∃ C : ℝ, 0 < C ∧ ∀ (D : Ideal O), D ≠ 0 → ∀ s : Finset ι, s.card ≤ N →
-      ∀ v : ι → Ideal O, (∑ a : Allocation D s, ‖allocationTerm D s v a‖) ≤
-        C*(Ideal.absNorm D:ℝ)^ε := by
-  have hNr : (0:ℝ) < N := by exact_mod_cast hN
-  obtain ⟨C,hC,hb⟩ := SquarefreeDivisorBound.prime_support_subsets_bound
-    (ε/N) (div_pos hε hNr)
-  refine ⟨C^N,pow_pos hC _,?_⟩
-  intro D hD s hs v
-  have hn : 0 ≤ (Ideal.absNorm D:ℝ) := Nat.cast_nonneg _
-  calc
-    _ ≤ ∑ _a : Allocation D s,(1:ℝ) := Finset.sum_le_sum (fun a _ => allocationTerm_norm_le_one D s v a)
-    _ = (Fintype.card (Allocation D s):ℝ) := by simp
-    _ ≤ ((2:ℝ)^(primeSupport D).card)^s.card := by exact_mod_cast allocation_card_bound D s
-    _ ≤ ((2:ℝ)^(primeSupport D).card)^N := pow_le_pow_right₀ (one_le_pow₀ (by norm_num)) hs
-    _ ≤ (C*(Ideal.absNorm D:ℝ)^(ε/N))^N := pow_le_pow_left₀ (by positivity) (hb D hD) N
-    _ = C^N*(Ideal.absNorm D:ℝ)^ε := by
-      rw [mul_pow,← Real.rpow_mul_natCast hn]
-      congr 2
-      field_simp
 
 end SevenEighths.CenteredMomentDivisorAllocation
 

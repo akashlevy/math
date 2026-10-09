@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CubeFloorArithmetic
 import OAI.NumberTheory.DirichletL.PrimeRows.CubeFloorDyadic
-
 namespace OAI
 
 noncomputable section

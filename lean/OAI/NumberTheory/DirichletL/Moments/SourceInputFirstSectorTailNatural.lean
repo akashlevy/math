@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SourceInputFirstSectorTailUniform
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.OriginalSplitReflection
 import OAI.NumberTheory.DirichletL.Reflection.OriginalChoicePhysical
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

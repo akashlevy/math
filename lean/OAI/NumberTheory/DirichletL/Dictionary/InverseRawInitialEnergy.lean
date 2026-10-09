@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseRawInitialGates
 import OAI.NumberTheory.DirichletL.Inversion.InitialExcludedEnergy
-
 namespace OAI
 
 noncomputable section

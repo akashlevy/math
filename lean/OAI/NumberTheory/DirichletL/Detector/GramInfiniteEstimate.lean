@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GramSourceEstimate
-
 namespace OAI
 
 noncomputable section

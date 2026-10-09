@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.IdealOperations
-
 namespace OAI
 
 noncomputable section
@@ -247,19 +246,6 @@ theorem idealCoeff_eq_row (η χ : Character) (m f z : O)
   change elementCoeff η n * _ = idealCoeff η (Ideal.span {n}) * _
   rw [idealCoeff_span η hn]
   rfl
-
-theorem exists_primitive_row (η : Character) (m f z : O)
-    (hm : m ≠ 0) (hf : f ≠ 0) (hz : z ≠ 0)
-    (hmLam : λ₀ ∣ m) (hm2 : (2 : O) ∣ m) :
-    ∃ χ ψ : Character, FiniteFourier.IsPrimitiveOnIdeals ψ.residue ∧
-      ψ.modulus.absNorm ≤ rowConductorBound η m f z ∧
-      (∀ I : Ideal O, idealCoeff χ I =
-        idealCoeff η I * CanonicalRowCompletion.idealRowHom (m^6*f^4*z) I) ∧
-      (∀ I : Ideal O, idealCoeff χ I =
-        if IsCoprime I χ.modulus then idealCoeff ψ I else 0) := by
-  obtain ⟨χ, hnorm, heq⟩ := exists_row_character_with_conductor η m f z hm hf hz hmLam hm2
-  obtain ⟨ψ, _, hp, hn, hmask⟩ := exists_primitive_character χ
-  exact ⟨χ, ψ, hp, hn.trans hnorm, idealCoeff_eq_row η χ m f z heq, hmask⟩
 
 end SevenEighths.HeckeRowClosure
 

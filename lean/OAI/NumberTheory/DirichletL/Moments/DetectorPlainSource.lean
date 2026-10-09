@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.UncenteredTerminal
 import OAI.NumberTheory.DirichletL.Moments.SourceRectangleEnergy
 import OAI.NumberTheory.DirichletL.Moments.RetainedEnergy
-
 namespace OAI
 
 noncomputable section

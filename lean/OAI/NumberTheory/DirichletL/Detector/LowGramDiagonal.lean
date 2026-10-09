@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LowGramPoisson
 import OAI.NumberTheory.DirichletL.Moments.SecondDiagonal
-
 namespace OAI
 
 noncomputable section

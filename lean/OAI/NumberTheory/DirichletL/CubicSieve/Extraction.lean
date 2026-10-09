@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.Norm
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve
@@ -7,24 +6,6 @@ open scoped BigOperators Classical
 open ActualEisensteinCubic CompletedGauss ConcreteTraceCRT ConcretePrimeRowBridge
 noncomputable section
 local notation "O" => ActualEisensteinCubic.O
-
-theorem primary_extracted_parts (I : Ideal O) (hI : primaryGenerator I ≠ 0) :
-    primaryGenerator (firstPart I) ≠ 0 ∧ primaryGenerator (secondPart I) ≠ 0 ∧
-      primaryGenerator (cubePart I) ≠ 0 := by
-  have he := congrArg primaryGeneratorHom
-    (cubic_factorization I (primaryGenerator_ne_zero_ideal I hI))
-  simp only [map_mul, map_pow] at he
-  change primaryGenerator I = primaryGenerator (firstPart I) *
-    primaryGenerator (secondPart I) ^ 2 * primaryGenerator (cubePart I) ^ 3 at he
-  rw [he, mul_ne_zero_iff, mul_ne_zero_iff, pow_ne_zero_iff (by decide : (2 : ℕ) ≠ 0),
-    pow_ne_zero_iff (by decide : (3 : ℕ) ≠ 0)] at hI
-  exact ⟨hI.1.1, hI.1.2, hI.2⟩
-
-theorem firstPart_admissible (I : Ideal O) (hI : primaryGenerator I ≠ 0) :
-    Admissible (firstPart I) := ⟨firstPart_squarefree I, (primary_extracted_parts I hI).1⟩
-
-theorem secondPart_admissible (I : Ideal O) (hI : primaryGenerator I ≠ 0) :
-    Admissible (secondPart I) := ⟨secondPart_squarefree I, (primary_extracted_parts I hI).2.1⟩
 
 theorem extracted_norm_product (I : Ideal O) (hI : I ≠ 0) :
     (Ideal.absNorm I : ℝ) = (Ideal.absNorm (firstPart I) : ℝ) *

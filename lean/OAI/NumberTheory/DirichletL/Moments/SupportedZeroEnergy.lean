@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.ZeroMeanBridge
 import OAI.NumberTheory.DirichletL.Moments.SourceMass
-
 namespace OAI
 
 noncomputable section
@@ -61,14 +60,6 @@ theorem zeroEnergy_eq_active_original (η : Character) (m A : O) (t : ℝ)
   exact idealZeroEnergy_filter (supportedColumns S) (fun I h => (Finset.mem_filter.mp h).2)
     (fun I => c I*rowWeight η m A 1 t I) K (fun I => c I≠0)
     (fun I _ h => by simp only [not_not] at h; rw [h,zero_mul])
-
-theorem zeroEnergy_eq_active (η : Character) (m A : O) (t : ℝ)
-    (S : Finset (Ideal O)) (c : Ideal O → ℂ) (W : 𝓢(ℝ,ℂ)) (K : ℝ) :
-    zeroEnergy η m A t S c W K = zeroEnergy η m A t (activeColumns S c) c W K := by
-  rw [zeroEnergy_eq_active_original,zeroEnergy_eq_original]
-  have he : supportedColumns (activeColumns S c)=activeColumns S c :=
-    Finset.filter_eq_self.mpr (activeColumns_supported S c)
-  simp only [he]
 
 theorem finiteColumnCoefficient_witness {ι : Type*} [Fintype ι]
     (S : Finset (Tuple ι)) (β : Tuple ι → ℂ) (I : Ideal O)
@@ -168,44 +159,6 @@ theorem active_tuple_zero_energy_bound (N : ℕ) (ε : ℝ) (hε : 0<ε) :
     _ = C*((1+D)^(N+2))^2*K*B^2*‖paperRadialFourier W 0‖*
       ((X^(ε/4))^2*X^(1+ε/2)) := by ring
     _ = _ := by rw [hxpow]
-
-theorem normalized_active_tuple_zero_energy_bound (N : ℕ) (ε : ℝ) (hε : 0<ε) :
-    ∃ C : ℝ,0<C ∧ ∀ {ι : Type*} [Fintype ι], Fintype.card ι≤N →
-      ∀ (η : Character) (m A : O) (t : ℝ) (S : Finset (Tuple ι))
-        (β : Tuple ι → ℂ) (W : 𝓢(ℝ,ℂ)) (X K B : ℝ),
-      1≤X → 0≤K → 0≤B →
-      (∀ v∈S,finiteTupleProduct v≠0 → ‖β v‖≤B) →
-      (∀ I∈supportedColumns (finiteColumns S),finiteColumnCoefficient S β I≠0 →
-        (Ideal.absNorm I:ℝ)≤X) →
-      ‖((X⁻¹:ℝ):ℂ)*zeroEnergy η m A t (finiteColumns S) (finiteColumnCoefficient S β) W K‖ ≤
-        C*K*B^2*‖paperRadialFourier W 0‖*X^ε := by
-  obtain ⟨C,hC,hc⟩ := active_tuple_zero_energy_bound N ε hε
-  refine ⟨C,hC,?_⟩
-  intro ι _ hi η m A t S β W X K B hX hK hB hβ hN
-  have hX0 : 0<X := zero_lt_one.trans_le hX
-  have hb := hc hi η m A t S β W X K B hX hK hB hβ hN
-  rw [norm_mul,Complex.norm_real,Real.norm_eq_abs,abs_of_pos (inv_pos.mpr hX0)]
-  apply (mul_le_mul_of_nonneg_left hb (inv_nonneg.mpr hX0.le)).trans_eq
-  rw [Real.rpow_add hX0,Real.rpow_one]
-  field_simp
-
-theorem normalized_supported_tuple_zero_energy_bound (N : ℕ) (ε : ℝ) (hε : 0<ε) :
-    ∃ C : ℝ,0<C ∧ ∀ {ι : Type*} [Fintype ι], Fintype.card ι≤N →
-      ∀ (η : Character) (m A : O) (t : ℝ) (S : Finset (Tuple ι))
-        (β : Tuple ι → ℂ) (W : 𝓢(ℝ,ℂ)) (X K B : ℝ),
-      1≤X → 0≤K → 0≤B →
-      (∀ v∈S,‖β v‖≤B) →
-      (∀ v∈S,β v≠0 → (Ideal.absNorm (finiteTupleProduct v):ℝ)≤X) →
-      ‖((X⁻¹:ℝ):ℂ)*zeroEnergy η m A t (finiteColumns S) (finiteColumnCoefficient S β) W K‖ ≤
-        C*K*B^2*‖paperRadialFourier W 0‖*X^ε := by
-  obtain ⟨C,hC,hc⟩ := normalized_active_tuple_zero_energy_bound N ε hε
-  refine ⟨C,hC,?_⟩
-  intro ι _ hi η m A t S β W X K B hX hK hB hβ hN
-  apply hc hi η m A t S β W X K B hX hK hB (fun v hv _ => hβ v hv)
-  intro I _ hI
-  obtain ⟨v,hv,hne,he⟩ := finiteColumnCoefficient_witness S β I hI
-  rw [←he]
-  exact hN v hv hne
 
 end SevenEighths.CenteredMomentSupportedZeroEnergy
 

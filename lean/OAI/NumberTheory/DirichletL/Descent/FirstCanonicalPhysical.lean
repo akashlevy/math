@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstMarkedColumns
 import OAI.NumberTheory.DirichletL.Descent.FirstPhysicalCommon
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

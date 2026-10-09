@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.WholePriorityValidSource
-
 namespace OAI
 
 noncomputable section
@@ -186,42 +185,6 @@ theorem whole_retained_sum [Fintype κ] (hp : ∀ i,p i≠0)
   congr 1
   exact parent_retained_sum p pool parents R label w _
 
-def activeParents (extra : CubeCoordinates ι→Finset ι) (pool : Finset ι)
-    (b : CubeCoordinates ι) (C E : Finset ι) (old : Fin Jo→SmoothMobiusCorrection.PrimeIdeal)
-    (selector : Finset ι→ℂ) (negative : Bool) (J : Finset σ) (lists : σ→Finset ι) :=
-  wholeAssignedParents p (fun x=>extra x.cube)
-    (activeFixedSource pool b C E old selector) negative J lists
-
-theorem active_conditions (hp : ∀ i,p i≠0)
-    (extra : CubeCoordinates ι→Finset ι) (pool : Finset ι)
-    (b : CubeCoordinates ι) (C E : Finset ι) (old : Fin Jo→SmoothMobiusCorrection.PrimeIdeal)
-    (selector : Finset ι→ℂ) (hb : b.Admissible) (hC : Disjoint C b.support) (hE : E⊆C∪b.support)
-    (hold : ∀ D∈pool.powerset,selector D≠0 → ∀ i,(old i).val∣
-      sourceIdeal p b.support*sourceIdeal p C*sourceIdeal p D)
-    (he : extra b⊆b.support) (negative : Bool) (J : Finset σ) (lists : σ→Finset ι)
-    (R : SecondParentSource ι (Jo+(J.card+J.card))→Finset ι→Finset ι→ℝ) :
-    ActualSecondSourceConditions p (unifiedSource p pool
-      (activeParents p extra pool b C E old selector negative J lists) R) :=
-  unified_conditions p hp extra _ (activeFixedSource_valid p pool b C E old selector hb hC hE hold)
-    (activeFixedSource_extra pool b C E old selector extra he) negative J lists pool R
-
-theorem active_deleted_support
-    (hinj : Function.Injective (fun i=>Ideal.span {p i}))
-    (extra : CubeCoordinates ι→Finset ι) (pool : Finset ι)
-    (b : CubeCoordinates ι) (C E : Finset ι) (old : Fin Jo→SmoothMobiusCorrection.PrimeIdeal)
-    (selector : Finset ι→ℂ) (hb : b.Admissible) (hC : Disjoint C b.support) (hE : E⊆C∪b.support)
-    (hold : ∀ D∈pool.powerset,selector D≠0 → ∀ i,(old i).val∣
-      sourceIdeal p b.support*sourceIdeal p C*sourceIdeal p D)
-    (he : extra b⊆b.support) (negative : Bool) (J : Finset σ) (lists : σ→Finset ι)
-    (R : SecondParentSource ι (Jo+(J.card+J.card))→Finset ι→Finset ι→ℝ)
-    (x : MarkedSecondSource ι (Jo+(J.card+J.card)) 0)
-    (hx : x∈unifiedSource p pool (activeParents p extra pool b C E old selector negative J lists) R) :
-    ∀ i∈InverseMomentWholeRetainedSource.deleted p extra negative x,
-      i∈x.cube.support∪x.firstCommon ∨ (Ideal.span {p i}:Ideal O)∣x.quotient :=
-  unified_deleted_support p hinj extra _
-    (activeFixedSource_valid p pool b C E old selector hb hC hE hold)
-    (activeFixedSource_extra pool b C E old selector extra he) negative J lists pool R x hx
-
 def coefficientBound : ℝ := 512*(32*512)
 
 theorem coefficientBound_pos : 0<coefficientBound := by norm_num [coefficientBound]
@@ -246,73 +209,6 @@ theorem priorityOuter_norm (b : CubeCoordinates ι) (negative : Bool) (Ψ : O→
   unfold priorityOuter coefficientBound
   exact mul_le_mul ((mul_le_of_le_one_right (norm_nonneg _) hselector).trans hr) hc
     (norm_nonneg _) (by norm_num)
-
-def sourceWeight (b : CubeCoordinates ι) (negative : Bool) (Ψ : O→*ℂ) (m : O)
-    (selector : Finset ι→ℂ) (r : RayCharacter×RayCharacter) (core : FirstCoreIndex)
-    (J : Finset σ) (a : σ→ι→ℂ) (x : MarkedSecondSource ι (Jo+(J.card+J.card)) 0) : ℂ :=
-  coefficient p J a (fun original=>(priorityOuter p hg b negative Ψ m selector r core
-    original.quotientSupport:ℂ)) (secondParentOf x)
-
-theorem sourceWeight_norm
-    (hinj : Function.Injective (fun i=>Ideal.span {p i}))
-    (extra : CubeCoordinates ι→Finset ι) (pool : Finset ι)
-    (b : CubeCoordinates ι) (C E : Finset ι) (old : Fin Jo→SmoothMobiusCorrection.PrimeIdeal)
-    (selector : Finset ι→ℂ) (negative : Bool) (Ψ : O→*ℂ) (m : O)
-    (r : RayCharacter×RayCharacter) (core : FirstCoreIndex)
-    (J : Finset σ) (lists : σ→Finset ι) (a : σ→ι→ℂ)
-    (ha : ∀ i∈J,∀ k∈lists i,‖a i k‖≤1)
-    (hselector : ∀ D∈pool.powerset,‖selector D‖≤1)
-    (hΨ : ∀ D∈pool.powerset,selector D≠0 → ‖Ψ (∏ i∈D,p i)‖≤1)
-    (R : SecondParentSource ι (Jo+(J.card+J.card))→Finset ι→Finset ι→ℝ)
-    (x : MarkedSecondSource ι (Jo+(J.card+J.card)) 0)
-    (hx : x∈unifiedSource p pool (activeParents p extra pool b C E old selector negative J lists) R) :
-    ‖sourceWeight p hg b negative Ψ m selector r core J a x‖≤coefficientBound := by
-  apply InverseMomentWholeRetainedSource.whole_coefficient_norm p hinj (fun x=>extra x.cube)
-    (activeFixedSource pool b C E old selector) negative J lists a _ coefficientBound ha
-  · intro y hy
-    obtain ⟨D,hD,hs,rfl⟩ := (mem_activeFixedSource pool b C E old selector y).mp hy
-    exact priorityOuter_norm p hg b negative Ψ m selector r core D (hselector D hD) (hΨ D hD hs)
-  · exact ((mem_unifiedSource p pool _ R x).mp hx).1
-
-def normalizedWeight (b : CubeCoordinates ι) (negative : Bool) (Ψ : O→*ℂ) (m : O)
-    (selector : Finset ι→ℂ) (r : RayCharacter×RayCharacter) (core : FirstCoreIndex)
-    (J : Finset σ) (a : σ→ι→ℂ) (x : MarkedSecondSource ι (Jo+(J.card+J.card)) 0) : ℂ :=
-  sourceWeight p hg b negative Ψ m selector r core J a x/(coefficientBound:ℂ)
-
-theorem normalizedWeight_norm
-    (hinj : Function.Injective (fun i=>Ideal.span {p i}))
-    (extra : CubeCoordinates ι→Finset ι) (pool : Finset ι)
-    (b : CubeCoordinates ι) (C E : Finset ι) (old : Fin Jo→SmoothMobiusCorrection.PrimeIdeal)
-    (selector : Finset ι→ℂ) (negative : Bool) (Ψ : O→*ℂ) (m : O)
-    (r : RayCharacter×RayCharacter) (core : FirstCoreIndex)
-    (J : Finset σ) (lists : σ→Finset ι) (a : σ→ι→ℂ)
-    (ha : ∀ i∈J,∀ k∈lists i,‖a i k‖≤1)
-    (hselector : ∀ D∈pool.powerset,‖selector D‖≤1)
-    (hΨ : ∀ D∈pool.powerset,selector D≠0 → ‖Ψ (∏ i∈D,p i)‖≤1)
-    (R : SecondParentSource ι (Jo+(J.card+J.card))→Finset ι→Finset ι→ℝ)
-    (x : MarkedSecondSource ι (Jo+(J.card+J.card)) 0)
-    (hx : x∈unifiedSource p pool (activeParents p extra pool b C E old selector negative J lists) R) :
-    ‖normalizedWeight p hg b negative Ψ m selector r core J a x‖≤1 := by
-  rw [normalizedWeight,norm_div,Complex.norm_real,Real.norm_of_nonneg coefficientBound_pos.le]
-  exact (div_le_one coefficientBound_pos).mpr
-    (sourceWeight_norm p hg hinj extra pool b C E old selector negative Ψ m r core J lists a
-      ha hselector hΨ R x hx)
-
-omit [DecidableEq σ] in
-
-theorem source_sum_normalized
-    (b : CubeCoordinates ι) (negative : Bool) (Ψ : O→*ℂ) (m : O)
-    (selector : Finset ι→ℂ) (r : RayCharacter×RayCharacter) (core : FirstCoreIndex)
-    (J : Finset σ) (a : σ→ι→ℂ) (source : Finset (MarkedSecondSource ι (Jo+(J.card+J.card)) 0))
-    (H : MarkedSecondSource ι (Jo+(J.card+J.card)) 0→ℂ) :
-    (∑ x∈source,sourceWeight p hg b negative Ψ m selector r core J a x*H x)=
-      (coefficientBound:ℂ)*∑ x∈source,normalizedWeight p hg b negative Ψ m selector r core J a x*H x := by
-  rw [Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro x hx
-  unfold normalizedWeight
-  have hc : (coefficientBound:ℂ)≠0 := by exact_mod_cast coefficientBound_pos.ne'
-  field_simp
 
 theorem fullPhysical_unified [Fintype κ] (hp : ∀ i,p i≠0)
     (hcop : Pairwise (Function.onFun IsCoprime (fun i=>Ideal.span {p i})))
@@ -340,41 +236,6 @@ theorem fullPhysical_unified [Fintype κ] (hp : ∀ i,p i≠0)
   simp only [fullPhysical,mul_add,Finset.sum_add_distrib]
   rw [whole_retained_sum p hp hcop hg extra pool parents w negative Ψ₀ m slots J lists a
     V X Y (fun _=>R) (fun _=>label)]
-
-theorem actual_retained_normalized [Fintype κ] (hp : ∀ i,p i≠0)
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i=>Ideal.span {p i})))
-    (extra : CubeCoordinates ι→Finset ι) (pool : Finset ι)
-    (b : CubeCoordinates ι) (C E : Finset ι) (old : Fin Jo→SmoothMobiusCorrection.PrimeIdeal)
-    (selector : Finset ι→ℂ) (negative : Bool) (Ψ : O→*ℂ) (m : O)
-    (r : RayCharacter×RayCharacter) (core : FirstCoreIndex)
-    (slots J : Finset σ) (lists : σ→Finset ι) (a : σ→ι→ℂ)
-    (V : ℝ→ℂ) (X Y : ℝ)
-    (R : SecondParentSource ι (Jo+(J.card+J.card))→Finset ι→Finset ι→ℝ)
-    (label : SecondParentSource ι (Jo+(J.card+J.card))→Finset ι→SecondExpansionData ι→κ) :
-    let parents := activeParents p extra pool b C E old selector negative J lists
-    let Ψ₀ := firstCoreTwist negative (if negative then r.1 else r.2) Ψ core
-    (∑ y∈parents,
-      coefficient p J a (fun original=>(priorityOuter p hg b negative Ψ m selector r core
-        original.quotientSupport:ℂ)) y *
-      (∑ ray : SecondRayIndex,∑ residual∈pool.powerset,∑ j : κ,
-        (Y:ℂ)*secondRayCoefficient ray *
-          ∑ x∈(secondDyadicSector pool (secondVariableCutoff p y (R y)) residual (label y) j).image
-            (attachSecondExpansion y),
-            retainedRow p hp hcop hg pool negative Ψ₀ m slots J (fun i=>lists i\extra y.cube)
-              a V X Y ray x)) =
-    (coefficientBound:ℂ)*(∑ ray : SecondRayIndex,(Y:ℂ)*secondRayCoefficient ray *
-      ∑ x∈unifiedSource p pool parents R,normalizedWeight p hg b negative Ψ m selector r core J a x *
-        wholeRow p hp hcop hg extra pool negative Ψ₀ m slots J lists a V X Y ray x) := by
-  intro parents Ψ₀
-  rw [whole_retained_sum p hp hcop hg extra pool parents _ negative Ψ₀ m slots J lists a V X Y R label]
-  change (∑ ray : SecondRayIndex,(Y:ℂ)*secondRayCoefficient ray *
-      ∑ x∈unifiedSource p pool parents R,sourceWeight p hg b negative Ψ m selector r core J a x *
-        wholeRow p hp hcop hg extra pool negative Ψ₀ m slots J lists a V X Y ray x)=_
-  simp_rw [source_sum_normalized]
-  rw [Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro ray hray
-  ring
 
 end SevenEighths.InverseWholePriorityRetainedSource
 

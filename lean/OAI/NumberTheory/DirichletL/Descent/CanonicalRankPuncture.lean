@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalCompleteRankNormalized
-
 namespace OAI
 
 noncomputable section

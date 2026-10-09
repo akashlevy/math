@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationEndpoint
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationConjugation
-
 namespace OAI
 
 noncomputable section

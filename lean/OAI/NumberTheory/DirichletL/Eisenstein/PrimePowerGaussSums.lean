@@ -1,79 +1,24 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.ResidualCuspDecay
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace CubicEisenstein
 
 section
@@ -355,13 +300,6 @@ lemma series_continuousOn : ContinuousOn coeff.series {p : ℝ × ℂ | 0<p.1} :
     continuousAt_fst.tendsto.eventually (Icc_mem_nhds (by linarith) (by linarith))
   exact (hclosed.continuousAt hnb).continuousWithinAt
 
-lemma series_uniform (a b : ℝ) (ha : 0<a) (hab : a≤b) :
-    TendstoUniformlyOn (fun t : Finset ActualEisensteinCubic.O => fun p : ℝ × ℂ => ∑h∈t,coeff.term h p)
-      coeff.series atTop {p : ℝ × ℂ | p.1∈Set.Icc a b} := by
-  obtain ⟨C,hC,hbound⟩ := coeff.slab_bound a b ha hab
-  exact tendstoUniformlyOn_tsum
-    ((summable_exp_neg_cuspFrequency_norm (Real.pi*a) (mul_pos Real.pi_pos ha)).mul_left C) hbound
-
 lemma series_bessel (v : ℝ) (hv : 0<v) (z : ℂ) :
     coeff.series (v,z)=∑'h : ActualEisensteinCubic.O,coeff.amplitude v h*ShortDraftTrace.breveE (cuspFrequency h*z) := by
   exact tsum_congr (fun h => coeff.term_eq_amplitude v hv h z)
@@ -517,8 +455,6 @@ lemma fullFunction_height_memLp (constant : ℂ) (v : ℝ) (hv : 0<v) :
 end SubexponentialBesselCoefficients
 end CubicEisenstein
 
-open scoped BigOperators Classical
-
 namespace ShortDraftCRT
 variable {R : Type*} [CommRing R]
 
@@ -536,28 +472,9 @@ theorem inverse_weight_residue_congr (D r r0 u u0 d d0 : R)
   have hh := dvd_add (dvd_mul_of_dvd_left hd u) (dvd_mul_of_dvd_right hi d0)
   convert dvd_neg.mpr hh using 1 ; ring
 
-theorem fixed_additive_sector {K : Type*} [Field K]
-    (ι : R→+*K) (ψ : AddChar K ℂ) (lam D r r0 u u0 d d0 x : R)
-    (hlam : ι lam≠0) (hD : ι D≠0)
-    (hperiod : ∀y : R,ψ (ι y/ι lam)=1)
-    (hcop : IsCoprime D r) (hr : D∣r-r0)
-    (hu : D∣u*r-1) (hu0 : D∣u0*r0-1) (hd : D∣d-d0) :
-    ψ (ι (-d*u)*ι x/(ι lam*ι D))=
-      ψ (ι (-d0*u0)*ι x/(ι lam*ι D)) :=
-  addChar_congr_of_dvd ι ψ lam D (-d*u) (-d0*u0) x hlam hD hperiod
-    (inverse_weight_residue_congr D r r0 u u0 d d0 hcop hr hu hu0 hd)
-
-theorem strong_sector_additive_congruences (M lam c r r0 d d0 : R)
-    (hlam : lam^3∣M) (hc : c∣M) (hr : M^2∣r-r0) (hd : M*c∣d-d0) :
-    lam^3*c∣r-r0 ∧ lam^3*c∣d-d0 := by
-  constructor
-  · apply (show lam^3*c∣M^2 by simpa only [pow_two] using mul_dvd_mul hlam hc).trans hr
-  · exact (mul_dvd_mul hlam (dvd_refl c)).trans hd
-
 end ShortDraftCRT
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
+open scoped MatrixGroups
 
 namespace CubicEisenstein
 open CubicKubota

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.TuplePrime
-
 namespace OAI
 
 noncomputable section

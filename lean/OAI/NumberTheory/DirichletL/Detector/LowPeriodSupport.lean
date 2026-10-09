@@ -1,6 +1,7 @@
-import OAI.NumberTheory.DirichletL.Detector.LowPrimeFamily
+import OAI.NumberTheory.DirichletL.Detector.LowSlotMarks
+import OAI.NumberTheory.DirichletL.Detector.LowSlotWeights
+import OAI.NumberTheory.DirichletL.Reflection.Canonical
 import OAI.NumberTheory.DirichletL.Hecke.RowClosure
-
 namespace OAI
 
 noncomputable section

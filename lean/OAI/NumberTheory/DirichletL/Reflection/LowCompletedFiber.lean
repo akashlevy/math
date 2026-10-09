@@ -2,8 +2,9 @@ import OAI.NumberTheory.DirichletL.Reflection.LowFrozenEnergy
 import OAI.NumberTheory.DirichletL.Reflection.CompletedCanonicalEnergy
 import OAI.NumberTheory.DirichletL.Reflection.PunctureAbsorption
 import OAI.NumberTheory.DirichletL.Reflection.CompletedFiberSource
-import OAI.NumberTheory.DirichletL.Reflection.CanonicalCellArithmetic
-
+import OAI.NumberTheory.DirichletL.Reflection.CellArithmetic
+import OAI.NumberTheory.DirichletL.Reflection.PuncturedMarks
+import OAI.NumberTheory.DirichletL.Reflection.MarkedLevel
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

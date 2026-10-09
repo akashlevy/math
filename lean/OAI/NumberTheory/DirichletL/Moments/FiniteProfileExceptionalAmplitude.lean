@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalAllocated
 import OAI.NumberTheory.DirichletL.Moments.AllocatedDetectorAmplitude
-
 namespace OAI
 noncomputable section
 open scoped Classical BigOperators SchwartzMap ContDiff

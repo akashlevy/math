@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.Character
-
 namespace OAI
 
 noncomputable section
@@ -58,27 +57,6 @@ theorem localCorrection_hasProd (S : Finset (Ideal O)) (hS : ∀P∈S,Prime P)
   have hD := targetRow_hasProd S hS hbad η u x hx1
   have he := ((hF.mul hZ).mul hW).mul hD
   simpa only [localCorrection,inv_inv,div_eq_mul_inv] using he
-
-theorem globalCorrection_multipliable (S : Finset (Ideal O)) (hS : ∀P∈S,Prime P)
-    (hbad : CanonicalQuadraticSieve.fixedBadPrimes⊆S) (η : Character) (u : FreeRow)
-    (x w z : ℂ) (hx : 3/2<x.re) (hw : 2<w.re) (hz : 1/6<z.re) :
-    Multipliable (fun P : {P : PrimeIdeal // P.val∉S} =>localCorrection η u P.val x w z) :=
-  (localCorrection_hasProd S hS hbad η u x w z hx hw hz).multipliable
-
-theorem high_L_factorization (S : Finset (Ideal O)) (hS : ∀P∈S,Prime P)
-    (hbad : CanonicalQuadraticSieve.fixedBadPrimes⊆S) (η : Character) (u : FreeRow)
-    (x w z : ℂ) (hx : 3/2<x.re) (hw : 2<w.re) (hz : 1/6<z.re) :
-    markedIdealHighSeries S 1 η u.val x w z=
-      LFunction (fixedSourcePrincipal S hS) (6*z) * LFunction (rowCharacter S hS u) w /
-        LFunction ((targetRow η u).excludePrimes S hS) x * globalCorrection S η u x w z := by
-  have hx1 : 1<x.re := by linarith
-  have hw1 : 1<w.re := by linarith
-  have hz1 : 1<(6*z).re := by norm_num [Complex.mul_re]; linarith
-  have hZ := LFunction_ne_zero_of_one_lt_re (fixedSourcePrincipal S hS) hz1
-  have hW := LFunction_ne_zero_of_one_lt_re (rowCharacter S hS u) hw1
-  have hD := LFunction_ne_zero_of_one_lt_re ((targetRow η u).excludePrimes S hS) hx1
-  rw [globalCorrection,(localCorrection_hasProd S hS hbad η u x w z hx hw hz).tprod_eq]
-  field_simp
 
 end SevenEighths.ProbeHighRowFamily
 

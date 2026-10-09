@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.PartitionNorm
 import OAI.NumberTheory.DirichletL.Moments.Forcing
-
 namespace OAI
 
 noncomputable section

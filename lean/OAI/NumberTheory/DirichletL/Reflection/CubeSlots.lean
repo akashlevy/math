@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.MarkedSource
 import OAI.NumberTheory.DirichletL.Reflection.SlotCoefficients
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -37,24 +36,6 @@ lemma cube_shifted_mark (H A : Ideal Eis) (S : PrimeFamily σ) :
   by_cases hh : S.ideal i∣H
   · simp only [hh,true_or,ite_true,not_true_eq_false,ite_false]
   · simp only [hh,false_or,not_false_eq_true,ite_true]
-
-omit [DecidableEq σ] in
-lemma cube_shifted_mark_restrict (H A : Ideal Eis) (S : PrimeFamily σ) :
-    (∏ i,if S.ideal i∣H^3*A then (1:ℂ) else 0)=
-      ∏ i : cubeActiveSlots H S,if (S.restrict (cubeActiveSlots H S)).ideal i∣A then (1:ℂ) else 0 := by
-  rw [cube_shifted_mark]
-  symm
-  exact Finset.prod_coe_sort (cubeActiveSlots H S) (fun i => if S.ideal i∣A then (1:ℂ) else 0)
-
-omit [DecidableEq σ] in
-theorem markedCompletedT_cube_shift (Ψ : Eis→*ℂ) (W : ℝ→ℂ) (X : ℝ)
-    (H : Ideal Eis) (S : PrimeFamily σ) :
-    markedCompletedT Ψ W X (fun A => ∏ i,if S.ideal i∣H^3*A then (1:ℂ) else 0)=
-      markedCompletedT Ψ W X
-        (fun A => ∏ i : cubeActiveSlots H S,if (S.restrict (cubeActiveSlots H S)).ideal i∣A then (1:ℂ) else 0) := by
-  congr 1
-  funext A
-  exact cube_shifted_mark_restrict H A S
 
 end
 end SevenEighths.InverseReflectedPhase

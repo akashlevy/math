@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.WhittakerContinuation
-
 namespace OAI
 
 noncomputable section
@@ -8,77 +7,21 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
-open Finset AddChar MulChar EisensteinEmbedding
 
 local notation "O" => ActualEisensteinCubic.O
 
@@ -122,100 +65,10 @@ lemma sourceFourierKernel_cubic_height (h : ActualEisensteinCubic.O) (hh : h≠0
 end
 
 section
-open Filter MeasureTheory
-open scoped Classical Topology
-open Finset AddChar MulChar EisensteinEmbedding
-
-local notation "O" => ActualEisensteinCubic.O
-
-lemma cuspWhittakerHeightFactor_punctured_ne_zero (h : ActualEisensteinCubic.O) (s : ℂ) (hs : 1<s.re) :
-    ∀ᶠw : ℂ in 𝓝[≠] s,cuspWhittakerHeightFactor w h≠0 := by
-  rcases (cuspWhittakerHeightFactor_analyticAt h s hs).eventually_eq_zero_or_eventually_ne_zero with hz|hne
-  · have han : AnalyticOnNhd ℂ (fun w => cuspWhittakerHeightFactor w h) {w : ℂ | 1<w.re} :=
-      fun w hw => cuspWhittakerHeightFactor_analyticAt h w hw
-    have hcon : Convex ℝ {w : ℂ | 1<w.re} :=
-      (convex_Ioi (1:ℝ)).linear_preimage Complex.reCLM.toLinearMap
-    have heq := han.eqOn_zero_of_preconnected_of_eventuallyEq_zero hcon.isPreconnected hs hz
-    have hval : cuspWhittakerHeightFactor (5:ℂ) h=0 := heq (by norm_num)
-    have hpos := cuspWhittakerHeightFactor_real_re_pos 5 (by norm_num) h
-    norm_num only [Complex.ofReal_ofNat] at hpos
-    rw [hval,Complex.zero_re] at hpos
-    exact (lt_irrefl 0 hpos).elim
-  · exact hne
-
-lemma continuedNonzeroScattering_eq_arithmetic_germ (h : ActualEisensteinCubic.O) (hh : h≠0)
-    (s : ℂ) (hs : 2<s.re) (hi : 0<s.im) :
-    continuedNonzeroScattering h =ᶠ[𝓝[≠] s] (fun w => scatteringCoefficient w h) := by
-  have hopen : IsOpen {w : ℂ | 2<w.re ∧ 0<w.im} :=
-    (isOpen_lt continuous_const Complex.continuous_re).inter
-      (isOpen_lt continuous_const Complex.continuous_im)
-  have hfull : ∀ᶠw : ℂ in 𝓝 s,2<w.re ∧ 0<w.im := hopen.mem_nhds ⟨hs,hi⟩
-  have hdomain : ∀ᶠw : ℂ in 𝓝[≠] s,2<w.re ∧ 0<w.im :=
-    hfull.filter_mono nhdsWithin_le_nhds
-  filter_upwards [hdomain,cuspWhittakerHeightFactor_punctured_ne_zero h s (by linarith)] with w hw hH
-  exact continuedNonzeroScattering_eq_upper h hh w hw.1 hw.2 hH
 
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
-open Finset AddChar MulChar EisensteinEmbedding
-
-local notation "O" => ActualEisensteinCubic.O
-
-lemma cuspWeightedWhittakerHeightFactor_differentiableAt
-    (ρ : BoundedContinuousFunction ℝ ℂ) (h : ActualEisensteinCubic.O) (s : ℂ) (hs : 1<s.re) :
-    DifferentiableAt ℂ (fun w => cuspWeightedWhittakerHeightFactor ρ w h) s := by
-  have heq : (fun w => cuspWeightedWhittakerHeightFactor ρ w h)=
-      (fun w => ∫v in Set.Icc (5:ℝ) 6,ρ v*(v:ℂ)^(-w-1)*sourceFourierKernel w (cuspFrequency h*v)) := by
-    funext w
-    apply integral_congr_ae
-    exact Eventually.of_forall (fun v => (mul_assoc _ _ _).symm)
-  rw [heq]
-  exact cuspWeightedWhittakerAverage_differentiableAt ρ (cuspFrequency h) s hs
-
-lemma cuspWeightedWhittakerHeightFactor_analyticAt
-    (ρ : BoundedContinuousFunction ℝ ℂ) (h : ActualEisensteinCubic.O) (s : ℂ) (hs : 1<s.re) :
-    AnalyticAt ℂ (fun w => cuspWeightedWhittakerHeightFactor ρ w h) s := by
-  apply Complex.analyticAt_iff_eventually_differentiableAt.mpr
-  have hopen : IsOpen {w : ℂ | 1<w.re} := isOpen_lt continuous_const Complex.continuous_re
-  filter_upwards [hopen.mem_nhds hs] with w hw
-  exact cuspWeightedWhittakerHeightFactor_differentiableAt ρ h w hw
-
-lemma kernelCuspWeightedFourierFamily_cross_identity
-    (ρ : BoundedContinuousFunction ℝ ℂ) (h : ActualEisensteinCubic.O) (hh : h≠0) :
-    Set.EqOn (fun s => kernelCuspWeightedFourierFamily ρ h s*cuspWhittakerHeightFactor s h)
-      (fun s => kernelCuspFourierFamily h 2 3 (by norm_num) (by norm_num) s*
-        cuspWeightedWhittakerHeightFactor ρ s h) {s : ℂ | 1<s.re ∧ 0<s.im} := by
-  let domain : Set ℂ := {s | 1<s.re ∧ 0<s.im}
-  have hconvex : Convex ℝ domain :=
-    ((convex_Ioi (1:ℝ)).linear_preimage Complex.reCLM.toLinearMap).inter
-      ((convex_Ioi (0:ℝ)).linear_preimage Complex.imCLM.toLinearMap)
-  have hleft : AnalyticOnNhd ℂ
-      (fun s => kernelCuspWeightedFourierFamily ρ h s*cuspWhittakerHeightFactor s h) domain := by
-    intro s hs
-    exact (kernelCuspWeightedFourierFamily_analyticAt_nonreal ρ h s hs.1.ne' hs.2.ne').mul
-      (cuspWhittakerHeightFactor_analyticAt h s hs.1)
-  have hright : AnalyticOnNhd ℂ
-      (fun s => kernelCuspFourierFamily h 2 3 (by norm_num) (by norm_num) s*
-        cuspWeightedWhittakerHeightFactor ρ s h) domain := by
-    intro s hs
-    exact (kernelCuspFourierFamily_analyticAt_nonreal h 2 3 (by norm_num) (by norm_num)
-      s hs.1.ne' hs.2.ne').mul (cuspWeightedWhittakerHeightFactor_analyticAt ρ h s hs.1)
-  have hstart : (5+Complex.I:ℂ)∈domain := by norm_num [domain]
-  have hopen : IsOpen {s : ℂ | 4<s.re ∧ 0<s.im} :=
-    (isOpen_lt continuous_const Complex.continuous_re).inter
-      (isOpen_lt continuous_const Complex.continuous_im)
-  have hevent : (fun s => kernelCuspWeightedFourierFamily ρ h s*cuspWhittakerHeightFactor s h)
-      =ᶠ[𝓝 (5+Complex.I:ℂ)]
-        (fun s => kernelCuspFourierFamily h 2 3 (by norm_num) (by norm_num) s*
-          cuspWeightedWhittakerHeightFactor ρ s h) := by
-    filter_upwards [hopen.mem_nhds (by norm_num)] with s hs
-    rw [kernelCuspWeightedFourierFamily_initial_factor ρ h hh s hs.1 hs.2,
-      kernelCuspFourierFamily_eq_upper h hh ⟨by linarith [hs.1],hs.2⟩]
-    ring
-  exact hleft.eqOn_of_preconnected_of_eventuallyEq hright hconvex.isPreconnected hstart hevent
 
 lemma upperVertical_tendsto_cubic_punctured :
     Tendsto (fun t : ℝ => (4/3:ℂ)+(t:ℂ)*Complex.I)
@@ -233,75 +86,11 @@ lemma upperVertical_tendsto_cubic_punctured :
       Complex.I_re,Complex.I_im,mul_one,zero_mul,add_zero] at hh
     exact ht.ne' (by linarith [hh])
 
-lemma kernelCuspWeightedFourier_residue_factor
-    (ρ : BoundedContinuousFunction ℝ ℂ) (h : ActualEisensteinCubic.O) (hh : h≠0) :
-    kernelCuspWeightedFourier ρ h cubicEisensteinResidue=
-      ((9*Real.sqrt 3/2:ℝ):ℂ)*nonzeroScatteringResidue h*
-        cuspWeightedWhittakerHeightFactor ρ (4/3:ℂ) h := by
-  have hbase : Tendsto (fun s : ℂ => cuspWhittakerHeightFactor s h)
-      (𝓝[≠] (4/3:ℂ)) (𝓝 (cuspWhittakerHeightFactor (4/3:ℂ) h)) :=
-    (cuspWhittakerHeightFactor_analyticAt h (4/3) (by norm_num)).continuousAt.tendsto.mono_left nhdsWithin_le_nhds
-  have hweight : Tendsto (fun s : ℂ => cuspWeightedWhittakerHeightFactor ρ s h)
-      (𝓝[≠] (4/3:ℂ)) (𝓝 (cuspWeightedWhittakerHeightFactor ρ (4/3:ℂ) h)) :=
-    (cuspWeightedWhittakerHeightFactor_analyticAt ρ h (4/3) (by norm_num)).continuousAt.tendsto.mono_left nhdsWithin_le_nhds
-  have hleft := ((kernelCuspWeightedFourierFamily_residue_limit ρ h).mul hbase).comp
-    upperVertical_tendsto_cubic_punctured
-  have hright := ((kernelCuspFourierFamily_residue_limit h 2 3 (by norm_num) (by norm_num)).mul hweight).comp
-    upperVertical_tendsto_cubic_punctured
-  have hevent : (fun t : ℝ =>
-      (((4/3:ℂ)+(t:ℂ)*Complex.I-4/3)*kernelCuspWeightedFourierFamily ρ h ((4/3:ℂ)+(t:ℂ)*Complex.I))*
-        cuspWhittakerHeightFactor ((4/3:ℂ)+(t:ℂ)*Complex.I) h)
-      =ᶠ[𝓝[>] (0:ℝ)] (fun t : ℝ =>
-      (((4/3:ℂ)+(t:ℂ)*Complex.I-4/3)*kernelCuspFourierFamily h 2 3 (by norm_num) (by norm_num)
-        ((4/3:ℂ)+(t:ℂ)*Complex.I))*cuspWeightedWhittakerHeightFactor ρ ((4/3:ℂ)+(t:ℂ)*Complex.I) h) := by
-    filter_upwards [self_mem_nhdsWithin] with t ht
-    change 0<t at ht
-    have hs : (4/3:ℂ)+(t:ℂ)*Complex.I∈{s : ℂ | 1<s.re ∧ 0<s.im} := by
-      constructor
-      · norm_num
-      · simpa using ht
-    have he := kernelCuspWeightedFourierFamily_cross_identity ρ h hh hs
-    linear_combination (((4/3:ℂ)+(t:ℂ)*Complex.I)-4/3)*he
-  have heq : kernelCuspWeightedFourier ρ h cubicEisensteinResidue*cuspWhittakerHeightFactor (4/3:ℂ) h=
-      kernelCuspFourier h cubicEisensteinResidue*cuspWeightedWhittakerHeightFactor ρ (4/3:ℂ) h :=
-    tendsto_nhds_unique_of_eventuallyEq hleft hright hevent
-  have hH := cuspWhittakerHeightFactor_center_ne_zero h
-  calc
-    _ = (kernelCuspFourier h cubicEisensteinResidue*cuspWeightedWhittakerHeightFactor ρ (4/3:ℂ) h)/
-        cuspWhittakerHeightFactor (4/3:ℂ) h := (eq_div_iff hH).mpr heq
-    _ = _ := by
-      unfold nonzeroScatteringResidue
-      field_simp [cusp_volume_ne_zero,hH]
-
-lemma cuspWeightedWhittakerHeightFactor_center_bessel
-    (ρ : BoundedContinuousFunction ℝ ℂ) (h : ActualEisensteinCubic.O) (hh : h≠0) :
-    cuspWeightedWhittakerHeightFactor ρ (4/3:ℂ) h=
-      cubicBesselNormalizer h*(∫v in Set.Icc (5:ℝ) 6,
-        ρ v*(schlafliBesselK (1/3) (4*Real.pi*‖cuspFrequency h‖*v)/(v:ℂ)^2)) := by
-  rw [cuspWeightedWhittakerHeightFactor,←integral_const_mul]
-  apply setIntegral_congr_fun measurableSet_Icc
-  intro v hv
-  have hpos : 0<v := lt_of_lt_of_le (by norm_num) hv.1
-  dsimp only
-  rw [sourceFourierKernel_cubic_height h hh v hpos]
-  ring
-
-lemma kernelCuspWeightedFourier_residue_bessel
-    (ρ : BoundedContinuousFunction ℝ ℂ) (h : ActualEisensteinCubic.O) (hh : h≠0) :
-    kernelCuspWeightedFourier ρ h cubicEisensteinResidue=
-      ((9*Real.sqrt 3/2:ℝ):ℂ)*cubicResidualFourierCoefficient h*
-        (∫v in Set.Icc (5:ℝ) 6,ρ v*
-          (schlafliBesselK (1/3) (4*Real.pi*‖cuspFrequency h‖*v)/(v:ℂ)^2)) := by
-  rw [kernelCuspWeightedFourier_residue_factor ρ h hh,
-    cuspWeightedWhittakerHeightFactor_center_bessel ρ h hh,cubicResidualFourierCoefficient]
-  ring
-
 end
 
 section
 
-open scoped BigOperators Classical
-open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal
+open CubicJacobiGlobal
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma denominatorRep_mk_congr (c d : Eis) :
@@ -499,8 +288,7 @@ theorem arithmeticResidueSum_crt (h a b alpha beta : Eis)
 
 end
 
-open scoped BigOperators Classical
-open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal
+open CubicJacobiGlobal
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma residueAdditive_mul (h c t d : Eis) :

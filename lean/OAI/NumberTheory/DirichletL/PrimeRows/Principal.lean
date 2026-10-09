@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.PrimeRows.Character
 import OAI.NumberTheory.DirichletL.Hecke.RowNonprincipal
 import OAI.NumberTheory.DirichletL.Hecke.UnitRows
 import OAI.NumberTheory.DirichletL.UnitSexticWitness
-
 namespace OAI
 
 noncomputable section

@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialFibers
 import OAI.NumberTheory.DirichletL.Descent.Fibers
 import OAI.NumberTheory.DirichletL.Descent.Sharp
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -102,54 +101,6 @@ theorem initial_energy_projection {J : ℕ} (source : Finset (InitialTuple J))
   apply Finset.sum_congr rfl
   intro k hk
   ring
-
-def initialPositiveEnergy {J : ℕ} (source : Finset (InitialTuple J))
-    (labels : Finset (Ideal Eis)) (rows : Finset Eis) (F : InitialChild → ℂ) : ℝ :=
-  ∑ t ∈ initialQuotientSet source, ((idealDivisors t).card : ℝ) ^ J *
-    ∑ f ∈ labels, ((idealDivisors f).card : ℝ) ^ (J + 1) *
-      ∑ k ∈ rows, ‖F (t, f, k)‖ ^ 2
-
-theorem initialPositiveEnergy_nonneg {J : ℕ} (source : Finset (InitialTuple J))
-    (labels : Finset (Ideal Eis)) (rows : Finset Eis) (F : InitialChild → ℂ) :
-    0 ≤ initialPositiveEnergy source labels rows F := by
-  unfold initialPositiveEnergy
-  positivity
-
-theorem initial_weighted_count {J : ℕ} (source : Finset (InitialTuple J))
-    (hsource : ∀ x ∈ source, InitialSourceValid x)
-    (labels : Finset (Ideal Eis)) (rows : Finset Eis)
-    (hlabels : ∀ f ∈ labels, f ≠ 0)
-    (hchild : ∀ x ∈ source, (initialChild x).2.1 ∈ labels ∧ (initialChild x).2.2 ∈ rows)
-    (w : InitialTuple J → ℝ) (hw0 : ∀ x ∈ source, 0 ≤ w x) (hw1 : ∀ x ∈ source, w x ≤ 1)
-    (F G : InitialChild → ℂ) :
-    ‖∑ x ∈ source, (w x : ℂ) * F (initialChild x) * star (G (initialChild x))‖ ≤
-      Real.sqrt (initialPositiveEnergy source labels rows F) *
-        Real.sqrt (initialPositiveEnergy source labels rows G) := by
-  have hF := initial_energy_projection source hsource labels rows hlabels hchild w hw1 F
-  have hG := initial_energy_projection source hsource labels rows hlabels hchild w hw1 G
-  apply (weighted_cauchy source w (F ∘ initialChild) (G ∘ initialChild) hw0).trans
-  exact mul_le_mul (Real.sqrt_le_sqrt hF) (Real.sqrt_le_sqrt hG)
-    (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
-
-theorem initial_weighted_count_normalized {J : ℕ} (source : Finset (InitialTuple J))
-    (hsource : ∀ x ∈ source, InitialSourceValid x)
-    (labels : Finset (Ideal Eis)) (rows : Finset Eis)
-    (hlabels : ∀ f ∈ labels, f ≠ 0)
-    (hchild : ∀ x ∈ source, (initialChild x).2.1 ∈ labels ∧ (initialChild x).2.2 ∈ rows)
-    (w : InitialTuple J → ℝ) (hw0 : ∀ x ∈ source, 0 ≤ w x) (hw1 : ∀ x ∈ source, w x ≤ 1)
-    (F G : InitialChild → ℂ) (H : ℝ) (hH : 0 < H) :
-    ‖∑ x ∈ source, (w x : ℂ) * F (initialChild x) * star (G (initialChild x))‖ ≤
-      H * (Real.sqrt (H⁻¹ * initialPositiveEnergy source labels rows F) *
-        Real.sqrt (H⁻¹ * initialPositiveEnergy source labels rows G)) := by
-  apply (initial_weighted_count source hsource labels rows hlabels hchild w hw0 hw1 F G).trans_eq
-  rw [Real.sqrt_mul (inv_nonneg.mpr hH.le), Real.sqrt_mul (inv_nonneg.mpr hH.le)]
-  have hc : H * (Real.sqrt H⁻¹) ^ 2 = 1 := by
-    rw [Real.sq_sqrt (inv_nonneg.mpr hH.le), mul_inv_cancel₀ hH.ne']
-  calc
-    _ = (H * (Real.sqrt H⁻¹) ^ 2) *
-        (Real.sqrt (initialPositiveEnergy source labels rows F) *
-          Real.sqrt (initialPositiveEnergy source labels rows G)) := by rw [hc, one_mul]
-    _ = _ := by ring
 
 end
 end SevenEighths.InverseMoment

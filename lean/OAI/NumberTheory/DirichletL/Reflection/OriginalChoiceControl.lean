@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.OriginalSlotSupport
 import OAI.NumberTheory.DirichletL.Reflection.OriginalTransport
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

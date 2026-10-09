@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Energy.ZeroGrowthPhysicalReindex
 import OAI.NumberTheory.DirichletL.Energy.CanonicalHighPhysical
 import OAI.NumberTheory.DirichletL.Energy.FirstSourceParameters
 import OAI.NumberTheory.DirichletL.Energy.ZeroGrowthSource
-
 namespace OAI
 
 noncomputable section

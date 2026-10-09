@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondSixthSource
 import OAI.NumberTheory.DirichletL.Moments.SecondHeightFamily
 import OAI.NumberTheory.DirichletL.Moments.RadicalFamily
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.CompletedReopening
-import OAI.NumberTheory.DirichletL.Descent.ReopenedPriority
-
+import OAI.NumberTheory.DirichletL.Descent.ReopenedMarks
 namespace OAI
 
 namespace SevenEighths.InverseMoment

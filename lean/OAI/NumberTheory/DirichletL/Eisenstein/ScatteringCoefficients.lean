@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.CutoffApproximation
 import OAI.NumberTheory.DirichletL.Eisenstein.ConjugateLevelAction
-
 namespace OAI
 
 noncomputable section
@@ -9,76 +8,22 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
+open scoped MatrixGroups
 
 def cubicEisensteinResidue : KernelQuotientL2 :=
   kernelEisensteinResidueVector 2 3 (by norm_num) (by norm_num)
@@ -91,9 +36,6 @@ lemma cubicEisensteinResidue_nonzero_character :
   intro s hs hi
   exact kernelEisensteinL2Correction_initial_overlap 2 3 (by norm_num) (by norm_num) s hs hi
 
-lemma cubicEisensteinResidue_ne_zero : cubicEisensteinResidue≠0 :=
-  cubicEisensteinResidue_nonzero_character.1
-
 lemma cubicEisensteinResidue_character (M : CubicKubota.levelThree) :
     kernelLevelPullback M cubicEisensteinResidue=
       CubicKubota.complexCharacter M • cubicEisensteinResidue :=
@@ -103,25 +45,12 @@ lemma cubicEisensteinResidue_eigenvector :
     (cubicEisensteinResidue,(8/9:ℂ) • cubicEisensteinResidue)∈kernelEnergyLaplacian.graph :=
   kernelEisensteinResidueVector_graph 2 3 (by norm_num) (by norm_num)
 
-lemma cubicEisensteinResidue_limit :
-    Tendsto (fun s : ℂ => (s-4/3) • kernelEisensteinL2Correction 2 3 (by norm_num) (by norm_num) s)
-      (𝓝[≠] (4/3:ℂ)) (𝓝 cubicEisensteinResidue) :=
-  kernelEisensteinResidueVector_limit 2 3 (by norm_num) (by norm_num)
-
 lemma cubicEisensteinResidue_cusp_average :
     kernelCuspStripAverage cubicEisensteinResidue=cuspConstantAverageResidue := by
   apply kernelEisensteinResidueVector_average_of_overlap 2 3 (by norm_num) (by norm_num)
   intro s hs hi
   apply kernelCuspAverageFamily_eq_of_initial_overlap 2 3 (by norm_num) (by norm_num) s (by linarith)
   exact kernelEisensteinL2Correction_initial_overlap 2 3 (by norm_num) (by norm_num) s hs hi
-
-lemma cubicEisensteinCorrection_not_continuousAt :
-    ¬ContinuousAt (kernelEisensteinL2Correction 2 3 (by norm_num) (by norm_num)) (4/3:ℂ) := by
-  intro hc
-  have hh := ((tendsto_id.sub_const (4/3:ℂ)).smul hc.tendsto).mono_left
-    (show 𝓝[≠] (4/3:ℂ)≤𝓝 (4/3:ℂ) from nhdsWithin_le_nhds)
-  simp only [sub_self,zero_smul] at hh
-  exact cubicEisensteinResidue_ne_zero (tendsto_nhds_unique cubicEisensteinResidue_limit hh)
 
 lemma cubicEisensteinResidue_local_limit (S : Set KernelQuotient) (hS : IsCompact S) :
     Tendsto (fun s : ℂ => (s-4/3) •
@@ -146,31 +75,9 @@ lemma cubicEisensteinLocalFamily_initial_ae (S : Set KernelQuotient) (hS : IsCom
     ring
   · rw [Set.indicator_of_notMem hmem,Set.indicator_of_notMem hmem]
 
-lemma cubicEisensteinLocalFamily_meromorphicAt (S : Set KernelQuotient) (hS : IsCompact S) :
-    MeromorphicAt (kernelLocalCorrectedSeed S hS 2 3 (by norm_num) (by norm_num)) (4/3:ℂ) :=
-  kernelLocalCorrectedSeed_meromorphicAt S hS 2 3 (by norm_num) (by norm_num)
-
-lemma cubicEisensteinLocalFamily_not_continuousAt :
-    ¬ContinuousAt (kernelLocalCorrectedSeed kernelCuspAverageCompact kernelCuspAverageCompact_isCompact
-      2 3 (by norm_num) (by norm_num)) (4/3:ℂ) := by
-  have hnonzero : kernelMassRestrictionCLM kernelCuspAverageCompact
-      kernelCuspAverageCompact_isCompact.measurableSet cubicEisensteinResidue≠0 := by
-    intro hz
-    have hh := congrArg kernelCuspStripAverage hz
-    rw [kernelCuspStripAverage_restrict,map_zero,cubicEisensteinResidue_cusp_average] at hh
-    exact cuspConstantAverageResidue_ne_zero hh
-  intro hc
-  have hh := ((tendsto_id.sub_const (4/3:ℂ)).smul hc.tendsto).mono_left
-    (show 𝓝[≠] (4/3:ℂ)≤𝓝 (4/3:ℂ) from nhdsWithin_le_nhds)
-  simp only [sub_self,zero_smul] at hh
-  exact hnonzero (tendsto_nhds_unique
-    (cubicEisensteinResidue_local_limit kernelCuspAverageCompact kernelCuspAverageCompact_isCompact) hh)
-
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
 
 def whittakerHeight (v : ℝ) : ℝ := max 5 v
 def whittakerBase (p : ℝ × ℂ) : ℝ := whittakerHeight p.1*(1+‖p.2‖^2)
@@ -353,9 +260,6 @@ theorem cuspWhittakerAverage_differentiableAt (freq s : ℂ) (hs : 1<s.re) :
 end
 
 section
-open scoped BigOperators Classical
-
-open ActualEisensteinCubic ConcreteTraceCRT
 
 lemma arithmeticDirichletTerm_differentiable (h : ActualEisensteinCubic.O) (c : LevelLower) :
     Differentiable ℂ (fun s : ℂ => arithmeticDirichletTerm s h c) := by
@@ -413,8 +317,7 @@ theorem scatteringCoefficient_analyticOnNhd (h : ActualEisensteinCubic.O) :
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology InnerProductSpace ComplexConjugate MatrixGroups ENNReal
+open scoped InnerProductSpace ComplexConjugate MatrixGroups ENNReal
 
 local notation "O" => ActualEisensteinCubic.O
 
@@ -498,11 +401,6 @@ def kernelCuspFourierFamily (h : ActualEisensteinCubic.O) (a b : ℝ) (ha : 0<a)
   kernelCuspFourier h
     (kernelLocalCorrectedSeed kernelCuspAverageCompact kernelCuspAverageCompact_isCompact a b ha hab s)
 
-lemma kernelCuspFourierFamily_meromorphicAt (h : ActualEisensteinCubic.O) (a b : ℝ) (ha : 0<a) (hab : a<b) :
-    MeromorphicAt (kernelCuspFourierFamily h a b ha hab) (4/3:ℂ) :=
-  meromorphicAt_clm (kernelCuspFourier h)
-    (kernelLocalCorrectedSeed_meromorphicAt kernelCuspAverageCompact kernelCuspAverageCompact_isCompact a b ha hab)
-
 lemma kernelCuspFourierFamily_residue_limit (h : ActualEisensteinCubic.O) (a b : ℝ) (ha : 0<a) (hab : a<b) :
     Tendsto (fun s : ℂ => (s-4/3)*kernelCuspFourierFamily h a b ha hab s)
       (𝓝[≠] (4/3:ℂ)) (𝓝 (kernelCuspFourier h (kernelEisensteinResidueVector a b ha hab))) := by
@@ -547,8 +445,7 @@ lemma kernelCuspFourierFamily_of_initial_overlap (h : ActualEisensteinCubic.O) (
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
+open scoped MatrixGroups
 
 local notation "O" => ActualEisensteinCubic.O
 
@@ -600,22 +497,6 @@ lemma hyperbolicEisenstein_cusp_fourier_nonzero (s : ℂ) (hs : 2<s.re) (h : Act
   rw [heq,integral_const_mul]
   rfl
 
-lemma cuspWhittakerHeightFactor_bessel (s : ℂ) (hs : 1<s.re) (h : ActualEisensteinCubic.O) (hh : h≠0) :
-    cuspWhittakerHeightFactor s h=
-      ∫v in Set.Icc (5:ℝ) 6,(v:ℂ)^(-s-1)*
-        ((2*Real.pi:ℂ)/Complex.Gamma s*
-          (2*Real.pi*‖cuspFrequency h*v‖:ℂ)^(s-1)*
-          schlafliBesselK (s-1) (4*Real.pi*‖cuspFrequency h*v‖)) := by
-  apply setIntegral_congr_fun measurableSet_Icc
-  intro v hv
-  have hpos : 0<v := lt_of_lt_of_le (by norm_num) hv.1
-  dsimp only
-  rw [sourceFourierKernel_bessel s _ hs
-    (mul_ne_zero (cuspFrequency_ne_zero h hh) (Complex.ofReal_ne_zero.mpr hpos.ne'))]
-
-def kernelResidualFourierDatum (h : ActualEisensteinCubic.O) (a b : ℝ) (ha : 0<a) (hab : a<b) : ℂ :=
-  kernelCuspFourier h (kernelEisensteinResidueVector a b ha hab)
-
 lemma kernelCuspFourierFamily_nonzero_of_initial_overlap (h : ActualEisensteinCubic.O) (hh : h≠0)
     (a b : ℝ) (ha : 0<a) (hab : a<b) (s : ℂ) (hs : 2<s.re)
     (hoverlap : kernelEisensteinL2Correction a b ha hab s=ᵐ[integralQuotientVolume globalKubotaKernel]
@@ -626,9 +507,6 @@ lemma kernelCuspFourierFamily_nonzero_of_initial_overlap (h : ActualEisensteinCu
     hyperbolicEisenstein_cusp_fourier_nonzero s hs h hh]
 
 end
-
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
 
 local notation "O" => ActualEisensteinCubic.O
 

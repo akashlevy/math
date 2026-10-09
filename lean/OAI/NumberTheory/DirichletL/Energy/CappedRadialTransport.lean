@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.CappedWidthInduction
-
 namespace OAI
 
 noncomputable section

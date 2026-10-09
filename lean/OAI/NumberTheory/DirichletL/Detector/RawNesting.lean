@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.RawIndexGrouping
-
 namespace OAI
 
 noncomputable section

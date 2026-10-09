@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.PrimeRows.FirstJoint
 import OAI.NumberTheory.DirichletL.PrimeRows.DiskControl
 import OAI.NumberTheory.DirichletL.PrimeRows.BufferedBin
 import OAI.NumberTheory.DirichletL.Hecke.StripActual
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.CompensatedTriple
-
 namespace OAI
 
 noncomputable section

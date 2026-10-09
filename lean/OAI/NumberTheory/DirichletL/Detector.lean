@@ -5,7 +5,6 @@ import Mathlib.Data.Finset.Max
 import Mathlib.Algebra.Order.Floor.Semiring
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
-
 namespace OAI
 
 namespace SevenEighths.Detector
@@ -22,11 +21,6 @@ theorem exists_small_increment (M : ℕ → ℝ) {n : ℕ} (hn : 0 < n)
   simp only [Finset.sum_const, Finset.card_range, nsmul_eq_mul,
     Finset.sum_range_sub] at hs
   linarith
-
-theorem buffered_bin_of_rounding {x y a e : ℝ}
-    (hround : a ≤ x ∧ x < a + e) (hstep : y - x ≤ e) :
-    a ≤ x ∧ x < a + e ∧ y < a + 2 * e := by
-  exact ⟨hround.1, hround.2, by linarith [hround.2]⟩
 
 theorem exists_grid_rounding {base x e : ℝ} (he : 0 < e) (hx : base ≤ x) :
     ∃ k : ℕ, base + e * k ≤ x ∧ x < base + e * k + e := by
@@ -51,18 +45,6 @@ theorem exists_buffered_bin (M : ℕ → ℝ) {n : ℕ} (hn : 0 < n)
   refine ⟨i, hi, k, ?_, hklo, hkhi, ?_⟩
   · exact hklo.trans (hbound i hi.le).2
   · linarith
-
-theorem maximal_zero_of_floor_lt {ι : Type*} (L : ι → ℂ → ℂ)
-    (zeros : Finset (ι × ℂ)) {floor M : ℝ}
-    (hzero : ∀ p ∈ zeros, L p.1 p.2 = 0)
-    (hmax : M ∈ insert floor (zeros.image (fun p => p.2.re)))
-    (hfloor : floor < M) :
-    ∃ χ ρ, (χ, ρ) ∈ zeros ∧ L χ ρ = 0 ∧ ρ.re = M := by
-  classical
-  rcases Finset.mem_insert.mp hmax with h | h
-  · exact False.elim ((ne_of_gt hfloor) h)
-  · obtain ⟨⟨χ, ρ⟩, hp, heq⟩ := Finset.mem_image.mp h
-    exact ⟨χ, ρ, hp, hzero _ hp, heq⟩
 
 theorem simultaneous_saturation {U δ r m ε A B : ℝ}
     (hU : 1 < U) (hδ : (1 / 50 : ℝ) ≤ δ) (hε : 0 ≤ ε)
@@ -109,22 +91,6 @@ theorem simultaneous_saturation {U δ r m ε A B : ℝ}
     have hpos := Real.rpow_pos_of_pos hU0 (δ * r + ε)
     nlinarith
   exact ⟨hlength, hlowerA, hlowerB⟩
-
-theorem inverse_length_of_saturation {r m t ε κ : ℝ}
-    (hsupport : t - κ ≤ r + m) (hplain : m ≤ 1 / 2 + 75 * ε) :
-    t - 1 / 2 - 75 * ε - κ ≤ r := by linarith
-
-theorem complex_simultaneous_saturation {U δ r m ε : ℝ} {M S : ℂ}
-    (hU : 1 < U) (hδ : (1 / 50 : ℝ) ≤ δ) (hε : 0 ≤ ε)
-    (hprod : U ^ (δ * (r + m) - ε) ≤ ‖M * S‖ ^ 2)
-    (hupperM : ‖M‖ ^ 2 ≤ U ^ (δ * r + ε))
-    (hupperS : ‖S‖ ^ 2 ≤ U ^ (δ * min m (1 - m) + ε)) :
-    m ≤ 1 / 2 + 75 * ε ∧
-      U ^ (δ * r - 2 * ε) ≤ ‖M‖ ^ 2 ∧
-      U ^ (δ * m - 2 * ε) ≤ ‖S‖ ^ 2 := by
-  apply simultaneous_saturation hU hδ hε (sq_nonneg _) (sq_nonneg _)
-    _ hupperM hupperS
-  simpa only [norm_mul, mul_pow] using hprod
 
 end SevenEighths.Detector
 

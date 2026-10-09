@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Energy.WidthInduction
 import OAI.NumberTheory.DirichletL.Energy.WidthFloor
 import OAI.NumberTheory.DirichletL.Energy.StageReserveSchedule
 import OAI.NumberTheory.DirichletL.Energy.BandMonotonicity
-
 namespace OAI
 
 noncomputable section

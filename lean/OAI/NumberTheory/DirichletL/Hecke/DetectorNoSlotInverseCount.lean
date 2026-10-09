@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorPlainFiberCount
 import OAI.NumberTheory.DirichletL.Hecke.DetectorCoefficientTransfer
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationRowwise
-
 namespace OAI
 
 noncomputable section

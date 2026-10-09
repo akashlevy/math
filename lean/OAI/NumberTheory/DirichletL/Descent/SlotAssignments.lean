@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.Marks
 import Mathlib.Data.Fintype.EquivFin
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -42,15 +41,6 @@ theorem indexedSlotAssignment_support (I : Finset σ) (L : σ → Finset ι)
     (j : Fin I.card) :
     indexedSlotAssignment I q j ∈ L ((I.equivFin).symm j).val ∩ A :=
   Finset.mem_pi.mp hq _ _
-
-theorem primeMark_indexed_assignments (I : Finset σ) (L : σ → Finset ι)
-    (a : σ → ι → ℂ) (A : Finset ι) :
-    primeMark I L a A =
-      ∑ r ∈ (I.pi (fun i => L i ∩ A)).image (indexedSlotAssignment I),
-        slotAssignmentWeight I a (fun i hi => r (I.equivFin ⟨i,hi⟩)) := by
-  rw [Finset.sum_image (fun q _ r _ h => indexedSlotAssignment_injective I h)]
-  simpa only [indexedSlotAssignment,Equiv.symm_apply_apply] using
-    primeMark_supported_assignments I L a A
 
 end
 end SevenEighths.InverseMoment

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.ScalarTable
 import OAI.NumberTheory.DirichletL.Detector.PrimeConstants
-
 namespace OAI
 
 noncomputable section

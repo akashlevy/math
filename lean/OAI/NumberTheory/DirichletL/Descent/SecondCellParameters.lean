@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondCellPhysical
 import OAI.NumberTheory.DirichletL.Descent.PhysicalBlockBudget
-
 namespace OAI
 
 noncomputable section

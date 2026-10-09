@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialPhysicalMeasure
-
 namespace OAI
 
 noncomputable section
@@ -35,9 +34,6 @@ theorem clipped_support_upper (W:ℝ→ℂ)(a b c θ:ℝ)(ha:0<a)(hc:1≤c)
 theorem childLogTest_eq_clipped (W:ℝ→ℂ)(θ:ℝ):childLogTest W θ=clippedSource W 1 θ:=by
   funext x
   simp only [childLogTest,clippedSource,mul_comm,mul_one]
-
-theorem childLogTest_norm (W:ℝ→ℂ)(θ x:ℝ):‖childLogTest W θ x‖=‖W x‖:=by
-  rw [childLogTest_eq_clipped,clipped_norm,one_mul]
 
 end SevenEighths.InverseInitialProfileBounds
 

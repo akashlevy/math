@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondSourceRetained
-
 namespace OAI
 
 noncomputable section

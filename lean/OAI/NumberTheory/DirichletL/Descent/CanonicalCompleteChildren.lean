@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalLongCosts
 import OAI.NumberTheory.DirichletL.Descent.CanonicalLongHeightBin
-
 namespace OAI
 
 noncomputable section

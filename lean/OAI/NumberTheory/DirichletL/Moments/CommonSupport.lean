@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FullCorrelation
 import OAI.NumberTheory.DirichletL.Moments.Canonical
-
 namespace OAI
 
 noncomputable section

@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.SectorLocalization
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Data.Int.Interval
-
 namespace OAI
 
 noncomputable section
@@ -45,12 +44,6 @@ lemma support_indices (a b q : ℝ) (ha : 0<a) (hq : q∈Icc a b)
   (mem_indices_iff_whole_support a b ha (hq.1.trans hq.2) n).mpr
     ⟨q,hq,subset_tsupport _ hne⟩
 
-lemma finite_active_indices (a b : ℝ) (ha : 0<a) (hab : a≤b) :
-    {n : ℤ | ∃q∈Icc a b,q∈tsupport (dyadicWeight n)}.Finite := by
-  apply (indices a b).finite_toSet.subset
-  intro n hn
-  exact (mem_indices_iff_whole_support a b ha hab n).mpr hn
-
 lemma logb_four_mul (b : ℝ) (hb : 0<b) :
     Real.logb 2 (4*b)=2+Real.logb 2 b := by
   rw [Real.logb_mul (by norm_num) hb.ne']
@@ -74,13 +67,6 @@ theorem indices_card_bound (a b : ℝ) (ha : 0<a) (hab : a≤b) :
   rw [hcard',Real.logb_div hb.ne' ha.ne']
   linarith [Int.floor_le (Real.logb 2 (4*b)),Int.le_ceil (Real.logb 2 a)]
 
-theorem scaled_indices_card_bound (a b T : ℝ) (ha : 0<a) (hab : a≤b) (hT : 0<T) :
-    ((indices (a/T) (b/T)).card:ℝ)≤3+Real.logb 2 (b/a) := by
-  have h := indices_card_bound (a/T) (b/T) (div_pos ha hT)
-    (div_le_div_of_nonneg_right hab hT.le)
-  have he : (b/T)/(a/T)=b/a := by field_simp
-  rwa [he] at h
-
 lemma dyadic_partition_on_interval (a b q : ℝ) (ha : 0<a) (hq : q∈Icc a b) :
     (∑n∈indices a b,dyadicWeight n q)=1 := by
   rw [←dyadicWeight_partition q (ha.trans_le hq.1)]
@@ -89,18 +75,6 @@ lemma dyadic_partition_on_interval (a b q : ℝ) (ha : 0<a) (hq : q∈Icc a b) :
   intro n hn
   by_contra hne
   exact hn (support_indices a b q ha hq n hne)
-
-theorem four_indices_card_bound (a b : Fin 4→ℝ)
-    (ha : ∀j,0<a j) (hab : ∀j,a j≤b j) :
-    (Fintype.card (∀j:Fin 4,↥(indices (a j) (b j))):ℝ)≤
-      ∏j:Fin 4,(3+Real.logb 2 (b j/a j)) := by
-  rw [Fintype.card_pi]
-  push_cast
-  apply Finset.prod_le_prod₀
-  · intro j hj
-    positivity
-  · intro j hj
-    simpa only [Fintype.card_coe] using indices_card_bound (a j) (b j) (ha j) (hab j)
 
 lemma retained_integral_mem (R q : ℝ) (hq : 1≤q) (n : ℤ)
     (hr : Retained R n) (hne : dyadicWeight n q≠0) :

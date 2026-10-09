@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.MaskDescent
-
 namespace OAI
 
 noncomputable section

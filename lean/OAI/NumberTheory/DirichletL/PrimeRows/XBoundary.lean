@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.XGrowth
 import OAI.NumberTheory.DirichletL.PrimeRows.BufferedContour
 import OAI.NumberTheory.DirichletL.ContinuationShiftedGaussian
-
 namespace OAI
 
 noncomputable section

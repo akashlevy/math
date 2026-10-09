@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Energy.PositiveHighBound
 import OAI.NumberTheory.DirichletL.Energy.LowBandSubtype
 import OAI.NumberTheory.DirichletL.Energy.ReferenceLowBands
 import OAI.NumberTheory.DirichletL.Energy.LowBandEmpty
-
 namespace OAI
 
 noncomputable section

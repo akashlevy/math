@@ -1,6 +1,6 @@
-import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCaller
+import OAI.NumberTheory.DirichletL.Inversion.InitialQuotientGeometry
+import OAI.NumberTheory.DirichletL.Inversion.InitialClippedColumns
 import OAI.NumberTheory.DirichletL.Descent.SecondAssignedSum
-
 namespace OAI
 
 noncomputable section
@@ -128,19 +128,6 @@ theorem coefficient_norm_le_one (S : Finset (Source (ι:=ι) 0))
   rw [paired_assignment_filter] at hq'
   rw [coefficient_attach]
   exact pairedSlotWeight_norm_le_one J₁ J₂ L₁ L₂ a₁ a₂ _ q hq' ha₁ ha₂
-
-theorem assigned_tuple_valid
-    (p : ι→ActualEisensteinCubic.O) (hp : ∀ i,p i≠0)
-    [∀ i,(Ideal.span {p i}).IsMaximal]
-    (hpr : ∀ i,ConcretePrimeRowBridge.goodLambda^2∣p i-1)
-    (S : Finset (Source (ι:=ι) 0))
-    (J₁ J₂ : Finset σ) (L₁ L₂ : σ→Finset ι)
-    (hdiv : ∀ x∈S,x.divisor⊆x.common) (u : ActualEisensteinCubic.Oˣ)
-    {x : Source (ι:=ι) (J₁.card+J₂.card)} (hx : x∈assignedSource S J₁ J₂ L₁ L₂) :
-    InitialSourceValid (toTuple p (sectorSource u x)) := by
-  obtain ⟨_,hdivx,hassigned⟩ := assignedSource_support S J₁ J₂ L₁ L₂ hdiv hx
-  exact sourceTuple_valid p hp hpr x.common x.divisor x.overlap
-    ((u:ActualEisensteinCubic.O)^5*x.frequency) x.assigned hdivx hassigned
 
 end SevenEighths.InverseInitialEnergyCallerAssigned
 

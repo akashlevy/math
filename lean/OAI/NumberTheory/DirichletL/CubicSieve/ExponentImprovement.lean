@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.FullImprovement
 import OAI.NumberTheory.DirichletL.HeathBrownIteration
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

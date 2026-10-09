@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.RawSourceIntegral
 import OAI.NumberTheory.DirichletL.Detector.SixthSeries
-
 namespace OAI
 
 noncomputable section

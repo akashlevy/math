@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsExcluded
-
 namespace OAI
 
 noncomputable section
@@ -48,14 +47,6 @@ theorem rowHighPrimeTerm_tsum_eq_localFactor (η : HeckeFamily.Character) (u : O
     simp only [rowHighPrimeTerm_zero_of_two_le η u x w z P e _ _ _ hh,tsum_zero]),
     ←Fin.sum_univ_eq_sum_range]
   rfl
-
-theorem bareIdealHighSeries_row_hasProd_localFactor (η : HeckeFamily.Character) (u : O) (x w z : ℂ)
-    (hx : 3/2<x.re) (hw : 2<w.re) (hz : 1/6<z.re) :
-    HasProd (fun P : PrimeIdeal=>idealRowHighLocalFactor η u P.val x w z)
-      (bareIdealHighSeries η u x w z) := by
-  have h := bareIdealHighSeries_row_hasProd η u x w z hx hw hz
-  change HasProd (fun P : PrimeIdeal=>∑' b : HighValuation,rowHighPrimeTerm η u x w z P b) _ at h
-  simpa only [rowHighPrimeTerm_tsum_eq_localFactor η u x w z hx hw hz] using h
 
 theorem excludedRowHighLocalFactor (S : Finset Id) (hS : ∀P∈S,Prime P)
     (η : HeckeFamily.Character) (u : O) (x w z : ℂ)

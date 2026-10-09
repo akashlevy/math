@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.CompensationActual
 import OAI.NumberTheory.DirichletL.PrincipalMellinGrowth
 import OAI.NumberTheory.DirichletL.PrincipalSlotEstimate
-
 namespace OAI
 
 noncomputable section
@@ -19,9 +18,6 @@ def localMultiplier (η : Character) (P : PrimeIdeal) (x w z : ℂ) : ℂ :=
       (coordD Q (idealCoeff η P.val) 1 x) (idealMarkedClosed η P x w z)
       (star (idealCoeff η P.val)*(Q : ℂ)^x) ((Q : ℂ)^(-w)) /
       idealClosedCorrection η P x w z)
-
-def selectedMultiplier (η : Character) (T : Finset PrimeIdeal) (x w z : ℂ) : ℂ :=
-  ∏ P ∈ T, localMultiplier η P x w z
 
 def slotMultiplier {ι : Type*} (η : Character) (J : Finset ι)
     (T : ι → Finset PrimeIdeal) (b : ι → PrimeIdeal → ℂ) (x w z : ℂ) : ℂ :=
@@ -243,33 +239,15 @@ theorem local_norm_bound (η : Character) (S : Finset Id) (hS : CorrectionTail S
     _ ≤ Q^(Bz-1)*(200*(1+Q^Bx)*2) := by gcongr
     _ = _ := by ring
 
-def selectedBound (T : Finset PrimeIdeal) (Bx Bz : ℝ) : ℝ :=
-  ∏ P ∈ T, localBound Bx Bz P
-
 def slotBound {ι : Type*} (J : Finset ι) (T : ι → Finset PrimeIdeal)
     (b : ι → PrimeIdeal → ℂ) (Bx Bz : ℝ) : ℝ :=
   ∏ j ∈ J, ∑ P ∈ T j, ‖b j P‖ * localBound Bx Bz P
-
-lemma selectedBound_nonneg (T : Finset PrimeIdeal) (Bx Bz : ℝ) :
-    0 ≤ selectedBound T Bx Bz := Finset.prod_nonneg (fun P _ => localBound_nonneg Bx Bz P)
 
 lemma slotBound_nonneg {ι : Type*} (J : Finset ι) (T : ι → Finset PrimeIdeal)
     (b : ι → PrimeIdeal → ℂ) (Bx Bz : ℝ) : 0 ≤ slotBound J T b Bx Bz := by
   apply Finset.prod_nonneg
   intro j hj
   exact Finset.sum_nonneg (fun P _ => mul_nonneg (norm_nonneg _) (localBound_nonneg Bx Bz P))
-
-theorem selected_analytic_w (η : Character) (S : Finset Id) (hS : CorrectionTail S)
-    (T : Finset PrimeIdeal) (hT : ∀ P ∈ T, P.val ∉ S) (x z : ℂ)
-    (hx : 7/8 ≤ x.re) (hz : 4/25 ≤ z.re) :
-    AnalyticOnNhd ℂ (fun w => selectedMultiplier η T x w z) {w : ℂ | 9/10 < w.re} :=
-  T.analyticOnNhd_fun_prod (fun P hp => local_analytic_w η S hS P (hT P hp) x z hx hz)
-
-theorem selected_analytic_z (η : Character) (S : Finset Id) (hS : CorrectionTail S)
-    (T : Finset PrimeIdeal) (hT : ∀ P ∈ T, P.val ∉ S) (x w : ℂ)
-    (hx : 7/8 ≤ x.re) (hw : 9/10 ≤ w.re) :
-    AnalyticOnNhd ℂ (fun z => selectedMultiplier η T x w z) {z : ℂ | 4/25 < z.re} :=
-  T.analyticOnNhd_fun_prod (fun P hp => local_analytic_z η S hS P (hT P hp) x w hx hw)
 
 theorem slot_analytic_w {ι : Type*} (η : Character) (S : Finset Id) (hS : CorrectionTail S)
     (J : Finset ι) (T : ι → Finset PrimeIdeal) (b : ι → PrimeIdeal → ℂ)
@@ -292,14 +270,6 @@ theorem slot_analytic_z {ι : Type*} (η : Character) (S : Finset Id) (hS : Corr
   apply (T j).analyticOnNhd_fun_sum
   intro P hp
   exact analyticOnNhd_const.mul (local_analytic_z η S hS P (hT j hj P hp) x w hx hw)
-
-theorem selected_norm_bound (η : Character) (S : Finset Id) (hS : CorrectionTail S)
-    (T : Finset PrimeIdeal) (hT : ∀ P ∈ T, P.val ∉ S) (x w z : ℂ) (Bx Bz : ℝ)
-    (hx : x.re ∈ Icc (7/8) Bx) (hw : 19/20 ≤ w.re) (hz : z.re ∈ Icc (33/200) Bz) :
-    ‖selectedMultiplier η T x w z‖ ≤ selectedBound T Bx Bz := by
-  simp only [selectedMultiplier,selectedBound,norm_prod]
-  exact Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _)
-    (fun P hp => local_norm_bound η S hS P (hT P hp) x w z Bx Bz hx hw hz)
 
 theorem slot_norm_bound {ι : Type*} (η : Character) (S : Finset Id) (hS : CorrectionTail S)
     (J : Finset ι) (T : ι → Finset PrimeIdeal) (b : ι → PrimeIdeal → ℂ)
@@ -350,21 +320,6 @@ theorem combined_slot_bound {ι : Type*} (η : Character) (S : Finset Id) (hS : 
   exact mul_le_mul (global_norm_bound η S hS x w z hx.1 (by linarith) (by linarith [hz.1]))
     (slot_norm_bound η S hS J T b hT x w z Bx Bz hx hw hz) (norm_nonneg _) (by norm_num)
 
-theorem selected_initial_identity (η : Character) (S : Finset Id) (hS : SourceExclusions S)
-    (T : Finset PrimeIdeal) (hT : ∀ P ∈ T, P.val ∉ S) (x w z : ℂ)
-    (hx : 3/2 < x.re) (hw : 2 < w.re) (hz : 1/6 < z.re) :
-    (∏ P ∈ T, (Ideal.absNorm P.val : ℂ)^(z-1)) *
-      spectralCompensatedHigh S T η x w z
-        (fun P => star (idealCoeff η P.val)*(Ideal.absNorm P.val : ℂ)^x)
-        (fun P => (Ideal.absNorm P.val : ℂ)^(-w)) =
-      (LFunction (fixedSourcePrincipal S hS.prime) (6*z) *
-        LFunction (fixedSourcePrincipal S hS.prime) w /
-        LFunction (η.excludePrimes S hS.prime) x) *
-        (globalClosedCorrection η S x w z * selectedMultiplier η T x w z) := by
-  rw [spectralCompensatedHigh_continued S hS T hT η x w z _ _ hx hw hz]
-  simp only [selectedMultiplier,localMultiplier,Finset.prod_mul_distrib,Complex.ofReal_natCast]
-  ring_nf
-
 theorem source_w_boundary {ι : Type*} (η : Character) (S : Finset Id) (hS : SourceExclusions S)
     (J : Finset ι) (T : ι → Finset PrimeIdeal) (b : ι → PrimeIdeal → ℂ)
     (hT : ∀ j ∈ J, ∀ P ∈ T j, P.val ∉ S)
@@ -386,27 +341,6 @@ theorem source_w_boundary {ι : Type*} (η : Character) (S : Finset Id) (hS : So
   · intro x hx t _
     simpa only [pow_zero,mul_one] using combined_slot_bound η S hS.tail J T b hT s
       ((x : ℂ)+t*I) z s.re z.re ⟨hs,le_rfl⟩ (by simpa using hx.1) ⟨hz,le_rfl⟩
-
-theorem source_z_boundary {ι : Type*} (η : Character) (S : Finset Id) (hS : SourceExclusions S)
-    (J : Finset ι) (T : ι → Finset PrimeIdeal) (b : ι → PrimeIdeal → ℂ)
-    (hT : ∀ j ∈ J, ∀ P ∈ T j, P.val ∉ S)
-    (W0 W1 : SchwartzMap ℝ ℂ) (a0 b0 : ℝ) (ha0 : 0<a0)
-    (hW0 : Function.support W0 ⊆ Icc a0 b0)
-    (M : Ideal HeckeFamily.O) [NeZero M] (X Y Z : ℝ) (hX : 0<X) (hZ : 0<Z)
-    (s : ℂ) (hs : 7/8 ≤ s.re) (hEta : LFunction (η.excludePrimes S hS.prime) s ≠ 0)
-    {e : ℝ} (he : 0<e) (he' : e≤2/3) :
-    BoundaryControl (fun z => sourceMultiplier W0 W1 X Y Z (η.excludePrimes S hS.prime) s
-      (globalClosedCorrection η S s) (slotMultiplier η J T b s) 1 z *
-        LFunction (fixedPrincipal M) (6*z)) (33/200) (1/6+e) := by
-  apply PrincipalMellinGrowth.source_z_boundary W0 W1 a0 b0 ha0 hW0 M X Y Z hX hZ
-    (η.excludePrimes S hS.prime) s hEta (globalClosedCorrection η S s) (slotMultiplier η J T b s)
-    (AH := (3/2)*slotBound J T b s.re (1/6+e)) he he'
-    (mul_nonneg (by norm_num) (slotBound_nonneg J T b _ _)) 0
-  · exact (combined_slot_analytic_z η S hS.tail J T b hT s 1 hs (by norm_num)).continuousOn.mono
-      (by intro z hz; change (4/25:ℝ)<z.re; linarith [hz.1])
-  · intro x hx t _
-    simpa only [pow_zero,mul_one] using combined_slot_bound η S hS.tail J T b hT s
-      1 ((x : ℂ)+t*I) s.re (1/6+e) ⟨hs,le_rfl⟩ (by norm_num) (by simpa using hx)
 
 theorem source_multiplier_differentiable_w {ι : Type*} (η : Character) (S : Finset Id)
     (hS : SourceExclusions S) (J : Finset ι) (T : ι → Finset PrimeIdeal) (b : ι → PrimeIdeal → ℂ)
@@ -451,44 +385,6 @@ theorem source_multiplier_differentiable_z {ι : Type*} (η : Character) (S : Fi
     funext z; unfold sourceMultiplier; ring
   rw [he]
   fun_prop (disch := first | assumption | exact Or.inl hXn | exact Or.inl hZn)
-
-theorem source_w_shift {ι : Type*} (η : Character) (S : Finset Id) (hS : SourceExclusions S)
-    (J : Finset ι) (T : ι → Finset PrimeIdeal) (b : ι → PrimeIdeal → ℂ)
-    (hT : ∀ j ∈ J, ∀ P ∈ T j, P.val ∉ S)
-    (W0 W1 : SchwartzMap ℝ ℂ) (a1 b1 : ℝ) (ha1 : 0<a1)
-    (hW1 : Function.support W1 ⊆ Icc a1 b1)
-    (M : Ideal HeckeFamily.O) [NeZero M] (X Y Z : ℝ) (hY : 0<Y)
-    (s z : ℂ) (hs : 7/8 ≤ s.re) (hz : 33/200 ≤ z.re)
-    (hEta : LFunction (η.excludePrimes S hS.prime) s ≠ 0) {cw : ℝ} (hcw : 1<cw) :
-    let K := sourceMultiplier W0 W1 X Y Z (η.excludePrimes S hS.prime) s
-      (globalClosedCorrection η S s) (slotMultiplier η J T b s)
-    verticalIntegral cw (fun w => K w z * LFunction (fixedPrincipal M) w) =
-      verticalIntegral (19/20) (fun w => K w z * LFunction (fixedPrincipal M) w) +
-        K 1 z * fixedPrincipalResidue M := by
-  dsimp only
-  apply PrincipalMellinResidues.source_w_shift (fixedPrincipal M) _ z hcw
-  · exact (source_multiplier_differentiable_w η S hS J T b hT W0 W1 a1 b1 ha1 hW1
-      X Y Z hY s z hs (by linarith)).mono (by intro w hw; change (9/10:ℝ)<w.re; linarith [hw.1])
-  · exact source_w_boundary η S hS J T b hT W0 W1 a1 b1 ha1 hW1 M X Y Z hY s z hs hz hEta hcw
-
-theorem source_residue_z_shift {ι : Type*} (η : Character) (S : Finset Id) (hS : SourceExclusions S)
-    (J : Finset ι) (T : ι → Finset PrimeIdeal) (b : ι → PrimeIdeal → ℂ)
-    (hT : ∀ j ∈ J, ∀ P ∈ T j, P.val ∉ S)
-    (W0 W1 : SchwartzMap ℝ ℂ) (a0 b0 : ℝ) (ha0 : 0<a0)
-    (hW0 : Function.support W0 ⊆ Icc a0 b0)
-    (M : Ideal HeckeFamily.O) [NeZero M] (X Y Z : ℝ) (hX : 0<X) (hZ : 0<Z)
-    (s : ℂ) (hs : 7/8 ≤ s.re) (hEta : LFunction (η.excludePrimes S hS.prime) s ≠ 0)
-    {e : ℝ} (he : 0<e) (he' : e≤2/3) :
-    let K := sourceMultiplier W0 W1 X Y Z (η.excludePrimes S hS.prime) s
-      (globalClosedCorrection η S s) (slotMultiplier η J T b s)
-    verticalIntegral (1/6+e) (fun z => K 1 z * LFunction (fixedPrincipal M) (6*z)) =
-      verticalIntegral (33/200) (fun z => K 1 z * LFunction (fixedPrincipal M) (6*z)) +
-        K 1 (1/6) * fixedPrincipalResidue M / 6 := by
-  dsimp only
-  apply PrincipalMellinResidues.source_residue_z_shift (fixedPrincipal M) _ he
-  · exact (source_multiplier_differentiable_z η S hS J T b hT W0 W1 X Y Z hX hZ s 1 hs
-      (by norm_num)).mono (by intro z hz; change (4/25:ℝ)<z.re; linarith [hz.1])
-  · exact source_z_boundary η S hS J T b hT W0 W1 a0 b0 ha0 hW0 M X Y Z hX hZ s hs hEta he he'
 
 theorem local_eq_regionSlot (η : Character) (P : PrimeIdeal) (s w z : ℂ) :
     localMultiplier η P s w z = (Ideal.absNorm P.val : ℂ)^(z-1) *
@@ -556,75 +452,11 @@ theorem combined_slot_bound_sharp {ι : Type*} (η : Character) (S : Finset Id) 
     (b : ι → PrimeIdeal → ℂ) (s w z : ℂ) : slotMultiplier η ∅ T b s w z = 1 := by
   simp [slotMultiplier]
 
-theorem selected_as_slots (η : Character) (T : Finset PrimeIdeal) (s w z : ℂ) :
-    selectedMultiplier η T s w z = slotMultiplier η T (fun P => {P}) (fun _ _ => 1) s w z := by
-  simp [selectedMultiplier,slotMultiplier]
-
-theorem fixed_source_boundaries {ι : Type*} (S : Finset Id) (hS : SourceExclusions S)
-    (J : Finset ι) (T : ι → Finset PrimeIdeal) (b : ι → PrimeIdeal → ℂ)
-    (hT : ∀ j ∈ J, ∀ P ∈ T j, P.val ∉ S)
-    (W0 W1 : SchwartzMap ℝ ℂ) (a0 b0 a1 b1 : ℝ) (ha0 : 0<a0) (ha1 : 0<a1)
-    (hW0 : Function.support W0 ⊆ Icc a0 b0) (hW1 : Function.support W1 ⊆ Icc a1 b1)
-    (X Y Z : ℝ) (hX : 0<X) (hY : 0<Y) (hZ : 0<Z)
-    (η : Character) (s : ℂ) (hs : 7/8 ≤ s.re)
-    (hEta : LFunction (η.excludePrimes S hS.prime) s ≠ 0)
-    {cw e : ℝ} (hcw : 1<cw) (he : 0<e) (he' : e≤2/3) :
-    let : NeZero (∏ P ∈ S, P) := ⟨fixedPrimeProduct_ne_zero S hS.prime⟩
-    let K := sourceMultiplier W0 W1 X Y Z (η.excludePrimes S hS.prime) s
-      (globalClosedCorrection η S s) (slotMultiplier η J T b s)
-    (∀ z : ℂ, z.re=1/6+e → BoundaryControl
-      (fun w => K w z * LFunction (fixedSourcePrincipal S hS.prime) w) (19/20) cw) ∧
-      BoundaryControl (fun z => K 1 z * LFunction (fixedSourcePrincipal S hS.prime) (6*z))
-        (33/200) (1/6+e) := by
-  dsimp only
-  let : NeZero (∏ P ∈ S, P) := ⟨fixedPrimeProduct_ne_zero S hS.prime⟩
-  constructor
-  · intro z hz
-    exact source_w_boundary η S hS J T b hT W0 W1 a1 b1 ha1 hW1
-      (∏ P ∈ S, P) X Y Z hY s z hs (by rw [hz]; linarith) hEta hcw
-  · exact source_z_boundary η S hS J T b hT W0 W1 a0 b0 ha0 hW0
-      (∏ P ∈ S, P) X Y Z hX hZ s hs hEta he he'
-
 lemma boundary_mul_const (F : ℂ → ℂ) (a b : ℝ) (h : BoundaryControl F a b) (c : ℂ) :
     BoundaryControl (fun z => F z*c) a b := by
   refine ⟨h.left.mul_const c,h.right.mul_const c,?_,?_⟩
   · simpa only [intervalIntegral.integral_mul_const,zero_mul] using h.lower.mul_const c
   · simpa only [intervalIntegral.integral_mul_const,zero_mul] using h.upper.mul_const c
-
-theorem fixed_source_ordered_boundaries {ι : Type*} (S : Finset Id) (hS : SourceExclusions S)
-    (J : Finset ι) (T : ι → Finset PrimeIdeal) (b : ι → PrimeIdeal → ℂ)
-    (hT : ∀ j ∈ J, ∀ P ∈ T j, P.val ∉ S)
-    (W0 W1 : SchwartzMap ℝ ℂ) (a0 b0 a1 b1 : ℝ) (ha0 : 0<a0) (ha1 : 0<a1)
-    (hW0 : Function.support W0 ⊆ Icc a0 b0) (hW1 : Function.support W1 ⊆ Icc a1 b1)
-    (X Y Z : ℝ) (hX : 0<X) (hY : 0<Y) (hZ : 0<Z)
-    (η : Character) (s : ℂ) (hs : 7/8 ≤ s.re)
-    (hEta : LFunction (η.excludePrimes S hS.prime) s ≠ 0)
-    {cw e : ℝ} (hcw : 1<cw) (he : 0<e) (he' : e≤2/3) :
-    let K := sourceMultiplier W0 W1 X Y Z (η.excludePrimes S hS.prime) s
-      (globalClosedCorrection η S s) (slotMultiplier η J T b s)
-    (∀ z : ℂ, z.re=1/6+e → BoundaryControl
-      (fun w => K w z * LFunction (fixedSourcePrincipal S hS.prime) (6*z) *
-        LFunction (fixedSourcePrincipal S hS.prime) w) (19/20) cw) ∧
-      BoundaryControl (fun z => K 1 z * LFunction (fixedSourcePrincipal S hS.prime) (6*z))
-        (33/200) (1/6+e) := by
-  have hh := fixed_source_boundaries S hS J T b hT W0 W1 a0 b0 a1 b1 ha0 ha1 hW0 hW1
-    X Y Z hX hY hZ η s hs hEta hcw he he'
-  dsimp only at hh ⊢
-  refine ⟨?_,hh.2⟩
-  intro z hz
-  convert boundary_mul_const _ _ _ (hh.1 z hz) (LFunction (fixedSourcePrincipal S hS.prime) (6*z)) using 1
-  funext w
-  ring
-
-theorem uniform_closed_box_bound {ι : Type*} (S : Finset Id) (hS : CorrectionTail S)
-    (J : Finset ι) (T : ι → Finset PrimeIdeal) (b : ι → PrimeIdeal → ℂ)
-    (hT : ∀ j ∈ J, ∀ P ∈ T j, P.val ∉ S) (Bx Bw Bz : ℝ) :
-    ∃ C : ℝ, 0 ≤ C ∧ ∀ (η : Character) (s w z : ℂ),
-      s.re ∈ Icc (7/8) Bx → w.re ∈ Icc (19/20) Bw → z.re ∈ Icc (33/200) Bz →
-      ‖globalClosedCorrection η S s w z * slotMultiplier η J T b s w z‖ ≤ C :=
-  ⟨(3/2)*slotBound J T b Bx Bz,
-    mul_nonneg (by norm_num) (slotBound_nonneg J T b Bx Bz),
-    fun η s w z hs hw hz => combined_slot_bound η S hS J T b hT s w z Bx Bz hs hw.1 hz⟩
 
 end SevenEighths.ProbeFiniteProductBounds
 end

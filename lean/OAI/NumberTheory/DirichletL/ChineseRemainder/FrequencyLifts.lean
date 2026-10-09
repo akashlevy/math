@@ -1,79 +1,23 @@
 import OAI.NumberTheory.DirichletL.Cusp.ResiduePhases
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
-
-open scoped Classical BigOperators
+open scoped ContDiff
+open Set
 
 namespace ShortDraftCRT
 open ActualEisensteinCubic FiniteGaussPhase ConcreteTraceCRT CubicEisenstein
@@ -126,52 +70,13 @@ theorem finiteCrossNumerator_fraction (a c l:Eis) (p h:ι→Eis)
 
 end ShortDraftCRT
 
-open scoped BigOperators Classical
-
 namespace IdealGaussCRT
 open CubicEisenstein
-
-theorem finite_fourier_sum_reindex {ι T : Type*} [Fintype ι]
-    (R : ι→Type*) [CommRing T] [∀i,CommRing (R i)]
-    [Fintype T] [∀i,Fintype (R i)] (e:T≃+*∀i,R i)
-    (ψ:AddChar T ℂ) (ψi:∀i,AddChar (R i) ℂ) (k:∀i,(R i)ˣ)
-    (hψ:∀i,coordinateAddChar R e ψ i=(ψi i).mulShift (k i:R i))
-    (φ:∀i,R i→ℂ) (weight:(∀i,R i)→ℂ) :
-    (∑H:T,finiteAdditiveFourierCoeff ψ (fun t=>∏i,φ i (e t i)) H*
-      weight (fun i=>(k i:R i)*e H i))=
-    ∑h:∀i,R i,(∏i,finiteAdditiveFourierCoeff (ψi i) (φ i) (h i))*weight h := by
-  let E:T≃(∀i,R i):=e.toEquiv.trans (Equiv.piCongrRight (fun i=>(k i).mulLeft))
-  have hc (H:T) : finiteAdditiveFourierCoeff ψ (fun t=>∏i,φ i (e t i)) H=
-      ∏i,finiteAdditiveFourierCoeff (ψi i) (φ i) ((k i:R i)*e H i) := by
-    rw [finiteAdditiveFourierCoeff_crt]
-    apply Finset.prod_congr rfl
-    intro i hi
-    rw [hψ,finiteAdditiveFourierCoeff_mulShift]
-  simp only [hc]
-  exact Equiv.sum_comp E
-    (fun h:∀i,R i=>(∏i,finiteAdditiveFourierCoeff (ψi i) (φ i) (h i))*weight h)
 
 end IdealGaussCRT
 
 namespace FiniteGaussPhase
 open ActualEisensteinCubic CubicEisenstein IdealGaussCRT
-local notation "Eis" => ActualEisensteinCubic.O
-
-theorem product_trace_fourier_sum_reindex {ι : Type*} [Fintype ι]
-    (p:ι→Eis) (hp:∀i,p i≠0)
-    (hcop:Pairwise (Function.onFun IsCoprime (fun i=>Ideal.span {p i})))
-    [Fintype (Eis⧸Ideal.span {∏i,p i})] [∀i,Fintype (Eis⧸Ideal.span {p i})]
-    (φ:∀i,(Eis⧸Ideal.span {p i})→ℂ)
-    (weight:(∀i,Eis⧸Ideal.span {p i})→ℂ) :
-    (∑H:Eis⧸Ideal.span {∏i,p i},finiteAdditiveFourierCoeff
-      (quotientTrace (∏i,p i) (Finset.prod_ne_zero_iff.mpr (fun i _=>hp i)))
-      (fun t=>∏i,φ i (productElementCRT p hcop t i)) H*
-      weight (fun i=>(productTraceShift p hp hcop i:Eis⧸Ideal.span {p i})*productElementCRT p hcop H i))=
-    ∑h:∀i,Eis⧸Ideal.span {p i},
-      (∏i,finiteAdditiveFourierCoeff (quotientTrace (p i) (hp i)) (φ i) (h i))*weight h := by
-  exact finite_fourier_sum_reindex (fun i=>Eis⧸Ideal.span {p i})
-    (productElementCRT p hcop) _ (fun i=>quotientTrace (p i) (hp i))
-    (productTraceShift p hp hcop) (productTraceShift_character p hp hcop) φ weight
 
 end FiniteGaussPhase
 
@@ -252,27 +157,6 @@ noncomputable local instance stratumField (P : Ideal Eis) [P.IsMaximal] :
     Field (Eis⧸P) := Ideal.Quotient.field P
 noncomputable local instance stratumFintype (P : Ideal Eis) [P.IsMaximal] :
     Fintype (Eis⧸P) := Fintype.ofFinite _
-
-theorem canonical_active_stratum {ι : Type*} [Fintype ι]
-    (P:ι→Ideal Eis) [∀i,(P i).IsMaximal]
-    (hg:∀i,lambda∉P i) (hchar:∀i,ringChar (Eis⧸P i)≠2)
-    (ψ:∀i,AddChar (Eis⧸P i) ℂ) (hψ:∀i,(ψ i).IsPrimitive)
-    (A:Finset ι) (j:ι→ℕ) (hj:∀i,j i<6)
-    (σ ε:∀i,(Eis⧸P i)ˣ) (x:∀i,Eis⧸P i) :
-    (∑h∈FixedRayActiveSet.activeStratum (fun i=>Eis⧸P i) A,
-      ∏i,frequencyRow (actualSextic (P i) (hg i)) (ψ i) (j i) (σ i) (ε i) (x i) (h i))=
-    (∏i∈A,(((actualSextic (P i) (hg i))⁻¹)^2) (σ i)*
-      phase (actualSextic (P i) (hg i)) (ψ i) (j i) (ε i)*
-      bracket (actualSextic (P i) (hg i)) (j i) (x i))*
-    (∏i∈(Finset.univ:Finset ι)\A,if j i=0 then 1-(Fintype.card (Eis⧸P i):ℂ)⁻¹ else 0) := by
-  rw [FixedRayActiveSet.sum_active_stratum]
-  congr 1
-  · apply Finset.prod_congr rfl
-    intro i hi
-    exact canonical_frequencyRow_units (P i) (hg i) (hchar i) (ψ i) (hψ i) (j i) (hj i) (σ i) (ε i) (x i)
-  · apply Finset.prod_congr rfl
-    intro i hi
-    exact canonical_frequencyRow_zero (P i) (hg i) (hchar i) (ψ i) (j i) (hj i) (σ i) (ε i) (x i)
 
 end LocalReflectionBrackets
 

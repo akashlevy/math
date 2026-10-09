@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.CanonicalReferencePaid
-
 namespace OAI
 
 noncomputable section

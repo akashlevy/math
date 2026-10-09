@@ -1,79 +1,25 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.LocalCutoffs
 import OAI.NumberTheory.DirichletL.MeanSquare.HarmonicAggregation
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace SecondPassArithmetic
 
 section
@@ -255,10 +201,6 @@ lemma firstFrequencyDisk_zero (R:ℝ) (hR:0≤R) : (0:O)∈firstFrequencyDisk R 
 
 lemma outside_firstFrequencyDisk (R:ℝ) (h:O) (hh:h∉firstFrequencyDisk R) :
     R<‖eisEmbedding h‖^2 := lt_of_not_ge (fun hb=>hh ((mem_firstFrequencyDisk R h).mpr hb))
-
-lemma firstFrequencyDisk_unit_invariant (R:ℝ) (u:Oˣ) (h:O) :
-    (u:O)*h∈firstFrequencyDisk R ↔ h∈firstFrequencyDisk R := by
-  simp only [mem_firstFrequencyDisk,GaussGeneratorTransport.norm_eisEmbedding_unit_mul]
 
 end SecondPassArithmetic
 
@@ -472,9 +414,6 @@ def kernelLocalizedH1Linear (χ : PositiveChartCutoff) : kernelSmoothTests →�
 
 end CubicEisenstein
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ContDiff
-
 namespace CubicEisenstein
 
 abbrev KernelEnergyAmbient := WithLp 2 (KernelQuotientL2 × KernelGradientL2)
@@ -490,8 +429,6 @@ abbrev KernelEnergyGraph := kernelEnergyGraphSubmodule
 
 instance kernelEnergyGraph_complete : CompleteSpace KernelEnergyGraph :=
   (LinearMap.range kernelEnergyCore).isClosed_topologicalClosure.completeSpace_coe
-
-example : InnerProductSpace ℂ KernelEnergyGraph := inferInstance
 
 def kernelEnergyGraphCore : kernelSmoothTests →ₗ[ℂ] KernelEnergyGraph :=
   kernelEnergyCore.codRestrict kernelEnergyGraphSubmodule
@@ -555,8 +492,7 @@ lemma kernelEnergyLocalize_core (χ : PositiveChartCutoff)
 
 end CubicEisenstein
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ContDiff SchwartzMap LineDeriv
+open scoped LineDeriv
 
 namespace CubicEisenstein
 

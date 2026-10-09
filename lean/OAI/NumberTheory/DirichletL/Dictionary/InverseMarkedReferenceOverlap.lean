@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseMarkedReferenceProducts
-
 namespace OAI
 
 noncomputable section

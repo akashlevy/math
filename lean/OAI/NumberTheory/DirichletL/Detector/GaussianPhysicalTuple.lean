@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.PhysicalRows
 import OAI.NumberTheory.DirichletL.Detector.GaussianDensityBudget
-
 namespace OAI
 
 noncomputable section
@@ -83,32 +82,6 @@ theorem physical_selected_gaussian_reassembly {ι α : Type*} [Fintype ι]
       intro r hr
       dsimp [A]
       ring
-
-theorem physical_selected_gaussian_family {ι α : Type*} [Fintype ι]
-    (W : ι→ℝ→ℂ) (M : ι→ℝ) (hM : ∀i,0≤M i)
-    (hwindow : ∀i y,W i (Real.exp y)≠0→|y|≤M i) :
-    ∃V : SchwartzMap ℝ ℂ,∃hV : HasCompactSupport (V:ℝ→ℂ),
-      (∀J : ℕ,∀s : ℝ,0<s→∃B : ℝ,0<B ∧ ∀Z : ℝ,0<Z→
-        Summable (fun j : ℕ=>((2:ℝ)^j)^s*gaussianJointMoment V hV J ((2:ℝ)^j/Z)) ∧
-        (∑'j : ℕ,((2:ℝ)^j)^s*gaussianJointMoment V hV J ((2:ℝ)^j/Z))≤B*Z^s) ∧
-      (∀η : HeckeFamily.Character,∀C : CalibrationData,∀W0 W1 : ℝ→ℂ,
-        HasCompactSupport W0→HasCompactSupport W1→
-        ∀F : Finset α,∀a : α→ℂ,∀D : α→Id,∀X Y : α→ℝ,
-        (∀k∈F,0<X k)→(∀k∈F,0<Y k)→∀Z : ℝ,0<Z→
-        ∀q : α→ι→ℝ,(∀k∈F,∀i,0<q k i)→
-        (∑k∈F,a k*(∏i,W i (q k i))*markedPhysicalProbe η C (D k) W0 W1
-          (X k) (Y k) (Z*∏i,q k i))=
-          ∑'j : ℕ,∫t : ℝ,(∑k∈F,a k*
-            (∑'r : PhysicalRowIndex,physicalRowWeight C W0 W1 (X k) (Y k) r*
-              correctedCompletedT C.excluded (D k) (physicalRowMonoid η C r)
-                (CompletedHeight.normTwistedSource gaussianFixedWindow t) ((2:ℝ)^j))*
-            (∏i,W i (q k i)*logPhase (-t) (Real.log (q k i))))*
-              gaussianJointDensity V hV ((2:ℝ)^j/Z) t) := by
-  obtain ⟨V,hV,hsep,_⟩ := gaussian_selected_slot_family W M hM hwindow
-  refine ⟨V,hV,fun J s hs=>gaussianJointMoment_summed V hV J s hs,?_⟩
-  intro η C W0 W1 hW0 hW1 F a D X Y hX hY Z hZ q hq
-  exact physical_selected_gaussian_reassembly W V hV hsep η C W0 W1 hW0 hW1
-    F a D X Y hX hY Z hZ q hq
 
 end SevenEighths.ProbePhysical
 end

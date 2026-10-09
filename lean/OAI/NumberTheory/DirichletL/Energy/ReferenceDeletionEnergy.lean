@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.ReferenceWeightedEnergy
 import OAI.NumberTheory.DirichletL.Energy.ReferenceDeletionBudget
-
 namespace OAI
 
 noncomputable section

@@ -1,75 +1,24 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.HyperbolicVolume
 import OAI.NumberTheory.DirichletL.CubicSieve.UniformTransfer
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 namespace CanonicalQuadraticSieve
 
@@ -217,7 +166,6 @@ theorem poissonComparisonMajorant_unit_box
 
 end CanonicalQuadraticSieve
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 
 section
@@ -373,72 +321,6 @@ theorem globalDescentWeight_nonneg (C ε θ₁ θ₂ K ell B F : ℝ) (A J : ℕ
   unfold globalDescentWeight globalPooledOuterBound
   positivity
 
-theorem globalPositiveBin_transfer (ε : ℝ) (hε : 0 < ε)
-    (A₁ A₂ W : 𝓢(ℝ,ℂ)) (V : Fin 7 → ℝ → ℂ) (M : Fin 7 → ℝ)
-    (hM : ∀ i,0 ≤ M i) (hV : ∀ i x,V i x ≠ 0 → |x| ≤ M i)
-    (hVc : ∀ i,HasCompactSupport (V i)) (hVs : ∀ i,Continuous (V i)) (A J : ℕ) :
-    ∃ C : ℝ,0 ≤ C ∧ ∀ {ι : Type*} [DecidableEq ι]
-      (p : ι → O) (hp : ∀ i,p i ≠ 0) [∀ i,(Ideal.span {p i}).IsMaximal]
-      (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-      (hg : ∀ i,lambda ∉ Ideal.span {p i})
-      (_hinj : Function.Injective (fun i => Ideal.span {p i}))
-      (_hc : ∀ i,ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-      (θ₁ θ₂ K ell B F : ℝ) (s : Finset (GlobalSecondData ι)) (side : Bool) (j : GlobalLogIndex)
-      (pool : Finset ι) (Ψ : O →* ℂ) (m : O),
-      0 < K → 0 < ell → 0 < B → 0 < F → (∀ a,‖Ψ a‖ ≤ 1) →
-      (∀ x∈s,GlobalSecondAdmissible x) → (∀ x∈s,x.source.frequency ≠ 0) →
-      globalBinFirstCoefficient K ell B F j *
-      ‖∑ ray : SecondRayIndex,∑ q∈globalBinTriples p s side j,
-        globalArithmeticBinSource p hp hcop hg s side q j pool Ψ m ray
-          (JointLogSeparation.frequencyTwist A₁ θ₁) (JointLogSeparation.frequencyTwist A₂ θ₂)
-          W V ell (globalPooledRowScale K ell B F j)‖ ≤
-      ∑ ray : SecondRayIndex,∑ q∈globalBinTriples p s side j,
-        globalDescentWeight C ε θ₁ θ₂ K ell B F A J j ray q *
-        (densityChildEnergy p hp hcop hg pool (secondRayMinus Ψ ray) (secondRayPlus Ψ ray)
-          (fixedTripleMask m q) (globalArithmeticTargets p s side q j) (V 5) (V 6)
-          (globalPooledColumnScale ell j) (globalPooledColumnScale ell j) J /
-          (globalPooledColumnScale ell j*globalPooledLabelScale j)) := by
-  obtain ⟨C,hC,htrans⟩ := full_uniform_globalArithmeticBin_twisted_transfer ε hε A₁ A₂ W V M hM hV hVc hVs A J
-  refine ⟨C,hC,?_⟩
-  intro ι _ p hp _ hcop hg hinj hc θ₁ θ₂ K ell B F s side j pool Ψ m hK hell hB hF hΨ hs hk
-  have hy := globalPooledRowScale_pos K ell B F hK hell hB hF j
-  have hfirst := globalBinFirstCoefficient_nonneg K ell B F hK.le hell hB hF j
-  have hmass : globalPooledColumnScale ell j*globalPooledLabelScale j ≠ 0 :=
-    (mul_pos (globalPooledColumnScale_pos ell hell j) (zero_lt_one.trans_le (globalPooledLabelScale_ge_one j))).ne'
-  calc
-    _ ≤ globalBinFirstCoefficient K ell B F j *
-        ∑ ray : SecondRayIndex,∑ q∈globalBinTriples p s side j,
-        ‖globalArithmeticBinSource p hp hcop hg s side q j pool Ψ m ray
-          (JointLogSeparation.frequencyTwist A₁ θ₁) (JointLogSeparation.frequencyTwist A₂ θ₂)
-          W V ell (globalPooledRowScale K ell B F j)‖ := by
-      apply mul_le_mul_of_nonneg_left _ hfirst
-      apply (norm_sum_le _ _).trans
-      apply Finset.sum_le_sum
-      intro ray hray
-      exact norm_sum_le _ _
-    _ = ∑ ray : SecondRayIndex,∑ q∈globalBinTriples p s side j,
-        globalBinFirstCoefficient K ell B F j *
-        ‖globalArithmeticBinSource p hp hcop hg s side q j pool Ψ m ray
-          (JointLogSeparation.frequencyTwist A₁ θ₁) (JointLogSeparation.frequencyTwist A₂ θ₂)
-          W V ell (globalPooledRowScale K ell B F j)‖ := by simp only [Finset.mul_sum]
-    _ ≤ _ := by
-      apply Finset.sum_le_sum
-      intro ray hray
-      apply Finset.sum_le_sum
-      intro q hq
-      obtain ⟨x,hx,hqx⟩ := Finset.mem_image.mp hq
-      have hq0 : q.1 ≠ ⊥ := by
-        rw [← hqx]
-        exact (globalSecondFixedTriple_nonzero p hp x).1
-      have ht := htrans p hp hcop hg hinj hc θ₁ θ₂ s side q j pool Ψ m ray ell
-        (globalPooledRowScale K ell B F j) hell hy hq0 hΨ hs hk
-      have ht' := mul_le_mul_of_nonneg_left ht hfirst
-      apply ht'.trans_eq
-      have hc0 := (globalPooledColumnScale_pos ell hell j).ne'
-      have hl0 := (zero_lt_one.trans_le (globalPooledLabelScale_ge_one j)).ne'
-      unfold globalDescentWeight
-      field_simp
-
 variable {ι : Type*} [DecidableEq ι]
   (p : ι → O) (hp : ∀ i,p i ≠ 0) [∀ i,(Ideal.span {p i}).IsMaximal]
 
@@ -535,8 +417,7 @@ theorem globalDescentWeight_mass (C ε θ₁ θ₂ K ell B F : ℝ) (A J : ℕ)
 
 end SecondPassArithmetic
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups Matrix
+open scoped MatrixGroups Matrix
 
 namespace CubicEisenstein
 

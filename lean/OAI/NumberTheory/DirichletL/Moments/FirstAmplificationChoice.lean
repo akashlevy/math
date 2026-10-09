@@ -1,11 +1,13 @@
-import OAI.NumberTheory.DirichletL.Moments.FirstExtractedLedger
+import OAI.NumberTheory.DirichletL.Moments.FirstCanonicalAllowance
+import OAI.NumberTheory.DirichletL.Moments.DescentLedger
 import OAI.NumberTheory.DirichletL.Moments.FirstScale
 import OAI.NumberTheory.DirichletL.Moments.SectorLocalization
 import OAI.NumberTheory.DirichletL.Moments.AmplificationSlotGap
-import OAI.NumberTheory.DirichletL.Moments.AmplificationOriginalErrors
+import OAI.NumberTheory.DirichletL.Moments.AmplificationActiveFamily
+import OAI.NumberTheory.DirichletL.Moments.AmplificationErrorEnergy
+import OAI.NumberTheory.DirichletL.Moments.AmplificationChildEnergy
 import OAI.NumberTheory.DirichletL.Moments.AmplificationAllocationScale
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-
 namespace OAI
 
 noncomputable section
@@ -18,7 +20,7 @@ open CenteredMomentSectorLocalization CenteredMomentPrimePool
 open CenteredMomentPrimeElements CenteredMomentAmplificationEligibility
 open CenteredMomentAmplificationEnergy CenteredMomentGaussEnergy
 open CenteredMomentSourceRow CenteredMomentGaussNormalization
-open CenteredMomentAmplificationOriginalErrors CenteredMomentAmplificationErrorEnergy
+open CenteredMomentAmplificationErrorEnergy
 open CenteredMomentAmplificationGlobal CenteredMomentAmplificationSlotGap
 local notation "O" => ActualEisensteinCubic.O
 
@@ -152,15 +154,6 @@ theorem eventually_actual_pool (Sbad : Finset (Ideal O))
     nlinarith [sq_nonneg (Z^(ell/2)-2)]
   · simpa only [mul_one] using hn.2
 
-omit hH in
-theorem reciprocal_pool_bound (Sbad : Finset (Ideal O)) (ell loss Z : ℝ)
-    (hZ : 0<Z)
-    (hc : Z^(ell-loss)≤(primePool M H Sbad (1/2) 1 (Z^ell)).card) :
-    ((primePool M H Sbad (1/2) 1 (Z^ell)).card:ℝ)⁻¹≤Z^(-ell+loss) := by
-  have hp := Real.rpow_pos_of_pos hZ (ell-loss)
-  have he := (inv_le_inv₀ (hp.trans_le hc) hp).mpr hc
-  simpa only [←Real.rpow_neg hZ.le,show -(ell-loss)=-ell+loss by ring] using he
-
 end Pool
 
 def dyadRows (n : ℤ) : Finset O :=
@@ -245,17 +238,6 @@ theorem errorGain_bounds (D0 c sigma Z : ℝ) (p : O) (k : ℕ) (hs : 0≤sigma)
   · linarith
   constructor <;> linarith
 
-theorem error_lengths (p : O) (Z sigma : ℝ) (hs : 0≤sigma) (k : ℕ)
-    (hk : k=1 ∨ k=6 ∨ k=7)
-    (hl : 0≤Real.logb Z (normValue p))
-    (hu : Real.logb Z (normValue p)≤sigma/3) :
-    0≤errorMoving p Z k ∧ errorMoving p Z k≤errorRemoval p Z k ∧
-      errorRemoval p Z k≤7*sigma/3 := by
-  have hk1 : (1:ℝ)≤k := by rcases hk with rfl|rfl|rfl <;> norm_num
-  have hk7 : (k:ℝ)≤7 := by rcases hk with rfl|rfl|rfl <;> norm_num
-  unfold errorMoving errorRemoval
-  split_ifs <;> refine ⟨?_,?_,?_⟩ <;> nlinarith
-
 theorem dyadRows_norm_power (Z : ℝ) (hZ : 1<Z) (n : ℤ)
     (h : O) (hh : h∈dyadRows n) :
     normValue h≤Z^(Real.logb Z (dyadicScale n)) := by
@@ -302,18 +284,6 @@ theorem eligible_error_sum {α : Type*} (S : Finset α) (a : α→O)
   rw [←sum_eligiblePairs]
   simp only [Finset.sum_filter]
   exact Finset.sum_comm
-
-theorem dyadic_to_ball {α : Type*} (S : Finset α) (a : α→O)
-    (ha : ∀i,Supported (Ideal.span {a i})) (c : α→ℂ)
-    (Z sigma D0 cLog : ℝ) (hZ : 1<Z) (hsigma : 0≤sigma) (n : ℤ) :
-    (∑' h : O,dyadicWeight n (normValue h)*‖gaussPolynomial S a ha c h‖^2)≤
-      (gaussEnergy S a ha c ballProfile
-        (Z^(Real.logb Z (dyadicScale n)+(max (D0-cLog) 0+sigma)))).re := by
-  apply (dyadic_energy_le_sum n (gaussPolynomial S a ha c)).trans
-  apply finite_energy_le_gaussEnergy S a ha c ballProfile _
-    (Real.rpow_pos_of_pos (zero_lt_one.trans hZ) _) (dyadRows n)
-    (fun _ => ballProfile_nonneg _)
-  exact dyad_ball_majorant Z hZ n _ (by positivity)
 
 theorem dyadic_amplification_to_ball {α : Type*} (S : Finset α) (a : α→O)
     (ha : ∀i,Supported (Ideal.span {a i})) (c : α→ℂ)
@@ -477,87 +447,10 @@ theorem childEnergy_nonneg (D : OriginalData ι) (τ : RayCharacter → Characte
 
 end OriginalData
 
-theorem exists_original_error_ball_family {ι : Type*} [Fintype ι]
-    (η : Character) (m p : O) (hm : m≠0) (hp : Prime p)
-    [(Ideal.span {p}).IsMaximal] (hPid : Prime (Ideal.span {p}))
-    (hs : Supported (Ideal.span {p})) (hg : goodLambda∉Ideal.span {p})
-    (hc : ringChar (O ⧸ Ideal.span {p})≠2) (hpp : goodLambda^2∣p-1)
-    (hmLam : goodLambda∣m) (hm2 : (2:O)∣m) (n : ℕ) (hn : n=0 ∨ n=5 ∨ n=6) :
-    ∃ τ : RayCharacter → Character,
-      (∀ χ,(τ χ).modulus.absNorm≤rowConductorBound (childCharacter η χ) m 1 (p^(2*errorMovingExponent n))) ∧
-      ∀ (D : OriginalData ι),
-        (∀ i,∀ I∈D.S i,I≠0) → (∀ i,∀ I∈D.S (Sum.inl i),Prime I) →
-        (∀ i,∀ I∈D.S (Sum.inl i),IsCoprime (Ideal.span {p}) I) →
-        ∀ (t T Z sigma D0 cLog : ℝ),0<T → 1<Z → 0≤sigma → ∀ (j : ℤ),
-        (∑ h∈(dyadRows j).filter (fun h => eligible D.R D.s h p),
-          ‖amplificationError Finset.univ (sourceGenerator D.columns)
-            (sourceGenerator_supported D.columns) (D.coefficient η m t T)
-            (fun I => multiplicity p (sourceGenerator D.columns I)) p (n+1) h‖^2)≤
-          D.childEnergy τ p n t T
-            (Z^(Real.logb Z (dyadicScale j)+errorGain D0 cLog sigma Z p (n+1))) := by
-  obtain ⟨τ,hN,hτ⟩ := original_errors_to_children (ι:=ι) η m p hm hp hPid hs hg hc hpp hmLam hm2 n hn
-  refine ⟨τ,hN,?_⟩
-  intro D hS hprime hslot t T Z sigma D0 cLog hT hZ hsigma j
-  have hK : 0<Z^(Real.logb Z (dyadicScale j)+errorGain D0 cLog sigma Z p (n+1)) :=
-    Real.rpow_pos_of_pos (zero_lt_one.trans hZ) _
-  by_cases he : ((dyadRows j).filter (fun h => eligible D.R D.s h p)).Nonempty
-  · obtain ⟨h,hh⟩ := he
-    have hsc := (eligible_coprime_divisor D.R D.s h p hPid (Finset.mem_filter.mp hh).2).pow_right (n:=n+1)
-    have hfull := hτ D.S hS hprime (fun i I hI => ⟨hS _ _ hI,hslot i I hI⟩) D.R D.s hsc
-      D.nu D.slot D.lengths D.W₁ D.W₂ D.X₁ D.X₂ D.Y₁ D.Y₂ D.B₁ D.B₂ t T hT
-      ((dyadRows j).filter (fun h => eligible D.R D.s h p))
-      (fun h hh => eligible_not_dvd_row D.R D.s h p (Finset.mem_filter.mp hh).2)
-      ballProfile _ hK (fun _ => ballProfile_nonneg _)
-      (fun h hh => dyad_ball_majorant Z hZ j _
-        (hsigma.trans (errorGain_bounds D0 cLog sigma Z p (n+1) hsigma).1)
-        h (Finset.mem_filter.mp hh).1)
-    rw [OriginalData.coefficient_eq]
-    dsimp only at hfull
-    dsimp only [OriginalData.childEnergy,OriginalData.coefficient,OriginalData.beta,
-      OriginalData.columns,OriginalData.profile]
-    exact hfull
-  · rw [Finset.not_nonempty_iff_eq_empty.mp he,Finset.sum_empty]
-    exact D.childEnergy_nonneg τ p n t T _ hT.le hK
-
 def errorIndex (i : Fin 3) : ℕ := ![0,5,6] i
 
 theorem errorIndex_cases (i : Fin 3) : errorIndex i=0 ∨ errorIndex i=5 ∨ errorIndex i=6 := by
   fin_cases i <;> simp [errorIndex]
-
-theorem exists_pool_error_families {ι : Type*} [Fintype ι]
-    (P : Finset (Ideal O)) (hP : ∀Q∈P,Prime Q) (hbad : ∀Q∈P,Q∉fixedBadPrimes)
-    (η : Character) (m : O) (hm : m≠0) (hmLam : goodLambda∣m) (hm2 : (2:O)∣m) :
-    ∃ τ : (elementPool P) → Fin 3 → RayCharacter → Character,
-      (∀ (p : elementPool P) i χ,(τ p i χ).modulus.absNorm≤
-        rowConductorBound (childCharacter η χ) m 1 (p.val^(2*errorMovingExponent (errorIndex i)))) ∧
-      ∀ (D : OriginalData ι),
-        (∀ i,∀ I∈D.S i,I≠0) → (∀ i,∀ I∈D.S (Sum.inl i),Prime I) →
-        (∀ p∈elementPool P,∀ i,∀ I∈D.S (Sum.inl i),IsCoprime (Ideal.span {p}) I) →
-        ∀ (t T Z sigma D0 cLog : ℝ),0<T → 1<Z → 0≤sigma → ∀ (j : ℤ),
-        (∑p∈elementPool P,∑h∈(dyadRows j).filter (fun h => eligible D.R D.s h p),
-          errorEnergy Finset.univ (sourceGenerator D.columns) (sourceGenerator_supported D.columns)
-            (D.coefficient η m t T) h p)≤
-        ∑p : elementPool P,∑i : Fin 3,D.childEnergy (τ p i) p (errorIndex i) t T
-          (Z^(Real.logb Z (dyadicScale j)+errorGain D0 cLog sigma Z p (errorIndex i+1))) := by
-  have hf (p : elementPool P) (i : Fin 3) := by
-    have hd := elementPool_data P hP hbad p p.property
-    have hPid := hP _ hd.2.1
-    letI : (Ideal.span {p.val}).IsMaximal :=
-      (Ideal.isPrime_of_prime hPid).isMaximal hPid.ne_zero
-    exact exists_original_error_ball_family (ι:=ι) η m p hm hd.1 hPid hd.2.2.2.1
-      hd.2.2.2.2.1 hd.2.2.2.2.2 hd.2.2.1 hmLam hm2 (errorIndex i) (errorIndex_cases i)
-  choose τ hτ using hf
-  refine ⟨τ,fun p i => (hτ p i).1,?_⟩
-  intro D hS hprime hslot t T Z sigma D0 cLog hT hZ hsigma j
-  rw [←Finset.sum_coe_sort (elementPool P)]
-  apply Finset.sum_le_sum
-  intro p hp
-  have h0 := (hτ p 0).2 D hS hprime (hslot p p.property) t T Z sigma D0 cLog hT hZ hsigma j
-  have h5 := (hτ p 1).2 D hS hprime (hslot p p.property) t T Z sigma D0 cLog hT hZ hsigma j
-  have h6 := (hτ p 2).2 D hS hprime (hslot p p.property) t T Z sigma D0 cLog hT hZ hsigma j
-  simpa only [errorEnergy,Finset.sum_add_distrib,Fin.sum_univ_three,
-    show errorIndex 0=0 from rfl,show errorIndex 1=5 from rfl,show errorIndex 2=6 from rfl,Nat.reduceAdd] using
-    add_le_add (add_le_add h0 h5) h6
 
 theorem original_slot_coprime {ι : Type*} [Fintype ι]
     (D : OriginalData ι) (Z sigma b eta : ℝ) (hZ : 1≤Z) (hb : 0≤b)
@@ -574,56 +467,6 @@ theorem original_slot_coprime {ι : Type*} [Fintype ι]
   have hN := live_profile_norm_bound (D.slot i) b Z (z i) eta I hb hZ (hz i) (hsupp i) hW
   exact ((HeckeInverseAmplification.prime_coprime_iff ⟨Q,hQ⟩ I).mpr
     (amplifier_not_dvd_slot Q I hQ (hprime i I hI) Z (sigma/6) eta b hgap hQN hN)).symm
-
-theorem eventually_original_source_amplification {ι : Type*} [Fintype ι]
-    (M : Ideal O) [NeZero M] (H : Subgroup (O ⧸ M)ˣ)
-    (hH : RayOrthogonality.globalUnits M≤H)
-    (Sbad : Finset (Ideal O)) (hbad : fixedBadPrimes⊆Sbad)
-    (sigma loss BR Bs Mmax b eta : ℝ)
-    (hsigma : 0<sigma) (hloss : 0<loss) (hM : 0≤Mmax) (hb : 0≤b) (hgap : eta<sigma/6) :
-    ∀ᶠ Z : ℝ in atTop, 1<Z ∧
-      let P := primePool M H Sbad (1/2) 1 (Z^(sigma/3))
-      P.Nonempty ∧ Z^(sigma/3-loss)≤(P.card:ℝ) ∧
-      ∀ (η : Character) (m : O),m≠0 → goodLambda∣m → (2:O)∣m →
-      ∃ τ : (elementPool P) → Fin 3 → RayCharacter → Character,
-        (∀ (p : elementPool P) i χ,(τ p i χ).modulus.absNorm≤
-          rowConductorBound (childCharacter η χ) m 1 (p.val^(2*errorMovingExponent (errorIndex i)))) ∧
-        ∀ (D : OriginalData ι),
-          (∀ i,∀ I∈D.S i,I≠0) → (∀ i,∀ I∈D.S (Sum.inl i),Prime I) →
-          (∀ i,∀ I∈D.S (Sum.inl i),D.slot i ((Ideal.absNorm I:ℝ)/D.lengths i)≠0) →
-          (∀ i,Function.support (D.slot i)⊆Set.Iic b) →
-          ∀ (z : ι→ℝ),(∀i,z i≤eta) → (∀i,D.lengths i=Z^(z i)) →
-          D.R≠0 → D.s≠0 → (Ideal.absNorm D.R:ℝ)≤Z^BR → (Ideal.absNorm D.s:ℝ)≤Z^Bs →
-          ∀ (t T D0 cLog : ℝ),0<T → ∀ (j : ℤ),Real.logb Z (dyadicScale j)≤Mmax →
-          (∑' h : O,dyadicWeight j (normValue h)*
-            ‖gaussPolynomial Finset.univ (sourceGenerator D.columns)
-              (sourceGenerator_supported D.columns) (D.coefficient η m t T) h‖^2)≤
-            (8/(P.card:ℝ))*
-              (((Mmax+2*sigma)/(sigma/6))*
-                (gaussEnergy Finset.univ (sourceGenerator D.columns)
-                  (sourceGenerator_supported D.columns) (D.coefficient η m t T) ballProfile
-                  (Z^(Real.logb Z (dyadicScale j)+mainGain D0 cLog sigma))).re+
-                ∑p : elementPool P,∑i : Fin 3,D.childEnergy (τ p i) p (errorIndex i) t T
-                  (Z^(Real.logb Z (dyadicScale j)+errorGain D0 cLog sigma Z p (errorIndex i+1)))) := by
-  filter_upwards [eventually_dyadic_amplification M H hH Sbad hbad sigma loss BR Bs Mmax b eta
-    hsigma hloss hM hgap] with Z hz
-  obtain ⟨hZ,hP,hcard,hsep,hdata,hamp⟩ := hz
-  refine ⟨hZ,hP,hcard,?_⟩
-  intro η m hm hmLam hm2
-  obtain ⟨τ,hN,herr⟩ := exists_pool_error_families (ι:=ι) _
-    (fun Q hQ => (hdata Q hQ).1) (fun Q hQ => (hdata Q hQ).2.1) η m hm hmLam hm2
-  refine ⟨τ,hN,?_⟩
-  intro D hS hprime hslot hsupp z hz hlen hR0 hs0 hR hs t T D0 cLog hT j hK
-  have hcop (p : O) (hp : p∈elementPool (primePool M H Sbad (1/2) 1 (Z^(sigma/3)))) :
-      ∀i,∀I∈D.S (Sum.inl i),IsCoprime (Ideal.span {p}) I := by
-    have hd := elementPool_data _ (fun Q hQ => (hdata Q hQ).1)
-      (fun Q hQ => (hdata Q hQ).2.1) p hp
-    exact original_slot_coprime D Z sigma b eta hZ.le hb hsep z hz hlen hsupp hslot hprime
-      (Ideal.span {p}) (hdata _ hd.2.1).1 (hdata _ hd.2.1).2.2.1
-  have he := herr D hS hprime hcop t T Z sigma D0 cLog hT hZ hsigma.le j
-  apply (hamp Finset.univ (sourceGenerator D.columns) (sourceGenerator_supported D.columns)
-    (D.coefficient η m t T) D.R D.s hR0 hs0 hR hs j hK D0 cLog).trans
-  exact mul_le_mul_of_nonneg_left (add_le_add le_rfl he) (by positivity)
 
 namespace OriginalData
 variable {ι : Type*} [Fintype ι]
@@ -709,72 +552,13 @@ theorem active_gaussEnergy (D : OriginalData ι) (η : Character) (m : O)
 
 end OriginalData
 
-theorem eventually_original_amplification {ι : Type*} [Fintype ι]
-    (M : Ideal O) [NeZero M] (H : Subgroup (O ⧸ M)ˣ)
-    (hH : RayOrthogonality.globalUnits M≤H)
-    (Sbad : Finset (Ideal O)) (hbad : fixedBadPrimes⊆Sbad)
-    (sigma loss BR Bs Mmax b eta : ℝ)
-    (hsigma : 0<sigma) (hloss : 0<loss) (hM : 0≤Mmax) (hb : 0≤b) (hgap : eta<sigma/6) :
-    ∀ᶠ Z : ℝ in atTop, 1<Z ∧
-      let P := primePool M H Sbad (1/2) 1 (Z^(sigma/3))
-      P.Nonempty ∧ Z^(sigma/3-loss)≤(P.card:ℝ) ∧
-      ∀ (η : Character) (m : O),m≠0 → goodLambda∣m → (2:O)∣m →
-      ∃ τ : (elementPool P) → Fin 3 → RayCharacter → Character,
-        (∀ (p : elementPool P) i χ,(τ p i χ).modulus.absNorm≤
-          rowConductorBound (childCharacter η χ) m 1 (p.val^(2*errorMovingExponent (errorIndex i)))) ∧
-        ∀ (D : OriginalData ι),
-          (∀ i,∀ I∈D.S i,I≠0) → (∀ i,∀ I∈D.S (Sum.inl i),Prime I) →
-          (∀ i,Function.support (D.slot i)⊆Set.Iic b) →
-          ∀ (z : ι→ℝ),(∀i,z i≤eta) → (∀i,D.lengths i=Z^(z i)) →
-          D.R≠0 → D.s≠0 → (Ideal.absNorm D.R:ℝ)≤Z^BR → (Ideal.absNorm D.s:ℝ)≤Z^Bs →
-          ∀ (t T D0 cLog : ℝ),0<T → ∀ (j : ℤ),Real.logb Z (dyadicScale j)≤Mmax →
-          (∑' h : O,dyadicWeight j (normValue h)*
-            ‖gaussPolynomial Finset.univ (sourceGenerator D.columns)
-              (sourceGenerator_supported D.columns) (D.coefficient η m t T) h‖^2)≤
-            (8/(P.card:ℝ))*
-              (((Mmax+2*sigma)/(sigma/6))*
-                (gaussEnergy Finset.univ (sourceGenerator D.columns)
-                  (sourceGenerator_supported D.columns) (D.coefficient η m t T) ballProfile
-                  (Z^(Real.logb Z (dyadicScale j)+mainGain D0 cLog sigma))).re+
-                ∑p : elementPool P,∑i : Fin 3,D.active.childEnergy (τ p i) p (errorIndex i) t T
-                  (Z^(Real.logb Z (dyadicScale j)+errorGain D0 cLog sigma Z p (errorIndex i+1)))) := by
-  filter_upwards [eventually_original_source_amplification (ι:=ι) M H hH Sbad hbad
-    sigma loss BR Bs Mmax b eta hsigma hloss hM hb hgap] with Z hz
-  obtain ⟨hZ,hP,hcard,hfam⟩ := hz
-  refine ⟨hZ,hP,hcard,?_⟩
-  intro η m hm hmLam hm2
-  obtain ⟨τ,hN,henergy⟩ := hfam η m hm hmLam hm2
-  refine ⟨τ,hN,?_⟩
-  intro D hS hprime hsupp z hz hlen hR0 hs0 hR hs t T D0 cLog hT j hK
-  have he := henergy D.active (fun i I hI => hS i I (D.active_subset i hI))
-    (fun i I hI => hprime i I (D.active_subset _ hI)) D.active_slot hsupp z hz hlen
-    hR0 hs0 hR hs t T D0 cLog hT j hK
-  simpa only [D.active_gaussPolynomial,D.active_gaussEnergy] using he
-
 open CenteredMomentFirstScale CenteredMomentCanonicalFirst CenteredMomentCompleteCommon
-open CenteredMomentFirstCanonicalFamily CenteredMomentFirstExtractedLedger
+open CenteredMomentFirstCanonicalFamily
 open CenteredMomentDescentLedger CenteredMomentCommonSupport
 open CenteredMomentFirstColumns CenteredMomentRankinRadical ActualEisensteinCubic
 
 def nominalLog (I J E : Ideal O) (K X Z : ℝ) : ℝ :=
   Real.logb Z (firstNominalScale I J E K X)
-
-theorem retained_nominal_choice (I J E : Ideal O) (hE : E≠0)
-    (K X Z Csec Tsec xi : ℝ) (hK : 0<K) (hX : 0<X) (hZ : 1<Z)
-    (hC : 0<Csec) (hsec : Tsec≤Csec*firstNominalScale I J E K X)
-    (n : ℤ) (hn : Retained (frequencyRadius Tsec Z xi) n)
-    (hne : (dyadRows n).Nonempty) :
-    0≤Real.logb Z (dyadicScale n) ∧
-    Real.logb Z (dyadicScale n)≤nominalLog I J E K X Z+frequencyLoss Z Csec xi ∧
-    Real.logb Z ((commonPart J I).absNorm:ℝ)-frequencyLoss Z Csec xi≤
-      Real.logb Z ((commonPart J I).absNorm:ℝ)+nominalLog I J E K X Z-
-        Real.logb Z (dyadicScale n) := by
-  have hs : Tsec≤Csec*Z^(nominalLog I J E K X Z) := by
-    rw [nominalLog,Real.rpow_logb (zero_lt_one.trans hZ) (ne_of_gt hZ)
-      (firstNominalScale_pos I J E hE K X hK hX)]
-    exact hsec
-  have he := retained_first_dyad_enclosure Tsec Z Csec (nominalLog I J E K X Z) xi hZ hC hs n hn
-  exact ⟨dyadRows_log_nonneg Z hZ n hne,he,by linarith⟩
 
 theorem canonical_active_log_le (η τ : Character) (m : O) (I J : Ideal O)
     (E : Finset (CommonIndex I J)) (Z : ℝ) (hZ : 1<Z)
@@ -792,36 +576,6 @@ theorem canonical_active_log_le (η τ : Character) (m : O) (I J : Ideal O)
     exact_mod_cast Nat.le_of_dvd hpos (map_dvd Ideal.absNorm hd)
   refine ⟨Real.logb_nonneg hZ (by exact_mod_cast hpos),?_⟩
   exact Real.logb_le_logb_of_le hZ (active_norm_pos I J) hN
-
-theorem retained_main_first_saving (η τ : Character) (m : O)
-    (I J E : Ideal O) (hI : Supported I) (hJ : Supported J) (hE : E≠0)
-    (A : Finset (CommonIndex I J)) (K X Z Csec Tsec xi sigma : ℝ)
-    (hK : 0<K) (hX : 0<X) (hZ : 1<Z) (hC : 1≤Csec) (hxi : 0≤xi) (hsigma : 0≤sigma)
-    (hmod : τ.modulus=η.modulus*Ideal.span {m}*Ideal.span {(72:O)}*
-      Ideal.span {primeSubsetGenerator (fun P : CommonIndex I J => P.val) A*activeConductor I J})
-    (hsec : Tsec≤Csec*firstNominalScale I J E K X)
-    (n : ℤ) (hn : Retained (frequencyRadius Tsec Z xi) n) (hne : (dyadRows n).Nonempty) :
-    let c := Real.logb Z ((commonPart I J).absNorm:ℝ)
-    let d := Real.logb Z ((commonPart J I).absNorm:ℝ)
-    let D0 := d+nominalLog I J E K X Z-Real.logb Z (dyadicScale n)
-    let p := Real.logb Z ((commonRadical I J).absNorm:ℝ)
-    let R := Real.logb Z ((Ideal.span {activeConductor I J}).absNorm:ℝ)
-    2*c/3-3*sigma-5*frequencyLoss Z Csec xi/6≤
-      firstSaving c D0 0 (Real.logb Z (τ.modulus.absNorm:ℝ)) 0
-        (c+d-2*p-R) (mainGain D0 c sigma) (sigma/3) := by
-  dsimp only
-  have hq := canonical_active_log_le η τ m I J A Z hZ hmod
-  have hD := (retained_nominal_choice I J E hE K X Z Csec Tsec xi hK hX hZ
-    (zero_lt_one.trans_le hC) hsec n hn hne).2.2
-  let c := Real.logb Z ((commonPart I J).absNorm:ℝ)
-  let D0 := Real.logb Z ((commonPart J I).absNorm:ℝ)+nominalLog I J E K X Z-
-    Real.logb Z (dyadicScale n)
-  have he := actual_extracted_first_saving I J hI hJ Z hZ
-    D0 0 (Real.logb Z (τ.modulus.absNorm:ℝ)) 0 (mainGain D0 c sigma) (sigma/3) sigma (frequencyLoss Z Csec xi)
-    (by norm_num) hq.1 (by norm_num) hsigma (frequencyLoss_nonneg Z Csec xi hZ hC hxi)
-    hq.2 hD (by simp only [mainGain,c,mul_zero,sub_zero,add_zero];exact le_rfl)
-    (by positivity) (by positivity)
-  simpa only [add_zero] using he
 
 theorem pool_prime_log_range (M : Ideal O) [NeZero M] (H : Subgroup (O ⧸ M)ˣ)
     (Sbad : Finset (Ideal O)) (hbad : fixedBadPrimes⊆Sbad)
@@ -844,73 +598,6 @@ theorem errorRemoval_power (p : O) (hp : p≠0) (Z : ℝ) (hZ : 1<Z) (k : ℕ) :
   unfold errorRemoval
   rw [mul_comm,Real.rpow_mul_natCast (zero_lt_one.trans hZ).le,
     Real.rpow_logb (zero_lt_one.trans hZ) (ne_of_gt hZ) (normValue_pos p hp)]
-
-theorem errorMoving_power (p : O) (hp : p≠0) (Z : ℝ) (hZ : 1<Z)
-    (n : ℕ) (hn : n=0 ∨ n=5 ∨ n=6) :
-    Z^(2*errorMoving p Z (n+1))=normValue (p^(2*errorMovingExponent n)) := by
-  have he := errorRemoval_power p hp Z hZ 2
-  have hn2 : normValue (p^2)=(normValue p)^2 := by
-    unfold normValue
-    rw [←Ideal.span_singleton_pow,map_pow,Nat.cast_pow]
-  rcases hn with rfl|rfl|rfl
-  · simpa only [errorMoving,errorMovingExponent,show ¬(0:ℕ)=5 by decide,
-      show ¬(1:ℕ)=6 by decide,ite_false,Nat.reduceAdd,mul_one,hn2,errorRemoval,Nat.cast_ofNat] using he
-  · norm_num [errorMoving,errorMovingExponent,normValue]
-  · simpa only [errorMoving,errorMovingExponent,show ¬(6:ℕ)=5 by decide,
-      show ¬(7:ℕ)=6 by decide,ite_false,Nat.reduceAdd,mul_one,hn2,errorRemoval,Nat.cast_ofNat] using he
-
-theorem shortened_raw_exact (p : O) (hp : p≠0) (Z : ℝ) (hZ : 1<Z) (T : ℝ) (k : ℕ) :
-    T/(Ideal.absNorm (Ideal.span {p}):ℝ)^k=T/Z^(errorRemoval p Z k) := by
-  rw [errorRemoval_power p hp Z hZ]
-  rfl
-
-theorem eventually_frequency_loss (Csec xi : ℝ) (hC : 1≤Csec) (hxi : 0<xi) :
-    ∀ᶠ Z : ℝ in atTop, 1<Z ∧ 0≤frequencyLoss Z Csec xi ∧ frequencyLoss Z Csec xi<xi := by
-  filter_upwards [Real.tendsto_log_atTop.eventually
-    (eventually_gt_atTop (2*Real.log (4*Csec)/xi)),eventually_gt_atTop (1:ℝ)] with Z hlog hZ
-  have hh := (div_lt_iff₀ hxi).mp hlog
-  have hr : Real.log (4*Csec)/Real.log Z<xi/2 := by
-    apply (div_lt_iff₀ (Real.log_pos hZ)).mpr
-    nlinarith
-  refine ⟨hZ,frequencyLoss_nonneg Z Csec xi hZ hC hxi.le,?_⟩
-  unfold frequencyLoss Real.logb
-  linarith
-
-theorem retained_error_first_saving (η τ : Character) (m : O)
-    (I J E : Ideal O) (hI : Supported I) (hJ : Supported J) (hE : E≠0)
-    (A : Finset (CommonIndex I J)) (K X Z Csec Tsec xi sigma : ℝ)
-    (hK : 0<K) (hX : 0<X) (hZ : 1<Z) (hC : 1≤Csec) (hxi : 0≤xi) (hsigma : 0≤sigma)
-    (hmod : τ.modulus=η.modulus*Ideal.span {m}*Ideal.span {(72:O)}*
-      Ideal.span {primeSubsetGenerator (fun P : CommonIndex I J => P.val) A*activeConductor I J})
-    (hsec : Tsec≤Csec*firstNominalScale I J E K X)
-    (j : ℤ) (hj : Retained (frequencyRadius Tsec Z xi) j) (hne : (dyadRows j).Nonempty)
-    (M : Ideal O) [NeZero M] (H : Subgroup (O ⧸ M)ˣ)
-    (Sbad : Finset (Ideal O)) (hbad : fixedBadPrimes⊆Sbad)
-    (p : O) (hp : p∈elementPool (primePool M H Sbad (1/2) 1 (Z^(sigma/3))))
-    (k : ℕ) (hk : k=1 ∨ k=6 ∨ k=7) :
-    let c := Real.logb Z ((commonPart I J).absNorm:ℝ)
-    let d := Real.logb Z ((commonPart J I).absNorm:ℝ)
-    let D0 := d+nominalLog I J E K X Z-Real.logb Z (dyadicScale j)
-    let u := Real.logb Z ((commonRadical I J).absNorm:ℝ)
-    let R := Real.logb Z ((Ideal.span {activeConductor I J}).absNorm:ℝ)
-    2*(c+errorRemoval p Z k)/3-3*sigma-5*frequencyLoss Z Csec xi/6≤
-      firstSaving c D0 (errorRemoval p Z k) (Real.logb Z (τ.modulus.absNorm:ℝ))
-        (errorMoving p Z k) (c+d-2*u-R) (errorGain D0 c sigma Z p k) 0 := by
-  dsimp only
-  let c := Real.logb Z ((commonPart I J).absNorm:ℝ)
-  let D0 := Real.logb Z ((commonPart J I).absNorm:ℝ)+nominalLog I J E K X Z-
-    Real.logb Z (dyadicScale j)
-  have hq := canonical_active_log_le η τ m I J A Z hZ hmod
-  have hD := (retained_nominal_choice I J E hE K X Z Csec Tsec xi hK hX hZ
-    (zero_lt_one.trans_le hC) hsec j hj hne).2.2
-  have hl := pool_prime_log_range M H Sbad hbad Z sigma hZ p hp
-  have hw := error_lengths p Z sigma hsigma k hk hl.1 hl.2
-  have hg := (errorGain_bounds D0 c sigma Z p k hsigma).2.2
-  exact actual_extracted_first_saving I J hI hJ Z hZ D0 (errorRemoval p Z k)
-    (Real.logb Z (τ.modulus.absNorm:ℝ)) (errorMoving p Z k)
-    (errorGain D0 c sigma Z p k) 0 sigma (frequencyLoss Z Csec xi)
-    (hw.1.trans hw.2.1) hq.1 hw.1 hsigma (frequencyLoss_nonneg Z Csec xi hZ hC hxi)
-    hq.2 hD hg (by norm_num) hw.2.2
 
 end SevenEighths.CenteredMomentFirstAmplificationChoice
 

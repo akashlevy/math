@@ -1,78 +1,23 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.FixedFrequencyExpansion
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 open ActualEisensteinCubic CompletedGauss CanonicalRowCompletion
@@ -106,44 +51,6 @@ theorem fixedThetaTwist_fixed_fourier (c:Eis) (hc:c≠0) [Fintype (Eis⧸Ideal.s
     (Ideal.Quotient.mk _ n)
   rw [fixedThetaQuotient_mk φ Q hφ c hcQ n] at h
   exact h.symm
-
-theorem fixedThetaTwist_free_fourier (c:Eis) (hc:c≠0) [Fintype (Eis⧸Ideal.span {c})]
-    (Q:Ideal Eis) (hcQ:Ideal.span {c}≤Ideal.span {(9:Eis)}*Q)
-    (I:Ideal Eis) (hI:CanonicalQuadraticSieve.Supported I)
-    (φ:Eis→*ℂ) (hφ:CanonicalCoefficientClass.FactorsModulo Q φ) (n:Eis) :
-    fixedThetaTwist (φ*freePrimeRow I hI Q) n=
-      (∑h:Eis⧸Ideal.span {c},fixedThetaRowCoeff c hc φ h*fixedRowFourierPhase c hc h n)*
-      ActualEisensteinCubic.principalSexticRow (fun P:FreePrimeIndex I Q=>P.val.val)
-        (freePrimeIndex_pairwise_coprime I Q)
-        (fun P=>(supported_factors_good I hI P.val.val (Multiset.mem_toFinset.mp P.val.property)).2.1)
-        (fun P=>(UniqueFactorizationMonoid.normalizedFactors I).count P.val.val%6)
-        (ActualEisensteinCubic.finitePrimeModulus (fun P:FreePrimeIndex I Q=>P.val.val))
-        (ActualEisensteinCubic.span_finitePrimeModulus _) (Ideal.Quotient.mk _ n) := by
-  rw [fixedThetaTwist_fixed_fourier c hc Q hcQ φ _ hφ n,←Finset.sum_mul,
-    freePrimeRow_eq_principalSexticRow I hI Q n]
-
-theorem actual_fixedTheta_fourier (c:Eis) (hc:c≠0) [Fintype (Eis⧸Ideal.span {c})]
-    (Ψ:Eis→*ℂ) (Q:Ideal Eis)
-    (hcQ:Ideal.span {c}≤Ideal.span {(9:Eis)}*(Q*Ideal.span {(72:Eis)}))
-    (hΨ:CanonicalCoefficientClass.FactorsModulo Q Ψ) (hΨnorm:∀n,‖Ψ n‖≤1)
-    (m f z:Eis) (hm:m≠0) (hf:f≠0) (hz:z≠0) (hmLam:lambda∣m) (hm2:(2:Eis)∣m) :
-    ∃(I:Ideal Eis)(hI:CanonicalQuadraticSieve.Supported I)(φ:Eis→*ℂ),
-      CanonicalCoefficientClass.FactorsModulo (Q*Ideal.span {(72:Eis)}) φ ∧
-      (∀n,‖φ n‖≤1) ∧
-      IsCoprime (Q*Ideal.span {(72:Eis)})
-        (∏P:FreePrimeIndex I (Q*Ideal.span {(72:Eis)}),P.val.val) ∧
-      (∀h:Eis⧸Ideal.span {c},‖fixedThetaRowCoeff c hc φ h‖≤1) ∧
-      (∀n,fixedThetaTwist (rowTwist Ψ m f z) n=
-        ∑h:Eis⧸Ideal.span {c},fixedThetaRowCoeff c hc φ h*fixedRowFourierPhase c hc h n*
-          freePrimeRow I hI (Q*Ideal.span {(72:Eis)}) n) := by
-  obtain ⟨I,hI,φ,hφ,hφn,hcop,hrow⟩:=exists_actual_coprime_row Ψ Q hΨ hΨnorm m f z hm hf hz hmLam hm2
-  refine ⟨I,hI,φ,hφ,hφn,hcop,fixedThetaRowCoeff_norm c hc φ hφn,?_⟩
-  have he:fixedThetaTwist (rowTwist Ψ m f z)=
-      fixedThetaTwist (φ*freePrimeRow I hI (Q*Ideal.span {(72:Eis)})):=
-    fixedThetaTwist_congr_primary _ _ hrow
-  intro n
-  rw [he]
-  exact fixedThetaTwist_fixed_fourier c hc _ hcQ φ _ hφ n
 
 end CubicEisenstein
 
@@ -182,41 +89,6 @@ theorem completedLocalExponent_residual (I F Q:Ideal Eis) (hFQ:F∣Q)
   have h:=rowResidualPart_prime_exponent I Q P.val (Multiset.mem_toFinset.mp P.property)
   have hnot:¬P.val∣F:=fun hd=>h.2.2 (hd.trans hFQ)
   simp only [completedLocalExponent,h.2.1,ite_eq_right hnot,mul_zero,add_zero,Nat.reduceMod]
-
-theorem residual_bracket_eq_quadraticRow (I F Q:Ideal Eis) (hFQ:F∣Q)
-    (hbad:∀P∈fixedBadPrimes,P∣Q) (x:Eis) :
-    (∏P:PrimeIndex (rowResidualPart I Q),
-      bracket (actualSextic P.val
-        (admissiblePrimeGood _ (rowResidualPart_admissible I Q hbad) P))
-        (completedLocalExponent I F P.val) (Ideal.Quotient.mk P.val x))=
-      quadraticRow (rowResidualPart I Q) x := by
-  simp_rw [completedLocalExponent_residual I F Q hFQ,bracket_one_eq_quadratic]
-  rw [quadraticRow_eq_primeIndex _ (rowResidualPart_admissible I Q hbad)]
-  simp only [finiteSexticRow,MulChar.pow_apply' _ (by decide : (3:ℕ)≠0)]
-
-def residualQuadraticPhase (K:Ideal Eis) (u:Eisˣ) (m:ℕ) (D E:Ideal Eis) : ℂ :=
-  quadraticRow K ((u.val*lambda^m)*primaryGenerator (D*E))
-
-lemma residualQuadraticPhase_norm_le_one (K:Ideal Eis) (u:Eisˣ) (m:ℕ) (D E:Ideal Eis) :
-    ‖residualQuadraticPhase K u m D E‖≤1 := quadraticRow_norm_le_one _ _
-
-theorem residual_bracket_extracted_columns (I F Q:Ideal Eis) (hFQ:F∣Q)
-    (hbad:∀P∈fixedBadPrimes,P∣Q) (u:Eisˣ) (m:ℕ) (D E n b:Ideal Eis) :
-    (∏P:PrimeIndex (rowResidualPart I Q),
-      bracket (actualSextic P.val
-        (admissiblePrimeGood _ (rowResidualPart_admissible I Q hbad) P))
-        (completedLocalExponent I F P.val)
-        (Ideal.Quotient.mk P.val
-          ((u.val*lambda^m)*primaryGenerator (D*n)*(primaryGenerator (E*b))^3)))=
-      residualQuadraticPhase (rowResidualPart I Q) u m D E *
-        quadraticRow (rowResidualPart I Q) (primaryGenerator (n*b)) := by
-  simp_rw [completedLocalExponent_residual I F Q hFQ]
-  rw [residual_bracket_product]
-  rw [←quadraticRow_eq_primeIndex _ (rowResidualPart_admissible I Q hbad),
-    ←quadraticRow_eq_primeIndex _ (rowResidualPart_admissible I Q hbad)]
-  simp only [primaryGenerator_mul,residualQuadraticPhase,
-    canonical_quadraticRow_argument_mul _ (rowResidualPart_admissible I Q hbad)]
-  ring
 
 end
 
@@ -267,47 +139,8 @@ theorem completedBranchScale_raw_argument {ι:Type*} [Fintype ι]
 end
 
 open ActualEisensteinCubic CanonicalQuadraticSieve CompletedDyadic LocalReflectionBrackets
-local notation "Eis" => ActualEisensteinCubic.O
-
-def residualModelRowPhase {K:ℝ} (rowPhase:ℕ→idealRange K→ℂ)
-    (u:Eisˣ) (D E:Ideal Eis) (m:ℕ) (k:idealRange K) : ℂ :=
-  rowPhase m k*residualQuadraticPhase k.val u m D E
-
-lemma residualModelRowPhase_norm_le_one {K:ℝ} (rowPhase:ℕ→idealRange K→ℂ)
-    (hphase:∀m k,‖rowPhase m k‖≤1) (u:Eisˣ) (D E:Ideal Eis) (m:ℕ) (k:idealRange K) :
-    ‖residualModelRowPhase rowPhase u D E m k‖≤1 := by
-  rw [residualModelRowPhase,norm_mul]
-  exact (mul_le_of_le_one_left (norm_nonneg _)
-    (hphase m k)).trans (residualQuadraticPhase_norm_le_one k.val u m D E)
-
-theorem residual_coefficient_eq_canonical {ι:Type*} [Fintype ι]
-    (I F Q:Ideal Eis) (hFQ:F∣Q) (hbad:∀P∈fixedBadPrimes,P∣Q)
-    (P:ι→Ideal Eis) [∀i,(P i).IsMaximal] (hg:∀i,lambda∉P i)
-    (j:ι→ℕ) (e:ι→Fin 3) (ρ q:ℝ) (u:Eisˣ)
-    (η:ℕ→Ideal Eis→Ideal Eis→ℂ) (rowPhase:ℕ→ℂ) (m:ℕ) (n b:Ideal Eis) :
-    let D:=reflectionExtractedDivisor P j e 1
-    let E:=reflectionExtractedDivisor P j e 2
-    (rowPhase m*(∏p:PrimeIndex (rowResidualPart I Q),
-        bracket (actualSextic p.val (admissiblePrimeGood _ (rowResidualPart_admissible I Q hbad) p))
-          (completedLocalExponent I F p.val)
-          (Ideal.Quotient.mk p.val ((u.val*lambda^m)*primaryGenerator (D*n)*(primaryGenerator (E*b))^3))) *
-      η m (D*n) (E*b)*reflectedBranch P hg j e (primaryGenerator (D*n)) (primaryGenerator (E*b)))/
-        ((ramifiedScale ρ q m*Real.sqrt (Ideal.absNorm (D*n):ℝ)*(Ideal.absNorm (E*b):ℝ):ℝ):ℂ)=
-      4*canonicalRawBranchCoefficient P hg j e ρ q
-        (fun l a c=>η l (D*a) (E*c))
-        (fun l=>rowPhase l*residualQuadraticPhase (rowResidualPart I Q) u l D E)
-        (rowResidualPart I Q) m n b := by
-  dsimp only
-  rw [residual_bracket_extracted_columns I F Q hFQ hbad]
-  unfold canonicalRawBranchCoefficient reflectedDyadicCoefficient
-  push_cast
-  simp only [div_eq_mul_inv,mul_inv_rev]
-  norm_num
-  ring
 
 end CompletedGauss
-
-open scoped Classical BigOperators ContDiff
 
 namespace CompletedGauss.FreeReflection
 
@@ -361,20 +194,6 @@ lemma mem_reflectionActivePool (I Q Q0:Ideal Eis) (e:pool I Q Q0→Fin 6)
   rw [reflectionActivePool, Finset.mem_filter]
   simp only [P.property, true_and]
   rw [reflectionChoiceValue, dite_eq_left P.property]
-
-lemma reflectionActivePool_encode (I Q Q0:Ideal Eis)
-    (A:Finset (pool I Q Q0)) (e:A→Fin 3) :
-    reflectionActivePool I Q Q0 (encodeReflectionSix ⟨A,e⟩)=A.image Subtype.val := by
-  ext P
-  constructor
-  · intro hP
-    let p:pool I Q Q0:=⟨P,reflectionActivePool_subset I Q Q0 _ hP⟩
-    have hp:p∈A:=(reflectionSixActive_encode ⟨A,e⟩ p).mp
-      ((mem_reflectionActivePool I Q Q0 _ p).mp hP)
-    exact Finset.mem_image.mpr ⟨p,hp,rfl⟩
-  · intro hP
-    obtain ⟨p,hp,rfl⟩:=Finset.mem_image.mp hP
-    exact (mem_reflectionActivePool I Q Q0 _ p).mpr ((reflectionSixActive_encode ⟨A,e⟩ p).mpr hp)
 
 def reflectionActiveLabel (I Q Q0:Ideal Eis) (e:pool I Q Q0→Fin 6)
     (P:reflectionActivePool I Q Q0 e) : Fin 3 :=
@@ -543,44 +362,6 @@ def sixPhaseFixedCuspFiber (rays:ℕ) (I F Q Q0:Ideal Eis) (hI:I≠0) (hQ:Q≠0)
     rw [norm_mul]
     exact (mul_le_of_le_one_left (norm_nonneg _)
       (hray x)).trans (reflectionSixInactiveWeight_norm_le_one I F Q Q0 x.2)
-
-theorem sixPhaseFixedCuspFiber_value (rays:ℕ) (I F Q Q0:Ideal Eis) (hI:I≠0) (hQ:Q≠0)
-    (K levelBound:ℝ) (levelScale:SixReflectionIndex rays I Q Q0→ℝ)
-    (hlevel:∀x,0<levelScale x) (hlevelBound:∀x,levelScale x≤levelBound)
-    (cusp:SixReflectionIndex rays I Q Q0→Fin 3) (unit:SixReflectionIndex rays I Q Q0→Eisˣ)
-    (phaseArray:SixReflectionIndex rays I Q Q0→ℕ→Ideal Eis→Ideal Eis→ℂ)
-    (hphase:∀x m n b,‖phaseArray x m n b‖≤1)
-    (rayWeight:SixReflectionIndex rays I Q Q0→ℂ) (hray:∀x,‖rayWeight x‖≤1)
-    (rowPhase:SixReflectionIndex rays I Q Q0→ℕ→idealRange (completedResidualScale K I Q)→ℂ)
-    (hrow:∀x m k,‖rowPhase x m k‖≤1)
-    (W:ℝ→ℂ) (X ρ q:ℝ) (k:idealRange (completedResidualScale K I Q)) :
-    let d:=sixPhaseFixedCuspFiber rays I F Q Q0 hI hQ K levelBound levelScale hlevel hlevelBound
-      cusp unit phaseArray hphase rayWeight hray rowPhase hrow
-    d.value W X ρ q k=
-      ∑t:Fin rays,∑A:Finset (pool I Q Q0),∑e:A→Fin 3,
-        reflectionInactiveStratumWeight I F Q Q0 A*rayWeight (t,encodeReflectionSix ⟨A,e⟩)*
-          (d.branch (t,encodeReflectionSix ⟨A,e⟩)).value W X ρ q k := by
-  dsimp only
-  rw [ReflectedFiberData.value,Fintype.sum_prod_type]
-  apply Finset.sum_congr rfl
-  intro t _
-  calc
-    _=∑e:pool I Q Q0→Fin 6,reflectionSixInactiveWeight I F Q Q0 e*
-      (rayWeight (t,e)*(sixPhaseFixedCuspBranch I F Q Q0 hI hQ K levelBound (levelScale (t,e))
-        (hlevel (t,e)) (hlevelBound (t,e)) e (cusp (t,e)) (unit (t,e))
-        (phaseArray (t,e)) (hphase (t,e)) (rowPhase (t,e)) (hrow (t,e))).value W X ρ q k) := by
-          apply Finset.sum_congr rfl
-          intro e _
-          dsimp only [sixPhaseFixedCuspFiber]
-          ring
-    _=_ := by
-      rw [sum_reflectionSixInactiveWeight_unpad]
-      apply Finset.sum_congr rfl
-      intro A _
-      apply Finset.sum_congr rfl
-      intro e _
-      dsimp only [sixPhaseFixedCuspFiber]
-      exact (mul_assoc _ _ _).symm
 
 end CompletedGauss.FreeReflection
 

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.MarkedLocal
-
 namespace OAI
 
 noncomputable section

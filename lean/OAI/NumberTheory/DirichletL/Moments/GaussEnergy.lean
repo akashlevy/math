@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.RowNorm
-
 namespace OAI
 
 noncomputable section

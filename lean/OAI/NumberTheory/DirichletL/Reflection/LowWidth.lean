@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.PoolArithmetic
 import OAI.NumberTheory.DirichletL.Inversion.TerminalWidths
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

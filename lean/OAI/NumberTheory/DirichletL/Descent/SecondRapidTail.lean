@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondTailAbsorption
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

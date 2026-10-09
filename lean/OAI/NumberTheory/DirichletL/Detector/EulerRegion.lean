@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.EulerCoordinates
-
 namespace OAI
 
 noncomputable section

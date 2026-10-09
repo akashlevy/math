@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalSource
-
 namespace OAI
 
 noncomputable section
@@ -8,7 +7,7 @@ open scoped Classical BigOperators
 namespace SevenEighths.CenteredMomentFirstPhysicalSource
 open ActualEisensteinCubic ConcretePrimeRowBridge HeckeFamily CanonicalQuadraticSieve
 open CenteredMomentSourceRow CenteredMomentFirstSectors CenteredMomentFirstSectorEnergy
-open CenteredMomentFirstSectorTransform CenteredMomentFirstChildProfile
+open CenteredMomentFirstSectorTransform
 open CenteredMomentCanonicalFirst CenteredMomentFirstCanonicalFamily CenteredMomentCommonSupport
 open CenteredMomentFirstColumns CenteredMomentChildAssembly CenteredMomentHeckeColumnWindow
 open CenteredMomentHeckeExpansion RayFourExpansion
@@ -33,30 +32,6 @@ theorem original_pool_restriction (C D:Ideal O)(hC:C≠0)(hD:D≠0)
     intro b hb
     by_cases hcb:IsCoprime C b <;> simp [hcb]
   · simp [hca]
-
-theorem actual_child_family (η:Character)(m:O)(hm:m≠0)
-    (hmLam:goodLambda∣m)(hm2:(2:O)∣m)
-    (C D:Ideal O)(hC:Supported C)(hD:Supported D)(E:Finset (CommonIndex C D))
-    (ξ₁ ξ₂:RayCharacter):
-    let e:=primeSubsetGenerator (fun P:CommonIndex C D=>P.val) E;
-    let r:=activeConductor C D;
-    let ρ:=finiteSexticRow (activePrime C D) (activeGood C D hC) (activeExponent C D);
-    let M:=η.modulus*Ideal.span {m}*Ideal.span {(72:O)}*Ideal.span {e*r};
-    ∃τ₁ τ₂:Character,τ₁.modulus=M ∧ τ₂.modulus=M ∧
-      (∀S:Finset (Ideal O),∀c:Ideal O→ℂ,∀t:ℝ,∀L:Ideal O,∀a:columns C C hC.1 S,
-        divisorCoefficient L (element C C hC.1 S)
-          (fun a=>coefficient η m 1 t c C a*leftCoefficient e r ρ (element C C hC.1 S a)) ξ₁ a=
-          (if L∣(a:Ideal O) then c (C*a) else 0)*heightCoeff τ₁ t a) ∧
-      (∀S:Finset (Ideal O),∀c:Ideal O→ℂ,∀t:ℝ,∀L:Ideal O,∀b:columns C D hD.1 S,
-        divisorCoefficient L (element C D hD.1 S)
-          (fun b=>coefficient η m 1 t c D b*rightCoefficient e r ρ (element C D hD.1 S b)) ξ₂ b=
-          (if L∣(b:Ideal O) then c (D*b) else 0)*heightCoeff τ₂ t b):=by
-  obtain ⟨τ₁,τ₂,hM₁,hM₂,h₁,h₂⟩:=exists_first_divisor_pair η m hm hmLam hm2 C D hC E ξ₁ ξ₂
-  refine ⟨τ₁,τ₂,hM₁,hM₂,?_,?_⟩
-  · intro S c t L a
-    exact h₁ L a (column_supported C C hC.1 S a) (fun I=>c (C*I)) t
-  · intro S c t L b
-    exact h₂ L b (column_supported C D hD.1 S b) (fun I=>c (D*I)) t
 
 end SevenEighths.CenteredMomentFirstPhysicalSource
 

@@ -1,7 +1,6 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic.NormNum
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

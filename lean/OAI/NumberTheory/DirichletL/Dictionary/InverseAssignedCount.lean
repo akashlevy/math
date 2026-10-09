@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SourceMass
-
 namespace OAI
 
 noncomputable section
@@ -106,20 +105,6 @@ theorem restricted_sum_normalized_le (K : ℕ) {b U : ℝ} (hb : 1 ≤ b) (hU : 
   rw [← Finset.sum_mul]
   exact restricted_normalized_mass_le K hb hU hK ell L hL a ha T hT
 
-theorem slots_normalized_mass_le (K : ℕ) {b U : ℝ} (hb : 1 ≤ b) (hU : 1 ≤ U)
-    {σ : Type*} (J : Finset σ) (hJ : J.card ≤ K)
-    (ell : σ → ℝ) (L : σ → Finset (Ideal O))
-    (hL : ∀ i ∈ J, ∀ I ∈ L i, I ≠ 0 ∧ (Ideal.absNorm I : ℝ) ≤ b*U^(ell i))
-    (a : σ → Ideal O → ℂ) (ha : ∀ i ∈ J, ∀ I ∈ L i, ‖a i I‖ ≤ 1)
-    (T : Finset (J → Ideal O)) (hT : T ⊆ assignedTuples (fun i : J => L i)) :
-    (∑ q ∈ T, ‖assignedCoefficient (fun i : J => a i) q‖) * U^(-(∑ i ∈ J, ell i)) ≤
-      assignedConstant K b := by
-  simpa only [Finset.sum_coe_sort] using
-    restricted_normalized_mass_le K hb hU (by simpa using hJ)
-      (fun i : J => ell i) (fun i : J => L i)
-      (fun i I hI => hL i i.property I hI) (fun i : J => a i)
-      (fun i I hI => ha i i.property I hI) T hT
-
 theorem assigned_sum_normalized_le (K : ℕ) {b U : ℝ} (hb : 1 ≤ b) (hU : 1 ≤ U)
     {ι : Type*} [Fintype ι] (hK : Fintype.card ι ≤ K)
     (ell : ι → ℝ) (L : ι → Finset (Ideal O))
@@ -128,29 +113,6 @@ theorem assigned_sum_normalized_le (K : ℕ) {b U : ℝ} (hb : 1 ≤ b) (hU : 1 
     (∑ q ∈ assignedTuples L, ‖assignedCoefficient a q‖ * U^(-(∑ i, ell i))) ≤
       assignedConstant K b :=
   restricted_sum_normalized_le K hb hU hK ell L hL a ha _ (Finset.Subset.refl _)
-
-theorem slots_card_le (K : ℕ) {b U : ℝ} (hb : 1 ≤ b) (hU : 1 ≤ U)
-    {σ : Type*} (J : Finset σ) (hJ : J.card ≤ K)
-    (ell : σ → ℝ) (L : σ → Finset (Ideal O))
-    (hL : ∀ i ∈ J, ∀ I ∈ L i, I ≠ 0 ∧ (Ideal.absNorm I : ℝ) ≤ b*U^(ell i)) :
-    ((assignedTuples (fun i : J => L i)).card : ℝ) ≤
-      assignedConstant K b * U^(∑ i ∈ J, ell i) := by
-  simpa only [Finset.sum_coe_sort] using
-    assigned_card_le K hb hU (by simpa using hJ)
-      (fun i : J => ell i) (fun i : J => L i)
-      (fun i I hI => hL i i.property I hI)
-
-theorem assignedTuples_eq_empty {ι : Type*} [Fintype ι]
-    (L : ι → Finset (Ideal O)) (i : ι) (hi : L i = ∅) :
-    assignedTuples L = ∅ := by
-  apply Finset.eq_empty_iff_forall_notMem.mpr
-  intro q hq
-  have h := (mem_assignedTuples L q).mp hq i
-  simp only [hi, Finset.notMem_empty] at h
-
-theorem assignedTuples_card_of_isEmpty {ι : Type*} [Fintype ι] [IsEmpty ι]
-    (L : ι → Finset (Ideal O)) : (assignedTuples L).card = 1 := by
-  simp [assignedTuples]
 
 end SevenEighths.DetectorDictionaryInverseAssignedCount
 

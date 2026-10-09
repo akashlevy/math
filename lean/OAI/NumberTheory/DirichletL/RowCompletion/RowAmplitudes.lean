@@ -1,79 +1,23 @@
 import OAI.NumberTheory.DirichletL.GaussSum.ResidualEquivalence
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
-
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CanonicalRowCompletion
 
@@ -141,12 +85,6 @@ lemma selectedSourceRowScalar_norm (Ψ:Eis→*ℂ) (hΨ:∀n,‖Ψ n‖≤1) (u:
     exact (mul_le_of_le_one_left (norm_nonneg _)
       (D.sourceRowScalar_norm Q c hc hcQ h G A Ψ hΨ u n)).trans (residualArgumentPhase_norm_le_one k 1 dN dB)
   · simp
-
-lemma sum_selectedSourceRowScalar [Fintype G.PhaseResidue]
-    (Ψ:Eis→*ℂ) (u:Eisˣ) (n:ℕ) (k dN dB:Ideal Eis) :
-    (∑rho:G.PhaseResidue,D.selectedSourceRowScalar Q c hc hcQ h G A Ψ u n rho k dN dB)=
-      D.sourceRowScalar Q c hc hcQ h G A Ψ u n*residualArgumentPhase k 1 dN dB := by
-  simp only [selectedSourceRowScalar,Finset.sum_ite_eq',Finset.mem_univ,ite_true]
 
 end GoodMaskRowData
 end
@@ -254,24 +192,9 @@ theorem inactive_weight_nonresidual_subsets (e:α⊕β ≃ γ) (z:γ → ℂ)
 
 end CanonicalRowCompletion
 
-open scoped BigOperators Classical ContDiff
-
 namespace CompletedGauss
 open ActualEisensteinCubic CubicEisenstein CanonicalQuadraticSieve CompletedDyadic LocalReflectionBrackets
 local notation "Eis" => ActualEisensteinCubic.O
-
-lemma active_product_residual_equiv {ι β:Type*} [Fintype ι] [Fintype β]
-    (I Q:Ideal Eis) (P:ι→Ideal Eis) (R:β→Ideal Eis)
-    (E:PrimeIndex (rowResidualPart I Q)⊕β≃ι)
-    (hres:∀r,P (E (Sum.inl r))=r.val) (hnonres:∀r,P (E (Sum.inr r))=R r) :
-    (∏i,P i)=rowResidualPart I Q*∏i,R i := by
-  rw [←E.prod_comp,Fintype.prod_sum_type]
-  simp only [hres,hnonres]
-  congr 1
-  change (∏r:primeSupport (rowResidualPart I Q),r.val)=rowResidualPart I Q
-  exact (Finset.prod_coe_sort (primeSupport (rowResidualPart I Q))
-      (fun r : Ideal Eis => r)).trans
-    (IdealMobiusDivisorSum.squarefree_support_product_self (rowResidualPart_squarefree I Q))
 
 lemma actual_bracket_ideal_congr (P Q:Ideal Eis) [P.IsMaximal] [Q.IsMaximal]
     (hP:lambda∉P) (hQ:lambda∉Q) (hPQ:P=Q) (j:ℕ) (z:Eis) :
@@ -280,127 +203,14 @@ lemma actual_bracket_ideal_congr (P Q:Ideal Eis) [P.IsMaximal] [Q.IsMaximal]
   subst Q
   rfl
 
-theorem residual_equiv_coefficient {ι β:Type*} [Fintype ι] [Fintype β]
-    (I F Q:Ideal Eis) (hFQ:F∣Q) (hbad:∀P∈fixedBadPrimes,P∣Q)
-    (P:ι→Ideal Eis) [∀i,(P i).IsMaximal] (hg:∀i,lambda∉P i)
-    (R:β→Ideal Eis) [∀i,(R i).IsMaximal] (hR:∀i,lambda∉R i)
-    (E:PrimeIndex (rowResidualPart I Q)⊕β≃ι)
-    (hres:∀r,P (E (Sum.inl r))=r.val) (hnonres:∀r,P (E (Sum.inr r))=R r)
-    (j:ι→ℕ) (hjres:∀r,j (E (Sum.inl r))=1)
-    (hjnonres:∀r,j (E (Sum.inr r))=completedLocalExponent I F (R r))
-    (e:β→Fin 3) (ρ q:ℝ) (η:ℕ→Ideal Eis→Ideal Eis→ℂ) (σ:ℕ→ℂ)
-    (m:ℕ) (n b:Ideal Eis) :
-    let A:=reflectionExtractedDivisor R (fun r=>completedLocalExponent I F (R r)) e 1
-    let B:=reflectionExtractedDivisor R (fun r=>completedLocalExponent I F (R r)) e 2
-    unextractedCuspCoefficient P hg j (residualLabelVia E e) ρ q η σ m (A*n) (B*b)=
-      4*canonicalRawBranchCoefficient R hR (fun r=>completedLocalExponent I F (R r)) e ρ q
-        (fun l a c=>η l (A*a) (B*c))
-        (fun l=>σ l*residualArgumentPhase (rowResidualPart I Q) 1 A B)
-        (rowResidualPart I Q) m n b := by
-  dsimp only
-  rw [unextractedCuspCoefficient,reflectedBranch_drop_residual_equiv E P hg j hjres]
-  have hchar (r:PrimeIndex (rowResidualPart I Q)) (z:Eis) :
-      bracket (actualSextic (P (E (Sum.inl r))) (hg (E (Sum.inl r)))) 1 (Ideal.Quotient.mk _ z)=
-      bracket (actualSextic r.val (admissiblePrimeGood _ (rowResidualPart_admissible I Q hbad) r))
-        (completedLocalExponent I F r.val) (Ideal.Quotient.mk _ z) := by
-    rw [completedLocalExponent_residual I F Q hFQ]
-    exact actual_bracket_ideal_congr _ _ _ _ (hres r) 1 z
-  have hnbranch (a b:Eis):
-      reflectedBranch (fun r=>P (E (Sum.inr r))) (fun r=>hg (E (Sum.inr r)))
-        (fun r=>j (E (Sum.inr r))) e a b=
-      reflectedBranch R hR (fun r=>completedLocalExponent I F (R r)) e a b := by
-    unfold reflectedBranch
-    apply Finset.prod_congr rfl
-    intro r hr
-    change reflectedLocalPiece (P (E (Sum.inr r))) _ (j (E (Sum.inr r))) (e r) a b=_
-    simp only [hnonres r,hjnonres r]
-  simp_rw [hchar]
-  rw [hnbranch]
-  have ht:=residual_coefficient_eq_canonical_argument I F Q hFQ hbad R hR
-    (fun r=>completedLocalExponent I F (R r)) e ρ q (fun _=>1) η σ m n b
-  simp only [one_mul] at ht
-  convert ht using 1 ; ring
-
 end CompletedGauss
 
 namespace CubicEisenstein
 open ActualEisensteinCubic CompletedGauss CompletedDyadic CanonicalQuadraticSieve
-local notation "Eis" => ActualEisensteinCubic.O
 namespace FixedFourierGeometry
-variable {c:Eis} {h:Eis⧸Ideal.span {c}} (G:FixedFourierGeometry c h)
-variable {ι:Type*} [Fintype ι] {p:ι→Eis} {N:Eis}
-
-theorem stratumBranchTerm_tsum_eq_rawValue
-    (D:ControlledStratumArithmetic p N G.a0 G.c0 G.mode)
-    [∀i,(Ideal.span {p i}).IsMaximal]
-    (hp:∀i,p i≠0) (hg:∀i,lambda∉Ideal.span {p i}) (j:ι→ℕ)
-    {I F Q:Ideal Eis} {levelBound K:ℝ} (d:ReflectedBranchData levelBound K I F Q)
-    (hFQ:F∣Q) (hbad:∀P∈fixedBadPrimes,P∣Q) (hK:0<completedResidualScale K I Q)
-    (k:idealRange (completedResidualScale K I Q)) (hk:k.val=rowResidualPart I Q)
-    (E:PrimeIndex (rowResidualPart I Q)⊕d.primes≃ι)
-    (hres:∀r,Ideal.span {p (E (Sum.inl r))}=r.val)
-    (hnonres:∀r,Ideal.span {p (E (Sum.inr r))}=r.val)
-    (hjres:∀r,j (E (Sum.inl r))=1)
-    (hjnonres:∀r,j (E (Sum.inr r))=completedLocalExponent I F r.val)
-    (hlevel:d.levelScale=G.levelScale) (u:Eisˣ) (W:ℝ→ℂ) (X:ℝ) :
-    letI : ∀r:d.primes,r.val.IsMaximal:=d.maximal
-    let A:=reflectionExtractedDivisor (fun r:d.primes=>r.val)
-      (fun r=>completedLocalExponent I F r.val) d.label 1
-    let B:=reflectionExtractedDivisor (fun r:d.primes=>r.val)
-      (fun r=>completedLocalExponent I F r.val) d.label 2
-    let hA:=reflectionExtractedDivisor_ne_zero (fun r:d.primes=>r.val) (fun _r=>NeZero.ne _)
-      (fun r=>completedLocalExponent I F r.val) d.label 1
-    let hB:=reflectionExtractedDivisor_ne_zero (fun r:d.primes=>r.val) (fun _r=>NeZero.ne _)
-      (fun r=>completedLocalExponent I F r.val) d.label 2
-    (∑'x:ℕ×NonzeroDualIdeal×NonzeroDualIdeal,
-      G.stratumBranchTerm D hp hg j u (residualLabelVia E d.label) W X (nonzeroDualDilation A B hA hB x))=
-      4*d.rawValue
-        (fun m n b=>G.array (Ideal.Quotient.mk _ (-(D.matrix (fun _=>1) 1 1)*D.U)) u m (A*n) (B*b))
-        (fun m k'=>D.modelRowPhase G.shape hp hg j u m*residualArgumentPhase k'.val 1 A B)
-        W X 1 completedRamifiedStep k := by
-  let : ∀r:d.primes,r.val.IsMaximal:=d.maximal
-  dsimp only
-  let A:=reflectionExtractedDivisor (fun r:d.primes=>r.val)
-    (fun r=>completedLocalExponent I F r.val) d.label 1
-  let B:=reflectionExtractedDivisor (fun r:d.primes=>r.val)
-    (fun r=>completedLocalExponent I F r.val) d.label 2
-  let η:=G.array (Ideal.Quotient.mk _ (-(D.matrix (fun _=>1) 1 1)*D.U)) u
-  let σ:=D.modelRowPhase G.shape hp hg j u
-  have hfull:Ideal.span {∏i,p i}=k.val*∏r:d.primes,r.val := by
-    rw [FiniteGaussPhase.span_finset_prod,hk]
-    exact active_product_residual_equiv I Q (fun i=>Ideal.span {p i})
-      (fun r:d.primes=>r.val) E hres hnonres
-  have hk0:k.val≠0:=(mem_idealRange.mp k.property).1.1
-  unfold ReflectedBranchData.rawValue
-  rw [←tsum_mul_left]
-  apply tsum_congr
-  intro x
-  have hcoef:=residual_equiv_coefficient I F Q hFQ hbad (fun i=>Ideal.span {p i}) hg
-    (fun r:d.primes=>r.val) d.good E hres hnonres j hjres hjnonres d.label
-    1 completedRamifiedStep η σ x.1 x.2.1.val x.2.2.val
-  have harg:
-      (X/(G.levelScale*(Ideal.absNorm (Ideal.span {∏i,p i}):ℝ)^2))*
-        (1*completedRamifiedStep^x.1)^3*(Ideal.absNorm (A*x.2.1.val):ℝ)*
-        (Ideal.absNorm (B*x.2.2.val):ℝ)^3=
-      ((completedBranchScale K (X/d.levelScale) I F Q (fun r:d.primes=>r.val) d.label)⁻¹*
-        (completedResidualScale K I Q/(Ideal.absNorm k.val:ℝ))^2)*
-        (1*completedRamifiedStep^x.1)^3*(Ideal.absNorm x.2.1.val:ℝ)*
-        (Ideal.absNorm x.2.2.val:ℝ)^3 := by
-    rw [hlevel,completedBranchScale_raw_argument K X G.levelScale (1*completedRamifiedStep^x.1)
-      I F Q (fun r:d.primes=>r.val) d.label k.val x.2.1.val x.2.2.val hK G.levelScale_pos hk0]
-    rw [hfull]
-    simp only [map_mul,Nat.cast_mul,mul_pow,div_eq_mul_inv,mul_inv_rev]
-    ring
-  dsimp only [stratumBranchTerm,nonzeroDualDilation,rawDualKernelTerm]
-  change unextractedCuspCoefficient (fun i=>Ideal.span {p i}) hg j (residualLabelVia E d.label)
-      1 completedRamifiedStep η σ x.1 (A*x.2.1.val) (B*x.2.2.val)*_=_
-  rw [hcoef,harg,hk]
-  exact mul_assoc _ _ _
 
 end FixedFourierGeometry
 end CubicEisenstein
-
-open scoped Classical BigOperators ContDiff
 
 namespace CanonicalRowCompletion
 open ActualEisensteinCubic CompletedGauss CanonicalQuadraticSieve CanonicalCoefficientClass
@@ -462,8 +272,6 @@ theorem hasCanonicalThetaModels_of_fixed_shell_models
 
 end CanonicalRowCompletion
 
-open scoped Classical BigOperators
-
 namespace CompletedGauss.ReflectedBranchData
 open ActualEisensteinCubic CanonicalQuadraticSieve CompletedDyadic
 local notation "Eis" => ActualEisensteinCubic.O
@@ -493,22 +301,7 @@ lemma rawValue_mul_phase_at (a:idealRange (completedResidualScale K I Q)→ℂ) 
   unfold rawDualKernelTerm canonicalRawBranchCoefficient
   ring
 
-lemma rawValue_select_phase_at (P:idealRange (completedResidualScale K I Q)→Prop)
-    [DecidablePred P] :
-    d.rawValue η (fun m l=>if P l then σ m l else 0) W X ρ q k=
-      if P k then d.rawValue η σ W X ρ q k else 0 := by
-  by_cases hp:P k
-  · rw [ite_eq_left hp]
-    exact d.rawValue_congr_phase_at η _ σ W X ρ q k (fun m=>ite_eq_left hp)
-  · rw [ite_eq_right hp]
-    calc
-      _=d.rawValue η (fun _ _=>0) W X ρ q k:=
-        d.rawValue_congr_phase_at η _ _ W X ρ q k (fun m=>ite_eq_right hp)
-      _=0:=d.rawValue_zero_phase η W X ρ q k
-
 end CompletedGauss.ReflectedBranchData
-
-open scoped BigOperators Classical
 
 namespace CanonicalRowCompletion
 variable {α β γ:Type*} [Fintype α] [Fintype β] [Fintype γ]
@@ -554,8 +347,6 @@ lemma selectedActiveEquiv_inr (e:α⊕β ≃ γ) (B:Finset β) (b:B) :
     (selectedActiveEquiv e B (Sum.inr b)).val=e (Sum.inr b.val) := rfl
 
 end CanonicalRowCompletion
-
-open scoped BigOperators Classical
 
 namespace CanonicalRowCompletion.ActualFiber
 open ActualEisensteinCubic CompletedGauss CanonicalQuadraticSieve CubicEisenstein
@@ -639,19 +430,6 @@ noncomputable def reflectedFiber (K:ℝ) (Ψ:Eis→*ℂ) (hΨ:∀n,‖Ψ n‖≤
     rows R F (maskIdeal q m F) (freeConductor q) hR (maskIdeal_ne_zero q m hm F hF.ne_zero) K
     (fun a J=>rowScalar q hq m hm rows R F hR hF hrows v Ψ a.1 a.2 J)
     (fun a J=>rowScalar_norm q hq m hm rows R F hR hF hrows v Ψ hΨ a.1 a.2 J)
-
-lemma reflectedFiber_rowPhase (K:ℝ) (Ψ:Eis→*ℂ) (hΨ:∀n,‖Ψ n‖≤1)
-    (hbound:∀I∈rows,(Ideal.absNorm I:ℝ)≤K)
-    (J:RowIndex q m rows R F)
-    (ray:FixedReflectionRay (reflectionConductor q) (reflectionConductor_ne_zero q hq))
-    (e:FreeReflection.pool R (maskIdeal q m F) (freeConductor q) → Fin 6) (i:ℕ×ℕ×ℕ) :
-    ((reflectedFiber q hq m hm rows R F hR hF hrows v K Ψ hΨ).branch
-      (fixedReflectionRayEquiv (reflectionConductor q) (reflectionConductor_ne_zero q hq) ray,e)).rowPhase i
-        (fiberResidualIndex rows R (maskIdeal q m F) K (mask_bad q m F)
-          (fun I hI=>⟨hrows I hI,hbound I hI⟩) J)=
-      rowScalar q hq m hm rows R F hR hF hrows v Ψ (ray,e) i.1 J := by
-  exact FreeReflection.fixedRayFiberFromRows_rowPhase _ _ _ _ _ _ _ _ _ _ _ _
-    (mask_bad q m F) (fun I hI=>⟨hrows I hI,hbound I hI⟩) J ray e i
 
 end CanonicalRowCompletion.ActualFiber
 

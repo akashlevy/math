@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LocalPhysical
 import OAI.NumberTheory.DirichletL.Detector.SourceLocal
-
 namespace OAI
 
 noncomputable section
@@ -35,37 +34,6 @@ theorem bareCongruenceCoefficient_all_prime_powers (p : O) (hp : Prime p)
     rw [bareCongruenceCoefficient_prime_power p hp hg n k j]
     simp only [sourceScalar, Nat.add_eq_zero_iff, Nat.one_ne_zero, and_false, ite_false,
       Nat.add_sub_cancel]
-
-def physicalPrincipalSeries (p : O) (hp : Prime p)
-    [(Ideal.span {p}:Ideal O).IsMaximal] (hg : goodLambda∉Ideal.span {p})
-    (eta a x w z : ℂ) : ℂ :=
-  ∑ e : Fin 2, ∑' l, ∑' k, ∑' m,
-    sourceWeightedScalar (Ideal.absNorm (Ideal.span {p})) eta a
-      (localGamma p hp.ne_zero hg 1) (star (localGamma p hp.ne_zero hg 3))
-      (actualSextic (Ideal.span {p}) hg (-1)) x w z
-      (bareCongruenceCoefficient (p^(e.val+3*l)) (p^k) (pow_ne_zero _ hp.ne_zero) (p^(6*m)))
-      e.val l k m
-
-theorem physicalPrincipalSeries_eq (p : O) (hp : Prime p)
-    [(Ideal.span {p}:Ideal O).IsMaximal] (hg : goodLambda∉Ideal.span {p})
-    (eta a x w z : ℂ) :
-    physicalPrincipalSeries p hp hg eta a x w z = sourcePrincipalSeries p hp hg eta a x w z := by
-  simp only [physicalPrincipalSeries, sourcePrincipalSeries, sourcePrincipalTerm,
-    bareCongruenceCoefficient_all_prime_powers p hp hg]
-
-theorem physicalPrincipalSeries_euler_identity (p : O) (hp : Prime p)
-    [(Ideal.span {p}:Ideal O).IsMaximal] (hg : goodLambda∉Ideal.span {p})
-    (hc : ringChar (O ⧸ Ideal.span {p})≠2) (eta a x w z : ℂ)
-    (hV : ‖coordV (Ideal.absNorm (Ideal.span {p})) z‖<1)
-    (hR : ‖coordR (Ideal.absNorm (Ideal.span {p})) (a^2) x z‖<1)
-    (hW : ‖coordW (Ideal.absNorm (Ideal.span {p})) 1 w‖<1)
-    (hD : 1-coordD (Ideal.absNorm (Ideal.span {p})) eta 1 x≠0) :
-    let Q : ℝ := Ideal.absNorm (Ideal.span {p})
-    physicalPrincipalSeries p hp hg eta a x w z =
-      (1-coordD Q eta 1 x) / ((1-coordV Q z)*(1-coordW Q 1 w)) *
-        unramifiedClosed Q (a^2) eta 1 x w z := by
-  rw [physicalPrincipalSeries_eq]
-  exact sourcePrincipalSeries_euler_identity p hp hg hc eta a x w z hV hR hW hD
 
 end SevenEighths.ProbePhysical
 end

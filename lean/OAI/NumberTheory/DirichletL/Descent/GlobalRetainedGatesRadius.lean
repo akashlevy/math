@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.GlobalRetainedGatesGeometry
-
 namespace OAI
 
 noncomputable section

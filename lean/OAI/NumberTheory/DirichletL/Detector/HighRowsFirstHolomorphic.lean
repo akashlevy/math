@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsHolomorphic
-
 namespace OAI
 
 noncomputable section

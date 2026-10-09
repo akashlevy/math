@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.FinalAssemblyHigh
 import OAI.NumberTheory.DirichletL.Detector.FinalAssemblyMomentInput
-
 namespace OAI
 
 noncomputable section

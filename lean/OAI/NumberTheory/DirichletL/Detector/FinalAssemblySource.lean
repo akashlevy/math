@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.LowNormalized
 import OAI.NumberTheory.DirichletL.Hecke.CommonProbe
 import OAI.NumberTheory.DirichletL.Hecke.ModulusRefinement
-
 namespace OAI
 
 noncomputable section

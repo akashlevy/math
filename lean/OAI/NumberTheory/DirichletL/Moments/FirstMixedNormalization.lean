@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstMixedCommonRadius
 import OAI.NumberTheory.DirichletL.Moments.AmplificationErrorEnergy
-
 namespace OAI
 
 noncomputable section

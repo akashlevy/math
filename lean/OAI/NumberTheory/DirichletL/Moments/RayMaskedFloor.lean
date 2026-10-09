@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.RayMaskedFloorSource
-
 namespace OAI
 
 noncomputable section

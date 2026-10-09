@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DeletionBounds
-
 namespace OAI
 
 noncomputable section

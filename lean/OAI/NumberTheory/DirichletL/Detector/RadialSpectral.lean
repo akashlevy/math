@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.RadialIdentity
 import OAI.NumberTheory.DirichletL.Detector.SpectralPoisson
-
 namespace OAI
 
 noncomputable section

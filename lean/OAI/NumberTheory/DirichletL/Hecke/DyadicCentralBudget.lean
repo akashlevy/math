@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.DyadicScale
 import OAI.NumberTheory.DirichletL.Hecke.DyadicTailBudget
-
 namespace OAI
 
 noncomputable section

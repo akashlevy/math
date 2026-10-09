@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.WholeTail
 import OAI.NumberTheory.DirichletL.Reflection.InactiveEnergy
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

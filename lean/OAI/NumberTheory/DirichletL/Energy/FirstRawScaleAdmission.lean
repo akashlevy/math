@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstChildLower
 import OAI.NumberTheory.DirichletL.Energy.AmplifiedRayDictionary
-
 namespace OAI
 
 noncomputable section
@@ -58,16 +57,6 @@ theorem active_error_lower (s:Input α)(C R:Ideal O)(hC:C≠0)
     rw [map_pow,Nat.cast_pow,Real.logb_pow]
     rfl
   simpa only [he] using hh
-
-theorem restored_error_lower (s:Input α)(C R:Ideal O)(hC:C≠0)
-    (B:actualAllocations s.pools C)(τ:Character)(t:ℝ)(p:O)(hp:p≠0)(k:ℕ)
-    (Bp:actualAllocations (activeInput (child s C R B τ t)).pools ((Ideal.span {p})^k))
-    (υ:Character)(v Z r:ℝ)(hZ:1<Z)
-    (hX₁:Z^r≤s.X₁)(hX₂:Z^r≤s.X₂)(hY₁:Z^r≤s.Y₁)(hY₂:Z^r≤s.Y₂):
-    let d:=restoredError s C R B τ t (Ideal.span {p}) k Bp υ v
-    let r':=r-Real.logb Z (C.absNorm:ℝ)-errorRemoval p Z k
-    Z^r'≤d.X₁ ∧ Z^r'≤d.X₂ ∧ Z^r'≤d.Y₁ ∧ Z^r'≤d.Y₂:=by
-  exact active_error_lower s C R hC B τ t p hp k Bp υ v Z r hZ hX₁ hX₂ hY₁ hY₂
 
 theorem error_minimum_lower (s:Input α)(C R:Ideal O)(hC:C≠0)
     (B:actualAllocations s.pools C)(τ:Character)(t:ℝ)(p:O)(hp:p≠0)(k:ℕ)

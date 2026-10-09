@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.Euler
 import OAI.NumberTheory.DirichletL.Supremum
-
 namespace OAI
 
 noncomputable section
@@ -51,29 +50,6 @@ theorem LFunction_ne_zero_of_beta_lt (χ : Character) {s : ℂ}
   intro hz
   have hpos : 0 < s.re := lt_trans (by linarith [half_le_beta]) hs
   exact (not_lt_of_ge (zero_re_le_beta χ hpos hpole hz)) hs
-
-theorem exists_zero_near_beta {ε : ℝ} (hε : 0 < ε)
-    (hεsmall : (1 / 2 : ℝ) ≤ beta - ε) :
-    ∃ (χ : Character) (s : ℂ), 0 < s.re ∧
-      (s ≠ 1 ∨ χ.residue ≠ 1) ∧ LFunction χ s = 0 ∧ beta - ε < s.re := by
-  obtain ⟨x, hx, hlt⟩ := Supremum.exists_gt_supremum_sub_of_insert
-    zeroSet_bddAbove hε hεsmall
-  obtain ⟨χ, s, hpos, hpole, hz, rfl⟩ := hx
-  exact ⟨χ, s, hpos, hpole, hz, hlt⟩
-
-theorem beta_le_seven_eighths_of_uniform_margin
-    (hbound : 7 / 8 < beta →
-      ∃ ω σ : ℝ, 0 < ω ∧ ω < beta - 7 / 8 ∧ 0 < σ ∧
-        ∀ (χ : Character) (s : ℂ), 0 < s.re →
-          (s ≠ 1 ∨ χ.residue ≠ 1) → LFunction χ s = 0 →
-            s.re ≤ beta - Supremum.continuationMargin beta ω σ) :
-    beta ≤ 7 / 8 := by
-  apply Supremum.seven_eighths_of_uniform_margin_with_sentinel zeroSet_bddAbove
-  intro hbeta
-  obtain ⟨ω, σ, hω, hωb, hσ, hzeros⟩ := hbound hbeta
-  refine ⟨ω, σ, hω, hωb, hσ, ?_⟩
-  rintro x ⟨χ, s, hpos, hpole, hz, rfl⟩
-  exact hzeros χ s hpos hpole hz
 
 end SevenEighths.HeckeZeroSupremum
 

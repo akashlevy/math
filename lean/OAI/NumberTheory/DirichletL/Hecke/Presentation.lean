@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.StripActual
 import OAI.NumberTheory.DirichletL.CharacterTransport
-
 namespace OAI
 
 noncomputable section

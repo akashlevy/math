@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.SmallSum
-
 namespace OAI
 
 noncomputable section

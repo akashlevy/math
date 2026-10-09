@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.CoefficientDirect
 import OAI.NumberTheory.DirichletL.Detector.SpectralSeparation
-
 namespace OAI
 
 noncomputable section
