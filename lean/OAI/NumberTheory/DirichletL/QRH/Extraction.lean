@@ -16,11 +16,13 @@ namespace OAI.QRH
 open OAI ActualEisensteinCubic ConcreteTraceCRT EisensteinSchwartzPoisson SixthPowerAverage
 open scoped ContDiff SchwartzMap
 
+variable {q : ℕ} (χ : DirichletCharacter ℂ q)
+
 /-- **Proposition 3.2** (extraction): the mean square with loss `2ε` gives the power saving
 `A^φ(D) ≪ D^{23/24+ε}`. -/
 theorem saving_of_meanSquare (W : ℝ → ℂ) (a b : ℝ)
     (hs : Function.support W ⊆ Set.Icc a b) (hW : ContDiff ℝ ∞ W) (ε : ℝ) (hε : 0 < ε)
-    (hms : MeanSquareBound W b (2 * ε)) : SavingBound W b ε := by
+    (hms : MeanSquareBound χ W b (2 * ε)) : SavingBound χ W b ε := by
   classical
   obtain ⟨V, hV, hVs, hV0, hVhat⟩ := exists_averaging_test
   obtain ⟨Cm, hCm, hm⟩ := hms
@@ -45,8 +47,8 @@ theorem saving_of_meanSquare (W : ℝ → ℂ) (a b : ℝ)
   let Y : ℝ := D ^ ((11 : ℝ) / 60)
   have hY : 1 ≤ Y := Real.one_le_rpow hD (by norm_num)
   have hYp : 0 < Y := by linarith
-  let F := ideals M
-  let Arow : O → ℂ := A W D M
+  let F := ideals q M
+  let Arow : O → ℂ := A χ W D M
   have hYpow : Y ^ 6 = D ^ ((11 : ℝ) / 10) := by
     dsimp only [Y]
     rw [← Real.rpow_mul_natCast hDpos.le]
@@ -74,11 +76,11 @@ theorem saving_of_meanSquare (W : ℝ → ℂ) (a b : ℝ)
       Avg * D ^ ((137 : ℝ) / 120 + ε) := (sq_le_sq₀ (norm_nonneg _) (by positivity)).mp havg2
   -- the remainder from counting `b` prime to `𝔫` is `≪ D^{1+ε}`
   have herr : ‖∑ I ∈ F,
-      ShortDraftHeckeBridge.baseChangeWeight χ₁ I * W ((Ideal.absNorm I : ℝ) / D) *
+      ShortDraftHeckeBridge.baseChangeWeight χ I * W ((Ideal.absNorm I : ℝ) / D) *
       maskedPrincipalRemainder (fun i : ConcretePrimeRowBridge.primePool F => i.val)
         (ConcretePrimeRowBridge.idealSupport F I) V Y‖ ≤ Err * D ^ (1 + ε) := by
     have hbD : 1 ≤ B * D := by nlinarith [mul_nonneg (sub_nonneg.mpr hB) (sub_nonneg.mpr hD)]
-    have hh := he F (ConcretePrimeRowBridge.outsideIdealsUpTo_ne_bot S M) χ₁ (fun n => W (n / D))
+    have hh := he F (ConcretePrimeRowBridge.outsideIdealsUpTo_ne_bot (S q) M) χ (fun n => W (n / D))
       V Y (B * D) G hYp hbD hG (fun n => Ws.norm_le_seminorm ℝ (n / D)) (by
         intro I _ hn
         have hh := (hs hn).2
@@ -91,9 +93,9 @@ theorem saving_of_meanSquare (W : ℝ → ℂ) (a b : ℝ)
   have hexponent : D ^ (1 + ε) ≤ D ^ ((137 : ℝ) / 120 + ε) :=
     Real.rpow_le_rpow_of_exponent_le hD (by linarith)
   -- the average equals `Y · V̂(0) · A^φ(D)` plus that remainder
-  have hmain := totient_sum_normalized_bound F (ConcretePrimeRowBridge.outsideIdealsUpTo_ne_bot S M)
-    (InitialMeanSquare.outside_good S M bad_subset_S) χ₁ (fun n => W (n / D)) V Y hYp
-  have hbound : Y * ‖paperRadialFourier V 0‖ * ‖weightedSum W D M‖ ≤
+  have hmain := totient_sum_normalized_bound F (ConcretePrimeRowBridge.outsideIdealsUpTo_ne_bot (S q) M)
+    (InitialMeanSquare.outside_good (S q) M (bad_subset_S q)) χ (fun n => W (n / D)) V Y hYp
+  have hbound : Y * ‖paperRadialFourier V 0‖ * ‖weightedSum χ W D M‖ ≤
       (Avg + Err) * D ^ ((137 : ℝ) / 120 + ε) := by
     apply hmain.trans
     have := add_le_add havg (herr.trans (mul_le_mul_of_nonneg_left hexponent hErr))

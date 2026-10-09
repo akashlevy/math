@@ -21,6 +21,7 @@ python3 scripts/treeshake/reach.py --import $D.Nonvanishing --import $D.Hecke.No
   --root OAI.DirichletCharacter.LFunction_ne_zero_of_seven_eighths_lt_re \
   --root OAI.SevenEighths.HeckeFamily.LFunction_ne_zero_of_seven_eighths_lt_re \
   --root OAI.riemannZeta_ne_zero_of_twenty_three_twenty_fourths_lt_re \
+  --root OAI.DirichletCharacter.LFunction_ne_zero_of_twenty_three_twenty_fourths_lt_re \
   --root-module-prefix $D.QRH --root-module-prefix $D.CubicDyadicDecay \
   --root-module-prefix $D.Nonvanishing --root-module-prefix $D.Hecke.Nonvanishing \
   --root-module-prefix $D.Hecke.ConditionalNonvanishing --prefix OAI --out reach.tsv
@@ -41,7 +42,7 @@ python3 scripts/treeshake/measure.py $D.Nonvanishing
 ```
 
 The roots are the Comparator-checked results of the quasi-Riemann development: 7/8 for ζ,
-Dirichlet and Hecke L-functions, and 23/24 for ζ. Whole modules are also kept:
+Dirichlet and Hecke L-functions, and 23/24 for Dirichlet L-functions and ζ. Whole modules are also kept:
 
 - the modules stating those results;
 - `CubicDyadicDecay`, which `OAI/NumberTheory/CubicMoment` imports, and which is the only module of

@@ -60,8 +60,8 @@ reflection, then `∑_{N(k) ≤ K} |T(X; Ψ_k)|² ≪ (K N(Q))^ε (K + K² N(Q)/
 alias completed_mean_square := CompletedHeight.uniform_polynomial_mean_square_of_exact_reflection
 
 /-- **Proposition 6.2** (`lem:reflection`, the twisted theta transformation, exact form): at the
-fixed level of `ζ`,
-every completed sum over a row shell equals a fixed scalar times a reflected dual sum. -/
+fixed level `2592 q` of a Dirichlet character of modulus `q`, every completed sum over a row
+shell equals a fixed scalar times a reflected dual sum. -/
 alias theta_reflection := CanonicalRowCompletion.actual_fixedShellModels
 
 /-- **Lemma 6.5** (`lem:quadratic`, the quadratic large sieve over `ℤ[ω]`, Input D): the norm of
