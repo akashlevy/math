@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondCanonicalLedger
-
 namespace OAI
 
 noncomputable section
@@ -57,32 +56,6 @@ theorem fixedActiveSet_subset (C D : Ideal O) (hC : Supported C) (hD : Supported
   · rw [hc,min_self] at ha
     exact heq ⟨hc,by simpa only [hc] using ha⟩
   · exact ha (actual_unequal_min_six C D hC hD hCD w hne P hc)
-
-theorem fixed_active_log_bound (C D : Ideal O) (hC : Supported C) (hD : Supported D)
-    (hCD : CompletedGauss.primeSupport C=CompletedGauss.primeSupport D)
-    (U : Finset (CommonIndex C D)) (w : O)
-    (hne : idealCorrelation C D hC hD (commonFrequencyGenerator C D*w)≠0)
-    (Z : ℝ) (hZ : 1<Z) :
-    Real.logb Z (Ideal.absNorm (∏P∈fixedActiveSet C D U,P.val):ℝ)≤
-      Real.logb Z (Ideal.absNorm (∏P∈U,P.val):ℝ)+
-        Real.logb Z (Ideal.absNorm (Ideal.span {nonunitFrequencyGenerator C D U}):ℝ) := by
-  have hn (P : CommonIndex C D) : 0≤Real.logb Z (Ideal.absNorm P.val:ℝ) :=
-    Real.logb_nonneg hZ (by exact_mod_cast (Nat.one_le_iff_ne_zero.mpr
-      (Ideal.absNorm_eq_zero_iff.not.mpr (commonPrime_supported_ideal C D hC P).1)))
-  have hlog (T : Finset (CommonIndex C D)) :
-      Real.logb Z (Ideal.absNorm (∏P∈T,P.val):ℝ)=∑P∈T,Real.logb Z (Ideal.absNorm P.val:ℝ) := by
-    simp only [map_prod,Nat.cast_prod]
-    exact Real.logb_prod _ _ (fun P _=>Nat.cast_ne_zero.mpr
-      (Ideal.absNorm_eq_zero_iff.not.mpr (commonPrime_supported_ideal C D hC P).1))
-  rw [CenteredMomentSecondCanonicalLedger.nonunitFrequencyGenerator_span,unitIdeal]
-  simp only [commonPrime_span C D hC]
-  have hdis : Disjoint U (nonunitPartitionSet C D U) := by
-    apply Finset.disjoint_left.mpr
-    intro P hU hV
-    exact (Finset.mem_sdiff.mp hV).2 hU
-  rw [hlog,hlog,hlog,←Finset.sum_union hdis]
-  exact Finset.sum_le_sum_of_subset_of_nonneg (fixedActiveSet_subset C D hC hD hCD U w hne)
-    (fun P _ _=>hn P)
 
 end SevenEighths.CenteredMomentSecondMovingSupport
 

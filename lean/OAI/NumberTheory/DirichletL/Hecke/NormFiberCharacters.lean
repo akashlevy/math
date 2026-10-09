@@ -1,56 +1,22 @@
 import OAI.NumberTheory.DirichletL.Arithmetic.NormFiberMellin
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
 
 namespace ShortDraftHeckeBridge
-
-theorem normFiberCoeff_baseChangeWeight_zero {q : ℕ}
-    (χ : DirichletCharacter ℂ q) :
-    normFiberCoeff (baseChangeWeight χ) 0 = 0 := by
-  classical
-  unfold normFiberCoeff
-  apply Finset.sum_eq_zero
-  intro I hI
-  have hnorm : Ideal.absNorm I = 0 := by
-    simpa using hI
-  have hbot : I = ⊥ := Ideal.absNorm_eq_zero_iff.mp hnorm
-  subst I
-  rw [baseChangeWeight]
-  have hz : UniqueFactorizationMonoid.moebius (⊥ : Ideal O) = 0 := by
-    simpa only [Ideal.zero_eq_bot] using
-      (UniqueFactorizationMonoid.moebius_zero (α := Ideal O))
-  rw [hz]
-  simp
 
 noncomputable def baseChangeChar {q : ℕ} (χ : DirichletCharacter ℂ q) :
     DirichletCharacter ℂ (q * 3) :=
@@ -70,50 +36,6 @@ end ShortDraftHeckeBridge
 namespace ActualEisensteinCubic
 
 open MulChar AddChar
-
-theorem canonical_A5_jone_no_quadratic_model (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (hchar : ringChar (O ⧸ P) ≠ 2)
-    (ψ : AddChar (O ⧸ P) ℂ) (hψ : ψ.IsPrimitive)
-    (σ : (O ⧸ P)ˣ) (ε : O ⧸ P) (hε : ε ≠ 0) :
-    let χ := canonicalSextic P hgood
-    ¬ ∃ d : ℂ, ∀ x : O ⧸ P,
-      (Nat.card (O ⧸ P) : ℂ)⁻¹ *
-        (∑ h : (O ⧸ P)ˣ,
-          (∑ t : O ⧸ P, χ t * ψ (-(h * t))) *
-          (χ ^ 2) (σ * h) *
-          ψ ((ε * x) * ((h⁻¹ : (O ⧸ P)ˣ) : O ⧸ P))) =
-        d * (χ ^ 3) x := by
-  let : Field (O ⧸ P) := Ideal.Quotient.field P
-  let : Fintype (O ⧸ P) := Fintype.ofFinite _
-  let χ : MulChar (O ⧸ P) ℂ := canonicalSextic P hgood
-  let S : ℂ := (Nat.card (O ⧸ P) : ℂ)⁻¹ *
-    gaussSum χ (ψ.mulShift (-1)) * gaussSum χ⁻¹ ψ * χ ε
-  let c : ℂ := (χ ^ 2) σ * S
-  have hχ : χ ≠ χ ^ 3 := canonical_A5_jone_direct_not_quadratic P hgood hchar
-  have hS : S ≠ 0 := by
-    simpa only [S, χ] using
-      canonical_A5_jone_direct_scalar_ne_zero P hgood hchar ψ hψ ε hε
-  have hσ : (χ ^ 2) (σ : O ⧸ P) ≠ 0 :=
-    (χ ^ 2).apply_ne_zero_iff.mpr σ.isUnit
-  have hc : c ≠ 0 := mul_ne_zero hσ hS
-  dsimp
-  intro hmodel
-  apply ShortDraftLocal.no_quadratic_scalar χ hχ c hc
-  obtain ⟨d, hd⟩ := hmodel
-  refine ⟨d, ?_⟩
-  intro x
-  have hrow := canonical_A5_jone_direct P hgood hchar ψ σ ε x
-  have hx := hd x
-  dsimp only at hrow hx
-  calc
-    c * χ x =
-      (Nat.card (O ⧸ P) : ℂ)⁻¹ *
-        (∑ h : (O ⧸ P)ˣ,
-          (∑ t : O ⧸ P, χ t * ψ (-(h * t))) *
-          (χ ^ 2) (σ * h) *
-          ψ ((ε * x) * ((h⁻¹ : (O ⧸ P)ˣ) : O ⧸ P))) := by
-            rw [hrow]
-    _ = d * (χ ^ 3) x := hx
 
 end ActualEisensteinCubic
 
@@ -389,23 +311,6 @@ theorem norm_p_sq_split_factors {p : ℕ} (hp : p.Prime) (hmod : p % 3 = 1)
   exact ⟨P, Q, ⟨inferInstance, inferInstance⟩,
     norm_prime_implies_over hp Q hQN, hIQ⟩
 
-theorem norm_p_sq_fiber_split {p : ℕ} (hp : p.Prime) (hmod : p % 3 = 1) :
-    {I : Ideal O | Ideal.absNorm I = p ^ 2} =
-      {I : Ideal O | ∃ P Q : Ideal O,
-        P ∈ (Ideal.span {(p : ℤ)}).primesOver O ∧
-        Q ∈ (Ideal.span {(p : ℤ)}).primesOver O ∧
-        I = P * Q} := by
-  ext I
-  constructor
-  · exact norm_p_sq_split_factors hp hmod I
-  · rintro ⟨P, Q, hP, hQ, rfl⟩
-    have : P.IsPrime := hP.1
-    have : P.LiesOver (Ideal.span {(p : ℤ)}) := hP.2
-    have : Q.IsPrime := hQ.1
-    have : Q.LiesOver (Ideal.span {(p : ℤ)}) := hQ.2
-    change Ideal.absNorm (P * Q) = p ^ 2
-    rw [map_mul, absNorm_split hp hmod P, absNorm_split hp hmod Q, pow_two]
-
 theorem norm_nine_fiber_ramified :
     {I : Ideal O | Ideal.absNorm I = 9} =
       {I : Ideal O | ∃ P : Ideal O,
@@ -446,54 +351,6 @@ theorem norm_nine_fiber_ramified :
     change Ideal.absNorm (P ^ 2) = 9
     rw [map_pow, absNorm_ramified P]
     norm_num
-
-theorem dirichletTarget_of_ideal_base_change
-    (hcoeff : ∀ (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q)
-      (n : ℕ), n ≠ 0 →
-        normFiberCoeff (baseChangeWeight χ) n =
-          pairInverseCoeff χ (baseChangeChar χ) n)
-    (hbound : ∀ (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q)
-      (ρ : ℂ), (23 / 24 : ℝ) < ρ.re → ρ.re < 1 →
-        ∃ σ : ℝ, 0 < σ ∧ σ < ρ.re ∧
-          (fun D : ℝ => normFiberExpSum (baseChangeWeight χ) D⁻¹) =O[atTop]
-            (fun D : ℝ => D ^ σ)) :
-    ShortDraft.DirichletTarget := by
-  intro q _ χ ρ h23 hprincipal
-  by_cases hρ : ρ.re < 1
-  · obtain ⟨σ, hσpos, hσρ, htop⟩ := hbound q χ ρ h23 hρ
-    have hσone : σ < 1 := lt_trans hσρ hρ
-    have hρone : ρ ≠ 1 := by
-      intro hh
-      subst ρ
-      norm_num at hρ
-    have hc := hcoeff q χ
-    have hz := normFiberCoeff_baseChangeWeight_zero χ
-    by_cases hχ : χ = 1
-    · have hψ : baseChangeChar χ ≠ 1 :=
-        baseChangeChar_ne_one_of_one χ hχ
-      have hc' : ∀ n : ℕ, n ≠ 0 →
-          normFiberCoeff (baseChangeWeight χ) n =
-            pairInverseCoeff (1 : DirichletCharacter ℂ q)
-              (baseChangeChar χ) n := by
-        intro n hn
-        simpa only [hχ] using hc n hn
-      have hpair := pair_zero_free_of_normFiber_exp_power_bound_principal_left
-        (q := q) (baseChangeChar χ) hψ (baseChangeWeight χ)
-        hc' hz σ hσpos hσone htop ρ hσρ hρone
-      simpa only [hχ] using hpair.1
-    · by_cases hψ : baseChangeChar χ = 1
-      · have hc' : ∀ n : ℕ, n ≠ 0 →
-            normFiberCoeff (baseChangeWeight χ) n =
-              pairInverseCoeff χ (1 : DirichletCharacter ℂ (q * 3)) n := by
-          intro n hn
-          simpa only [hψ] using hc n hn
-        exact (pair_zero_free_of_normFiber_exp_power_bound_principal_right
-          χ hχ (baseChangeWeight χ) hc' hz σ hσpos hσone htop ρ hσρ hρone).1
-      · exact (pair_zero_free_of_normFiber_exp_power_bound_only
-          χ (baseChangeChar χ) hχ hψ (baseChangeWeight χ)
-          (fun n hn => hc n hn) hz σ hσpos hσone htop ρ hσρ).1
-  · exact ShortDraft.dirichlet_target_of_one_le_re q χ ρ
-      (le_of_not_gt hρ) hprincipal
 
 theorem local_inert_p {q : ℕ} (χ : DirichletCharacter ℂ q)
     {p : ℕ} (hp : p.Prime) (hmod : p % 3 = 2) :
@@ -681,24 +538,6 @@ theorem local_split_p_sq {q : ℕ} (χ : DirichletCharacter ℂ q)
       have hnorm : Ideal.absNorm (P * Q) = p ^ 2 := by
         rw [map_mul, hPN, hQN, pow_two]
       simp [hnorm, Nat.cast_pow]
-
-theorem local_one {q : ℕ} (χ : DirichletCharacter ℂ q) :
-    normFiberCoeff (baseChangeWeight χ) 1 = 1 := by
-  classical
-  have hfinset : (Ideal.finite_setOfPred_absNorm_eq (S := O) 1).toFinset = {⊤} := by
-    ext I
-    simp only [Set.Finite.mem_toFinset, Finset.mem_singleton]
-    exact Ideal.absNorm_eq_one_iff
-  unfold normFiberCoeff
-  rw [hfinset]
-  simp only [Finset.sum_singleton]
-  change baseChangeWeight χ ⊤ = 1
-  have hunit : IsUnit (⊤ : Ideal O) := Ideal.isUnit_iff.mpr rfl
-  have hmu : UniqueFactorizationMonoid.moebius (⊤ : Ideal O) = 1 := hunit.moebius_eq
-  change (UniqueFactorizationMonoid.moebius (⊤ : Ideal O) : ℂ) *
-    χ (Ideal.absNorm (⊤ : Ideal O)) = 1
-  rw [hmu, Ideal.absNorm_top]
-  simp
 
 end ShortDraftHeckeBridge
 

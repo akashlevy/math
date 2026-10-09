@@ -1,79 +1,24 @@
 import OAI.NumberTheory.DirichletL.MeanSquare.UniformPolynomialHeight
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace CompletedUnitRows
 open ActualEisensteinCubic
 open ConcretePrimeRowBridge hiding O
@@ -155,7 +100,6 @@ theorem short_completed_elements_uniform_twist
 
 end CompletedUnitRows
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 
 section
@@ -186,70 +130,6 @@ theorem CanonicalStateCondition.invariant_reserved
     K*‖eisEmbedding m‖^2≤(X*F)*Z^(-((1:ℝ)/40)) :=
   canonicalRankMargin_final_bound Z η _ _ _ hZ hη
     (mul_nonneg h.column_pos.le (zero_le_one.trans h.label_ge_one)) hbudget h.invariant
-
-theorem CanonicalStateCondition.small_or_live
-    {base : ActualEisensteinCubic.O→*ℂ} {bad : Ideal ActualEisensteinCubic.O} {Z η : ℝ} {Ψ : ActualEisensteinCubic.O→*ℂ} {m : ActualEisensteinCubic.O}
-    {labels : Finset (Ideal ActualEisensteinCubic.O)} {X F K : ℝ}
-    (h : CanonicalStateCondition base bad Z η Ψ m labels X F K)
-    (hZ : Real.exp 9000≤Z) (hZ1 : 1≤Z) (hη : 0≤η)
-    (hbudget : 3000*η≤(1:ℝ)/40) :
-    K≤F ∨ (1<X ∧ X≤Z^3 ∧ F≤Z^3) := by
-  have hi := h.invariant_reserved hZ1 hη hbudget
-  have hr : Z^(-((1:ℝ)/40))≤1 := by
-    simpa only [Real.rpow_zero] using
-      (Real.rpow_le_rpow_of_exponent_le hZ1 (by norm_num : -((1:ℝ)/40)≤0))
-  have hi' : K*‖eisEmbedding m‖^2≤X*F :=
-    hi.trans ((mul_le_mul_of_nonneg_left hr
-      (mul_nonneg h.column_pos.le (zero_le_one.trans h.label_ge_one))).trans_eq (mul_one _))
-  exact canonical_small_or_live Z X F K _ m hZ h.column_pos h.label_ge_one
-    (zero_le_one.trans h.row_ge_one) h.mask_ne_zero h.mass_le hi'
-
-variable {ι : Type*} [DecidableEq ι] (p : ι→ActualEisensteinCubic.O) (hp : ∀i,p i≠0)
-  [∀i,(Ideal.span {p i}).IsMaximal]
-
-include hp in
-
-theorem canonicalStateCondition_retained
-    (base : ActualEisensteinCubic.O→*ℂ) (bad : Ideal ActualEisensteinCubic.O) (Z η : ℝ) (Ψ : ActualEisensteinCubic.O→*ℂ) (m : ActualEisensteinCubic.O)
-    (labels : Finset (Ideal ActualEisensteinCubic.O)) (X F K : ℝ)
-    (hstate : CanonicalStateCondition base bad Z η Ψ m labels X F K)
-    (hpbad : ∀i,IsCoprime (Ideal.span {p i}) bad)
-    (source : Finset (GlobalSecondData ι)) (side : Bool)
-    (q : Ideal ActualEisensteinCubic.O×Ideal ActualEisensteinCubic.O×Ideal ActualEisensteinCubic.O) (j : GlobalLogIndex)
-    (hq : q∈globalBinTriples p source side j)
-    (a : RayCharacter) (r : FirstCoreIndex) (ray : SecondRayIndex) (B : ℝ)
-    (hZ : 1<Z) (hZbig : Real.exp 9000≤Z) (hη : 0≤η) (hηsmall : η≤(1:ℝ)/1000)
-    (hB : 0<B) (hprogress : Z^((1:ℝ)/1000)≤(Real.exp 1*B)*F)
-    (hk : ∀x∈source,x.source.frequency≠0)
-    (hb₁ : ∀x∈source,‖eisEmbedding (primeProduct p x.cube.support x.cube.leftExponent)‖^2≤Real.exp 1*B)
-    (hb₂ : ∀x∈source,‖eisEmbedding (primeProduct p x.cube.support x.cube.rightExponent)‖^2≤Real.exp 1*B)
-    (hretained : globalBinRadial (X/B^3)
-      (globalPooledRowScale K (X/B^3) (Real.exp 1*B) F j) j≤Z^η) :
-    let X':=globalPooledColumnScale (X/B^3) j
-    let F':=globalPooledLabelScale j
-    let K':=globalLogRep j 8*Real.exp 1
-    let labels':=globalCanonicalLabels p source side q j
-    let m':=fixedTripleMask m q
-    fixedDepthRank Z K'+1≤fixedDepthRank Z K ∧
-    CanonicalStateCondition base bad Z η (secondRayMinus (firstCoreTwist side a Ψ r) ray)
-      m' labels' X' F' K' ∧
-    CanonicalStateCondition base bad Z η (secondRayPlus (firstCoreTwist side a Ψ r) ray)
-      m' labels' X' F' K' := by
-  obtain ⟨hXc,hFc,hKc,hrank,hKglobal,hmass,hinvariant,hm,hlabels⟩ :=
-    canonical_retained_unpadded_closure p hp source side q j hq Z ((1:ℝ)/20) η X B F K m
-      hZ hZbig hη hηsmall hstate.column_pos hB hstate.label_ge_one hstate.row_ge_one
-      hstate.mask_ne_zero hprogress hstate.row_le_global hstate.mass_le hstate.invariant
-      hk hb₁ hb₂ hretained
-  have hbad := globalCanonicalLabels_coprime p bad hpbad source side q j
-  have hbnd : ∀I∈globalCanonicalLabels p source side q j,
-      I≠⊥ ∧ Squarefree I ∧ IsCoprime I bad ∧ (Ideal.absNorm I:ℝ)≤globalPooledLabelScale j := by
-    intro I hI
-    exact ⟨(hlabels I hI).1,(hlabels I hI).2.1,hbad I hI,(hlabels I hI).2.2⟩
-  refine ⟨hrank,?_,?_⟩
-  · exact ⟨(hstate.coefficient.firstCore side a r).secondMinus ray,
-      hm,hXc,hFc,hKc,hKglobal,hmass,hinvariant,hbnd⟩
-  · exact ⟨(hstate.coefficient.firstCore side a r).secondPlus ray,
-      hm,hXc,hFc,hKc,hKglobal,hmass,hinvariant,hbnd⟩
 
 end
 section
@@ -419,9 +299,6 @@ theorem reopenedCanonicalRow_nonzero_twoPassage
 
 end SecondPassArithmetic
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ContDiff
-
 namespace CubicEisenstein
 
 def euclideanAxisPath (p : EuclideanSpatial) (j : Fin 3) (t : ℝ) : EuclideanSpatial :=
@@ -499,8 +376,7 @@ lemma positiveEuclideanLaplacian_congr (f g : EuclideanSpatial→ℂ) (p : Eucli
 
 end CubicEisenstein
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ContDiff SchwartzMap LineDeriv Manifold
+open scoped LineDeriv Manifold
 
 namespace CubicEisenstein
 

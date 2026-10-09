@@ -1,102 +1,28 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.IdealGenerators
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
+open scoped ContDiff
 
 namespace ConcretePrimeRowBridge
 open ActualEisensteinCubic ShortDraftHeckeBridge ConcreteTraceCRT
 
-theorem idealRowSum_smoothed_summable
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (hFgood : ∀ I ∈ F,
-      ∀ P ∈ UniqueFactorizationMonoid.normalizedFactors I, goodLambda ∉ P)
-    {q : ℕ} (χ : DirichletCharacter ℂ q) (A : ℕ → ℂ)
-    (W : 𝓢(ℝ, ℂ)) (scale : ℝ) (hscale : 0 < scale) :
-    Summable (fun u : O => W (‖eisEmbedding u‖ ^ 2 / scale) *
-      (↑(‖idealRowSum F hFpos hFgood χ A u‖ ^ 2) : ℂ)) := by
-  let : ∀ i : primePool F, (i.1).IsMaximal := primePool_maximal F hFpos
-  exact finiteSquarefreeRow_smoothed_mean_square_summable
-    (fun i : primePool F => i.1) (primePool_good F hFgood)
-    F (idealSupport F) (fun I => baseChangeWeight χ I * A (Ideal.absNorm I))
-    W scale hscale
-
-theorem idealRowSum_smoothed_expand
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (hFgood : ∀ I ∈ F,
-      ∀ P ∈ UniqueFactorizationMonoid.normalizedFactors I, goodLambda ∉ P)
-    {q : ℕ} (χ : DirichletCharacter ℂ q) (A : ℕ → ℂ)
-    (W : 𝓢(ℝ, ℂ)) (scale : ℝ) (hscale : 0 < scale) :
-    (∑' u : O, W (‖eisEmbedding u‖ ^ 2 / scale) *
-      (↑(‖idealRowSum F hFpos hFgood χ A u‖ ^ 2) : ℂ)) =
-      ∑ I ∈ F, ∑ J ∈ F,
-        (star (baseChangeWeight χ I * A (Ideal.absNorm I)) *
-          (baseChangeWeight χ J * A (Ideal.absNorm J))) *
-        ∑' u : O, (star (idealSexticRow F hFpos hFgood I u) *
-          idealSexticRow F hFpos hFgood J u) * W (‖eisEmbedding u‖ ^ 2 / scale) := by
-  let : ∀ i : primePool F, (i.1).IsMaximal := primePool_maximal F hFpos
-  exact finiteSquarefreeRow_smoothed_mean_square_expand
-    (fun i : primePool F => i.1) (primePool_good F hFgood)
-    F (idealSupport F) (fun I => baseChangeWeight χ I * A (Ideal.absNorm I))
-    W scale hscale
-
 end ConcretePrimeRowBridge
 
-open scoped BigOperators Classical
 namespace ActualEisensteinCubic
 
 def activeSupport {α : Type*} [DecidableEq α] (S T : Finset α) : Finset α :=
@@ -183,87 +109,12 @@ theorem finiteSquarefreeRow_pair_activeSupport {α : Type*} [DecidableEq α]
 
 open ConcreteTraceCRT EisensteinSchwartzPoisson
 
-noncomputable def squarefreePairPoissonKernel
-    {ι : Type*} [DecidableEq ι] (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hinj : Function.Injective P) (hgood : ∀ i, lambda ∉ P i)
-    (S T : Finset ι) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) : ℂ :=
-  let Q := activePrimes P S T
-  let hQ := activePrimes_pairwise_isCoprime P hinj S T
-  let row := finiteSexticRow Q (fun i => hgood i.val) (activeExponent S T)
-  let c := finitePrimeModulus Q
-  ((scale : ℂ) * canonicalNormalizedGauss Q hQ (fun i => hgood i.val)
-      (activeExponent S T) / (‖eisEmbedding c‖ : ℂ)) *
-    ∑ E ∈ (S ∩ T).powerset,
-      let d := primeSubsetGenerator P E
-      ((UniqueFactorizationMonoid.moebius (∏ i ∈ E, P i) : ℂ) * row d /
-        (‖eisEmbedding d‖ ^ 2 : ℝ)) *
-        ∑' h : O, star (row h) * paperRadialFourier W
-          (scale * ‖eisEmbedding h‖ ^ 2 /
-            (‖eisEmbedding d‖ ^ 2 * ‖eisEmbedding c‖ ^ 2))
-
-theorem finiteSquarefreeRow_pair_radial_poisson
-    {ι : Type*} [DecidableEq ι] (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hinj : Function.Injective P) (hgood : ∀ i, lambda ∉ P i)
-    (hchar : ∀ i, ringChar (O ⧸ P i) ≠ 2)
-    (S T : Finset ι) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) (hscale : 0 < scale) :
-    (∑' u : O, (star (finiteSquarefreeRow P hgood S u) *
-      finiteSquarefreeRow P hgood T u) * W (‖eisEmbedding u‖ ^ 2 / scale)) =
-      squarefreePairPoissonKernel P hinj hgood S T W scale := by
-  calc
-    _ = ∑' u : O, rowCoprimeMask P (S ∩ T) u *
-        finiteSexticRow (activePrimes P S T) (fun i => hgood i.val)
-          (activeExponent S T) u * W (‖eisEmbedding u‖ ^ 2 / scale) := by
-      apply tsum_congr
-      intro u
-      rw [finiteSquarefreeRow_pair_activeSupport]
-    _ = _ := canonical_masked_radial_poisson_collected P hinj (S ∩ T)
-      (activePrimes P S T) (activePrimes_pairwise_isCoprime P hinj S T)
-      (fun i => hgood i.val) (fun i => hchar i.val)
-      (activeExponent S T) (activeExponent_ne_zero S T) (activeExponent_lt_six S T)
-      W scale hscale
-
 end ActualEisensteinCubic
 
 namespace ConcretePrimeRowBridge
 open ActualEisensteinCubic ShortDraftHeckeBridge ConcreteTraceCRT EisensteinSchwartzPoisson
 
-noncomputable def idealPairPoissonKernel
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (hFgood : ∀ I ∈ F,
-      ∀ P ∈ UniqueFactorizationMonoid.normalizedFactors I, goodLambda ∉ P)
-    (I J : Ideal O) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) : ℂ := by
-  letI : ∀ i : primePool F, (i.1).IsMaximal := primePool_maximal F hFpos
-  exact squarefreePairPoissonKernel (fun i : primePool F => i.1)
-    Subtype.val_injective (primePool_good F hFgood)
-    (idealSupport F I) (idealSupport F J) W scale
-
-theorem idealRowSum_smoothed_poisson
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (hFgood : ∀ I ∈ F,
-      ∀ P ∈ UniqueFactorizationMonoid.normalizedFactors I, goodLambda ∉ P)
-    (hchar : ∀ i : primePool F, ringChar (O ⧸ i.1) ≠ 2)
-    {q : ℕ} (χ : DirichletCharacter ℂ q) (A : ℕ → ℂ)
-    (W : 𝓢(ℝ, ℂ)) (scale : ℝ) (hscale : 0 < scale) :
-    (∑' u : O, W (‖eisEmbedding u‖ ^ 2 / scale) *
-      (↑(‖idealRowSum F hFpos hFgood χ A u‖ ^ 2) : ℂ)) =
-      ∑ I ∈ F, ∑ J ∈ F,
-        (star (baseChangeWeight χ I * A (Ideal.absNorm I)) *
-          (baseChangeWeight χ J * A (Ideal.absNorm J))) *
-        idealPairPoissonKernel F hFpos hFgood I J W scale := by
-  rw [idealRowSum_smoothed_expand F hFpos hFgood χ A W scale hscale]
-  apply Finset.sum_congr rfl
-  intro I hI
-  apply Finset.sum_congr rfl
-  intro J hJ
-  congr 1
-  let : ∀ i : primePool F, (i.1).IsMaximal := primePool_maximal F hFpos
-  exact finiteSquarefreeRow_pair_radial_poisson
-    (fun i : primePool F => i.1) Subtype.val_injective (primePool_good F hFgood)
-    hchar (idealSupport F I) (idealSupport F J) W scale hscale
-
 end ConcretePrimeRowBridge
-
-open scoped BigOperators Classical
 
 namespace IdealGaussCRT
 
@@ -483,8 +334,6 @@ theorem canonicalProductGauss_constant_power {ι : Type*} [Fintype ι]
   rw [canonicalProductGauss_cross_factors]
   simp only [MulChar.pow_apply' _ hj, Finset.prod_pow]
 
-open ActualEisensteinCubic ConcreteTraceCRT EisensteinSchwartzPoisson
-
 def angularFactor (a : O) : ℂ := eisEmbedding a / (‖eisEmbedding a‖ : ℂ)
 
 theorem angularFactor_prod {ι : Type*} [Fintype ι] (p : ι → O) :
@@ -566,30 +415,6 @@ theorem product_moebius_eq_sign {ι : Type*} [Fintype ι]
   simpa only [Finset.card_univ] using
     prime_product_moebius (fun i => Ideal.span {p i}) hprime hinj Finset.univ
 
-theorem canonicalProductGauss_two_cube {ι : Type*} [Fintype ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hgood : ∀ i, lambda ∉ Ideal.span {p i})
-    (hprimary : ∀ i, lambda ^ 2 ∣ p i - 1) :
-    canonicalProductGauss p hp hcop hgood (fun _ => 2) ^ 3 =
-      (UniqueFactorizationMonoid.moebius (Ideal.span {∏ i, p i}) : ℂ) *
-        angularFactor (∏ i, p i) := by
-  have hlocal (i : ι) :
-      ConcreteBreveE.normalizedTraceGauss (p i) (hp i)
-        (canonicalSextic (Ideal.span {p i}) (hgood i) ^ 2) ^ 3 =
-        -angularFactor (p i) := by
-    change breveGamma2 (Ideal.span {p i}) (hgood i) (p i) rfl (hp i) ^ 3 = _
-    simpa only [angularFactor, neg_div] using
-      breveGamma2_cube (Ideal.span {p i}) (hgood i) (p i) rfl (hp i) (hprimary i)
-  rw [canonicalProductGauss_constant_power p hp hcop hgood 2 (by decide),
-    mul_pow, ← pow_mul]
-  change canonicalCrossFactor p hgood ^ 6 * _ = _
-  rw [canonicalCrossFactor_pow_six p hcop hgood, one_mul, ← Finset.prod_pow]
-  simp_rw [hlocal]
-  rw [Finset.prod_neg, product_moebius_eq_sign p hcop, angularFactor_prod]
-  rfl
-
 def canonicalProductG {ι : Type*} [Fintype ι]
     (p : ι → O) (hp : ∀ i, p i ≠ 0)
     [∀ i, (Ideal.span {p i}).IsMaximal]
@@ -598,62 +423,6 @@ def canonicalProductG {ι : Type*} [Fintype ι]
   (∏ i, canonicalSextic (Ideal.span {p i}) (hgood i)
       (Ideal.Quotient.mk (Ideal.span {p i}) (4 : O)))⁻¹ *
     canonicalProductGauss p hp hcop hgood (fun _ => 3)
-
-theorem canonicalProductGauss_one_two_relation {ι : Type*} [Fintype ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hgood : ∀ i, lambda ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hprimary : ∀ i, lambda ^ 2 ∣ p i - 1) :
-    canonicalProductGauss p hp hcop hgood (fun _ => 1) *
-      canonicalProductGauss p hp hcop hgood (fun _ => 2) =
-      canonicalProductG p hp hcop hgood *
-        canonicalProductGauss p hp hcop hgood (fun _ => 2) ^ 3 := by
-  let g (j : ℕ) (i : ι) := ConcreteBreveE.normalizedTraceGauss (p i) (hp i)
-    (canonicalSextic (Ideal.span {p i}) (hgood i) ^ j)
-  let v (i : ι) := canonicalSextic (Ideal.span {p i}) (hgood i)
-    (Ideal.Quotient.mk (Ideal.span {p i}) (4 : O))
-  have hlocal (i : ι) : g 1 i * g 2 i = (v i)⁻¹ * g 3 i * (g 2 i) ^ 3 := by
-    simpa only [g, v, pow_one, ConcreteBreveE.normalizedTraceGauss,
-      breveGamma1, breveGamma2, breveGamma3] using
-      breveGamma1_gamma2_relation (Ideal.span {p i}) (hgood i) (hchar i)
-        (p i) rfl (hp i) (hprimary i)
-  have hprod : (∏ i, g 1 i) * (∏ i, g 2 i) =
-      (∏ i, v i)⁻¹ * (∏ i, g 3 i) * (∏ i, g 2 i) ^ 3 := by
-    rw [← Finset.prod_mul_distrib]
-    simp_rw [hlocal]
-    rw [Finset.prod_mul_distrib, Finset.prod_mul_distrib,
-      Finset.prod_inv_distrib, Finset.prod_pow]
-  rw [canonicalProductG,
-    canonicalProductGauss_constant_power p hp hcop hgood 1 (by decide),
-    canonicalProductGauss_constant_power p hp hcop hgood 2 (by decide),
-    canonicalProductGauss_constant_power p hp hcop hgood 3 (by decide)]
-  change (canonicalCrossFactor p hgood ^ 1 * ∏ i, g 1 i) *
-    (canonicalCrossFactor p hgood ^ 2 * ∏ i, g 2 i) =
-    ((∏ i, v i)⁻¹ * (canonicalCrossFactor p hgood ^ 3 * ∏ i, g 3 i)) *
-      (canonicalCrossFactor p hgood ^ 2 * ∏ i, g 2 i) ^ 3
-  rw [mul_pow, ← pow_mul]
-  change _ = _ * (canonicalCrossFactor p hgood ^ 6 * _)
-  rw [canonicalCrossFactor_pow_six p hcop hgood, one_mul]
-  calc
-    _ = canonicalCrossFactor p hgood ^ 3 * ((∏ i, g 1 i) * ∏ i, g 2 i) := by ring
-    _ = _ := by rw [hprod]; ring
-
-theorem canonicalProductGauss_one_two_eq_moebius {ι : Type*} [Fintype ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hgood : ∀ i, lambda ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hprimary : ∀ i, lambda ^ 2 ∣ p i - 1) :
-    canonicalProductGauss p hp hcop hgood (fun _ => 1) *
-      canonicalProductGauss p hp hcop hgood (fun _ => 2) =
-      (UniqueFactorizationMonoid.moebius (Ideal.span {∏ i, p i}) : ℂ) *
-        angularFactor (∏ i, p i) * canonicalProductG p hp hcop hgood := by
-  rw [canonicalProductGauss_one_two_relation p hp hcop hgood hchar hprimary,
-    canonicalProductGauss_two_cube p hp hcop hgood hprimary]
-  ring
 
 theorem norm_angularFactor (a : O) (ha : a ≠ 0) : ‖angularFactor a‖ = 1 := by
   rw [angularFactor, norm_div, Complex.norm_real, Real.norm_eq_abs,
@@ -702,98 +471,6 @@ theorem norm_canonicalProductGauss {ι : Type*} [Fintype ι]
   rw [norm_div, hnorm, Complex.norm_real, Real.norm_eq_abs,
     abs_of_nonneg (norm_nonneg _)]
   exact div_self (norm_ne_zero_iff.mpr (eisEmbedding_ne_zero hc))
-
-theorem norm_canonicalProductG {ι : Type*} [Fintype ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hgood : ∀ i, lambda ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hprimary : ∀ i, lambda ^ 2 ∣ p i - 1) :
-    ‖canonicalProductG p hp hcop hgood‖ = 1 := by
-  have h := congrArg norm
-    (canonicalProductGauss_one_two_eq_moebius p hp hcop hgood hchar hprimary)
-  simp only [norm_mul, product_moebius_eq_sign p hcop, norm_pow, norm_neg, norm_one,
-    one_pow, one_mul, norm_angularFactor _ (Finset.prod_ne_zero_iff.mpr (fun i _ => hp i))] at h
-  rw [norm_canonicalProductGauss p hp hcop hgood hchar (fun _ => 1)
-      (by intro; decide) (by intro; decide),
-    norm_canonicalProductGauss p hp hcop hgood hchar (fun _ => 2)
-      (by intro; decide) (by intro; decide), one_mul] at h
-  exact h.symm
-
-theorem canonicalProductCoefficient_mul_gauss_one {ι : Type*} [Fintype ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hgood : ∀ i, lambda ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hprimary : ∀ i, lambda ^ 2 ∣ p i - 1) :
-    canonicalProductCoefficient p hp hcop hgood *
-      canonicalProductGauss p hp hcop hgood (fun _ => 1) =
-      (UniqueFactorizationMonoid.moebius (Ideal.span {∏ i, p i}) : ℂ) *
-        canonicalProductG p hp hcop hgood := by
-  have hα := angularFactor_mul_star (∏ i, p i)
-    (Finset.prod_ne_zero_iff.mpr (fun i _ => hp i))
-  unfold canonicalProductCoefficient
-  calc
-    _ = star (angularFactor (∏ i, p i)) *
-        (canonicalProductGauss p hp hcop hgood (fun _ => 1) *
-          canonicalProductGauss p hp hcop hgood (fun _ => 2)) := by ring
-    _ = _ := by
-      rw [canonicalProductGauss_one_two_eq_moebius p hp hcop hgood hchar hprimary]
-      calc
-        _ = (angularFactor (∏ i, p i) * star (angularFactor (∏ i, p i))) *
-            ((UniqueFactorizationMonoid.moebius (Ideal.span {∏ i, p i}) : ℂ) *
-              canonicalProductG p hp hcop hgood) := by ring
-        _ = _ := by rw [hα, one_mul]
-
-theorem moebius_star_gauss_one_eq_coefficient {ι : Type*} [Fintype ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hgood : ∀ i, lambda ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hprimary : ∀ i, lambda ^ 2 ∣ p i - 1) :
-    (UniqueFactorizationMonoid.moebius (Ideal.span {∏ i, p i}) : ℂ) *
-      star (canonicalProductGauss p hp hcop hgood (fun _ => 1)) =
-      (canonicalProductG p hp hcop hgood)⁻¹ * canonicalProductCoefficient p hp hcop hgood := by
-  have hα := angularFactor_mul_star (∏ i, p i)
-    (Finset.prod_ne_zero_iff.mpr (fun i _ => hp i))
-  have hg : canonicalProductGauss p hp hcop hgood (fun _ => 1) *
-      star (canonicalProductGauss p hp hcop hgood (fun _ => 1)) = 1 := by
-    rw [← starRingEnd_apply, Complex.mul_conj',
-      norm_canonicalProductGauss p hp hcop hgood hchar (fun _ => 1)
-        (by intro; decide) (by intro; decide)]
-    norm_num
-  have hG : canonicalProductG p hp hcop hgood ≠ 0 := by
-    intro hz
-    have hn := norm_canonicalProductG p hp hcop hgood hchar hprimary
-    rw [hz, norm_zero] at hn
-    exact zero_ne_one hn
-  have hA : canonicalProductCoefficient p hp hcop hgood =
-      (UniqueFactorizationMonoid.moebius (Ideal.span {∏ i, p i}) : ℂ) *
-        star (canonicalProductGauss p hp hcop hgood (fun _ => 1)) *
-          canonicalProductG p hp hcop hgood := by
-    unfold canonicalProductCoefficient
-    calc
-      _ = star (angularFactor (∏ i, p i)) *
-          star (canonicalProductGauss p hp hcop hgood (fun _ => 1)) *
-            (canonicalProductGauss p hp hcop hgood (fun _ => 1) *
-              canonicalProductGauss p hp hcop hgood (fun _ => 2)) := by
-        calc
-          _ = (star (angularFactor (∏ i, p i)) *
-              canonicalProductGauss p hp hcop hgood (fun _ => 2)) * 1 := by ring
-          _ = _ := by rw [← hg]; ring
-      _ = _ := by
-        rw [canonicalProductGauss_one_two_eq_moebius p hp hcop hgood hchar hprimary]
-        calc
-          _ = (angularFactor (∏ i, p i) * star (angularFactor (∏ i, p i))) *
-              ((UniqueFactorizationMonoid.moebius (Ideal.span {∏ i, p i}) : ℂ) *
-                star (canonicalProductGauss p hp hcop hgood (fun _ => 1)) *
-                  canonicalProductG p hp hcop hgood) := by ring
-          _ = _ := by rw [hα, one_mul]
-  rw [hA]
-  field_simp
 
 end FiniteGaussPhase
 

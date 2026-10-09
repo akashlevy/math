@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.PrimeAnnular
 import OAI.NumberTheory.DirichletL.Hecke.PrimeDyadicSource
-
 namespace OAI
 
 noncomputable section

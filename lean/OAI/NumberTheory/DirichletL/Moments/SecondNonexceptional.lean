@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondScaled
 import OAI.NumberTheory.DirichletL.Moments.RestrictedEnergy
-
 namespace OAI
 
 noncomputable section

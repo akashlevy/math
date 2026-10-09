@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondCanonicalLedger
 import OAI.NumberTheory.DirichletL.Moments.SecondSectorChildren
-
 namespace OAI
 
 noncomputable section

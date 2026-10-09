@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GramBound
 import OAI.NumberTheory.DirichletL.Detector.LowSlotPolynomial
-
 namespace OAI
 
 noncomputable section

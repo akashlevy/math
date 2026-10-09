@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GramLocalExtension
 import OAI.NumberTheory.DirichletL.Detector.GramCommonPhase
-
 namespace OAI
 
 noncomputable section

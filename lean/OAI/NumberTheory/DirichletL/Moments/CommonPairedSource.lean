@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.CommonLinearNormalization
-
 namespace OAI
 
 noncomputable section

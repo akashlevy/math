@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.SixthDecomposition
 import OAI.NumberTheory.DirichletL.Detector.SpectralSupport
-
 namespace OAI
 
 noncomputable section

@@ -1,78 +1,24 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.SourceMellinInversion
 import OAI.NumberTheory.DirichletL.Mellin.VerticalContourShift
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CompletedGauss
 open Filter MeasureTheory
@@ -270,52 +216,6 @@ lemma ramifiedSource_wirtingerBar_cusp_decay (side:Bool) (a:ℝ) (ha:0<a) :
         mul_le_mul_of_nonneg_left (add_le_add hb1 hbI) (by norm_num)
     _ = _ := by ring
 
-lemma ramifiedSource_wirtingerZ_cusp_decay (side:Bool) (a:ℝ) (ha:0<a) :
-    ∃C:ℝ,0≤C ∧ ∀(v:ℝ)(hv:0<v)(z:ℂ),a≤v →
-      ‖horizontalWirtingerZ (fun w => ramifiedSourceFunction (ramifiedCuspRoot side:Eis)
-        (upperPoint w v hv)) z‖ ≤ C*Real.exp (-(residualCuspDecayRate/3)*v) := by
-  obtain ⟨C1,hC1,h1b⟩ := (ramifiedBesselCoefficients side).directionalSeries_cusp_decay
-    (a/3) (by positivity) (1/3)
-  obtain ⟨CI,hCI,hIb⟩ := (ramifiedBesselCoefficients side).directionalSeries_cusp_decay
-    (a/3) (by positivity) (Complex.I/3)
-  refine ⟨(C1+CI)/2,by positivity,?_⟩
-  intro v hv z hav
-  have h1 := (ramifiedSource_horizontal_hasDerivAt side v hv z 1 0).deriv
-  have hI := (ramifiedSource_horizontal_hasDerivAt side v hv z Complex.I 0).deriv
-  simp only [mul_one,Complex.ofReal_zero,zero_mul,add_zero] at h1 hI
-  have he : -residualCuspDecayRate*(v/3)=-(residualCuspDecayRate/3)*v := by ring
-  have hb1 := h1b (v/3) (z/3) (by linarith)
-  have hbI := hIb (v/3) (z/3) (by linarith)
-  rw [he] at hb1 hbI
-  rw [horizontalWirtingerZ,h1,hI,norm_mul]
-  have hhalf : ‖(1/2:ℂ)‖=(1/2:ℝ) := by norm_num
-  rw [hhalf]
-  calc
-    _ ≤ (1/2:ℝ)*(‖∑'h:Eis,(ramifiedBesselCoefficients side).directionalTerm h (v/3) (z/3) (1/3)‖+
-      ‖Complex.I*(∑'h:Eis,(ramifiedBesselCoefficients side).directionalTerm h (v/3) (z/3) (Complex.I/3))‖) :=
-        mul_le_mul_of_nonneg_left (norm_sub_le _ _) (by norm_num)
-    _ = (1/2:ℝ)*(‖∑'h:Eis,(ramifiedBesselCoefficients side).directionalTerm h (v/3) (z/3) (1/3)‖+
-      ‖∑'h:Eis,(ramifiedBesselCoefficients side).directionalTerm h (v/3) (z/3) (Complex.I/3)‖) := by
-        rw [norm_mul,Complex.norm_I,one_mul]
-    _ ≤ (1/2:ℝ)*(C1*Real.exp (-(residualCuspDecayRate/3)*v)+
-      CI*Real.exp (-(residualCuspDecayRate/3)*v)) :=
-        mul_le_mul_of_nonneg_left (add_le_add hb1 hbI) (by norm_num)
-    _ = _ := by ring
-
-lemma ramifiedConjugate_barProfile_isBigO (side:Bool) (z:ℂ) :
-    cuspBarProfile (fun w => cubicSourceConjugateFunction
-      (integralComplexMatrix (lowerCuspMatrix (ramifiedCuspRoot side:Eis)) • w)) z
-      =O[atTop] (fun v:ℝ => Real.exp (-(residualCuspDecayRate/3)*v)) := by
-  obtain ⟨C,hC,hb⟩ := ramifiedSource_wirtingerZ_cusp_decay side 1 (by norm_num)
-  apply Asymptotics.IsBigO.of_bound C
-  filter_upwards [eventually_ge_atTop (1:ℝ)] with v hv
-  have hvp:0<v := lt_of_lt_of_le (by norm_num) hv
-  rw [cuspBarProfile_positive _ _ _ hvp,Real.norm_of_nonneg (Real.exp_pos _).le]
-  change ‖horizontalWirtingerBar (fun w => star (ramifiedSourceFunction
-    (ramifiedCuspRoot side:Eis) (upperPoint w v hvp))) z‖ ≤ _
-  rw [horizontalWirtingerBar_star,norm_star]
-  exact hb v hvp z hv
-
 lemma ramifiedConjugate_zProfile_isBigO (side:Bool) (z:ℂ) :
     cuspZProfile (fun w => cubicSourceConjugateFunction
       (integralComplexMatrix (lowerCuspMatrix (ramifiedCuspRoot side:Eis)) • w)) z
@@ -331,8 +231,6 @@ lemma ramifiedConjugate_zProfile_isBigO (side:Bool) (z:ℂ) :
   exact hb v hvp z hv
 
 end
-
-local notation "Eis" => ActualEisensteinCubic.O
 
 lemma reflectedCuspProfile_eq_inv_square (A:ℂ) (Q:ℝ) (g:ℝ→ℂ) (v:ℝ) :
     reflectedCuspProfile A Q g v=A/(v:ℂ)^2*g ((Q*v)⁻¹) := by
@@ -366,46 +264,7 @@ theorem cusp_mellin_entire_both (f g:ℝ→ℂ) (A:ℂ) (hA:A≠0)
   · exact cusp_mellin_entire g f (A⁻¹/(Q:ℂ)^2) Q decayG decayF hQ hdecayG hdecayF
       hg hf hgbound hfbound (reflectedCuspProfile_reverse A hA Q hQ f g hfg)
 
-theorem conjugateSource_ramified_cusp_mellin_entire (side:Bool)
-    (G:CubicKubota.levelThree) (g:SL(2,ℂ))
-    (hfactor:g=complexMatrix G*integralComplexMatrix
-      (lowerCuspMatrix (ramifiedCuspRoot side:Eis))) (hc:g 1 0≠0) :
-    ((∀s:ℂ,MellinConvergent
-      (cuspBarProfile cubicSourceConjugateFunction (g 0 0/g 1 0)) s) ∧
-      Differentiable ℂ (mellin (cuspBarProfile cubicSourceConjugateFunction (g 0 0/g 1 0)))) ∧
-    ((∀s:ℂ,MellinConvergent
-      (cuspZProfile (fun w=>cubicSourceConjugateFunction
-        (integralComplexMatrix (lowerCuspMatrix (ramifiedCuspRoot side:Eis)) • w))
-        (-g 1 1/g 1 0)) s) ∧
-      Differentiable ℂ (mellin
-        (cuspZProfile (fun w=>cubicSourceConjugateFunction
-          (integralComplexMatrix (lowerCuspMatrix (ramifiedCuspRoot side:Eis)) • w))
-          (-g 1 1/g 1 0)))) := by
-  have hchar:CubicKubota.complexCharacter G≠0 := by
-    intro hz
-    have hn:=CubicKubota.norm_complexCharacter G
-    rw [hz,norm_zero] at hn
-    norm_num at hn
-  have hscalar : -star (CubicKubota.complexCharacter G)/(g 1 0)^2≠0 :=
-    div_ne_zero (neg_ne_zero.mpr (star_ne_zero.mpr hchar)) (pow_ne_zero 2 hc)
-  exact cusp_mellin_entire_both
-    (cuspBarProfile cubicSourceConjugateFunction (g 0 0/g 1 0))
-    (cuspZProfile (fun w=>cubicSourceConjugateFunction
-      (integralComplexMatrix (lowerCuspMatrix (ramifiedCuspRoot side:Eis)) • w))
-      (-g 1 1/g 1 0))
-    (-star (CubicKubota.complexCharacter G)/(g 1 0)^2) hscalar (‖g 1 0‖^2)
-    residualCuspDecayRate (residualCuspDecayRate/3)
-    (sq_pos_of_pos (norm_pos_iff.mpr hc)) residualCuspDecayRate_pos
-    (div_pos residualCuspDecayRate_pos (by norm_num))
-    (cuspBarProfile_conjugate_continuousOn _)
-    (cuspZProfile_conjugate_translate_continuousOn _ _)
-    (cuspBarProfile_conjugate_isBigO _)
-    (ramifiedConjugate_zProfile_isBigO side _)
-    (fun v hv=>cuspBarProfile_conjugate_reflection G g _ hfactor hc v hv)
-
 end CubicEisenstein
-
-open scoped BigOperators Classical
 
 namespace CompletedGauss
 
@@ -576,9 +435,6 @@ theorem completedT_mellin_shift (Ψ : ActualEisensteinCubic.O→*ℂ) (hΨ : ∀
     completedT_initial_mellin Ψ hΨ W a b ha hWs hW X hX
 
 end CompletedGauss
-
-open Filter MeasureTheory
-open scoped Classical BigOperators Topology
 
 namespace CompletedGauss
 open CubicEisenstein

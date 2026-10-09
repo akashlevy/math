@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstScale
 import OAI.NumberTheory.DirichletL.Moments.FirstDiscardedEnergy
-
 namespace OAI
 
 noncomputable section

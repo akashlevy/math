@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LowNominalEnergy
 import OAI.NumberTheory.DirichletL.Detector.LowInverseNormalize
-
 namespace OAI
 
 noncomputable section

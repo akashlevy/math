@@ -1,74 +1,23 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.GlobalBinLoss
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 
@@ -121,20 +70,6 @@ theorem subgroup_hyperbolic_sublevel_finite (H : Subgroup (SL(2,O)))
     (w : HyperbolicSpace) (C : ℝ) :
     Set.Finite {M : H | hyperbolicFrobenius (integralComplexMatrix (M:SL(2,O)) • w)≤C} := by
   exact Set.Finite.preimage Subtype.val_injective.injOn (integral_hyperbolic_sublevel_finite w C)
-
-theorem subgroup_orbit_minimum (H : Subgroup (SL(2,O))) (w : HyperbolicSpace) :
-    ∃M : H,∀N : H,
-      hyperbolicFrobenius (integralComplexMatrix (M:SL(2,O)) • w)≤
-        hyperbolicFrobenius (integralComplexMatrix (N:SL(2,O)) • w) := by
-  let S : Set H := {M | hyperbolicFrobenius (integralComplexMatrix (M:SL(2,O)) • w)≤hyperbolicFrobenius w}
-  have hs : Set.Finite S := subgroup_hyperbolic_sublevel_finite H w _
-  have hne : S.Nonempty := ⟨1,by simp [S]⟩
-  obtain ⟨M,hM,hmin⟩ := Set.exists_min_image S
-    (fun M : H => hyperbolicFrobenius (integralComplexMatrix (M:SL(2,O)) • w)) hs hne
-  refine ⟨M,fun N => ?_⟩
-  by_cases hN : N∈S
-  · exact hmin N hN
-  · exact hM.trans (le_of_lt (lt_of_not_ge hN))
 
 end
 
@@ -476,20 +411,7 @@ lemma hyperbolicEuclideanVolume_ne_zero : hyperbolicEuclideanVolume≠0 := by
 lemma hyperbolicVolume_ne_zero : hyperbolicVolume≠0 :=
   (Measure.map_ne_zero_iff euclideanToHyperbolic_measurable.aemeasurable).mpr hyperbolicEuclideanVolume_ne_zero
 
-lemma integralQuotientVolume_ne_zero (H : Subgroup (SL(2,O))) (hH : H≤levelThree) :
-    integralQuotientVolume H≠0 := by
-  apply (Measure.map_ne_zero_iff (measurable_integralOrbitProjection H).aemeasurable).mpr
-  intro hz
-  have hD := MeasureTheory.IsFundamentalDomain.measure_ne_zero hyperbolicVolume_ne_zero
-    (hyperbolicFundamentalSet_isFundamentalDomain H hH)
-  have hh := congrArg (fun ν : Measure HyperbolicSpace => ν Set.univ) hz
-  simp only [Measure.restrict_apply MeasurableSet.univ,Set.univ_inter] at hh
-  exact hD hh
-
 abbrev KernelQuotientL2 := Lp ℂ 2 (integralQuotientVolume globalKubotaKernel)
-example : InnerProductSpace ℂ KernelQuotientL2 := inferInstance
-example : CompleteSpace KernelQuotientL2 := inferInstance
-
 lemma kernel_eisenstein_invariant (M : globalKubotaKernel) (s : ℂ) (hs : 2<s.re)
     (w : HyperbolicSpace) :
     hyperbolicEisenstein s (M • w)=hyperbolicEisenstein s w := by
@@ -537,7 +459,6 @@ def kernelQuotientDefect (a b : ℝ) (s : ℂ) : IntegralOrbitQuotient globalKub
 
 end CubicEisenstein
 
-open scoped BigOperators Classical
 namespace CompletedGauss
 open ActualEisensteinCubic
 open IdealMobiusDivisorSum (idealDivisors mem_idealDivisors)
@@ -545,9 +466,6 @@ open IdealMobiusDivisorSum (idealDivisors mem_idealDivisors)
 def largeCubeCoefficient (H₀ : ℝ) (B : Ideal O) : ℂ :=
   if B=⊥ then 0 else ∑ H∈idealDivisors B,
     if H₀ ≤ (Ideal.absNorm H : ℝ) then (UniqueFactorizationMonoid.moebius H : ℂ) else 0
-
-theorem largeCubeCoefficient_zero (H₀ : ℝ) : largeCubeCoefficient H₀ ⊥=0 := by
-  simp [largeCubeCoefficient]
 
 theorem largeCubeCoefficient_norm_le (H₀ : ℝ) (B : Ideal O) :
     ‖largeCubeCoefficient H₀ B‖ ≤ (idealDivisors B).card := by
@@ -730,12 +648,6 @@ theorem completed_cube_inverse_split (Ψ : O →* ℂ) (W : ℝ → ℂ)
   by_cases h : (Ideal.absNorm H : ℝ)<H₀
   · simp [h,not_le.mpr h]
   · simp [h,le_of_not_gt h]
-
-theorem large_cube_block_progress (H₀ B F : ℝ) (hB : 0 ≤ B) (hF : 1 ≤ F)
-    (I : Ideal O) (hI : largeCubeCoefficient H₀ I ≠ 0) (hIB : (Ideal.absNorm I : ℝ) ≤ B) :
-    H₀ ≤ B*F := by
-  have hlarge := (largeCubeCoefficient_support H₀ I hI).2
-  exact (hlarge.trans hIB).trans (le_mul_of_one_le_right hB hF)
 
 end CompletedGauss
 

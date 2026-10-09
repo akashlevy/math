@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GramIdealDilation
 import OAI.NumberTheory.DirichletL.Moments.MobiusRegroup
-
 namespace OAI
 
 noncomputable section

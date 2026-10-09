@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.InactiveRows
 import OAI.NumberTheory.DirichletL.Reflection.MarkedTuples
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

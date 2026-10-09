@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.Physical
-
 namespace OAI
 
 noncomputable section
@@ -29,22 +28,6 @@ theorem idealWindow_finite_support (W : ℝ → ℂ) (hW : HasCompactSupport W)
   intro I hI
   have hnorm : (Ideal.absNorm I : ℝ) ≤ B * R := (div_le_iff₀ hR).mp (hbound _ hI)
   exact_mod_cast hnorm.trans hM.le
-
-theorem elementWindow_mul_summable (W : ℝ → ℂ) (hW : HasCompactSupport W)
-    (R : ℝ) (hR : 0 < R) (F : O → ℂ) :
-    Summable (fun m : O => W (elementNorm m / R) * F m) := by
-  apply summable_of_hasFiniteSupport
-  apply (elementWindow_finite_support W hW R hR).subset
-  intro m hm hzero
-  exact hm (by simp only [hzero, zero_mul])
-
-theorem idealWindow_mul_summable (W : ℝ → ℂ) (hW : HasCompactSupport W)
-    (R : ℝ) (hR : 0 < R) (F : Ideal O → ℂ) :
-    Summable (fun I : Ideal O => W ((Ideal.absNorm I : ℝ) / R) * F I) := by
-  apply summable_of_hasFiniteSupport
-  apply (idealWindow_finite_support W hW R hR).subset
-  intro I hI hzero
-  exact hI (by simp only [hzero, zero_mul])
 
 end SevenEighths.ProbePhysical
 end

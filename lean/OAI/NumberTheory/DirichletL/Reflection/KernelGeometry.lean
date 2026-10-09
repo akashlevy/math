@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.Shape
 import OAI.NumberTheory.DirichletL.Reflection.Denominator
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -74,25 +73,6 @@ lemma source_kernel_argument_factor {φ σ : Type*} [Fintype φ] [Fintype σ]
   rw [reflected_conductor_norm]
   simp only [fixedKernelCoefficient,map_mul,Nat.cast_mul,mul_pow,div_eq_mul_inv,mul_inv_rev]
   ring
-
-theorem source_kernel_argument_annuli {φ σ : Type*} [Fintype φ] [Fintype σ]
-    (F : PrimeFamily φ) (K : Ideal Eis) (hK : Admissible K) (S : PrimeFamily σ)
-    (c : Eis) (X tau r : ℝ) (D1 D2 n b : Ideal Eis)
-    (hn : n≠0) (hb : b≠0) (QK QP Qn Qb : ℝ)
-    (hQK : 0<QK) (hQP : 0<QP) (hQn : 0<Qn) (hQb : 0<Qb) :
-    (X/(27*tau^2*(Ideal.absNorm (Ideal.span {c*∏ i, (F.reflected K hK S).generator i}):ℝ)^2))*
-      r^3*(Ideal.absNorm (D1*n):ℝ)*(Ideal.absNorm (D2*b):ℝ)^3 =
-    kernelCenter (fixedKernelCoefficient X tau r (Ideal.span {c}*(∏ i, F.ideal i)) D1 D2)
-      QK QP Qn Qb * Real.exp (∑ i, kernelSlope i *
-        kernelLogCoordinates QK QP Qn Qb (Ideal.absNorm K:ℝ)
-          (Ideal.absNorm (∏ i, S.ideal i):ℝ) (Ideal.absNorm n:ℝ) (Ideal.absNorm b:ℝ) i) := by
-  rw [source_kernel_argument_factor]
-  have hn0 (I : Ideal Eis) (hI : I≠0) : (0:ℝ)<Ideal.absNorm I := by
-    exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr hI)
-  apply actual_annular_kernel_identity _ _ _ _ _ _ _ _ _ hQK hQP hQn hQb
-    (hn0 K hK.1) _ (hn0 n hn) (hn0 b hb)
-  apply hn0
-  exact Finset.prod_ne_zero_iff.mpr (fun i _ => NeZero.ne (S.ideal i))
 
 end
 end SevenEighths.InverseReflectedPhase

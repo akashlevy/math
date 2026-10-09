@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Foundation
 import OAI.NumberTheory.DirichletL.Moments.Basic
 import Mathlib.Analysis.Normed.Ring.Finite
-
 namespace OAI
 
 noncomputable section
@@ -115,66 +114,6 @@ theorem normPowerProfile_apply (W : ℝ → ℂ) (a b : ℝ) (ha : 0 < a)
   by_cases hx : W x = 0
   · simp only [hx, mul_zero]
   · rw [logPhase_eq_normPower t x (lt_of_lt_of_le ha (hs hx).1)]
-
-theorem normPowerProfile_zero_mode (W : ℝ → ℂ) (a b : ℝ) (ha : 0 < a)
-    (hs : Function.support W ⊆ Set.Icc a b) (hW : ContDiff ℝ ∞ W) (t : ℝ) :
-    paperRadialFourier (normPowerProfile W a b ha hs hW t) 0 =
-      (2 * Real.pi / Real.sqrt 3 : ℂ) *
-        ∫ y : ℝ in Set.Ioi 0, (y : ℂ) ^ (Complex.I * t) * W y := by
-  rw [paperRadialFourier_zero_eq_halfline]
-  congr 1
-  apply MeasureTheory.setIntegral_congr_fun measurableSet_Ioi
-  intro y _
-  exact normPowerProfile_apply W a b ha hs hW t y
-
-theorem normPowerProfile_uniform_degree (a b : ℝ) (ha : 0 < a)
-    (S : Finset (ℕ × ℕ)) :
-    ∃ n : ℕ, ∀ W : ℝ → ℂ, ∀ hs : Function.support W ⊆ Set.Icc a b,
-      ∀ hW : ContDiff ℝ ∞ W, ∃ C : ℝ, 0 < C ∧ ∀ t : ℝ,
-      S.sup (schwartzSeminormFamily ℝ ℝ ℂ) (normPowerProfile W a b ha hs hW t) ≤
-        C * (1 + ‖t / (2 * Real.pi)‖) ^ n := by
-  obtain ⟨n, hn⟩ := CompletedHeight.normTwistedSource_uniform_degree a b ha S
-  refine ⟨n, ?_⟩
-  intro W hs hW
-  obtain ⟨C, hC, hbound⟩ := hn W hs hW
-  exact ⟨C, hC, fun t => hbound (t / (2 * Real.pi))⟩
-
-theorem periodic_twisted_lattice_volume_error (a b : ℝ) (ha : 0 < a) :
-    ∃ n : ℕ, ∀ W : ℝ → ℂ, ∀ hs : Function.support W ⊆ Set.Icc a b,
-      ∀ hW : ContDiff ℝ ∞ W, ∀ c : O, ∀ hc : c ≠ 0,
-      ∀ P : O ⧸ Ideal.span {c} → ℂ,
-      letI : Finite (O ⧸ Ideal.span {c}) := finite_quotient_span hc
-      letI : Fintype (O ⧸ Ideal.span {c}) := Fintype.ofFinite _
-      ∃ C : ℝ, 0 < C ∧ ∀ t X : ℝ, 0 < X →
-        ‖(∑' z : O, P (Ideal.Quotient.mk (Ideal.span {c}) z) *
-            (((‖eisEmbedding z‖ ^ 2 / X : ℝ) : ℂ) ^ (Complex.I * t) *
-              W (‖eisEmbedding z‖ ^ 2 / X))) -
-          (X / ‖eisEmbedding c‖ ^ 2 : ℝ) •
-            ((∑ r : O ⧸ Ideal.span {c}, P r) *
-              paperRadialFourier (normPowerProfile W a b ha hs hW t) 0)‖ ≤
-          C * (1 + ‖t / (2 * Real.pi)‖) ^ n := by
-  obtain ⟨n, hn⟩ := normPowerProfile_uniform_degree a b ha pvSeminorms
-  refine ⟨n, ?_⟩
-  intro W hs hW c hc P
-  let : Finite (O ⧸ Ideal.span {c}) := finite_quotient_span hc
-  let : Fintype (O ⧸ Ideal.span {c}) := Fintype.ofFinite _
-  obtain ⟨D, hD, hbound⟩ := hn W hs hW
-  let B : ℝ := ∑ r : O ⧸ Ideal.span {c}, ‖P r‖
-  have hB : 0 ≤ B := Finset.sum_nonneg (fun _ _ => norm_nonneg _)
-  refine ⟨(1 + B) * pvConstant * D, mul_pos (mul_pos (by linarith) pvConstant_pos) hD, ?_⟩
-  intro t X hX
-  have h := periodic_lattice_volume_error (normPowerProfile W a b ha hs hW t) X hX c hc P
-  simp only [normPowerProfile_apply] at h
-  apply h.trans
-  change B * (pvConstant * _) ≤ _
-  calc
-    _ ≤ B * (pvConstant * (D * (1 + ‖t / (2 * Real.pi)‖) ^ n)) :=
-      mul_le_mul_of_nonneg_left
-        (mul_le_mul_of_nonneg_left (hbound t) pvConstant_pos.le) hB
-    _ ≤ (1 + B) * pvConstant * D * (1 + ‖t / (2 * Real.pi)‖) ^ n := by
-      nlinarith [mul_nonneg pvConstant_pos.le hD.le,
-        mul_nonneg (mul_nonneg pvConstant_pos.le hD.le)
-          (show 0 ≤ (1 + ‖t / (2 * Real.pi)‖) ^ n by positivity)]
 
 end SevenEighths.CenteredMomentLattice
 end

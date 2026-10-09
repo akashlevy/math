@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.IdealOperations
 import OAI.NumberTheory.DirichletL.Hecke.FiniteDeletion
-
 namespace OAI
 
 noncomputable section

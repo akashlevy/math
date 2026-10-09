@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.DetectorMomentGates
 import OAI.NumberTheory.DirichletL.Detector.FinalAssemblyData
-
 namespace OAI
 
 noncomputable section
@@ -31,23 +30,6 @@ theorem sourceMoment_fiber_large_eventually
   change ((baseCharacter (B.data j)).modulus.absNorm:ℝ)<1*(Z^d)^(B.widths s)
   rw [hdata,hw,one_mul]
   exact hZ.2 d hd j s
-
-theorem sourceMoment_fiber_support {Δ:ℝ}{D:Parameters.HighData Δ}
-    (F:ProbeFinalAssembly.SourceData D)
-    {Slot:Type*}{U a ε tstar T allowance:ℝ}{i:ℕ}
-    (B:Batch M H (Sum Bool (RayQuotient.Characters M H)) Slot U a ε tstar T allowance i)
-    (hprofile:B.profile=(fun _=>(F.W:ℝ→ℂ)))(hupper:B.upper=(fun _=>2))
-    (bin:B.Bin)(j:Sum Bool (RayQuotient.Characters M H))
-    (J K:Fin (HeckeDetectorWitnessRows.dyadicLength U))
-    (hne:(B.fiberRows bin j J K).Nonempty):
-    ∀s x,(B.fiber bin j J K hne).profile s x≠0→
-      x∈Set.Icc 1 ((B.fiber bin j J K hne).upper s):=by
-  intro s x hx
-  change B.profile s x≠0 at hx
-  change x∈Set.Icc 1 (B.upper s)
-  rw [hprofile] at hx
-  rw [hupper]
-  exact F.complex_support hx
 
 end SevenEighths.ProbeHighRowFamily
 

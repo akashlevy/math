@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseUniformLog
 import OAI.NumberTheory.DirichletL.Dictionary.InverseUniformScale
-
 namespace OAI
 
 noncomputable section

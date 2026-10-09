@@ -1,77 +1,23 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.SourceProjection
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 open Filter MeasureTheory
@@ -185,8 +131,7 @@ lemma kernelSourceAction_measurePreserving (M : levelTwo) :
 end CubicEisenstein
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
+open scoped MatrixGroups
 
 namespace CubicEisenstein
 open CubicKubota
@@ -214,51 +159,6 @@ lemma kernelSourcePullback_comp (M N : levelTwo) (F : KernelQuotientL2) :
   rw [hp,hnm]
   exact hn.trans (congrArg F (kernelSourceAction_mul N M q).symm)
 
-lemma kernelSourcePullback_surjective (M : levelTwo) : Function.Surjective (kernelSourcePullback M) := by
-  intro F
-  refine ⟨kernelSourcePullback M⁻¹ F,?_⟩
-  rw [kernelSourcePullback_comp,inv_mul_cancel,kernelSourcePullback_one]
-
-def kernelSourceUnitary (M : levelTwo) : KernelQuotientL2 ≃ₗᵢ[ℂ] KernelQuotientL2 :=
-  LinearIsometryEquiv.ofSurjective (kernelSourcePullback M) (kernelSourcePullback_surjective M)
-
-lemma kernelSourceUnitary_apply (M : levelTwo) (F : KernelQuotientL2) :
-    kernelSourceUnitary M F=kernelSourcePullback M F := rfl
-
-local notation "O" => ActualEisensteinCubic.O
-
-lemma kernelSourceAction_of_kernel (g : levelTwo)
-    (hg : (g:SL(2,ActualEisensteinCubic.O))∈globalKubotaKernel) (q : SourceKernelQuotient) :
-    kernelSourceAction g q=q := by
-  induction q using Quotient.inductionOn with
-  | _ w =>
-    exact integralOrbitProjection_eq globalKubotaKernel ⟨(g:SL(2,ActualEisensteinCubic.O)),hg⟩ w
-
-lemma rationalCongruenceThree_in_kernel (r : SL(2,ℤ)) (hr : r∈rationalCongruenceThree) :
-    rationalEmbedding r∈globalKubotaKernel := by
-  have hr3 := (mem_rationalCongruenceThree r).mp hr
-  exact (globalKubotaKernel_mem _).mpr ⟨hr3,complexCharacter_rational_intersection r hr3⟩
-
-lemma kernelSourceAction_rational_eq (r s : SL(2,ℤ))
-    (hrs : rationalReductionThree r=rationalReductionThree s) (q : SourceKernelQuotient) :
-    kernelSourceAction (rationalLift r) q=kernelSourceAction (rationalLift s) q := by
-  have hd : r*s⁻¹∈rationalCongruenceThree := by
-    apply (rationalReductionThree_eq_one_iff _).mp
-    rw [map_mul,map_inv,hrs,mul_inv_cancel]
-  have hk := rationalCongruenceThree_in_kernel _ hd
-  have he : rationalLift r=rationalLift (r*s⁻¹)*rationalLift s := by
-    rw [←map_mul,inv_mul_cancel_right]
-  rw [he,kernelSourceAction_mul]
-  exact kernelSourceAction_of_kernel _ hk _
-
-lemma kernelSourcePullback_rational_eq (r s : SL(2,ℤ))
-    (hrs : rationalReductionThree r=rationalReductionThree s) (F : KernelQuotientL2) :
-    kernelSourcePullback (rationalLift r) F=kernelSourcePullback (rationalLift s) F := by
-  apply Lp.ext
-  filter_upwards [kernelSourcePullback_ae_eq (rationalLift r) F,
-    kernelSourcePullback_ae_eq (rationalLift s) F] with q hr hs
-  rw [hr,hs,kernelSourceAction_rational_eq r s hrs]
-
 def kernelSourceProjection : KernelQuotientL2 →L[ℂ] KernelQuotientL2 :=
   (24:ℂ)⁻¹ • ∑q : levelTwo ⧸ levelThreeInTwo,
     (kernelSourcePullback (rationalLift (sourceRationalSection q))).toContinuousLinearMap
@@ -277,59 +177,6 @@ lemma kernelSourceProjection_eq_twentyFour (F : KernelQuotientL2) :
   rw [←rationalCosetEquiv.sum_comp]
   simp only [sourceRationalSection,Equiv.symm_apply_apply]
 
-lemma norm_kernelSourceProjection_apply (F : KernelQuotientL2) :
-    ‖kernelSourceProjection F‖≤‖F‖ := by
-  rw [kernelSourceProjection_apply,norm_smul]
-  calc
-    _ ≤ ‖(24:ℂ)⁻¹‖ * ∑q : levelTwo ⧸ levelThreeInTwo,
-      ‖kernelSourcePullback (rationalLift (sourceRationalSection q)) F‖ :=
-        mul_le_mul_of_nonneg_left (norm_sum_le _ _) (norm_nonneg _)
-    _ = ‖F‖ := by
-      simp only [LinearIsometry.norm_map,Finset.sum_const,Finset.card_univ,nsmul_eq_mul]
-      have hc : Fintype.card (levelTwo ⧸ levelThreeInTwo)=24 := by
-        simpa only [Nat.card_eq_fintype_card] using sourceQuotient_card
-      rw [hc]
-      norm_num
-      ring
-
-lemma norm_kernelSourceProjection : ‖kernelSourceProjection‖≤1 :=
-  ContinuousLinearMap.opNorm_le_bound _ (by norm_num)
-    (fun F => by simpa using norm_kernelSourceProjection_apply F)
-
-lemma sourceSection_mul_reduction (q : levelTwo ⧸ levelThreeInTwo) (r : SL(2,ℤ)) :
-    rationalReductionThree (sourceRationalSection q*r)=
-      rationalReductionThree (sourceRationalSection (q*rationalQuotient r)) := by
-  apply (rationalQuotient_eq_iff_reduction _ _).mp
-  rw [map_mul,sourceRationalSection_spec,sourceRationalSection_spec]
-
-lemma kernelSourcePullback_projection (r : SL(2,ℤ)) (F : KernelQuotientL2) :
-    kernelSourcePullback (rationalLift r) (kernelSourceProjection F)=kernelSourceProjection F := by
-  rw [kernelSourceProjection_apply,map_smul,map_sum]
-  apply congrArg (fun v : KernelQuotientL2 => (24:ℂ)⁻¹ • v)
-  simp_rw [kernelSourcePullback_comp,←map_mul]
-  have he : ∀q : levelTwo ⧸ levelThreeInTwo,
-      kernelSourcePullback (rationalLift (sourceRationalSection q*r)) F=
-      kernelSourcePullback (rationalLift (sourceRationalSection (q*rationalQuotient r))) F :=
-    fun q => kernelSourcePullback_rational_eq _ _ (sourceSection_mul_reduction q r) F
-  simp_rw [he]
-  exact Function.Bijective.sum_comp (Group.mulRight_bijective (rationalQuotient r))
-    (fun q => kernelSourcePullback (rationalLift (sourceRationalSection q)) F)
-
-lemma kernelSourceProjection_fixed (F : KernelQuotientL2)
-    (hF : ∀r : SL(2,ℤ),kernelSourcePullback (rationalLift r) F=F) :
-    kernelSourceProjection F=F := by
-  rw [kernelSourceProjection_apply]
-  simp only [hF,Finset.sum_const,Finset.card_univ]
-  have hc : Fintype.card (levelTwo ⧸ levelThreeInTwo)=24 := by
-    simpa only [Nat.card_eq_fintype_card] using sourceQuotient_card
-  rw [hc]
-  rw [←Nat.cast_smul_eq_nsmul ℂ,smul_smul]
-  norm_num
-
-lemma kernelSourceProjection_idempotent (F : KernelQuotientL2) :
-    kernelSourceProjection (kernelSourceProjection F)=kernelSourceProjection F :=
-  kernelSourceProjection_fixed _ (fun r => kernelSourcePullback_projection r F)
-
 end CubicEisenstein
 
 namespace CubicKubota
@@ -344,58 +191,10 @@ lemma sourceLevelInclusion_character (n : levelThree) :
     levelTwoComplexCharacter (sourceLevelInclusion n)=complexCharacter n :=
   levelTwoComplexCharacter_restrict n
 
-lemma sourceSection_factor (q : levelTwo ⧸ levelThreeInTwo) (g : levelTwo) :
-    ∃n : levelThree,
-      rationalLift (sourceRationalSection q)*g=
-        sourceLevelInclusion n*rationalLift (sourceRationalSection
-          (q*QuotientGroup.mk' levelThreeInTwo g)) ∧
-      complexCharacter n=levelTwoComplexCharacter g := by
-  let r := sourceRationalSection q
-  let s := sourceRationalSection (q*QuotientGroup.mk' levelThreeInTwo g)
-  let n2 : levelTwo := rationalLift r*g*(rationalLift s)⁻¹
-  have hn2 : n2∈levelThreeInTwo := by
-    apply (QuotientGroup.eq_one_iff (N:=levelThreeInTwo) n2).mp
-    change QuotientGroup.mk' levelThreeInTwo (rationalLift r*g*(rationalLift s)⁻¹)=1
-    rw [map_mul,map_mul,map_inv]
-    change rationalQuotient r * QuotientGroup.mk' levelThreeInTwo g *
-      (rationalQuotient s)⁻¹=1
-    rw [sourceRationalSection_spec,sourceRationalSection_spec,mul_inv_cancel]
-  let n : levelThree := ⟨(n2:SL(2,ActualEisensteinCubic.O)),hn2⟩
-  refine ⟨n,?_,?_⟩
-  · change rationalLift r*g=(rationalLift r*g*(rationalLift s)⁻¹)*rationalLift s
-    group
-  · rw [←levelTwoComplexCharacter_restrict n]
-    change levelTwoComplexCharacter (rationalLift r*g*(rationalLift s)⁻¹)=_
-    rw [map_mul,map_mul,←map_inv rationalLift]
-    change levelTwoComplexCharacter (rationalLift r)*levelTwoComplexCharacter g*
-      levelTwoComplexCharacter (rationalLift s⁻¹)=_
-    rw [levelTwoComplexCharacter_rationalLift,levelTwoComplexCharacter_rationalLift,one_mul,mul_one]
 end CubicKubota
 
 namespace CubicEisenstein
 open CubicKubota
-
-theorem kernelSourceProjection_covariance (F : KernelQuotientL2)
-    (hF : ∀n : levelThree,kernelSourcePullback (sourceLevelInclusion n) F=
-      complexCharacter n • F) (g : levelTwo) :
-    kernelSourcePullback g (kernelSourceProjection F)=
-      levelTwoComplexCharacter g • kernelSourceProjection F := by
-  rw [kernelSourceProjection_apply,map_smul,map_sum]
-  simp_rw [kernelSourcePullback_comp]
-  have he : ∀q : levelTwo ⧸ levelThreeInTwo,
-      kernelSourcePullback (rationalLift (sourceRationalSection q)*g) F=
-      levelTwoComplexCharacter g •
-        kernelSourcePullback (rationalLift (sourceRationalSection
-          (q*QuotientGroup.mk' levelThreeInTwo g))) F := by
-    intro q
-    obtain ⟨n,hn,hc⟩ := sourceSection_factor q g
-    rw [hn,←kernelSourcePullback_comp,hF,map_smul,hc]
-  simp_rw [he]
-  rw [←Finset.smul_sum]
-  rw [Function.Bijective.sum_comp
-    (Group.mulRight_bijective (QuotientGroup.mk' levelThreeInTwo g))
-    (fun q => kernelSourcePullback (rationalLift (sourceRationalSection q)) F)]
-  rw [smul_comm]
 
 lemma kernelSourceProjection_ae_eq (F : KernelQuotientL2) :
     kernelSourceProjection F=ᵐ[integralQuotientVolume globalKubotaKernel]
@@ -410,23 +209,6 @@ lemma kernelSourceProjection_ae_eq (F : KernelQuotientL2) :
   filter_upwards [(Lp.coeFn_smul (24:ℂ)⁻¹ _).trans (hsum.const_smul (24:ℂ)⁻¹)] with x hx
   simpa only [Pi.smul_apply,Finset.sum_apply,smul_eq_mul] using hx
 
-lemma kernelSourceProjection_representative (F : KernelQuotientL2)
-    (f : SourceKernelQuotient→ℂ)
-    (hf : F=ᵐ[integralQuotientVolume globalKubotaKernel] f) :
-    kernelSourceProjection F=ᵐ[integralQuotientVolume globalKubotaKernel]
-      fun x => (24:ℂ)⁻¹ * ∑q : levelTwo ⧸ levelThreeInTwo,
-        f (kernelSourceAction (rationalLift (sourceRationalSection q)) x) := by
-  apply (kernelSourceProjection_ae_eq F).trans
-  have hh : (∑q : levelTwo ⧸ levelThreeInTwo, fun x =>
-      F (kernelSourceAction (rationalLift (sourceRationalSection q)) x))
-      =ᵐ[integralQuotientVolume globalKubotaKernel]
-      (∑q : levelTwo ⧸ levelThreeInTwo, fun x =>
-      f (kernelSourceAction (rationalLift (sourceRationalSection q)) x)) :=
-    eventuallyEq_sum (fun q _ =>
-      (kernelSourceAction_measurePreserving (rationalLift (sourceRationalSection q))).quasiMeasurePreserving.ae_eq_comp hf)
-  filter_upwards [hh.const_smul (24:ℂ)⁻¹] with x hx
-  simpa only [Pi.smul_apply,Finset.sum_apply,smul_eq_mul] using hx
-
 lemma kernelSourceProjection_hyperbolic_average (f : SourceKernelQuotient→ℂ) (w : HyperbolicSpace) :
     (24:ℂ)⁻¹ * ∑q : levelTwo ⧸ levelThreeInTwo,
       f (kernelSourceAction (rationalLift (sourceRationalSection q))
@@ -435,8 +217,6 @@ lemma kernelSourceProjection_hyperbolic_average (f : SourceKernelQuotient→ℂ)
 
 end CubicEisenstein
 end
-
-open scoped Classical
 
 namespace CubicEisenstein
 open CubicKubota
@@ -447,20 +227,9 @@ lemma kernelSourceAction_level (n : levelThree) :
 lemma kernelSourcePullback_level (n : levelThree) :
     kernelSourcePullback (sourceLevelInclusion n)=kernelLevelPullback n := rfl
 
-theorem kernelSourceProjection_covariance_of_level (F : KernelQuotientL2)
-    (hF : ∀n : levelThree,kernelLevelPullback n F=complexCharacter n • F) (g : levelTwo) :
-    kernelSourcePullback g (kernelSourceProjection F)=
-      levelTwoComplexCharacter g • kernelSourceProjection F := by
-  apply kernelSourceProjection_covariance F
-  intro n
-  rw [kernelSourcePullback_level]
-  exact hF n
-
 end CubicEisenstein
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ENNReal
-open Finset AddChar MulChar EisensteinEmbedding
+open scoped ENNReal
 
 namespace CubicEisenstein
 open EisensteinSchwartzPoisson ActualEisensteinCubic ConcreteTraceCRT Module

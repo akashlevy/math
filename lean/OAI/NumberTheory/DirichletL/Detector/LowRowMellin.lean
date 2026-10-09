@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowMellin
-
 namespace OAI
 
 noncomputable section
@@ -132,29 +131,6 @@ theorem physicalRowWeight_low_mellin (C : CalibrationData) (W0 W1 : ℝ→ℂ)
         apply integral_congr_ae
         exact Filter.Eventually.of_forall (fun v=>by dsimp only [Ω]; ring)
   · simp [physicalRowWeight,lowRowMellinIntegrand,lowAdditiveCoefficient,hc]
-
-lemma lowAdditiveCoefficient_height (C : CalibrationData) (W1 : ℝ→ℂ) (Y : ℝ) (hY : 0<Y)
-    (s : {I : Id // Supported I}) (m : O) (v : ℝ) :
-    lowAdditiveCoefficient C W1 Y s m v=
-      (((Ideal.absNorm s.val:ℝ)/Y:ℝ):ℂ)^((v:ℂ)*Complex.I)*lowAdditiveCoefficient C W1 Y s m 0 := by
-  have hq : (0:ℝ)<Ideal.absNorm s.val := by
-    exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr s.property.1)
-  have hqc : (((Ideal.absNorm s.val:ℝ)/Y:ℝ):ℂ)≠0 := Complex.ofReal_ne_zero.mpr (div_pos hq hY).ne'
-  unfold lowAdditiveCoefficient
-  split_ifs
-  · dsimp only
-    rw [Complex.cpow_add _ _ hqc]
-    simp only [Complex.ofReal_zero,zero_mul,add_zero]
-    ring
-  · simp
-
-lemma lowAdditiveCoefficient_height_norm (C : CalibrationData) (W1 : ℝ→ℂ) (Y : ℝ) (hY : 0<Y)
-    (s : {I : Id // Supported I}) (m : O) (v : ℝ) :
-    ‖lowAdditiveCoefficient C W1 Y s m v‖=‖lowAdditiveCoefficient C W1 Y s m 0‖ := by
-  have hq : (0:ℝ)<Ideal.absNorm s.val := by
-    exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr s.property.1)
-  rw [lowAdditiveCoefficient_height C W1 Y hY s m v,norm_mul,
-    low_mellin_phase_norm _ v (div_pos hq hY),one_mul]
 
 def lowArithmeticCoefficient (C : CalibrationData) (s : {I : Id // Supported I}) : ℂ :=
   if ∀P∈C.excluded,¬P∣s.val then

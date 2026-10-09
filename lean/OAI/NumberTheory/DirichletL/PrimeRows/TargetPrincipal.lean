@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CanonicalRayCube
-
 namespace OAI
 
 noncomputable section

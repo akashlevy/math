@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.HighExcludedLocal
 import OAI.NumberTheory.DirichletL.Hecke.RayFamily
 import OAI.NumberTheory.DirichletL.Hecke.ModulusRefinement
-
 namespace OAI
 
 noncomputable section

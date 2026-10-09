@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.SurvivingGate
 import OAI.NumberTheory.DirichletL.Reflection.OptionalWidth
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

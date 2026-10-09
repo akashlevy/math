@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.HeckeExpansion
 import OAI.NumberTheory.DirichletL.Moments.RowNorm
-
 namespace OAI
 
 noncomputable section
@@ -87,23 +86,6 @@ theorem finiteHeckeEnergy_eq (η : Character) (m A : O) (t : ℝ)
         (fun I : supportedColumns S => c I*rowWeight η m A 1 t I) W K := by
   unfold finiteHeckeEnergy rowEnergy
   simp_rw [finite_hecke_sum_eq_rowPolynomial η m A _ t hmLam hm2 S c]
-
-theorem finiteHeckeEnergy_poisson (η : Character) (m A : O) (t : ℝ)
-    (hmLam : goodLambda ∣ m) (hm2 : (2:O) ∣ m)
-    (S : Finset (Ideal O)) (c : Ideal O → ℂ) (W : 𝓢(ℝ,ℂ)) (K : ℝ) (hK : 0 < K) :
-    finiteHeckeEnergy η m A t S c W K =
-      ∑ I : supportedColumns S,∑ J : supportedColumns S,
-        ((c I*rowWeight η m A 1 t I)*star (c J*rowWeight η m A 1 t J))*
-          (((K/‖ConcreteTraceCRT.eisEmbedding (sourceGenerator S I*sourceGenerator S J)‖^2:ℝ):ℂ)*
-            ∑' h : O,pairFourier (sourceGenerator S I) (sourceGenerator S J)
-              (sourceGenerator_supported S I) (sourceGenerator_supported S J) h*
-              EisensteinSchwartzPoisson.paperRadialFourier W
-                (K*‖ConcreteTraceCRT.eisEmbedding h‖^2/
-                  ‖ConcreteTraceCRT.eisEmbedding (sourceGenerator S I*sourceGenerator S J)‖^2)) := by
-  rw [finiteHeckeEnergy_eq η m A t hmLam hm2 S c W K]
-  exact rowEnergy_poisson Finset.univ (sourceGenerator S)
-    (fun I : supportedColumns S => c I*rowWeight η m A 1 t I)
-    (sourceGenerator_supported S) W K hK
 
 end SevenEighths.CenteredMomentSourceRow
 

@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.AmplificationEnergy
-import OAI.NumberTheory.DirichletL.Moments.AmplificationMask
+import OAI.NumberTheory.DirichletL.Moments.AmplificationRectangle
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationMask
-
 namespace OAI
 
 noncomputable section

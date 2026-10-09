@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Energy.ZeroReflectionSupport
 import OAI.NumberTheory.DirichletL.Moments.UniformOriginalEnergy
 import OAI.NumberTheory.DirichletL.Energy.ReferenceHomogeneous
 import OAI.NumberTheory.DirichletL.Moments.OriginalReflectionErrorMass
-
 namespace OAI
 
 noncomputable section
@@ -101,27 +100,6 @@ theorem radial_original_error (xi saving Cscale epsilon : ℝ)
   exact hh.trans (mul_le_mul_of_nonneg_left
     (hshortsum.sum_le_tsum rows (fun z _=>by split_ifs;exact mul_nonneg (sq_nonneg _) (hΦ z);exact le_rfl))
     (by positivity))
-
-theorem natural_polynomials_summable {Z Bmask bΦ:ℝ}(state:NaturalState Z Bmask bΦ)
-    (Wlong Wshort:𝓢(ℝ,ℂ))(a b Xlong Xshort t omega:ℝ)
-    (hb:0≤b)(hXlong:0<Xlong)(hXshort:0<Xshort)
-    (hsLong:Function.support (Wlong:ℝ→ℂ)⊆Set.Icc a b)
-    (hsShort:Function.support (Wshort:ℝ→ℂ)⊆Set.Icc a b):
-    Summable (fun z:O=>if (effectiveState state).radial.keep z then
-      ‖polynomial (naturalCharacter state.character z) false Wlong Xlong 0 t*
-        polynomial (naturalCharacter state.character z) false Wshort Xshort 0 omega‖^2*
-        (state.radial.profile (‖eisEmbedding z‖^2/state.radial.scale)).re else 0) ∧
-    Summable (fun z:O=>if (effectiveState state).radial.keep z then
-      ‖polynomial (naturalCharacter state.character z) false Wshort Xshort 0 omega‖^2*
-        (state.radial.profile (‖eisEmbedding z‖^2/state.radial.scale)).re else 0):=by
-  constructor
-  · simpa only [mul_one] using pair_radial_summable (naturalCharacter state.character)
-      (fun _=>1) (fun _=>t) (fun _=>omega) Wlong Wshort a b a b Xlong Xshort 1
-      hb hb hXlong hXshort hsLong hsShort (fun _=>by simp)
-      (effectiveState state).radial.keep state.radial.profile state.radial.scale state.radial.scale_pos
-  · simpa only [mul_one] using single_radial_summable (naturalCharacter state.character)
-      (fun _=>1) (fun _=>omega) Wshort a b Xshort 1 hb hXshort hsShort (fun _=>by simp)
-      (effectiveState state).radial.keep state.radial.profile state.radial.scale state.radial.scale_pos
 
 theorem natural_original_error (a b bΦ epsilon xi saving:ℝ)
     (ha:0<a)(hb:0≤b)(hbΦ:0<bΦ)(hepsilon:0<epsilon)(hxi:0<xi):

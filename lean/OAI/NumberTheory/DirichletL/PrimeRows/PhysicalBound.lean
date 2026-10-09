@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.WeightedTuple
 import OAI.NumberTheory.DirichletL.PrimeRows.TupleBound
 import OAI.NumberTheory.DirichletL.PrimeRows.ScalarGrowth
-
 namespace OAI
 
 noncomputable section

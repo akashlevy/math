@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.Grid
 import OAI.NumberTheory.DirichletL.Descent.DivisorExtraction
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

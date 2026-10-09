@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Energy.CertifiedExistence
 import OAI.NumberTheory.DirichletL.Detector.FinalAssemblyCertifiedBands
 import OAI.NumberTheory.DirichletL.Moments.DetectorPlainSlotProfile
-
 namespace OAI
 
 noncomputable section

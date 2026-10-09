@@ -1,79 +1,23 @@
 import OAI.NumberTheory.DirichletL.RowCompletion.ReflectedFibers
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
-
-open scoped BigOperators Classical ContDiff
+open scoped ContDiff
+open Set
 
 namespace CanonicalRowCompletion
 
@@ -88,10 +32,6 @@ lemma initialOrbit_reflection_inputs {q:ℕ} (χ:DirichletCharacter ℂ q)
 
 lemma canonicalLabel_squarefree {X:ℝ} (f:idealRange X) : Squarefree f.val :=
   (mem_idealRange.mp f.property).1.2.1
-
-lemma canonicalLabel_generator_ne_zero {X:ℝ} (f:idealRange X) :
-    ConcretePrimeRowBridge.idealGenerator f.val≠0 :=
-  ConcretePrimeRowBridge.idealGenerator_ne_zero f.val (mem_idealRange.mp f.property).1.1
 
 lemma unitRowFamily_actual {X:ℝ} (f:idealRange X) (Ψ:Eis→*ℂ) (q:ℕ) (m:Eis)
     (u:Eisˣ) (I:Ideal Eis) :
@@ -182,8 +122,6 @@ theorem finite_selected_branch_collection
     _=_:=by ring
 
 end CanonicalRowCompletion
-
-open scoped BigOperators Classical ContDiff
 
 namespace CompletedGauss.FreeReflection
 open ActualEisensteinCubic CubicEisenstein CanonicalQuadraticSieve
@@ -417,8 +355,6 @@ theorem completedT_eq_compressedSourceTotal
 
 end CanonicalRowCompletion.ActualFiber
 
-open scoped Classical BigOperators
-
 namespace CompletedGauss
 variable {α β γ ι:Type*} [Fintype α] [Fintype β] [Fintype γ] [Fintype ι]
 
@@ -465,19 +401,7 @@ lemma activeModelPrimeEquiv_labels
     (FreeReflection.supportActivePoolEquiv R (maskIdeal q m F) (freeConductor q) e)
     _ _ (fun _=>rfl)
 
-lemma reflectionSixLabel_encode_at {β:Type*} [Fintype β]
-    (B:Finset β) (l:B→Fin 3) (b:B) :
-    reflectionSixLabel (encodeReflectionSix ⟨B,l⟩ b.val)=l b := by
-  classical
-  apply Fin.ext
-  simp only [encodeReflectionSix,dite_eq_left b.property,reflectionSixLabel]
-  change (3+(l b).val)%3=(l b).val
-  have hb:=(l b).isLt
-  omega
-
 end CanonicalRowCompletion.ActualFiber
-
-open scoped BigOperators Classical ContDiff
 
 namespace CompletedGauss.FreeReflection
 open ActualEisensteinCubic

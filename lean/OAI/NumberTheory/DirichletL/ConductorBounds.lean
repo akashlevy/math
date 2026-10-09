@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.FiniteConductor
 import Mathlib.RingTheory.Ideal.Quotient.Operations
 import Mathlib.RingTheory.Ideal.Norm.AbsNorm
-
 namespace OAI
 
 namespace SevenEighths.FiniteConductor
@@ -104,28 +103,6 @@ theorem exists_primitive_quotient_above_with_bound_and_mask
   exact ⟨I, φ, hJI, hφ, hprimitive, hmaximal, quotient_card_le_of_le hJI,
     factorization_with_source_mask χ I φ hφ⟩
 
-theorem FactorsThroughIdeal.mul {χ ψ : MulChar R ℂ} {I J : Ideal R}
-    (hχ : FactorsThroughIdeal χ I) (hψ : FactorsThroughIdeal ψ J) :
-    FactorsThroughIdeal (χ * ψ) (I ⊓ J) := by
-  rw [factorsThroughIdeal_iff] at hχ hψ ⊢
-  intro u hu
-  rw [MulChar.mul_apply, hχ u hu.1, hψ u hu.2, one_mul]
-
-theorem exists_primitive_product_quotient_with_bound_and_mask
-    (χ ψ : MulChar R ℂ) (I J : Ideal R)
-    (hχ : FactorsThroughIdeal χ I) (hψ : FactorsThroughIdeal ψ J) :
-    ∃ (K : Ideal R) (φ : MulChar (R ⧸ K) ℂ),
-      I ⊓ J ≤ K ∧ φ.toUnitHom.comp (quotientUnits K) = (χ * ψ).toUnitHom ∧
-      IsPrimitiveOnIdeals φ ∧ Maximal (FactorsThroughIdeal (χ * ψ)) K ∧
-      Nat.card (R ⧸ K) ≤ Nat.card (R ⧸ I) * Nat.card (R ⧸ J) ∧
-      ∀ a : R, χ a * ψ a = if IsUnit a then φ (Ideal.Quotient.mk K a) else 0 := by
-  let : Finite (R ⧸ I) := Finite.of_surjective _ (Ideal.Quotient.mk_surjective (I := I))
-  let : Finite (R ⧸ J) := Finite.of_surjective _ (Ideal.Quotient.mk_surjective (I := J))
-  obtain ⟨K, φ, hIK, hφ, hprimitive, hmaximal, hcard, hmask⟩ :=
-    exists_primitive_quotient_above_with_bound_and_mask (χ * ψ) (I ⊓ J) (hχ.mul hψ)
-  exact ⟨K, φ, hIK, hφ, hprimitive, hmaximal,
-    hcard.trans (quotient_inf_card_le_mul I J), hmask⟩
-
 end FiniteRing
 
 variable {A : Type*} [CommRing A] [IsDedekindDomain A] [Infinite A]
@@ -144,14 +121,6 @@ theorem absNorm_comap_eq_quotient_card (M : Ideal A) (I : Ideal (A ⧸ M)) :
     (I.comap (Ideal.Quotient.mk M)).absNorm = Nat.card ((A ⧸ M) ⧸ I) := by
   simpa only [Ideal.absNorm_apply, Submodule.cardQuot_apply] using quotient_comap_card M I
 
-theorem absNorm_comap_le (M : Ideal A) [Finite (A ⧸ M)] (I : Ideal (A ⧸ M)) :
-    (I.comap (Ideal.Quotient.mk M)).absNorm ≤ M.absNorm := by
-  apply absNorm_le_of_le
-  intro a ha
-  change Ideal.Quotient.mk M a ∈ I
-  rw [Ideal.Quotient.eq_zero_iff_mem.mpr ha]
-  exact I.zero_mem
-
 theorem exists_primitive_residue_quotient_above_with_norm_and_mask
     (M : Ideal A) [Finite (A ⧸ M)] (χ : MulChar (A ⧸ M) ℂ)
     (J : Ideal (A ⧸ M)) (hJ : FactorsThroughIdeal χ J) :
@@ -164,22 +133,6 @@ theorem exists_primitive_residue_quotient_above_with_norm_and_mask
   obtain ⟨I, φ, hJI, hφ, hprimitive, hmaximal, hcard, hmask⟩ :=
     exists_primitive_quotient_above_with_bound_and_mask χ J hJ
   refine ⟨I, φ, hJI, hφ, hprimitive, hmaximal, ?_, hmask⟩
-  simpa only [absNorm_comap_eq_quotient_card] using hcard
-
-theorem exists_primitive_residue_product_with_norm_and_mask
-    (M : Ideal A) [Finite (A ⧸ M)] (χ ψ : MulChar (A ⧸ M) ℂ)
-    (I J : Ideal (A ⧸ M))
-    (hχ : FactorsThroughIdeal χ I) (hψ : FactorsThroughIdeal ψ J) :
-    ∃ (K : Ideal (A ⧸ M)) (φ : MulChar ((A ⧸ M) ⧸ K) ℂ),
-      I ⊓ J ≤ K ∧ φ.toUnitHom.comp (quotientUnits K) = (χ * ψ).toUnitHom ∧
-      IsPrimitiveOnIdeals φ ∧ Maximal (FactorsThroughIdeal (χ * ψ)) K ∧
-      (K.comap (Ideal.Quotient.mk M)).absNorm ≤
-        (I.comap (Ideal.Quotient.mk M)).absNorm *
-          (J.comap (Ideal.Quotient.mk M)).absNorm ∧
-      ∀ a : A ⧸ M, χ a * ψ a = if IsUnit a then φ (Ideal.Quotient.mk K a) else 0 := by
-  obtain ⟨K, φ, hIK, hφ, hprimitive, hmaximal, hcard, hmask⟩ :=
-    exists_primitive_product_quotient_with_bound_and_mask χ ψ I J hχ hψ
-  refine ⟨K, φ, hIK, hφ, hprimitive, hmaximal, ?_, hmask⟩
   simpa only [absNorm_comap_eq_quotient_card] using hcard
 
 end

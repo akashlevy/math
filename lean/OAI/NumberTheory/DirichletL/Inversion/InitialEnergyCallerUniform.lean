@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerClipping
 import OAI.NumberTheory.DirichletL.Descent.ClippedUniform
-
 namespace OAI
 
 noncomputable section

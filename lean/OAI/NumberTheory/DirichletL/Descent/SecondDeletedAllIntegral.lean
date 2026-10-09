@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondDeletedAllModes
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

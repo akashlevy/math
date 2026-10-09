@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialTotalEnergy
-
 namespace OAI
 
 noncomputable section

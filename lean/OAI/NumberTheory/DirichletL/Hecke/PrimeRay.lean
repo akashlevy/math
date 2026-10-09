@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.PrimeBin
 import OAI.NumberTheory.DirichletL.Hecke.RayQuotient
 import OAI.NumberTheory.DirichletL.Hecke.IdealOperations
-
 namespace OAI
 
 noncomputable section

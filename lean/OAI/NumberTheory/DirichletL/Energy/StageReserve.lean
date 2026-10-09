@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.ReferenceScalarReserve
-
 namespace OAI
 
 noncomputable section
@@ -53,10 +52,6 @@ theorem exists_separated_reference_reserve (rho ε Mcap Bmask bΦ:ℝ)
       rw [mul_left_comm,←Real.rpow_add hz]
       congr 2
       ring
-
-lemma inherited_loss_budget (incoming overhead final:ℝ)
-    (hin:incoming≤final/2)(hover:overhead≤final/2):incoming+overhead≤final:=by
-  linarith
 
 end SevenEighths.CenteredMomentEnergyStageReserve
 

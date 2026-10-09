@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstActiveFourier
 import OAI.NumberTheory.DirichletL.Moments.CompleteCommon
-
 namespace OAI
 
 noncomputable section
@@ -139,43 +138,6 @@ theorem activeConductor_span_dvd (I J : Ideal O) :
   apply Finset.prod_dvd_prod_of_dvd
   intro P hP
   simpa only [pow_one] using pow_dvd_pow P.val (leftExponent_pos I J P)
-
-theorem residual_active_coprime (I J : Ideal O) (hI : Supported I) :
-    IsCoprime (residualGenerator I J) (activeConductor I J) := by
-  apply (Ideal.isCoprime_span_singleton_iff _ _).mp
-  rw [residualGenerator_span I J hI]
-  exact (commonPart_own_residual_coprime I J).symm.of_isCoprime_of_dvd_right (activeConductor_span_dvd I J)
-
-theorem opposite_residual_active_coprime (I J : Ideal O) (hJ : Supported J) :
-    IsCoprime (residualGenerator J I) (activeConductor I J) := by
-  apply (Ideal.isCoprime_span_singleton_iff _ _).mp
-  rw [residualGenerator_span J I hJ]
-  exact (commonPart_residualPart_coprime I J).symm.of_isCoprime_of_dvd_right (activeConductor_span_dvd I J)
-
-theorem residual_generators_coprime (I J : Ideal O) (hI : Supported I) (hJ : Supported J) :
-    IsCoprime (residualGenerator I J) (residualGenerator J I) := by
-  apply (Ideal.isCoprime_span_singleton_iff _ _).mp
-  rw [residualGenerator_span I J hI,residualGenerator_span J I hJ]
-  exact residualParts_coprime I J
-
-theorem canonical_tripleFourier_norm_le (I J : Ideal O) (hI : Supported I) (hJ : Supported J) (h : O) :
-    ‖tripleFourier (residualGenerator I J) (residualGenerator J I) (activeConductor I J)
-      (supported_element_ne_zero _ (residualGenerator_supported I J hI))
-      (supported_element_ne_zero _ (residualGenerator_supported J I hJ)) (finitePrimeModulus_ne_zero _)
-      (residualCharacter I J hI) (residualCharacter J I hJ)⁻¹ (activeFunction I J hI) h‖ ≤
-      ‖eisEmbedding (activeConductor I J)‖*
-        ‖residueGauss (residualGenerator I J) (supported_element_ne_zero _ (residualGenerator_supported I J hI))
-          (residualCharacter I J hI) (Ideal.Quotient.mk _ h)‖*
-        ‖residueGauss (residualGenerator J I) (supported_element_ne_zero _ (residualGenerator_supported J I hJ))
-          (residualCharacter J I hJ)⁻¹ (Ideal.Quotient.mk _ h)‖ := by
-  exact tripleFourier_active_norm_le (activePrime I J) (activeCoprime I J) (activeGood I J hI)
-    (fun P => common_odd I J hI P.val) (activeExponent I J)
-    (netExponent_ne_zero _ _ _) (fun P => netExponent_lt_six _ _)
-    (residualGenerator I J) (residualGenerator J I)
-    (supported_element_ne_zero _ (residualGenerator_supported I J hI))
-    (supported_element_ne_zero _ (residualGenerator_supported J I hJ))
-    ((residual_generators_coprime I J hI hJ).mul_right (residual_active_coprime I J hI))
-    (opposite_residual_active_coprime I J hJ) _ _ h
 
 end SevenEighths.CenteredMomentCanonicalFirst
 

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DyadicContour
-
 namespace OAI
 
 noncomputable section

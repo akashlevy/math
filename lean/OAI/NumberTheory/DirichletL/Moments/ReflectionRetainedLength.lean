@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.ReflectionLength
 import OAI.NumberTheory.DirichletL.Moments.ReflectedTruncation
-
 namespace OAI
 
 noncomputable section
@@ -53,19 +52,6 @@ theorem eventually_actual_retained_length (C box xi : ℝ) (hC : 0<C)
     _=(box*C)*Z^(M-a+xi/2) :=by ring
     _≤Z^(xi/2)*Z^(M-a+xi/2) :=mul_le_mul_of_nonneg_right hconst (by positivity)
     _=Z^(M-a+xi) :=by rw [←Real.rpow_add hz];congr 1;ring
-
-lemma one_reflection_total_width (M A z b xi reflected : ℝ)
-    (hb : b≤M/4) (hreflection : reflected≤M-(A-z-b)+xi) :
-    reflected+b+z≤3*M/2-A+2*z+xi := by linarith
-
-lemma positive_slot_width_drop (M A z xi kappa : ℝ)
-    (hM : 0≤M) (hz : 0≤z) (hk : 3/4≤kappa)
-    (hA : 5*M/6≤A) (hcap : A+(6*kappa-1)*z≤M) :
-    3*M/2-A+2*z+xi≤23*M/30+xi ∧
-    3*M/2-A+2*z+xi+(6*kappa-1)*z≤14*M/15+xi := by
-  have hkz : 7/2*z≤(6*kappa-1)*z := mul_le_mul_of_nonneg_right (by linarith) hz
-  have hsmall : z≤M/21 := by linarith
-  constructor <;> nlinarith
 
 end SevenEighths.CenteredMomentReflectionRetainedLength
 

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseMarkedReferenceTuples
-
 namespace OAI
 
 noncomputable section
@@ -62,11 +61,6 @@ omit [Fintype ι] [DecidableEq ι] in
 theorem assignedIdeal_ne_zero (L:ι→Finset (Ideal O))(hprime:∀i,∀P∈L i,Prime P)
     (J:Finset ι)(x:Assigned L J) : assignedIdeal L J x≠0 :=
   Finset.prod_ne_zero_iff.mpr (fun i _hi=>(hprime i.val _ (x i).property).ne_zero)
-
-theorem residual_join (L:ι→Finset (Ideal O))(hprime:∀i,∀P∈L i,Prime P)
-    (J:Finset ι)(x:Assigned L J)(y:Remaining L J) :
-    residual (∏i,(joinTuple L J x y i).val) (assignedIdeal L J x)=remainingIdeal L J y := by
-  rw [joinTuple_product,InverseInitialOverlap.residual,quotient_mul_cancel (assignedIdeal_ne_zero L hprime J x)]
 
 theorem original_selected_grouped_products (S:Finset (Ideal O))
     (L:ι→Finset (Ideal O))(hprime:∀i,∀P∈L i,Prime P)

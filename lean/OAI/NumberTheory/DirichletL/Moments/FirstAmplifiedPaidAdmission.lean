@@ -3,7 +3,6 @@ import OAI.NumberTheory.DirichletL.Moments.FirstAmplifiedActiveAffine
 import OAI.NumberTheory.DirichletL.Moments.SecondCapacitySourceShift
 import OAI.NumberTheory.DirichletL.Moments.AmplificationChildSourceCaps
 import OAI.NumberTheory.DirichletL.Energy.InputParentCapacity
-
 namespace OAI
 
 noncomputable section
@@ -208,18 +207,6 @@ theorem actual_active_error_admission (s:Input ι)(τ υ:Character)(C D R0:Ideal
       (Fintype.card (liveIndices Bp.val):ℝ)*Real.logb Z (max 1 (errorInput s C R0 B τ t (Ideal.span {p}) k Bp υ v).upper)) 0
   refine ⟨add_nonneg (sub_nonneg.mpr hM) (sourceReserve_nonneg _ _ _ _ _ _ _ _ _),hparent,?_⟩
   unfold sourceReserve
-  linarith
-
-theorem actual_width_admission {η:Character}{C D:Ideal O}{hC:Supported C}{hD:Supported D}
-    {U:Finset (CommonIndex C D)}{τ:RayFourExpansion.RayCharacter→Character}
-    (hf:CenteredMomentSecondExceptionalFamily.Family η C D hC hD U τ)
-    (t:ℝ)(S:Finset (Ideal O))(β:Ideal O→ℂ)(R:ℝ)(rows:Finset O)
-    (W:𝓢(ℝ,ℂ))(K:ℝ)(hK:0<K)(n:Fin 4→ℤ)
-    (hne:physicalBlock η t S β C D hC hD U R rows W K n≠0)
-    (qref Z:ℝ)(hq:(η.modulus.absNorm:ℝ)≤qref)(hZ:1<Z)(χ:RayFourExpansion.RayCharacter):
-    Real.logb Z (dyadicScale (n 1))+Real.logb Z ((τ χ).modulus.absNorm:ℝ)-
-      Real.logb Z (envelopeRef qref C D U n)≤0 := by
-  have hh:=actual_width_le_reference hf t S β R rows W K hK n hne qref Z hq hZ χ
   linarith
 
 lemma common_preVolume_height (s:Input ι)(C R:Ideal O)(B:actualAllocations s.pools C)

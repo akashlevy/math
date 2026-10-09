@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstGlobalSourceEnergy
 import OAI.NumberTheory.DirichletL.Descent.PriorityProfile
 import OAI.NumberTheory.DirichletL.Descent.FirstChildWindowsCells
-
 namespace OAI
 
 noncomputable section

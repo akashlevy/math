@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GaussianPhysicalTail
 import OAI.NumberTheory.DirichletL.Detector.PhysicalCrudeMass
-
 namespace OAI
 
 noncomputable section

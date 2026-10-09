@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstAnnularActiveInput
 import OAI.NumberTheory.DirichletL.Moments.AmplificationRadicalChoice
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.ResidualFourierExpansion
-
 namespace OAI
 
 noncomputable section
@@ -8,77 +7,24 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open scoped BigOperators Classical MatrixGroups Matrix
+open scoped MatrixGroups Matrix
 
-open ActualEisensteinCubic CubicKubota ConcreteTraceCRT CubicJacobiGlobal CubicRamified
+open CubicKubota CubicJacobiGlobal CubicRamified
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma ramified_omega_relation : omega^2+omega+1=(0:Eis) := by
@@ -195,10 +141,9 @@ lemma ramifiedSourceFunction_omega_sq_translate (A B : ℤ) (w : HyperbolicSpace
 end
 
 section
-open MeasureTheory Filter
-open scoped BigOperators Classical MatrixGroups Matrix
+open scoped MatrixGroups Matrix
 
-open ActualEisensteinCubic ConcreteTraceCRT CubicRamified
+open CubicRamified
 open EisensteinEmbedding (omega3)
 local notation "Eis" => ActualEisensteinCubic.O
 
@@ -223,20 +168,6 @@ lemma embedding_cubicExp (n : ℤ) :
 def ramifiedShift10 : ℂ := eisEmbedding (omega-1)/(9*eisLam)
 
 def ramifiedShift19 : ℂ := eisEmbedding (-2-omega)/(9*eisLam)
-
-lemma ramifiedShift10_explicit : ramifiedShift10=-(omega3^2)/9 := by
-  unfold ramifiedShift10
-  apply (div_eq_iff (mul_ne_zero (by norm_num : (9:ℂ)≠0) eisLam_ne_zero)).mpr
-  rw [map_sub,eisEmbedding_omega_actual,map_one]
-  change omega3-1=-(omega3^2)/9*(9*(1+2*omega3))
-  linear_combination (2*omega3-1)*EisensteinEmbedding.omega3_sq
-
-lemma ramifiedShift19_explicit : ramifiedShift19=omega3/9 := by
-  unfold ramifiedShift19
-  apply (div_eq_iff (mul_ne_zero (by norm_num : (9:ℂ)≠0) eisLam_ne_zero)).mpr
-  rw [map_sub,map_neg,map_ofNat,eisEmbedding_omega_actual]
-  change -2-omega3=omega3/9*(9*(1+2*omega3))
-  linear_combination -2*EisensteinEmbedding.omega3_sq
 
 lemma ramifiedShift10_period (A B : ℤ) :
     ShortDraftTrace.breveE (ramifiedShift10*(3*eisEmbedding (ActualEisensteinCoordinates.eval A B)))=
@@ -307,42 +238,10 @@ lemma ramifiedSourceFunction_upper_shift19 (x : Eis) (z : ℂ) (v : ℝ) (hv : 0
       (upperTranslation_section (ActualEisensteinCoordinates.eval A B) z v hv).symm
   rw [he,ramifiedSourceFunction_omega_sq_translate]
 
-lemma trace_dephase_periodic (f : ℂ→ℂ) (shift : ℂ)
-    (hf : ∀ x : Eis,∀z, f (z+3*eisEmbedding x)=
-      ShortDraftTrace.breveE (shift*(3*eisEmbedding x))*f z) :
-    ∀x:Eis,∀z,(f (z+3*eisEmbedding x)*ShortDraftTrace.breveE (-shift*(z+3*eisEmbedding x)))=
-      f z*ShortDraftTrace.breveE (-shift*z) := by
-  intro x z
-  rw [hf,mul_add,AddChar.map_add_eq_mul]
-  have hn : -shift*(3*eisEmbedding x)=-(shift*(3*eisEmbedding x)) := by ring
-  rw [hn,AddChar.map_neg_eq_inv]
-  have hne : ShortDraftTrace.breveE (shift*(3*eisEmbedding x))≠0 :=
-    Complex.exp_ne_zero _
-  calc
-    _ = (ShortDraftTrace.breveE (shift*(3*eisEmbedding x))*
-      (ShortDraftTrace.breveE (shift*(3*eisEmbedding x)))⁻¹)*
-        (f z*ShortDraftTrace.breveE (-shift*z)) := by ring
-    _ = _ := by rw [mul_inv_cancel₀ hne,one_mul]
-
-lemma ramifiedSourceFunction_dephase10_periodic (v : ℝ) (hv : 0<v) :
-    ∀x:Eis,∀z,ramifiedSourceFunction omega (upperPoint (z+3*eisEmbedding x) v hv)*
-      ShortDraftTrace.breveE (-ramifiedShift10*(z+3*eisEmbedding x))=
-    ramifiedSourceFunction omega (upperPoint z v hv)*ShortDraftTrace.breveE (-ramifiedShift10*z) :=
-  trace_dephase_periodic (fun z => ramifiedSourceFunction omega (upperPoint z v hv))
-    ramifiedShift10 (fun x z=>ramifiedSourceFunction_upper_shift10 x z v hv)
-
-lemma ramifiedSourceFunction_dephase19_periodic (v : ℝ) (hv : 0<v) :
-    ∀x:Eis,∀z,ramifiedSourceFunction (omega^2) (upperPoint (z+3*eisEmbedding x) v hv)*
-      ShortDraftTrace.breveE (-ramifiedShift19*(z+3*eisEmbedding x))=
-    ramifiedSourceFunction (omega^2) (upperPoint z v hv)*ShortDraftTrace.breveE (-ramifiedShift19*z) :=
-  trace_dephase_periodic (fun z => ramifiedSourceFunction (omega^2) (upperPoint z v hv))
-    ramifiedShift19 (fun x z=>ramifiedSourceFunction_upper_shift19 x z v hv)
-
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups ENNReal
+open scoped MatrixGroups ENNReal
 
 def arbitraryCuspCompact (M : SL(2,ℂ)) (a b : ℝ) : Set HyperbolicSpace :=
   (M • ·) '' cuspHeightCompact a b
@@ -419,8 +318,7 @@ lemma arbitraryCusp_mem_compact (M : SL(2,ℂ)) (a b : ℝ) (ha : 0<a)
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups InnerProductSpace ENNReal
+open scoped MatrixGroups InnerProductSpace ENNReal
 
 def arbitraryCuspWeightedPhase (ρ : BoundedContinuousFunction ℝ ℂ) (freq : ℂ)
     (w : HyperbolicSpace) : ℂ :=
@@ -528,8 +426,7 @@ lemma arbitraryCuspHeightFamily_initial (M : SL(2,ℂ)) (a b : ℝ) (ha : 0<a)
 
 end
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology InnerProductSpace
+open scoped InnerProductSpace
 
 private lemma inner_projection_sandwich {E G : Type*}
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
@@ -575,15 +472,6 @@ theorem kernelEisensteinResidueVector_pairing (a b : ℝ) (ha : 0<a) (hab : a<b)
     kernelThetaMassProjection_eigenvector F hF,inner_smul_left]
   simp only [map_div₀,map_ofNat]
   ring
-
-theorem kernelEisensteinResidueVector_orthogonal_of_defect (a b : ℝ) (ha : 0<a) (hab : a<b)
-    (F : KernelQuotientL2) (hF : (F,(8/9:ℂ) • F)∈kernelEnergyLaplacian.graph)
-    (hzero : inner ℂ F (kernelL2Defect a b ha hab (4/3))=0) :
-    inner ℂ F (kernelEisensteinResidueVector a b ha hab)=0 := by
-  rw [kernelEisensteinResidueVector_pairing a b ha hab F hF,hzero,mul_zero]
-
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology InnerProductSpace
 
 lemma kernelLocalCorrectedSeed_initial_eq
     (S : Set KernelQuotient) (hS : IsCompact S)

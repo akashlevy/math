@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.RationalTranslations
-
 namespace OAI
 
 noncomputable section
@@ -8,75 +7,19 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
-
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
+open scoped ContDiff
+open Set
 
 lemma ramified_denominator_ne_zero (s : ℂ) (hs : 1<s.re) :
     (3:ℂ)^(3*s-3)-1≠0 := by
@@ -90,12 +33,6 @@ lemma ramified_denominator_ne_zero (s : ℂ) (hs : 1<s.re) :
     linarith
   rw [hpow,norm_one] at hnorm
   exact lt_irrefl _ hnorm
-
-theorem unramifiedCubicGaussSeries_zero (s : ℂ) (hs : 2<s.re) :
-    unramifiedCubicGaussSeries s 0=unramifiedTotientSeries (3*s-2) := by
-  have he:=arithmeticDirichletSeries_zero_unramified s hs
-  rw [arithmeticDirichletSeries_zero_totient s (by linarith)] at he
-  exact (mul_left_cancel₀ (mul_ne_zero (by norm_num) (inv_ne_zero (ramified_denominator_ne_zero s (by linarith)))) he).symm
 
 lemma cuspWhittakerHeightFactor_zero (s : ℂ) (hs : 1<s.re) :
     cuspWhittakerHeightFactor s 0=((Real.pi:ℂ)/(s-1))*cuspScatterHeightFactor s := by
@@ -181,11 +118,10 @@ theorem translatedCuspFourier_opposite_zero_residue :
   exact mul_left_cancel₀ (by norm_num : (2:ℂ)≠0) heq
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
+open scoped MatrixGroups
 
 section
-open CubicKubota ActualEisensteinCubic ConcreteTraceCRT
+open CubicKubota
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma rationalComplex_conjugate (r:SL(2,ℤ)) (M:levelThree) :
@@ -360,13 +296,6 @@ theorem kernelSourceProjection_residue_cusp_average :
   norm_num
   ring
 
-theorem kernelSourceProjection_cubicEisensteinResidue_ne_zero :
-    kernelSourceProjection cubicEisensteinResidue≠0 := by
-  intro hz
-  have hh:=kernelSourceProjection_residue_cusp_average
-  rw [hz,map_zero] at hh
-  exact cuspConstantAverageResidue_ne_zero hh.symm
-
 theorem cubicSourceResidualFunction_cusp_average :
     (∫w in cuspPeriodStrip 5 6,cubicSourceResidualFunction w∂hyperbolicVolume)=
       cuspConstantAverageResidue := by
@@ -385,8 +314,6 @@ theorem cubicSourceResidualFunction_ne_zero : cubicSourceResidualFunction≠0 :=
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
 
 section
 
@@ -419,10 +346,6 @@ lemma complex_gaussian_power_integral (s : ℂ) (r : ℝ)
   simpa [neg_mul] using he
 
 end
-
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
-open Finset AddChar MulChar EisensteinEmbedding
 
 def cubicMellinMixture (s : ℂ) (t x : ℝ) : ℂ :=
   (t:ℂ)^(-(2:ℂ)/3)*Complex.exp (-(t:ℂ))*
@@ -546,10 +469,6 @@ lemma cubicMellinMixture_integral_t (s : ℂ) (x : ℝ) :
   linear_combination (t:ℂ)^(-(2:ℂ)/3)*(x:ℂ)^((s-1/3)-1)*he
 
 end
-
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
-open Finset AddChar MulChar EisensteinEmbedding
 
 lemma schlafliBesselK_cubic_mellin_mixture (s : ℂ) (x : ℝ) (hx : 0<x) :
     (x:ℂ)^(s-1)*schlafliBesselK (1/3) x =

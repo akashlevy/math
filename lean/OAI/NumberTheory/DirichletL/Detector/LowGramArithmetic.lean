@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LowGramProfile
 import OAI.NumberTheory.DirichletL.Detector.LowPeriod
-
 namespace OAI
 
 noncomputable section

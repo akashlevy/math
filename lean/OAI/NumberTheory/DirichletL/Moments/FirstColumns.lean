@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstNormalization
 import OAI.NumberTheory.DirichletL.Moments.FixedRay
 import OAI.NumberTheory.DirichletL.Moments.ChildAssembly
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.ContinuationPolynomialContour
-
 namespace OAI
 
 noncomputable section

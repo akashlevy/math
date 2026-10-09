@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.SourceCuspKernels
-
 namespace OAI
 
 noncomputable section
@@ -8,77 +7,23 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open scoped Classical BigOperators
 
-open ActualEisensteinCubic CompletedGauss
+open CompletedGauss
 local notation "Eis" => ActualEisensteinCubic.O
 
 theorem thetaFullFrequency_tsum (c w : Eis→ℂ)
@@ -105,41 +50,13 @@ theorem thetaFullFrequency_tsum (c w : Eis→ℂ)
   · intro p
     rfl
 
-theorem sourceFourier_tsum_full_index (w : Eis→ℂ) :
-    (∑'h:{h:Eis // h≠0},w h.val*star (sourceResidualFourierCoefficient h.val))=
-      ∑'p:ThetaFullIndex,w (thetaFullFrequency p)*
-        star (sourceResidualFourierCoefficient (thetaFullFrequency p)) := by
-  apply thetaFullFrequency_tsum (fun h => star (sourceResidualFourierCoefficient h)) w
-  intro h hh hc
-  have hn : sourceResidualFourierCoefficient h≠0 := by
-    intro hz
-    exact hc (by rw [hz,star_zero])
-  obtain ⟨u,m,I,J,hsq,hI,hJ,hfactor⟩:=
-    sourceResidualFourierCoefficient_full_squarefree_cube_support h hh hn
-  refine ⟨(u,m,(⟨I,hsq,hI⟩,⟨J,hJ⟩)),?_⟩
-  exact hfactor.symm
-
-theorem ramifiedFourier_tsum_full_index (side : Bool) (w : Eis→ℂ) :
-    (∑'h:{h:Eis // h≠0},w h.val*star (ramifiedBesselValue side h.val))=
-      ∑'p:ThetaFullIndex,w (thetaFullFrequency p)*
-        star (ramifiedBesselValue side (thetaFullFrequency p)) := by
-  apply thetaFullFrequency_tsum (fun h => star (ramifiedBesselValue side h)) w
-  intro h hh hc
-  have hn : ramifiedBesselValue side h≠0 := by
-    intro hz
-    exact hc (by rw [hz,star_zero])
-  obtain ⟨u,m,I,J,hsq,hI,hJ,hfactor⟩:=ramifiedBesselValue_squarefree_cube_support side h hh hn
-  refine ⟨(u,m,(⟨I,hsq,hI⟩,⟨J,hJ⟩)),?_⟩
-  exact hfactor.symm
-
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
+open scoped MatrixGroups
 
 section
-open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal CompletedGauss
+open CubicJacobiGlobal CompletedGauss
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma squarefreeCube_scale_le_norm_third (I J:Ideal Eis)
@@ -199,7 +116,6 @@ theorem three_cusp_coefficients_polynomial_bound :
 end
 
 section
-open ActualEisensteinCubic ConcreteTraceCRT
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma coefficient_weighted_summable_of_polynomial (F:Eis→ℂ) (C:ℝ) (hC:0≤C)
@@ -258,18 +174,9 @@ lemma derivative_coefficient_weighted_summable (F:Eis→ℂ) (A:ℂ)
       _=‖A‖*‖F h‖*(‖cuspFrequency h‖*‖cuspFrequency h‖^(-5:ℝ)):=by rw [hp];ring
       _=_:=by ring
 
-theorem three_cusp_derivative_coefficients_weighted_summable (A:ℂ) :
-    Summable (fun h:Eis=>if h=0 then (0:ℝ) else
-      ‖A*cuspFrequency h*star (sourceResidualFourierCoefficient h)‖*‖cuspFrequency h‖^(-5:ℝ)) ∧
-    ∀side:Bool,Summable (fun h:Eis=>if h=0 then (0:ℝ) else
-      ‖A*cuspFrequency h*star (ramifiedBesselValue side h)‖*‖cuspFrequency h‖^(-5:ℝ)) :=
-  ⟨derivative_coefficient_weighted_summable _ A three_cusp_coefficients_weighted_summable.1,
-    fun side=>derivative_coefficient_weighted_summable _ A (three_cusp_coefficients_weighted_summable.2 side)⟩
-
 end
 
 section
-open ActualEisensteinCubic ConcreteTraceCRT
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma radial_inverse_weight (x:ℝ) (hx:0<x) :
@@ -308,19 +215,8 @@ lemma radialCoefficient_weighted_summable_of_fourth (F:Eis→ℂ) (A:ℂ)
       _=‖A*cuspFrequency h*star (F h)‖*‖eisEmbedding h‖^(-5:ℝ):=by rw [hw]
       _=_:=by rw [←radial_inverse_weight _ hx];ring
 
-theorem three_cusp_radial_coefficients_weighted_summable (A:ℂ) :
-    Summable (fun h:Eis=>if h=0 then (0:ℝ) else
-      ‖A*cuspFrequency h*star (sourceResidualFourierCoefficient h)/((‖eisEmbedding h‖^2:ℝ):ℂ)‖*
-        (‖eisEmbedding h‖^2)^(-(3/2):ℝ)) ∧
-    ∀side:Bool,Summable (fun h:Eis=>if h=0 then (0:ℝ) else
-      ‖A*cuspFrequency h*star (ramifiedBesselValue side h)/((‖eisEmbedding h‖^2:ℝ):ℂ)‖*
-        (‖eisEmbedding h‖^2)^(-(3/2):ℝ)) :=
-  ⟨radialCoefficient_weighted_summable_of_fourth _ A three_cusp_coefficients_weighted_summable.1,
-    fun side=>radialCoefficient_weighted_summable_of_fourth _ A (three_cusp_coefficients_weighted_summable.2 side)⟩
-
 end
 
-open ActualEisensteinCubic ConcreteTraceCRT
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma sourceCuspCoefficients_weighted_summable (j:Fin 3) :
@@ -353,11 +249,10 @@ theorem sourceCuspRadialCoefficient_weighted_summable (j:Fin 3) (z:ℂ) :
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ContDiff MatrixGroups
+open scoped MatrixGroups
 
 section
-open CompletedGauss ConcreteTraceCRT
+open CompletedGauss
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma SourceCuspDatum.cuspBarProfile_mellin_entire (d : SourceCuspDatum) :
@@ -408,7 +303,7 @@ def SourceCuspDatum.smoothedKernel (d:SourceCuspDatum) (W:ℝ→ℂ) (X:ℝ) : �
 end
 
 section
-open CompletedGauss ConcreteTraceCRT
+open CompletedGauss
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma thetaBesselScale_square : thetaBesselScale^2=(1/27:ℝ) := by
@@ -433,22 +328,9 @@ lemma SourceCuspDatum.smoothedKernel_eq (d:SourceCuspDatum) (W:ℝ→ℂ) (X:ℝ
             (X*sourceCuspRadialLength n/(27*(sourceCuspScale d.index)^2*d.heightScale^2)) := by
   simp only [SourceCuspDatum.smoothedKernel,sourceCuspRadialScale_ratio,sourceCuspKernel_argument]
 
-lemma SourceCuspDatum.smoothedKernel_prefactor_norm (d:SourceCuspDatum) :
-    ‖d.multiplier*(d.heightScale:ℂ)*(sourceCuspScale d.index:ℂ)^2‖=
-      (sourceCuspScale d.index)^2 := by
-  rw [norm_mul,norm_mul,norm_pow,d.multiplier_norm,Complex.norm_real,Complex.norm_real,
-    Real.norm_eq_abs,Real.norm_eq_abs,abs_of_pos d.heightScale_pos,abs_of_pos (sourceCuspScale_pos _)]
-  rw [inv_mul_cancel₀ d.heightScale_pos.ne',one_mul]
-
-lemma SourceCuspDatum.smoothedKernel_prefactor_norm_le (d:SourceCuspDatum) :
-    ‖d.multiplier*(d.heightScale:ℂ)*(sourceCuspScale d.index:ℂ)^2‖≤9 := by
-  rw [d.smoothedKernel_prefactor_norm]
-  rcases d with ⟨G,j,hj⟩
-  fin_cases j <;> norm_num [sourceCuspScale]
-
 end
 
-open CompletedGauss ConcreteTraceCRT
+open CompletedGauss
 local notation "Eis" => ActualEisensteinCubic.O
 
 theorem completedT_finite_smoothed_reflection
@@ -544,52 +426,9 @@ theorem completedT_canonical_smoothed_reflection
 
 end
 
-open scoped Classical MatrixGroups Matrix
+open scoped MatrixGroups Matrix
 
-open CubicKubota EisensteinCuspModThree ConcreteTraceCRT
-local notation "Eis" => ActualEisensteinCubic.O
-
-def fixedCuspReduction : SL(2,Eis) →* SL(2,Eis⧸Ideal.span {(3:Eis)}) :=
-  Matrix.SpecialLinearGroup.map (n:=Fin 2) (Ideal.Quotient.mk (Ideal.span {(3:Eis)}))
-
-abbrev FixedCuspSector := fixedCuspReduction.range
-
-instance : Finite FixedCuspSector := by
-  let : Finite (Eis⧸Ideal.span {(3:Eis)}) := finite_quotient_span (by norm_num : (3:Eis)≠0)
-  infer_instance
-
-def fixedCuspSector (M : SL(2,Eis)) : FixedCuspSector :=
-  ⟨fixedCuspReduction M,⟨M,rfl⟩⟩
-
-def fixedCuspRepresentative (s : FixedCuspSector) : SL(2,Eis) := s.property.choose
-
-lemma fixedCuspRepresentative_reduction (s : FixedCuspSector) :
-    fixedCuspReduction (fixedCuspRepresentative s)=s.val := s.property.choose_spec
-
-lemma fixedCusp_difference_levelThree (M : SL(2,Eis)) :
-    M*(fixedCuspRepresentative (fixedCuspSector M))⁻¹∈levelThree := by
-  change fixedCuspReduction (M*(fixedCuspRepresentative (fixedCuspSector M))⁻¹)=1
-  rw [map_mul,map_inv,fixedCuspRepresentative_reduction]
-  change fixedCuspReduction M*(fixedCuspReduction M)⁻¹=1
-  exact mul_inv_cancel _
-
-theorem exists_fixed_cusp_decomposition :
-    ∃(j:FixedCuspSector→Fin 3) (T:FixedCuspSector→SL(2,Eis))
-      (G:SL(2,Eis)→levelTwo),
-      (∀s,T s 1 0=0 ∧ IsUnit (T s 0 0) ∧ IsUnit (T s 1 1)) ∧
-      ∀M:SL(2,Eis),M=(G M:SL(2,Eis))*cuspRepresentative (j (fixedCuspSector M))*
-        T (fixedCuspSector M) := by
-  have h (s:FixedCuspSector) := three_cusp_decomposition (fixedCuspRepresentative s)
-  choose G0 j T hT hT0 hT1 he using h
-  let D : SL(2,Eis)→levelTwo := fun M=>
-    ⟨M*(fixedCuspRepresentative (fixedCuspSector M))⁻¹,
-      levelThree_le_levelTwo (fixedCusp_difference_levelThree M)⟩
-  refine ⟨j,T,fun M=>D M*G0 (fixedCuspSector M),fun s=>⟨hT s,hT0 s,hT1 s⟩,?_⟩
-  intro M
-  change M=(M*(fixedCuspRepresentative (fixedCuspSector M))⁻¹)*
-    (G0 (fixedCuspSector M):SL(2,Eis))*cuspRepresentative (j (fixedCuspSector M))*T (fixedCuspSector M)
-  rw [he (fixedCuspSector M)]
-  group
+open CubicKubota EisensteinCuspModThree
 
 end CubicEisenstein
 

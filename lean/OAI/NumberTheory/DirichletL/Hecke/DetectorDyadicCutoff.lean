@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorDyadicProfiles
 import OAI.NumberTheory.DirichletL.Hecke.DetectorProfilesCutoffs
-
 namespace OAI
 
 noncomputable section

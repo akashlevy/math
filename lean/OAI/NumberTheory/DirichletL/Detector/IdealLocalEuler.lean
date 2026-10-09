@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.HighSeries
 import OAI.NumberTheory.DirichletL.Detector.SourcePrimeFactor
 import OAI.NumberTheory.DirichletL.IdealEuler
-
 namespace OAI
 
 noncomputable section

@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.DetectorPlainFiberSource
 import OAI.NumberTheory.DirichletL.Moments.DetectorEnergyInitialState
 import OAI.NumberTheory.DirichletL.Moments.NaturalFixedRaySourceFreeExceptional
-
 namespace OAI
 
 noncomputable section
@@ -105,19 +104,6 @@ theorem source_fibers_eventually_retained (S:ProbeFinalAssembly.SourceData D)(η
   intro u hu
   obtain ⟨hu,hex⟩:=Finset.mem_filter.mp hu
   exact ((source_keep_iff S η₀ u).mp (hk u hu)) hex
-
-theorem source_exceptional_energy_eventually_zero (S:ProbeFinalAssembly.SourceData D)(η:Character):
-    ∀ᶠZ:ℝ in atTop,∀rows:Finset FreeRow,
-      (∀u∈rows,Z^(1/100:ℝ)≤rowNorm u)→
-      ∀label:Sum Bool (RayQuotient.Characters S.modulus ⊤),∀f:FreeRow→ℂ,
-      (∑u∈rows.filter (sourceExceptional S
-        (sourceMomentBase S.modulus ⊤ le_top S.S S.exclusions.prime η label)),‖f u‖^2)=0:=by
-  filter_upwards [eventually_source_no_exceptional S η] with Z hz
-  intro rows hrows label f
-  apply Finset.sum_eq_zero
-  intro u hu
-  obtain ⟨hu,hex⟩:=Finset.mem_filter.mp hu
-  exact False.elim ((hz label u (hrows u hu)) hex)
 
 theorem source_batch_plain_retained (S:ProbeFinalAssembly.SourceData D)(η:Character):
     ∀ᶠZ:ℝ in atTop,1<Z ∧ ∀rows:Finset FreeRow,

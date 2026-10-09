@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GramClassification
 import OAI.NumberTheory.DirichletL.Detector.GramLatticeWindow
-
 namespace OAI
 
 noncomputable section

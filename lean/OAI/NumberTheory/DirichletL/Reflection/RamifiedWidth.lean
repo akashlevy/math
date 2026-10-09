@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.KernelActual
 import OAI.NumberTheory.DirichletL.Inversion.TerminalWidths
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -39,18 +38,6 @@ theorem literal_reflectedExponent_le_signed (Z : ℝ) (hZ : 1<Z) (m : ℕ)
     literal_ramified_width_offset]
   rw [add_sub_cancel_right]
   linarith
-
-theorem ramified_offset_threshold (η : ℝ) (hη : 0<η) :
-    ∃ Z₀ : ℝ, 1<Z₀ ∧ ∀ Z : ℝ, Z₀≤Z →
-      0≤4*Real.logb Z 3 ∧ 4*Real.logb Z 3≤η := by
-  obtain ⟨Z₀,hZ₀,hw⟩ := InverseTerminalWidths.ramified_width_threshold η hη
-  refine ⟨Z₀,hZ₀,?_⟩
-  intro Z hZ
-  have hz : 1<Z := lt_of_lt_of_le hZ₀ hZ
-  have he := hw Z hZ 0
-  unfold InverseTerminalWidths.ramifiedWidth at he
-  norm_num at he
-  exact ⟨mul_nonneg (by norm_num) (Real.logb_nonneg hz (by norm_num)),by linarith⟩
 
 end
 end SevenEighths.InverseReflectedPhase

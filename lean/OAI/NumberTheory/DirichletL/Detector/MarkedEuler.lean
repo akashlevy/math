@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.MarkedValuations
-
 namespace OAI
 
 noncomputable section

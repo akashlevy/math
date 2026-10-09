@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.RowAnalytic
-
 namespace OAI
 
 noncomputable section

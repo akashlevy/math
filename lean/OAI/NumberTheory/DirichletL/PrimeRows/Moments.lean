@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.Euler
 import OAI.NumberTheory.DirichletL.Hecke.DetectorCoefficientTransfer
-
 namespace OAI
 
 noncomputable section
@@ -73,24 +72,6 @@ theorem denominator_moment_coeff (S : Finset (Ideal O)) (hS : ∀P∈S,Prime P)
         excludedTarget_prime,ite_eq_right hP,idealCoeff_inverse_conj,map_mul]
       simp only [starRingEnd_self_apply]
   simpa only [idealCoeff_inverse_conj] using congrArg (fun F : Ideal O→*₀ℂ => F I) he
-
-theorem numerator_moment_polynomial (S : Finset (Ideal O)) (hS : ∀P∈S,Prime P)
-    (hbad : CanonicalQuadraticSieve.fixedBadPrimes⊆S) (u : FreeRow)
-    (inv : Bool) (W : ℝ→ℂ) (D σ freq : ℝ) :
-    HeckeDyadic.polynomial (rowCharacter S hS u) inv W D σ freq=
-      HeckeDyadic.polynomial ((momentData (fixedSourcePrincipal S hS)).character
-        (momentElement u)) inv W D σ freq :=
-  HeckeDetectorCoefficientTransfer.polynomial_eq_of_idealCoeff _ _
-    (numerator_moment_coeff S hS hbad u) inv W D σ freq
-
-theorem denominator_moment_norm (S : Finset (Ideal O)) (hS : ∀P∈S,Prime P)
-    (hbad : CanonicalQuadraticSieve.fixedBadPrimes⊆S) (η : Character) (u : FreeRow)
-    (inv : Bool) (W : ℝ→ℂ) (D σ freq : ℝ) (hD : 0<D) :
-    ‖HeckeDyadic.polynomial ((targetRow η u).excludePrimes S hS) inv W D σ freq‖=
-      ‖HeckeDyadic.polynomial ((momentData (η.inverse.excludePrimes S hS)).character
-        (momentElement u)) inv (fun x=>conj (W x)) D σ (-freq)‖ :=
-  HeckeDetectorCoefficientTransfer.norm_of_oriented_coefficients _ _ true
-    (denominator_moment_coeff S hS hbad η u) inv W D σ freq hD
 
 end SevenEighths.ProbeHighRowFamily
 

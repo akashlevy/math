@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialTotalRows
 import OAI.NumberTheory.DirichletL.Inversion.InitialOverlapHeight
 import OAI.NumberTheory.DirichletL.Inversion.InitialMarkedInputEnergy
-
 namespace OAI
 
 noncomputable section

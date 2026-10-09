@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.TailEnergyBudget
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

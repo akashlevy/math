@@ -1,74 +1,23 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.RowCaps
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 
@@ -154,12 +103,6 @@ def kernelSmoothTestsToL2 : kernelSmoothTests→ₗ[ℂ]KernelQuotientL2 where
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 
-lemma kernelSmoothTestsToL2_injective : Function.Injective kernelSmoothTestsToL2 := by
-  intro f g hfg
-  apply Subtype.ext
-  apply kernel_continuous_eq_of_ae_eq _ _ f.2.1.continuous g.2.1.continuous
-  exact ((kernelSmoothTests_memLp f).toLp_eq_toLp_iff (kernelSmoothTests_memLp g)).mp hfg
-
 lemma kernelL2_smooth_compact_approx (f : KernelQuotientL2) (ε : ℝ) (hε : 0<ε) :
     ∃g : kernelSmoothTests,
       eLpNorm ((f : KernelQuotient→ℂ)-g.1) 2 (integralQuotientVolume globalKubotaKernel)≤
@@ -232,45 +175,8 @@ lemma hyperbolicSpatialChart_symm_eq {p : SpatialCoordinates}
     hyperbolicSpatialChart.right_inv hp
   simpa only [he,spatialHorizontal] using h.symm
 
-lemma kernelQuotientDefect_coordinate (a b : ℝ) (s : ℂ) (q : KernelQuotient)
-    {p : SpatialCoordinates} (hp : p∈hyperbolicSpatialChart.target) :
-    kernelQuotientDefect a b s ((kernelQuotientChart q).symm p)=smoothCuspSeedDefectField a b s p := by
-  rw [kernelQuotientChart_symm,hyperbolicSpatialChart_symm_eq hp]
-  change smoothCuspSeedDefect a b s _=smoothCuspSeedDefectField a b s p
-  rw [smoothCuspSeedDefectField,dite_eq_left (hyperbolicSpatialChart_target_positive hp)]
-  rfl
-
-lemma kernelQuotientDefect_contMDiff (a b : ℝ) (s : ℂ) (ha : 1<a) (hab : a<b) :
-    ContMDiff 𝓘(ℝ,SpatialCoordinates) 𝓘(ℝ,ℂ) ∞ (kernelQuotientDefect a b s) := by
-  intro q
-  rw [contMDiffAt_iff]
-  refine ⟨(kernelQuotientDefect_continuous a b s ha hab).continuousAt,?_⟩
-  have hq : q∈(kernelQuotientChart q).source := mem_chart_source SpatialCoordinates q
-  have hp : kernelQuotientChart q q∈hyperbolicSpatialChart.target :=
-    ((kernelQuotientChart q).map_source hq).1
-  have hF := actual_smoothCuspSeedDefect_contDiffAt a b s ha hab _
-    (hyperbolicSpatialChart_target_positive hp)
-  have he : (fun p => kernelQuotientDefect a b s ((kernelQuotientChart q).symm p))=ᶠ[𝓝 (kernelQuotientChart q q)]
-      smoothCuspSeedDefectField a b s := by
-    filter_upwards [hyperbolicSpatialChart.open_target.mem_nhds hp] with p hp
-    exact kernelQuotientDefect_coordinate a b s q hp
-  have hh := hF.congr_of_eventuallyEq he
-  have hh' := hh.contDiffWithinAt (s := Set.univ)
-  simpa only [extChartAt_coe,extChartAt_coe_symm,modelWithCornersSelf_coe,
-    modelWithCornersSelf_coe_symm,Function.id_comp,Function.comp_id,Set.range_id,
-    chartAt_self_eq,kernelSpatial_chartAt,OpenPartialHomeomorph.refl_apply,Function.comp_def,id_eq] using hh'
-
-def kernelDefectSmoothTest (a b : ℝ) (ha : 1<a) (hab : a<b) (s : ℂ) : kernelSmoothTests :=
-  ⟨kernelQuotientDefect a b s,kernelQuotientDefect_contMDiff a b s ha hab,
-    kernelQuotientDefect_hasCompactSupport a b (by linarith) hab s⟩
-
-lemma kernelDefectSmoothTest_toL2 (a b : ℝ) (ha : 1<a) (hab : a<b) (s : ℂ) :
-    kernelSmoothTestsToL2 (kernelDefectSmoothTest a b ha hab s)=
-      kernelL2Defect a b (by linarith) hab s := rfl
-
 end CubicEisenstein
 
-open scoped BigOperators Classical SchwartzMap
 namespace InitialMeanSquare
 
 section
@@ -292,12 +198,6 @@ omit [∀ (i : ι), (span {p i}).IsMaximal] in
 lemma quotient_norm_fixed (r : O) (x : SecondExpansionData ι) (hx : InSecondQuotientSector p r x) :
     elementNorm (secondExpansionQuotient p x)=elementNorm r := by
   simp only [elementNorm,eisEmbedding_norm_sq_eq_absNorm_span,quotient_span_fixed p r x hx]
-
-omit [∀ (i : ι), (span {p i}).IsMaximal] in
-lemma residualScale_fixed (Z : ℝ) (r : O) (x : SecondExpansionData ι)
-    (hx : InSecondQuotientSector p r x) :
-    residualScale p Z x=Z/(elementNorm (primeSubsetGenerator (fun i => Ideal.span {p i}) x.divisor)*elementNorm r) := by
-  rw [residualScale,quotient_norm_fixed p r x hx]
 
 variable (hp : ∀i,p i≠0)
   (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
@@ -485,7 +385,6 @@ theorem initial_sector_transfer
 
 end InitialMeanSquare
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 
@@ -536,7 +435,6 @@ theorem descent_normLogBin_small_power (ε : ℝ) (hε : 0<ε) (H : ℝ) (hH : 1
     _ ≤ H^ε/ε+H^ε := add_le_add le_rfl hp
     _ = _ := by ring
 
-open ActualEisensteinCubic
 open FirstPassCubeLabels (primeProductNorm primeProduct aLabel squarefreeLabel b0Label j2Label cubeActiveSupport)
 open ConcreteTraceCRT (eisEmbedding)
 open IdealMobiusDivisorSum (idealDivisors mem_idealDivisors)
@@ -589,11 +487,6 @@ theorem cubeParityKey_ne_zero (x : CubeCoordinates ι) :
   · exact (Ideal.span_singleton_eq_bot.not).mpr (primeProduct_ne_zero p hp _ _)
   · exact (Ideal.span_singleton_eq_bot.not).mpr
       (mul_ne_zero (primeProduct_ne_zero p hp _ _) (primeProduct_ne_zero p hp _ _))
-
-omit [∀ (i : ι), (span {p i}).IsMaximal] in
-theorem cubeProductIdeal_ne_zero (x : CubeCoordinates ι) : cubeProductIdeal p x≠0 := by
-  rw [cubeParityKey_product]
-  exact mul_ne_zero (pow_ne_zero _ (cubeParityKey_ne_zero p hp x).2) (cubeParityKey_ne_zero p hp x).1
 
 variable (hinj : Function.Injective (fun i => Ideal.span {p i}))
 include hinj

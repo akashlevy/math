@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalLongCoefficient
-
 namespace OAI
 
 noncomputable section

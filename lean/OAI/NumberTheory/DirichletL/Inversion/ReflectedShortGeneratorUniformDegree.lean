@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.ShortCanonicalNormalization
 import OAI.NumberTheory.DirichletL.Inversion.ReflectedShortPowerUniformDegree
-
 namespace OAI
 noncomputable section
 open scoped BigOperators Classical ContDiff

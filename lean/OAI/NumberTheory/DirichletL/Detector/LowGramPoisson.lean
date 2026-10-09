@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowGramProfile
-
 namespace OAI
 
 noncomputable section

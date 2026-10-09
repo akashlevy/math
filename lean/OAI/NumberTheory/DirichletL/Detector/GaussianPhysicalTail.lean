@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GaussianRemoteRows
 import OAI.NumberTheory.DirichletL.Detector.GaussianPhysicalTuple
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LiftedFourier
-
 namespace OAI
 
 noncomputable section

@@ -3,8 +3,7 @@ import OAI.NumberTheory.DirichletL.Energy.NaturalHighStage
 import OAI.NumberTheory.DirichletL.Energy.NaturalZeroStage
 import OAI.NumberTheory.DirichletL.Energy.CappedSuccessorPacking
 import OAI.NumberTheory.DirichletL.Energy.CappedRequests
-import OAI.NumberTheory.DirichletL.Energy.CappedBandTransport
-
+import OAI.NumberTheory.DirichletL.Energy.CappedWidthInduction
 namespace OAI
 
 noncomputable section

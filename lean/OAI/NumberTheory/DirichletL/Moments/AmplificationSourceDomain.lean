@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.AmplificationSource
-
 namespace OAI
 
 noncomputable section

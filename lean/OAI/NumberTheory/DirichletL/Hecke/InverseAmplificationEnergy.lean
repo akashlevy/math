@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationMask
-
 namespace OAI
 
 noncomputable section
@@ -39,37 +38,6 @@ theorem prime_column_energy (χ ψ : Character) (P : SmoothMobiusCorrection.Prim
       idealCoeff χ P.val*(P.val.absNorm : ℂ)^(-(1/2 : ℂ))*polynomial ψ true W (D/(P.val.absNorm : ℝ)) σ freq),
     sq_nonneg (‖polynomial ψ true W D σ freq‖-
       ‖polynomial ψ true W (D/(P.val.absNorm : ℝ)) σ freq‖)]
-
-theorem finite_amplification (rows : Finset FreeRow) (multipliers : Finset NonzeroIdeal)
-    (target : Finset O) (F : FreeRow→ℝ) (E : O→ℝ) (K : ℝ)
-    (hK : 0≤K) (hE : ∀ u, 0≤E u)
-    (hmap : ∀ u∈rows, ∀ A∈multipliers, rowMap (u,A)∈target)
-    (hamp : ∀ u∈rows, ∀ A∈multipliers, F u≤K*E (rowMap (u,A))) :
-    (multipliers.card : ℝ)*(∑ u∈rows, F u)≤K*∑ v∈target, E v := by
-  have hs : (multipliers.card : ℝ)*(∑ u∈rows, F u)=
-      ∑ p∈rows×ˢmultipliers, F p.1 := by
-    rw [Finset.sum_product]
-    simp only [Finset.sum_const,nsmul_eq_mul]
-    rw [Finset.mul_sum]
-  rw [hs]
-  calc
-    _ ≤ ∑ p∈rows×ˢmultipliers, K*E (rowMap p) := by
-      apply Finset.sum_le_sum
-      intro p hp
-      obtain ⟨hu,hA⟩ := Finset.mem_product.mp hp
-      exact hamp p.1 hu p.2 hA
-    _ = K*∑ v∈(rows×ˢmultipliers).image rowMap, E v := by
-      rw [Finset.mul_sum,Finset.sum_image]
-      exact fun p hp q hq h => rowMap_injective h
-    _ ≤ K*∑ v∈target, E v := by
-      apply mul_le_mul_of_nonneg_left _ hK
-      apply Finset.sum_le_sum_of_subset_of_nonneg
-      · intro v hv
-        obtain ⟨p,hp,rfl⟩ := Finset.mem_image.mp hv
-        obtain ⟨hu,hA⟩ := Finset.mem_product.mp hp
-        exact hmap p.1 hu p.2 hA
-      · intro v hv hn
-        exact hE v
 
 end SevenEighths.HeckeInverseAmplification
 

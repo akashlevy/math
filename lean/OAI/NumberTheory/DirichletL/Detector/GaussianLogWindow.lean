@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GaussianFlow
-
 namespace OAI
 
 noncomputable section

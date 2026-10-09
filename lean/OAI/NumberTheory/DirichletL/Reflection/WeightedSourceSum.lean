@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.ActualWeightedEnergy
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

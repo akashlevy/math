@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.PhysicalPoisson
 import OAI.NumberTheory.DirichletL.Detector.PhysicalReopen
-
 namespace OAI
 
 noncomputable section

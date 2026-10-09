@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.Row
 import Mathlib.Analysis.Normed.Group.FunctionSeries
 import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-
 namespace OAI
 
 noncomputable section

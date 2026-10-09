@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondSourcePoisson
 import OAI.NumberTheory.DirichletL.Moments.FirstWholeKernel
 import OAI.NumberTheory.DirichletL.Moments.FirstScale
-
 namespace OAI
 
 noncomputable section

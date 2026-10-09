@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.ZShift
 import OAI.NumberTheory.DirichletL.PrimeRows.FixedIntegral
 import OAI.NumberTheory.DirichletL.PrimeRows.IteratedShift
-
 namespace OAI
 
 noncomputable section

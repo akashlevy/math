@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Foundation
-
 namespace OAI
 
 noncomputable section
@@ -62,52 +61,6 @@ theorem eventually_canonical_reference_gates (hi Alog window eta : ℝ)
   · apply (Real.exp_le_exp.mpr ?_).trans hpow
     dsimp [R]
     linarith [le_abs_self window, abs_nonneg hi, abs_nonneg Alog]
-
-theorem canonical_reference_pool_coverage (hi B Z N L D : ℝ)
-    (hB : 0 ≤ B) (hhi : hi ≤ B) (hZ : 1 ≤ Z) (hNL : N ≤ L)
-    (hD : B * Z ^ L ≤ D) : hi * Z ^ N ≤ D := by
-  calc
-    hi * Z ^ N ≤ B * Z ^ N :=
-      mul_le_mul_of_nonneg_right hhi (Real.rpow_nonneg (by linarith) _)
-    _ ≤ B * Z ^ L :=
-      mul_le_mul_of_nonneg_left (Real.rpow_le_rpow_of_exponent_le hZ hNL) hB
-    _ ≤ D := hD
-
-theorem exists_canonical_reference_family_gates {ι : Type*} (s : Finset ι)
-    (hi Alog window : ι → ℝ) (eta : ℝ) (heta : 0 < eta) :
-    ∃ B : ℝ, 0 < B ∧ ∃ Z0 : ℝ, 1 < Z0 ∧
-      (∀ i ∈ s, hi i ≤ B ∧ Real.exp (Alog i) ≤ B ∧ Real.exp (window i) ≤ B) ∧
-      ∀ Z : ℝ, Z0 ≤ Z →
-        2 ≤ Z ∧ 2 ≤ Z ^ eta ∧ Real.exp 1 ≤ Z ^ eta ∧
-        1 ≤ eta * Real.log Z ∧ B ≤ Z ^ eta ∧
-        (∀ i ∈ s, hi i ≤ Z ^ eta ∧ Real.exp (Alog i) ≤ Z ^ eta ∧
-          Real.exp (window i) ≤ Z ^ eta) ∧
-        (∀ i ∈ s, ∀ N L D : ℝ, N ≤ L → B * Z ^ L ≤ D → hi i * Z ^ N ≤ D) := by
-  let mass : ι → ℝ := fun i => |hi i| + Real.exp (Alog i) + Real.exp (window i)
-  have hm : ∀ i, 0 ≤ mass i := by intro i; dsimp [mass]; positivity
-  let B : ℝ := 1 + ∑ i ∈ s, mass i
-  have hB : 0 < B := by dsimp [B]; positivity
-  have hbound : ∀ i ∈ s, hi i ≤ B ∧ Real.exp (Alog i) ≤ B ∧
-      Real.exp (window i) ≤ B := by
-    intro i hiS
-    have hsum : mass i ≤ ∑ j ∈ s, mass j := Finset.single_le_sum (fun j _ => hm j) hiS
-    dsimp [mass, B] at *
-    constructor
-    · linarith [le_abs_self (hi i), Real.exp_pos (Alog i), Real.exp_pos (window i)]
-    constructor
-    · linarith [abs_nonneg (hi i), Real.exp_pos (window i)]
-    · linarith [abs_nonneg (hi i), Real.exp_pos (Alog i)]
-  obtain ⟨Z0, hZ0, hgate⟩ := eventually_canonical_reference_gates B 0 0 eta heta
-  refine ⟨B, hB, Z0, hZ0, hbound, ?_⟩
-  intro Z hZ
-  obtain ⟨hZtwo, htwo, hexp, hlog, hBpow, _, _⟩ := hgate Z hZ
-  refine ⟨hZtwo, htwo, hexp, hlog, hBpow, ?_, ?_⟩
-  · intro i hiS
-    obtain ⟨hhi, hA, hw⟩ := hbound i hiS
-    exact ⟨hhi.trans hBpow, hA.trans hBpow, hw.trans hBpow⟩
-  · intro i hiS N L D hNL hD
-    exact canonical_reference_pool_coverage (hi i) B Z N L D hB.le
-      (hbound i hiS).1 (by linarith) hNL hD
 
 end SevenEighths.InverseMoment
 

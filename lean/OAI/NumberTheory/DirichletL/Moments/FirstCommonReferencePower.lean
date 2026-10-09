@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstCommonSourcePowerBudget
 import OAI.NumberTheory.DirichletL.Moments.FirstMixedAllowance
-
 namespace OAI
 
 noncomputable section
@@ -17,12 +16,6 @@ local instance {κ:Type*}:DecidableEq κ:=Classical.decEq _
 
 def normalizedPower (b V C q Z allowance ε E:ℝ)(N:ℕ)(α:ℝ):ℝ:=
   C^ε*(b^N)^α*E/q*(V/C)^(α-1)*Z^(-allowance)
-
-lemma normalizedPower_nonneg (b V C q Z allowance ε E:ℝ)(N:ℕ)(α:ℝ)
-    (hb:0≤b)(hV:0≤V)(hC:0≤C)(hq:0≤q)(hZ:0≤Z)(hE:0≤E):
-    0≤normalizedPower b V C q Z allowance ε E N α:=by
-  unfold normalizedPower
-  positivity
 
 lemma reference_power_identity (b V C q Z allowance ε E:ℝ)(N:ℕ)(α:ℝ)
     (hb:0<b)(hV:0<V)(hC:0<C)(hq:0<q)(hZ:0<Z):

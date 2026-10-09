@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowRowMellin
-
 namespace OAI
 
 noncomputable section
@@ -23,27 +22,6 @@ lemma lowAdditiveCoefficient_common_support (C : CalibrationData) (W1 : ℝ→�
   intro m v s hs
   apply lowAdditiveCoefficient_outer_zero
   simpa only [Set.Finite.mem_toFinset,Set.mem_preimage,Function.mem_support,not_not] using hs
-
-lemma lowAdditiveCoefficient_mul_summable (C : CalibrationData) (W1 : ℝ→ℂ)
-    (hW1 : HasCompactSupport W1) (Y : ℝ) (hY : 0<Y) (m : O) (v : ℝ)
-    (F : {I : Id // Supported I}→ℂ) :
-    Summable (fun s=>lowAdditiveCoefficient C W1 Y s m v*F s) := by
-  obtain ⟨R,hR⟩ := lowAdditiveCoefficient_common_support C W1 hW1 Y hY
-  apply summable_of_ne_finset_zero (s:=R)
-  intro s hs
-  rw [hR m v s hs,zero_mul]
-
-lemma lowRayAmplitude_eq_finite (C : CalibrationData) (W1 : ℝ→ℂ)
-    (hW1 : HasCompactSupport W1) (Y : ℝ) (hY : 0<Y) :
-    ∃F : Finset {I : Id // Supported I},∀σ : RayRing,∀m : O,∀v : ℝ,
-      lowRayAmplitude C W1 Y σ m v=
-        ∑s∈F,if physicalIdealRay s=σ then lowAdditiveCoefficient C W1 Y s m v else 0 := by
-  obtain ⟨F,hF⟩ := lowAdditiveCoefficient_common_support C W1 hW1 Y hY
-  refine ⟨F,?_⟩
-  intro σ m v
-  apply tsum_eq_sum
-  intro s hs
-  simp only [hF m v s hs,ite_self]
 
 lemma lowRayAmplitude_group (C : CalibrationData) (W1 : ℝ→ℂ)
     (hW1 : HasCompactSupport W1) (Y : ℝ) (hY : 0<Y) (m : O) (v : ℝ)

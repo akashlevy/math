@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.RayMaskedFloorSlots
 import OAI.NumberTheory.DirichletL.Moments.PlainPositiveEnergy
 import OAI.NumberTheory.DirichletL.Moments.AllocatedNaturalRadial
-
 namespace OAI
 
 noncomputable section

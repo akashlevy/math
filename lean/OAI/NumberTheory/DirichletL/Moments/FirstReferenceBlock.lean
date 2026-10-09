@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstDivisorCommonBound
 import OAI.NumberTheory.DirichletL.Moments.FirstMixedWindow
-
 namespace OAI
 
 noncomputable section

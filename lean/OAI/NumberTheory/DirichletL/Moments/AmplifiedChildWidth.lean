@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.AmplificationRadicalChoice
 import OAI.NumberTheory.DirichletL.Moments.SecondChildRadialWidth
 import OAI.NumberTheory.DirichletL.Moments.CommonRadiusSaving
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalLedger
-
 namespace OAI
 
 noncomputable section
@@ -19,7 +18,7 @@ open CenteredMomentAmplificationRadicalFamily CenteredMomentAmplificationActiveF
 open CenteredMomentChildRows CenteredMomentSecondRadicalBudget
 open CenteredMomentSecondExceptionalFamily CenteredMomentSecondChildRadialWidth
 open CenteredMomentSecondPhysicalBlock CenteredMomentSecondLiveBlock
-open CenteredMomentSecondActualWidth CenteredMomentSecondWidthDrop
+open CenteredMomentSecondActualWidth
 open CenteredMomentSecondCanonical CenteredMomentSecondHeightFamily
 open CenteredMomentHeckeColumnWindow CenteredMomentSourceRow
 open CenteredMomentSectorLocalization
@@ -86,18 +85,6 @@ theorem radical_error_log_bound (ρ η:Character)(χ:RayCharacter)(m p:O)
     Real.logb_mul (modulus_pos ρ).ne' (span_pos 12 (by norm_num)).ne',
     Real.logb_rpow (zero_lt_one.trans hZ) hZ.ne'] at hh
   linarith
-
-theorem common_nominal_identity (A c d R E m q w wo σ δ reserve branch:ℝ) :
-    2*(A-c-w)-(2*A-c-d+R+E-m+
-      max (d-c-2*w+wo) 0+branch*σ+δ+reserve)+(q+R+E+wo)=
-    m+q+(d-c-2*w+wo-max (d-c-2*w+wo) 0)-branch*σ-δ-reserve := by ring
-
-theorem common_nominal_le (A c d R E m q w wo σ δ reserve branch:ℝ) :
-    2*(A-c-w)-(2*A-c-d+R+E-m+
-      max (d-c-2*w+wo) 0+branch*σ+δ+reserve)+(q+R+E+wo)≤
-    m+q-branch*σ-δ-reserve := by
-  rw [common_nominal_identity]
-  linarith [le_max_left (d-c-2*w+wo) (0:ℝ)]
 
 theorem shortened_log (I J:Ideal O)(X Z:ℝ)(hX:0<X)(p:O)(hp:p≠0)(k:ℕ) :
     Real.logb Z (X/((commonPart I J).absNorm*(normValue p)^k))=
@@ -204,37 +191,6 @@ theorem physical_declared_budget {η:Character}{C D:Ideal O}
     (radial_support_bound n Φ b hs y hy)
   rw [max_eq_right hbH]
   linarith
-
-theorem physical_whole_budget {η:Character}{C D:Ideal O}
-    {hC:Supported C}{hD:Supported D}{U:Finset (CommonIndex C D)}
-    {τ:RayCharacter→Character}(h:Family η C D hC hD U τ)
-    (t:ℝ)(S:Finset (Ideal O))(β:Ideal O→ℂ)(rows:Finset O)(W:𝓢(ℝ,ℂ))
-    (Z H L Tsec Csec ξ:ℝ)(hZ:1<Z)(hH:0<H)(hL:0<L)(hT:0<Tsec)(hCs:0<Csec)
-    (hscale:Tsec≤Csec*(H^2/L))(n:Fin 4→ℤ)
-    (hne:physicalBlock η t S β C D hC hD U (frequencyRadius Tsec Z ξ) rows W L n≠0)
-    (χ:RayCharacter)(Φ:ℝ→ℂ)(b:ℝ)(hb:0<b)(hs:Function.support Φ⊆Set.Iic b)
-    (y:O)(hy:Φ (normValue y/dyadicScale (n 1))≠0) :
-    normValue y*((τ χ).modulus.absNorm:ℝ)≤
-      Z^(2*Real.logb Z H-Real.logb Z L+Real.logb Z (η.modulus.absNorm:ℝ)+ξ/2+
-        Real.logb Z (16*b*Csec*(fixedFactor:ℝ))) := by
-  have hh:=physical_radial_budget h t S β rows W Z H L Tsec Csec ξ hZ hH hL hT hCs hscale n hne χ b hb
-  have hc:=actual_common_log_ge_unit C D hC U Z hZ
-  have hb':Real.logb Z (b*dyadicScale (n 1))+Real.logb Z ((τ χ).modulus.absNorm:ℝ)≤
-      2*Real.logb Z H-Real.logb Z L+Real.logb Z (η.modulus.absNorm:ℝ)+ξ/2+
-        Real.logb Z (16*b*Csec*(fixedFactor:ℝ)) := by linarith
-  rw [←Real.logb_mul (mul_pos hb (dyadicScale_pos (n 1))).ne' (modulus_pos (τ χ)).ne'] at hb'
-  exact (mul_le_mul_of_nonneg_right (radial_support_bound n Φ b hs y hy)
-    (modulus_pos (τ χ)).le).trans
-    ((Real.logb_le_iff_le_rpow hZ (mul_pos (mul_pos hb (dyadicScale_pos (n 1)))
-      (modulus_pos (τ χ)))).mp hb')
-
-theorem original_coefficient_fixed_mask {ι:Type*}[Fintype ι]
-    (D:OriginalData ι)(ρ:Character)(t T:ℝ) :
-    D.coefficient ρ fixedBadMask t T=
-      fun I:supportedColumns D.columns => (Real.sqrt T:ℂ)⁻¹*(D.beta I*heightCoeff ρ t I) := by
-  funext I
-  rw [OriginalData.coefficient,←heightCoeff_eq_fixed_rowWeight ρ t I
-    (Finset.mem_filter.mp I.property).2]
 
 def presentationFactor : ℝ :=
   ((Ideal.span {(72:O)}).absNorm:ℝ)*(fixedFactor:ℝ)
@@ -366,56 +322,6 @@ theorem error_declared_width (θ:Character)(χ₀:RayCharacter)(p:O)(hp:p≠0)
   have hw:=physical_declared_budget h t S β rows W Z _ _ Tsec Csec ξ hZ hHx hL hT hCs hscale n hne χ Φ b hb hs y hy0 hy
   have hnom:=error_nominal_fixed η ρ m hm I J A K X Z σ δ reserve hK hX hZ hmod θ χ₀ p hp k hk hN
   have hF:(0:ℝ)<fixedFactor:=by exact_mod_cast fixedFactor_pos
-  rw [Real.logb_mul (by positivity : (0:ℝ)<16*b*Csec*fixedFactor).ne' presentationFactor_pos.ne']
-  linarith
-
-theorem main_whole_width {C D:Ideal O}{hC:Supported C}{hD:Supported D}
-    {U:Finset (CommonIndex C D)}{τ:RayCharacter→Character}(h:Family ρ C D hC hD U τ)
-    (t:ℝ)(S:Finset (Ideal O))(β:Ideal O→ℂ)(rows:Finset O)(W:𝓢(ℝ,ℂ))
-    (Tsec Csec ξ:ℝ)(hT:0<Tsec)(hCs:0<Csec)(hscale:Tsec≤Csec*(Hx^2/Lm))
-    (n:Fin 4→ℤ)
-    (hne:physicalBlock ρ t S β C D hC hD U (frequencyRadius Tsec Z ξ) rows W Lm n≠0)
-    (χ:RayCharacter)(Φ:ℝ→ℂ)(b:ℝ)(hb:0<b)(hs:Function.support Φ⊆Set.Iic b)
-    (y:O)(hy:Φ (normValue y/dyadicScale (n 1))≠0) :
-    normValue y*((τ χ).modulus.absNorm:ℝ)≤
-      Z^(parentWidth-2*σ-δ-reserve+ξ/2+
-      Real.logb Z (16*b*Csec*(fixedFactor:ℝ)*presentationFactor)) := by
-  have hHx:0<Hx:=div_pos hX (norm_pos _ (commonPart_ne_zero I J))
-  have hL:0<Lm:=Real.rpow_pos_of_pos (zero_lt_one.trans hZ) _
-  have hw:=physical_whole_budget h t S β rows W Z Hx Lm Tsec Csec ξ hZ hHx hL hT hCs hscale n hne χ Φ b hb hs y hy
-  have hnom:=main_nominal_fixed η ρ m hm I J A K X Z σ δ reserve hK hX hZ hmod
-  have hF:(0:ℝ)<fixedFactor:=by exact_mod_cast fixedFactor_pos
-  apply hw.trans
-  apply Real.rpow_le_rpow_of_exponent_le hZ.le
-  rw [Real.logb_mul (by positivity : (0:ℝ)<16*b*Csec*fixedFactor).ne' presentationFactor_pos.ne']
-  linarith
-
-theorem error_whole_width (θ:Character)(χ₀:RayCharacter)(p:O)(hp:p≠0)
-    (k:ℕ)(hk:k=0∨k=5∨k=6)
-    (hN:θ.modulus.absNorm≤radicalBound (childCharacter ρ χ₀) fixedBadMask p (errorMovingExponent k))
-    {C D:Ideal O}{hC:Supported C}{hD:Supported D}{U:Finset (CommonIndex C D)}
-    {τ:RayCharacter→Character}(h:Family θ C D hC hD U τ)
-    (t:ℝ)(S:Finset (Ideal O))(β:Ideal O→ℂ)(rows:Finset O)(W:𝓢(ℝ,ℂ))
-    (Tsec Csec ξ:ℝ)(hT:0<Tsec)(hCs:0<Csec)
-    (hscale:Tsec≤Csec*((X/((commonPart I J).absNorm*(normValue p)^(k+1)))^2/
-      errorCommonRadius Z dd kk cc σ δ reserve p (k+1)))
-    (n:Fin 4→ℤ)
-    (hne:physicalBlock θ t S β C D hC hD U (frequencyRadius Tsec Z ξ) rows W
-      (errorCommonRadius Z dd kk cc σ δ reserve p (k+1)) n≠0)
-    (χ:RayCharacter)(Φ:ℝ→ℂ)(b:ℝ)(hb:0<b)(hs:Function.support Φ⊆Set.Iic b)
-    (y:O)(hy:Φ (normValue y/dyadicScale (n 1))≠0) :
-    normValue y*((τ χ).modulus.absNorm:ℝ)≤
-      Z^(parentWidth-σ-δ-reserve+ξ/2+
-      Real.logb Z (16*b*Csec*(fixedFactor:ℝ)*presentationFactor)) := by
-  have hHx:0<X/((commonPart I J).absNorm*(normValue p)^(k+1)):=
-    div_pos hX (mul_pos (norm_pos _ (commonPart_ne_zero I J)) (pow_pos (normValue_pos p hp) _))
-  have hL:0<errorCommonRadius Z dd kk cc σ δ reserve p (k+1):=
-    Real.rpow_pos_of_pos (zero_lt_one.trans hZ) _
-  have hw:=physical_whole_budget h t S β rows W Z _ _ Tsec Csec ξ hZ hHx hL hT hCs hscale n hne χ Φ b hb hs y hy
-  have hnom:=error_nominal_fixed η ρ m hm I J A K X Z σ δ reserve hK hX hZ hmod θ χ₀ p hp k hk hN
-  have hF:(0:ℝ)<fixedFactor:=by exact_mod_cast fixedFactor_pos
-  apply hw.trans
-  apply Real.rpow_le_rpow_of_exponent_le hZ.le
   rw [Real.logb_mul (by positivity : (0:ℝ)<16*b*Csec*fixedFactor).ne' presentationFactor_pos.ne']
   linarith
 

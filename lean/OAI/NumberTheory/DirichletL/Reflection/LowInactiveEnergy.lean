@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.LowChoiceEnergy
 import OAI.NumberTheory.DirichletL.Reflection.InactiveSource
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

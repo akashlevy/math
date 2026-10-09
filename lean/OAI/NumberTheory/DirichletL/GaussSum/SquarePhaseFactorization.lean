@@ -1,71 +1,24 @@
 import OAI.NumberTheory.DirichletL.GaussSum.CubicTrace
 import OAI.NumberTheory.DirichletL.Fourier.PositiveLogProfiles
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 namespace ActualEisensteinCubic
 
@@ -362,24 +315,7 @@ theorem canonicalSextic_four_prod_eq_fixed_two
   intro i hi
   exact canonicalSextic_four_eq_fixed_two (P i) (hgood i) (p i) (hP i hi) (hprimary i hi)
 
-theorem canonicalSextic_four_prod_eq_one_of_mod_two
-    {ι : Type*} (s : Finset ι) (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hgood : ∀ i, lambda ∉ P i) (p : ι → O)
-    (hP : ∀ i ∈ s, P i = Ideal.span {p i})
-    (hprimary : ∀ i ∈ s, lambda ^ 2 ∣ p i - 1)
-    (hmod : (2 : O) ∣ (∏ i ∈ s, p i) - 1) :
-    (∏ i ∈ s, canonicalSextic (P i) (hgood i) (Ideal.Quotient.mk (P i) (4 : O))) = 1 := by
-  have hmem : (∏ i ∈ s, p i) - 1 ∈ cubicTwoIdeal := by
-    rw [cubicTwoIdeal, Ideal.span_singleton_neg]
-    exact Ideal.mem_span_singleton.mpr hmod
-  have heq : Ideal.Quotient.mk cubicTwoIdeal (∏ i ∈ s, p i) = 1 := by
-    have hz := Ideal.Quotient.eq_zero_iff_mem.mpr hmem
-    simpa only [map_sub, map_one, sub_eq_zero] using hz
-  rw [canonicalSextic_four_prod_eq_fixed_two s P hgood p hP hprimary, heq, map_one, map_one]
-
 end ActualEisensteinCubic
-
-open scoped BigOperators Classical
 
 namespace IdealGaussCRT
 
@@ -479,10 +415,6 @@ theorem quadraticGammaO_eq_rayValue (c : O) (hc : c ≠ 0) :
   unfold quadraticRayValue residue
   exact fourTerms_eq_of_mod_four (by simp) (by simp)
 
-theorem quadraticGammaO_eq_of_residue_eq (c d : O) (hc : c ≠ 0) (hd : d ≠ 0)
-    (h : residue c = residue d) : quadraticGammaO c hc = quadraticGammaO d hd := by
-  rw [quadraticGammaO_eq_rayValue, quadraticGammaO_eq_rayValue, h]
-
 theorem canonicalProductGauss_three_eq_rayValue
     {ι : Type*} [Fintype ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
     [∀ i, (Ideal.span {p i}).IsMaximal]
@@ -493,8 +425,6 @@ theorem canonicalProductGauss_three_eq_rayValue
       quadraticRayValue (residue (∏ i, p i)) := by
   rw [canonicalProductGauss_three_eq_quadraticGamma p hp hcop hgood hchar,
     quadraticGammaO_eq_rayValue]
-
-open ActualEisensteinCubic ConcreteTraceCRT FiniteGaussPhase ActualEisensteinCoordinates
 
 theorem fixed_two_mk_eq_residue_lift (c : O) :
     Ideal.Quotient.mk cubicTwoIdeal c =
@@ -553,23 +483,6 @@ theorem canonicalProductG_eq_fixedGValue
     canonicalProductGauss_three_eq_rayValue p hp hcop hgood hchar,
     fixed_two_mk_eq_residue_lift]
   rfl
-
-theorem canonicalProductG_eq_of_residue_eq
-    {ι κ : Type*} [Fintype ι] [Fintype κ]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hgood : ∀ i, lambda ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hprimary : ∀ i, lambda ^ 2 ∣ p i - 1)
-    (q : κ → O) (hq : ∀ i, q i ≠ 0) [∀ i, (Ideal.span {q i}).IsMaximal]
-    (kcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {q i})))
-    (kgood : ∀ i, lambda ∉ Ideal.span {q i})
-    (kchar : ∀ i, ringChar (O ⧸ Ideal.span {q i}) ≠ 2)
-    (kprimary : ∀ i, lambda ^ 2 ∣ q i - 1)
-    (hres : residue (∏ i, p i) = residue (∏ i, q i)) :
-    canonicalProductG p hp hcop hgood = canonicalProductG q hq kcop kgood := by
-  rw [canonicalProductG_eq_fixedGValue p hp hcop hgood hchar hprimary,
-    canonicalProductG_eq_fixedGValue q hq kcop kgood kchar kprimary, hres]
 
 theorem canonicalProductG_eq_fixed_quotient
     {ι : Type*} [Fintype ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)

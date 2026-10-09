@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.AmplificationLocal
 import OAI.NumberTheory.DirichletL.Moments.GaussEnergy
 import OAI.NumberTheory.DirichletL.Detector.PhysicalCRT
-
 namespace OAI
 
 noncomputable section
@@ -112,21 +111,6 @@ theorem norm_four_sum_sq (a b c d : ℂ) :
   have hs := (sq_le_sq₀ (norm_nonneg _) (by positivity)).mpr hn
   nlinarith [sq_nonneg (‖a‖-‖b‖),sq_nonneg (‖a‖-‖c‖),sq_nonneg (‖a‖-‖d‖),
     sq_nonneg (‖b‖-‖c‖),sq_nonneg (‖b‖-‖d‖),sq_nonneg (‖c‖-‖d‖)]
-
-theorem polynomial_amplification_bound {α : Type*} (S : Finset α) (a : α → O)
-    (ha : ∀ i, Supported (Ideal.span {a i})) (c : α → ℂ)
-    (p : O) (hp : Prime p) [(Ideal.span {p}).IsMaximal]
-    (hs : Supported (Ideal.span {p})) (hg : goodLambda ∉ Ideal.span {p})
-    (hc : ringChar (O ⧸ Ideal.span {p}) ≠ 2)
-    (ν : α → ℕ) (r : α → O) (hr : ∀ i, Supported (Ideal.span {r i}))
-    (hfactor : ∀ i ∈ S, a i = p^(ν i)*r i)
-    (hcop : ∀ i ∈ S, IsCoprime p (r i)) (h : O) (hph : ¬p ∣ h) :
-    ‖gaussPolynomial S a ha c h‖^2 ≤ 4*(‖gaussPolynomial S a ha c (p^6*h)‖^2 +
-      ‖amplificationError S a ha c ν p 1 h‖^2 +
-      ‖amplificationError S a ha c ν p 6 h‖^2 +
-      ‖amplificationError S a ha c ν p 7 h‖^2) := by
-  rw [polynomial_amplification S a ha c p hp hs hg hc ν r hr hfactor hcop h hph]
-  exact norm_four_sum_sq _ _ _ _
 
 theorem eligible_pool_average {β : Type*} (P : Finset β) (hP : P.Nonempty)
     (H : ℂ) (A E₁ E₆ E₇ : β → ℂ)

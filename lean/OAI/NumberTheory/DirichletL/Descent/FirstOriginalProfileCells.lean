@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileIdentity
-import OAI.NumberTheory.DirichletL.Descent.FirstChildWindowsLive
-
+import OAI.NumberTheory.DirichletL.Descent.FirstChildWindowsCells
 namespace OAI
 
 noncomputable section
@@ -45,23 +44,6 @@ theorem original_cell_subset (pool : Finset ι) (Q : Finset (ι→₀ℕ))
 omit [∀ (i : ι), (Ideal.span {p i}).IsMaximal] in
 lemma original_outer_cell_subset (pool : Finset ι) (Q : Finset (ι→₀ℕ)) (k : SourceIndex) :
     originalOuterCell p pool Q k⊆firstOriginalOuter pool Q := Finset.filter_subset _ _
-
-theorem original_outer_cell_ratios (hp : ∀i,p i≠0)
-    (pool : Finset ι) (Q : Finset (ι→₀ℕ)) (k : SourceIndex)
-    (x : FirstOriginalOuter ι) (hx : x∈originalOuterCell p pool Q k) (i : Fin 5) :
-    originalNorms p ⟨x,(1,1)⟩ i.castSucc/dyadScale (k i.castSucc)∈Set.Icc 1 2 := by
-  have hnorm : ∀j:Fin 6,1≤originalNorms p ⟨x,(1,1)⟩ j := by
-    apply sourceNorms_ge_one
-    · exact element_norm_ge_one _ (primeProduct_ne_zero p hp _ _)
-    · exact element_norm_ge_one _ (primeProduct_ne_zero p hp _ _)
-    · exact primeProductNorm_ge_one p hp _
-    · exact primeProductNorm_ge_one p hp _
-    · exact primeSubsetGenerator_ne_zero _ _
-    · exact one_ne_zero
-  have hh := dyadIndex_bounds _ (hnorm i.castSucc)
-  rw [(Finset.mem_filter.mp hx).2 i] at hh
-  exact ⟨(le_div_iff₀ (dyadScale_pos _)).mpr (by simpa using hh.1),
-    (div_le_iff₀ (dyadScale_pos _)).mpr hh.2.le⟩
 
 end SevenEighths.InverseMomentFirstOriginalProfile
 end

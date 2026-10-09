@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.Floor
 import OAI.NumberTheory.DirichletL.Moments.RayMaskedFloorState
-
 namespace OAI
 
 noncomputable section
@@ -23,13 +22,6 @@ def ZeroAt (Q:Ideal O)(a b bΦ Bmask L M ε Z:ℝ)
   ∀p:Profiles a b,∀t X₁ X₂:ℝ,0<X₁→0<X₂→X₁≤Z^L→X₂≤Z^L→
     s.plainEnergy p t X₁ X₂≤C*diagonalControl s.radial.profile*(p.control S)^2*
       (1+‖t‖)^degree*Z^(s.width+ε)
-
-lemma zeroAt_of_zeroBound (Q:Ideal O)(a b bΦ Bmask L M ε Z Z₀:ℝ)
-    (degree:ℕ)(S:Finset (ℕ×ℕ))(C:ℝ)
-    (h:ZeroBound Q a b bΦ Bmask M ε degree S C Z₀)(hZ:Z₀≤Z):
-    ZeroAt Q a b bΦ Bmask L M ε Z degree S C:=by
-  intro s hQ hs p t X₁ X₂ hX₁ hX₂ _ _
-  exact h Z hZ s hQ hs p t X₁ X₂ hX₁ hX₂
 
 variable {α:Type*}[Fintype α][DecidableEq α]
 variable (M:Ideal O)[NeZero M]

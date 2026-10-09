@@ -1,59 +1,22 @@
 import OAI.NumberTheory.DirichletL.GaussSum.SexticRadialPoisson
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-
-open scoped BigOperators Classical
+open scoped ContDiff
 
 namespace ConcretePrimeRowBridge
 
@@ -187,7 +150,7 @@ theorem tsum_masked_radial_dilations
       rw [hr, map_mul, norm_mul, mul_pow, div_div_eq_mul_div]
       ring_nf
 
-open ConcreteTraceCRT EisensteinSchwartzPoisson
+open EisensteinSchwartzPoisson
 
 theorem primeSubset_reducedScale_pos {α : Type*}
     (P : α → Ideal O) [∀ i, (P i).IsMaximal] (E : Finset α)
@@ -288,32 +251,6 @@ theorem canonical_masked_radial_poisson_collected
   push_cast
   simp only [div_eq_mul_inv, mul_inv_rev]
   ring
-
-theorem canonical_masked_compact_radial_poisson_collected
-    {α ι : Type*} [DecidableEq α] [Fintype ι]
-    (P : α → Ideal O) [∀ i, (P i).IsMaximal]
-    (hinj : Function.Injective P) (S : Finset α)
-    (Q : ι → Ideal O) [∀ i, (Q i).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime Q))
-    (hgood : ∀ i, lambda ∉ Q i)
-    (hchar : ∀ i, ringChar (O ⧸ Q i) ≠ 2)
-    (j : ι → ℕ) (hj0 : ∀ i, j i ≠ 0) (hj6 : ∀ i, j i < 6)
-    (W : ℝ → ℂ) (hWc : HasCompactSupport W) (hWs : ContDiff ℝ ∞ W)
-    (scale : ℝ) (hscale : 0 < scale) :
-    let c := finitePrimeModulus Q
-    (∑' u : O, rowCoprimeMask P S u * finiteSexticRow Q hgood j u *
-      W (‖eisEmbedding u‖ ^ 2 / scale)) =
-      ((scale : ℂ) * canonicalNormalizedGauss Q hcop hgood j / (‖eisEmbedding c‖ : ℂ)) *
-        ∑ E ∈ S.powerset,
-          let d := primeSubsetGenerator P E
-          ((UniqueFactorizationMonoid.moebius (∏ i ∈ E, P i) : ℂ) *
-            finiteSexticRow Q hgood j d / (‖eisEmbedding d‖ ^ 2 : ℝ)) *
-            ∑' h : O, star (finiteSexticRow Q hgood j h) *
-              paperRadialFourier W
-                (scale * ‖eisEmbedding h‖ ^ 2 /
-                  (‖eisEmbedding d‖ ^ 2 * ‖eisEmbedding c‖ ^ 2)) := by
-  exact canonical_masked_radial_poisson_collected P hinj S Q hcop hgood hchar j hj0 hj6
-    (hWc.toSchwartzMap hWs) scale hscale
 
 end ActualEisensteinCubic
 
@@ -595,49 +532,6 @@ theorem finiteSquarefreeRow_smoothed_mean_square_summable
   apply Finset.sum_congr rfl
   intro m hm
   ring
-
-theorem finiteSquarefreeRow_smoothed_mean_square_expand
-    {ι β : Type*} (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hgood : ∀ i, lambda ∉ P i)
-    (C : Finset β) (support : β → Finset ι) (a : β → ℂ)
-    (W : 𝓢(ℝ, ℂ)) (scale : ℝ) (hscale : 0 < scale) :
-    (∑' u : O, W (‖eisEmbedding u‖ ^ 2 / scale) *
-      (↑(‖∑ n ∈ C, a n * finiteSquarefreeRow P hgood (support n) u‖ ^ 2) : ℂ)) =
-      ∑ n ∈ C, ∑ m ∈ C, (star (a n) * a m) *
-        ∑' u : O,
-          (star (finiteSquarefreeRow P hgood (support n) u) *
-            finiteSquarefreeRow P hgood (support m) u) *
-          W (‖eisEmbedding u‖ ^ 2 / scale) := by
-  let f : β → β → O → ℂ := fun n m u =>
-    (star (a n) * a m) *
-      ((star (finiteSquarefreeRow P hgood (support n) u) *
-        finiteSquarefreeRow P hgood (support m) u) *
-        W (‖eisEmbedding u‖ ^ 2 / scale))
-  have hf (n m : β) : Summable (f n m) :=
-    (finiteSquarefreeRow_pair_radial_summable P hgood (support n) (support m)
-      W scale hscale).mul_left (star (a n) * a m)
-  have hterm (u : O) : W (‖eisEmbedding u‖ ^ 2 / scale) *
-      (↑(‖∑ n ∈ C, a n * finiteSquarefreeRow P hgood (support n) u‖ ^ 2) : ℂ) =
-      ∑ n ∈ C, ∑ m ∈ C, f n m u := by
-    rw [norm_sq_finite_row_sum]
-    simp only [Finset.mul_sum]
-    apply Finset.sum_congr rfl
-    intro n hn
-    apply Finset.sum_congr rfl
-    intro m hm
-    dsimp [f]
-    ring
-  calc
-    _ = ∑' u : O, ∑ n ∈ C, ∑ m ∈ C, f n m u := tsum_congr hterm
-    _ = ∑ n ∈ C, ∑' u : O, ∑ m ∈ C, f n m u :=
-      Summable.tsum_finsetSum (fun n hn => summable_sum (fun m hm => hf n m))
-    _ = _ := by
-      apply Finset.sum_congr rfl
-      intro n hn
-      rw [Summable.tsum_finsetSum (fun m hm => hf n m)]
-      apply Finset.sum_congr rfl
-      intro m hm
-      exact tsum_mul_left
 
 end ActualEisensteinCubic
 

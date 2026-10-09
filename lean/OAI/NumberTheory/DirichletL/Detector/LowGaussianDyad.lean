@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.LowCentralTuple
 import OAI.NumberTheory.DirichletL.Detector.LowRemoteMass
 import OAI.NumberTheory.DirichletL.Detector.GaussianCommon
-
 namespace OAI
 
 noncomputable section

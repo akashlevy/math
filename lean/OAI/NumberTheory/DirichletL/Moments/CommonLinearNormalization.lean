@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.CommonLinearSource
 import OAI.NumberTheory.DirichletL.Moments.CommonRawCost
-
 namespace OAI
 
 noncomputable section
@@ -45,22 +44,6 @@ theorem source_normalized (s:Input ι)(C:Ideal O)(hC:Supported C)(R seed L:Ideal
       ((Real.sqrt (volume (commonData s C R B)):ℂ)⁻¹*_)
   rw [hs,Complex.ofReal_mul,mul_inv_rev]
   ring
-
-omit [DecidableEq ι] in
-theorem commonScalar_sq (s:Input ι)(C R:Ideal O)(B:actualAllocations s.pools C):
-    ‖commonScalar s C R B‖^2=
-      ‖frozenCoefficient B.val C R s.ν s.W s.P‖^2/rawReduction B.val s.P:=
-  CenteredMomentDivisorRawEnergy.normalized_norm_sq _
-    (rawReduction_pos B.val (alloc_ne s C B) s.P s.P_pos) _
-
-omit [DecidableEq ι] in
-theorem commonScalar_sq_bound (s:Input ι)(C R:Ideal O)(hC:C≠0)(B:actualAllocations s.pools C):
-    ‖commonScalar s C R B‖^2≤
-      ((∏i,s.M i)^2*(max 1 s.upper)^Fintype.card ι)/(Ideal.absNorm C:ℝ):=by
-  rw [commonScalar_sq]
-  exact frozen_normalized_cost B.val (alloc_ne s C B) C R hC
-    (Finset.mem_filter.mp B.property).2 s.ν s.W s.P s.M s.P_pos s.ν_bound s.W_bound
-    s.M_ge_one s.lower s.upper s.lower_pos s.slot_support
 
 end SevenEighths.CenteredMomentCommonLinearNormalization
 

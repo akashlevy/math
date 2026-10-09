@@ -1,74 +1,23 @@
 import OAI.NumberTheory.DirichletL.MeanSquare.SourceTransfer
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 namespace InitialMeanSquare
 
@@ -355,44 +304,6 @@ open FirstPassCubeLabels (primeProductNorm)
 open SecondPassIntegration (elementNorm)
 
 section
-variable {ι : Type*} [DecidableEq ι]
-  (p : ι→O) (hp : ∀i,p i≠0) [∀i,(Ideal.span {p i}).IsMaximal]
-  (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-
-include hcop in
-theorem sourceLabel_squarefree (x : SecondExpansionData ι)
-    (hE : x.divisor⊆x.sourceCommon) (hV : Disjoint x.sourceCommon x.overlap) :
-    Squarefree (Ideal.span {(sourceObservation p x).2}) := by
-  have hd : Disjoint x.divisor x.overlap := hV.mono_left hE
-  rw [sourceLabel_span,←Finset.prod_union hd]
-  exact primeSpanProduct_squarefree p hcop _
-
-include hcop in
-theorem sourceMask_coprime (x : SecondExpansionData ι)
-    (hE : x.divisor⊆x.sourceCommon) (hV : Disjoint x.sourceCommon x.overlap) :
-    IsCoprime (Ideal.span {secondExpansionQuotient p x})
-      (Ideal.span {(sourceObservation p x).2}) := by
-  rw [secondExpansionQuotient_of_subset p x hE,secondMaskQuotient_span,sourceLabel_span]
-  apply IsCoprime.prod_left
-  intro i hi
-  apply IsCoprime.mul_right
-  · apply IsCoprime.prod_right
-    intro j hj
-    exact hcop (fun he => (Finset.mem_sdiff.mp hi).2 (he.symm ▸ hj))
-  · apply IsCoprime.prod_right
-    intro j hj
-    exact hcop (fun he => Finset.disjoint_left.mp hV (Finset.mem_sdiff.mp hi).1 (he.symm ▸ hj))
-
-include hp in
-theorem initialLogIndex_mem_box (Z M K : ℝ) (x : SecondExpansionData ι)
-    (hs : SecondSourceSupport p Z M x) (hE : x.divisor⊆x.sourceCommon)
-    (hk : x.frequency≠0) (hK : elementNorm (sourceObservation p x).1≤K) :
-    initialLogIndex p x∈secondLogBinBox (Z*Real.exp M) K := by
-  obtain ⟨hG,hE',hV⟩ := secondSourceSupport_bounds p hp Z M x hs hE
-  simp only [initialLogIndex,secondLogBinBox,Finset.mem_product,Finset.mem_range,Nat.lt_succ_iff]
-  exact ⟨normLogBin_mono (FirstPassCubeLabels.primeProductNorm_pos p hp _) hE',
-    normLogBin_mono (FirstPassCubeLabels.primeProductNorm_pos p hp _) hV,
-    normLogBin_mono (SecondPassIntegration.elementNorm_pos _ (sourceRow_nonzero p x hk)) hK⟩
 
 end
 
@@ -424,14 +335,8 @@ namespace SecondPassArithmetic
 
 section
 open ActualEisensteinCubic
-open FirstPassCubeLabels (bit conductorExponent dilationExponent retained parity evenDouble
-  primeProduct primeProductNorm aLabel dilationLabel jLabel j2Label squarefreeLabel cubeActiveSupport)
+open FirstPassCubeLabels (bit conductorExponent dilationExponent retained parity evenDouble primeProduct primeProductNorm aLabel dilationLabel jLabel j2Label squarefreeLabel cubeActiveSupport)
 open ConcreteTraceCRT (eisEmbedding)
-
-theorem local_first_conductor_balance (parityBit e₁ e₂ : Bool) :
-    (if conductorExponent parityBit e₁ e₂=0 then 0 else 1)+dilationExponent parityBit e₁ e₂+
-      2*bit (!parityBit && e₁ && e₂)=bit e₁+bit e₂+bit parityBit := by
-  cases parityBit <;> cases e₁ <;> cases e₂ <;> decide
 
 theorem local_first_conductor_bound (parityBit e₁ e₂ : Bool) (n : ℕ) (hn : 0<n) :
     (if conductorExponent parityBit e₁ e₂=0 then 0 else 1)+dilationExponent parityBit e₁ e₂+
@@ -452,18 +357,6 @@ theorem firstActiveProduct_as_primeProduct (S : Finset ι) (v : ι → ℕ) (ε�
   apply Finset.prod_congr rfl
   intro i hi
   by_cases h : conductorExponent (parity (v i)) (ε₁ i) (ε₂ i)=0 <;> simp [h]
-
-omit [DecidableEq ι] in
-theorem first_conductor_product_balance (S : Finset ι) (v : ι → ℕ) (ε₁ ε₂ : ι → Bool) :
-    (∏ i∈cubeActiveSupport S v ε₁ ε₂,p i)*dilationLabel p S v ε₁ ε₂*j2Label p S v ε₁ ε₂^2 =
-      aLabel p S ε₁*aLabel p S ε₂*squarefreeLabel p S v := by
-  rw [firstActiveProduct_as_primeProduct]
-  simp only [dilationLabel,j2Label,aLabel,squarefreeLabel,primeProduct,← Finset.prod_pow,
-    ← Finset.prod_mul_distrib,← pow_mul,← pow_add]
-  apply Finset.prod_congr rfl
-  intro i hi
-  congr 1
-  simpa only [evenDouble,mul_comm] using local_first_conductor_balance (parity (v i)) (ε₁ i) (ε₂ i)
 
 variable [∀ i,(Ideal.span {p i}).IsMaximal]
 

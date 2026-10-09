@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Foundation
-
 namespace OAI
 
 noncomputable section
@@ -83,31 +82,6 @@ theorem sixthRemainder_valuation_lt (I P : Ideal O) : valuation (sixthRemainder 
   rw [sixthRemainder_valuation]
   omega
 
-theorem sixthRemainder_eq_iff (I J : Ideal O) :
-    sixthRemainder I = sixthRemainder J ↔
-      ∀ P, valuation I P % 6 = valuation J P % 6 := by
-  constructor
-  · intro h P
-    simpa only [sixthRemainder_valuation] using congrArg (fun K => valuation K P) h
-  · intro h
-    exact ideal_eq_of_valuation_eq (sixthRemainder_ne_zero I) (sixthRemainder_ne_zero J)
-      (by simpa only [sixthRemainder_valuation] using h)
-
-theorem sixth_normal_form_unique {A B C D : Ideal O}
-    (hA : A ≠ 0) (hB : B ≠ 0) (hC : C ≠ 0) (hD : D ≠ 0)
-    (hAf : ∀ P, valuation A P < 6) (hCf : ∀ P, valuation C P < 6)
-    (h : A * B ^ 6 = C * D ^ 6) : A = C ∧ B = D := by
-  have hv (P : Ideal O) := congrArg (fun I => valuation I P) h
-  simp only [valuation_mul _ _ _ hA (pow_ne_zero _ hB),
-    valuation_mul _ _ _ hC (pow_ne_zero _ hD), valuation_pow] at hv
-  have he (P : Ideal O) : valuation A P = valuation C P ∧ valuation B P = valuation D P := by
-    have := hv P
-    have := hAf P
-    have := hCf P
-    omega
-  exact ⟨ideal_eq_of_valuation_eq hA hC (fun P => (he P).1),
-    ideal_eq_of_valuation_eq hB hD (fun P => (he P).2)⟩
-
 theorem sixthQuotient_injective_on_remainder {I J : Ideal O}
     (hI : I ≠ 0) (hJ : J ≠ 0) (hr : sixthRemainder I = sixthRemainder J)
     (hq : sixthQuotient I = sixthQuotient J) : I = J := by
@@ -160,10 +134,6 @@ theorem sixth_normal_form_norm (I : Ideal O) (hI : I ≠ 0) :
   have h := congrArg (fun J : Ideal O => (Ideal.absNorm J : ℝ)) (sixth_normal_form I hI)
   simpa only [map_mul, map_pow, Nat.cast_mul, Nat.cast_pow] using h
 
-theorem sixthRemainder_norm_le (I : Ideal O) (hI : I ≠ 0) :
-    (Ideal.absNorm (sixthRemainder I) : ℝ) ≤ (Ideal.absNorm I : ℝ) :=
-  norm_le_of_dvd hI ⟨sixthQuotient I ^ 6, (sixth_normal_form I hI).symm⟩
-
 theorem sixthQuotient_norm_le (I : Ideal O) (hI : I ≠ 0) {H : ℝ} (hH : 0 ≤ H)
     (hNI : (Ideal.absNorm I : ℝ) ≤ H) :
     (Ideal.absNorm (sixthQuotient I) : ℝ) ≤
@@ -177,16 +147,6 @@ theorem sixthQuotient_norm_le (I : Ideal O) (hI : I ≠ 0) {H : ℝ} (hH : 0 ≤
   simpa only [one_div] using
     (Real.le_rpow_inv_iff_of_pos (Nat.cast_nonneg _) (div_nonneg hH hr.le)
       (by norm_num : (0 : ℝ) < 6)).mpr hp
-
-theorem empty_of_below_remainder (S : Finset (Ideal O)) (R : Ideal O) {H : ℝ}
-    (hS : ∀ I ∈ S, I ≠ 0) (hR : ∀ I ∈ S, sixthRemainder I = R)
-    (hN : ∀ I ∈ S, (Ideal.absNorm I : ℝ) ≤ H)
-    (hH : H < Ideal.absNorm R) : S = ∅ := by
-  apply Finset.eq_empty_iff_forall_notMem.mpr
-  intro I hI
-  have hn := sixthRemainder_norm_le I (hS I hI)
-  rw [hR I hI] at hn
-  exact (not_le_of_gt hH) (hn.trans (hN I hI))
 
 theorem ideal_count_fixed_remainder (S : Finset (Ideal O)) (R : Ideal O) (hR : R ≠ 0)
     (H : ℝ) (hH : 0 ≤ H) (hS : ∀ I ∈ S, I ≠ 0)
@@ -214,37 +174,6 @@ theorem ideal_count_fixed_remainder (S : Finset (Ideal O)) (R : Ideal O) (hR : R
   · rw [Finset.not_nonempty_iff_eq_empty.mp hne, Finset.card_empty, Nat.cast_zero]
     exact mul_nonneg (by norm_num) (Real.rpow_nonneg (div_nonneg hH (norm_pos hR).le) _)
 
-theorem ideal_count_valuation_profile (S : Finset (Ideal O)) (R : Ideal O) (hR : R ≠ 0)
-    (H : ℝ) (hH : 0 ≤ H) (hS : ∀ I ∈ S, I ≠ 0)
-    (hprofile : ∀ I ∈ S, ∀ P, valuation I P % 6 = valuation R P)
-    (hN : ∀ I ∈ S, (Ideal.absNorm I : ℝ) ≤ H) :
-    (S.card : ℝ) ≤ 128 * (H / Ideal.absNorm R) ^ (1 / 6 : ℝ) :=
-  ideal_count_fixed_remainder S R hR H hH hS
-    (fun I hI => sixthRemainder_eq_of_profile hR (hprofile I hI)) hN
-
-theorem ideal_count_remainder_family (S Rs : Finset (Ideal O))
-    (hRs : ∀ R ∈ Rs, R ≠ 0) (H : ℝ) (hH : 0 ≤ H)
-    (hS : ∀ I ∈ S, I ≠ 0) (hrem : ∀ I ∈ S, sixthRemainder I ∈ Rs)
-    (hN : ∀ I ∈ S, (Ideal.absNorm I : ℝ) ≤ H) :
-    (S.card : ℝ) ≤ ∑ R ∈ Rs, 128 * (H / Ideal.absNorm R) ^ (1 / 6 : ℝ) := by
-  rw [Finset.card_eq_sum_card_fiberwise (t := Rs) hrem, Nat.cast_sum]
-  apply Finset.sum_le_sum
-  intro R hR
-  exact ideal_count_fixed_remainder (S.filter (fun I => sixthRemainder I = R)) R
-    (hRs R hR) H hH
-    (fun I hI => hS I (Finset.mem_filter.mp hI).1)
-    (fun I hI => (Finset.mem_filter.mp hI).2)
-    (fun I hI => hN I (Finset.mem_filter.mp hI).1)
-
-theorem ideal_count_of_remainder_norm_lower (S : Finset (Ideal O)) (R : Ideal O)
-    (hR : R ≠ 0) (H L : ℝ) (hH : 0 ≤ H) (hL : 0 < L)
-    (hLR : L ≤ Ideal.absNorm R) (hS : ∀ I ∈ S, I ≠ 0)
-    (hrem : ∀ I ∈ S, sixthRemainder I = R)
-    (hN : ∀ I ∈ S, (Ideal.absNorm I : ℝ) ≤ H) :
-    (S.card : ℝ) ≤ 128 * (H / L) ^ (1 / 6 : ℝ) := by
-  apply (ideal_count_fixed_remainder S R hR H hH hS hrem hN).trans
-  gcongr
-
 theorem element_count_le_six_ideal_count (S : Finset O) (hS : ∀ z ∈ S, z ≠ 0) :
     (S.card : ℝ) ≤ 6 * ((S.image (fun z => Ideal.span {z})).card : ℝ) := by
   have h := CompletedUnitRows.sum_nonzero_element_le_units S hS (fun _ => 1)
@@ -270,14 +199,6 @@ theorem element_count_fixed_remainder (S : Finset O) (R : Ideal O) (hR : R ≠ 0
     _ ≤ 6 * (128 * (H / Ideal.absNorm R) ^ (1 / 6 : ℝ)) := by gcongr
     _ = 768 * (H / Ideal.absNorm R) ^ (1 / 6 : ℝ) := by ring
 
-theorem element_count_valuation_profile (S : Finset O) (R : Ideal O) (hR : R ≠ 0)
-    (H : ℝ) (hH : 0 ≤ H) (hS : ∀ z ∈ S, z ≠ 0)
-    (hprofile : ∀ z ∈ S, ∀ P, valuation (Ideal.span {z}) P % 6 = valuation R P)
-    (hN : ∀ z ∈ S, (Ideal.absNorm (Ideal.span {z}) : ℝ) ≤ H) :
-    (S.card : ℝ) ≤ 768 * (H / Ideal.absNorm R) ^ (1 / 6 : ℝ) :=
-  element_count_fixed_remainder S R hR H hH hS
-    (fun z hz => sixthRemainder_eq_of_profile hR (hprofile z hz)) hN
-
 theorem element_count_remainder_family (S : Finset O) (Rs : Finset (Ideal O))
     (hRs : ∀ R ∈ Rs, R ≠ 0) (H : ℝ) (hH : 0 ≤ H)
     (hS : ∀ z ∈ S, z ≠ 0) (hrem : ∀ z ∈ S, sixthRemainder (Ideal.span {z}) ∈ Rs)
@@ -291,17 +212,6 @@ theorem element_count_remainder_family (S : Finset O) (Rs : Finset (Ideal O))
     (fun z hz => hS z (Finset.mem_filter.mp hz).1)
     (fun z hz => (Finset.mem_filter.mp hz).2)
     (fun z hz => hN z (Finset.mem_filter.mp hz).1)
-
-theorem elements_empty_of_below_remainder (S : Finset O) (R : Ideal O) {H : ℝ}
-    (hS : ∀ z ∈ S, z ≠ 0) (hrem : ∀ z ∈ S, sixthRemainder (Ideal.span {z}) = R)
-    (hN : ∀ z ∈ S, (Ideal.absNorm (Ideal.span {z}) : ℝ) ≤ H)
-    (hH : H < Ideal.absNorm R) : S = ∅ := by
-  apply Finset.eq_empty_iff_forall_notMem.mpr
-  intro z hz
-  have hn := sixthRemainder_norm_le (Ideal.span {z})
-    (Ideal.span_singleton_eq_bot.not.mpr (hS z hz))
-  rw [hrem z hz] at hn
-  exact (not_le_of_gt hH) (hn.trans (hN z hz))
 
 theorem element_count_power_scale (S : Finset O) (R : Ideal O) (hR : R ≠ 0)
     (Z C m d : ℝ) (hZ : 0 < Z) (hC : 0 ≤ C)
@@ -320,66 +230,6 @@ theorem element_count_power_scale (S : Finset O) (R : Ideal O) (hR : R ≠ 0)
       rw [mul_div_assoc, ← Real.rpow_sub hZ, Real.mul_rpow hC (Real.rpow_nonneg hZ.le _),
         ← Real.rpow_mul hZ.le]
       rw [show (m - d) * (1 / 6 : ℝ) = (m - d) / 6 by ring, mul_assoc]
-
-theorem ideal_count_power_scale (S : Finset (Ideal O)) (R : Ideal O) (hR : R ≠ 0)
-    (Z C m d : ℝ) (hZ : 0 < Z) (hC : 0 ≤ C)
-    (hRnorm : Z ^ d ≤ (Ideal.absNorm R : ℝ)) (hS : ∀ I ∈ S, I ≠ 0)
-    (hrem : ∀ I ∈ S, sixthRemainder I = R)
-    (hN : ∀ I ∈ S, (Ideal.absNorm I : ℝ) ≤ C * Z ^ m) :
-    (S.card : ℝ) ≤ 128 * C ^ (1 / 6 : ℝ) * Z ^ ((m - d) / 6) := by
-  have hM : 0 ≤ C * Z ^ m := mul_nonneg hC (Real.rpow_nonneg hZ.le _)
-  have hdiv : (C * Z ^ m) / Ideal.absNorm R ≤ (C * Z ^ m) / Z ^ d :=
-    div_le_div_of_nonneg_left hM (Real.rpow_pos_of_pos hZ _) hRnorm
-  calc
-    (S.card : ℝ) ≤ 128 * ((C * Z ^ m) / Ideal.absNorm R) ^ (1 / 6 : ℝ) :=
-      ideal_count_fixed_remainder S R hR _ hM hS hrem hN
-    _ ≤ 128 * ((C * Z ^ m) / Z ^ d) ^ (1 / 6 : ℝ) := by gcongr
-    _ = 128 * C ^ (1 / 6 : ℝ) * Z ^ ((m - d) / 6) := by
-      rw [mul_div_assoc, ← Real.rpow_sub hZ, Real.mul_rpow hC (Real.rpow_nonneg hZ.le _),
-        ← Real.rpow_mul hZ.le]
-      rw [show (m - d) * (1 / 6 : ℝ) = (m - d) / 6 by ring, mul_assoc]
-
-theorem element_count_forced_fourth_power (S : Finset O) (R D : Ideal O)
-    (hR : R ≠ 0) (hD : Squarefree D) (Z C m f : ℝ)
-    (hZ : 0 < Z) (hC : 0 ≤ C) (hDnorm : Z ^ (f / 2) ≤ (Ideal.absNorm D : ℝ))
-    (hS : ∀ z ∈ S, z ≠ 0) (hrem : ∀ z ∈ S, sixthRemainder (Ideal.span {z}) = R)
-    (hfour : ∀ z ∈ S, ∀ P ∈ normalizedFactors D, valuation (Ideal.span {z}) P % 6 = 4)
-    (hN : ∀ z ∈ S, (Ideal.absNorm (Ideal.span {z}) : ℝ) ≤ C * Z ^ m) :
-    (S.card : ℝ) ≤ 768 * C ^ (1 / 6 : ℝ) * Z ^ ((m - 2 * f) / 6) := by
-  by_cases hne : S.Nonempty
-  · obtain ⟨z, hz⟩ := hne
-    have hforced := forced_fourth_power_norm_le (Ideal.span {z}) D hD (hfour z hz)
-    rw [hrem z hz] at hforced
-    have hRnorm : Z ^ (2 * f) ≤ (Ideal.absNorm R : ℝ) := by
-      calc
-        Z ^ (2 * f) = (Z ^ (f / 2)) ^ (4 : ℕ) := by
-          rw [← Real.rpow_mul_natCast hZ.le]
-          congr 1
-          norm_num
-          ring
-        _ ≤ (Ideal.absNorm D : ℝ) ^ (4 : ℕ) := by gcongr
-        _ ≤ (Ideal.absNorm R : ℝ) := hforced
-    exact element_count_power_scale S R hR Z C m (2 * f) hZ hC hRnorm hS hrem hN
-  · rw [Finset.not_nonempty_iff_eq_empty.mp hne, Finset.card_empty, Nat.cast_zero]
-    positivity
-
-theorem element_count_forced_fourth_power_weaker (S : Finset O) (R D : Ideal O)
-    (hR : R ≠ 0) (hD : Squarefree D) (Z C m f : ℝ)
-    (hZ : 1 ≤ Z) (hC : 0 ≤ C) (hf : 0 ≤ f)
-    (hDnorm : Z ^ (f / 2) ≤ (Ideal.absNorm D : ℝ))
-    (hS : ∀ z ∈ S, z ≠ 0) (hrem : ∀ z ∈ S, sixthRemainder (Ideal.span {z}) = R)
-    (hfour : ∀ z ∈ S, ∀ P ∈ normalizedFactors D, valuation (Ideal.span {z}) P % 6 = 4)
-    (hN : ∀ z ∈ S, (Ideal.absNorm (Ideal.span {z}) : ℝ) ≤ C * Z ^ m) :
-    (S.card : ℝ) ≤ 768 * C ^ (1 / 6 : ℝ) * Z ^ ((m - f) / 6) := by
-  apply (element_count_forced_fourth_power S R D hR hD Z C m f
-    (zero_lt_one.trans_le hZ) hC hDnorm hS hrem hfour hN).trans
-  gcongr
-  linarith
-
-theorem valuation_eq_multiplicity {I P : Ideal O} (hI : I ≠ 0) (hP : Prime P) :
-    valuation I P = multiplicity P I := by
-  simpa only [valuation, normalize_eq] using
-    (multiplicity_eq_count_normalizedFactors hP.irreducible hI).symm
 
 theorem sixthRemainder_eq_of_prime_profile {I R : Ideal O} (hR : R ≠ 0)
     (hprofile : ∀ P, Prime P → valuation I P % 6 = valuation R P) :
@@ -415,15 +265,6 @@ theorem element_count_power_scale_family (S : Finset O) (Rs : Finset (Ideal O))
         (fun z hz => (Finset.mem_filter.mp hz).2)
         (fun z hz => hN z (Finset.mem_filter.mp hz).1)
     _ = _ := by rw [Finset.sum_const, nsmul_eq_mul]; ring
-
-theorem element_count_squareNorm (S : Finset O) (R : Ideal O) (hR : R ≠ 0)
-    (H : ℝ) (hH : 0 ≤ H) (hS : ∀ z ∈ S, z ≠ 0)
-    (hprofile : ∀ z ∈ S, ∀ P, Prime P → valuation (Ideal.span {z}) P % 6 = valuation R P)
-    (hN : ∀ z ∈ S, ‖ConcreteTraceCRT.eisEmbedding z‖ ^ 2 ≤ H) :
-    (S.card : ℝ) ≤ 768 * (H / Ideal.absNorm R) ^ (1 / 6 : ℝ) :=
-  element_count_fixed_remainder S R hR H hH hS
-    (fun z hz => sixthRemainder_eq_of_prime_profile hR (hprofile z hz))
-    (fun z hz => by simpa only [ActualEisensteinCubic.eisEmbedding_norm_sq_eq_absNorm_span] using hN z hz)
 
 end SevenEighths.CenteredExceptionalCount
 end

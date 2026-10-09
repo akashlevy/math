@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.PrincipalStrip
-
 namespace OAI
 
 noncomputable section
@@ -49,12 +48,6 @@ theorem regular_ne_zero (η : Character) {s : ℂ}
   · rw [regular_eq_nonprincipal η hη]
     exact HeckeZeroSupremum.LFunction_ne_zero_of_beta_lt η hs (Or.inr hη)
 
-theorem regular_inverse_differentiableAt (η : Character) {s : ℂ}
-    (hs : HeckeZeroSupremum.beta < s.re) :
-    DifferentiableAt ℂ (fun z => (regular η z)⁻¹) s :=
-  (regular_differentiableAt η (by linarith [HeckeZeroSupremum.half_le_beta])).inv
-    (regular_ne_zero η hs)
-
 theorem principal_regular_factor_bound {s : ℂ} (hs : 0 ≤ s.re) :
     ‖s-1‖ ≤ ‖s+1‖ := by
   have he : ‖s+1‖^2 - ‖s-1‖^2 = 4*s.re := by
@@ -79,32 +72,6 @@ theorem regular_norm_le (η : Character) {σ : ℝ} (hσ : 1 < σ)
     nlinarith [principal_regular_factor_bound (s := s) (by linarith), norm_nonneg (LFunction η s)]
   · rw [regular_eq_nonprincipal η hη]
     exact HeckeStripActual.LFunction_norm_le η hσ hs
-
-theorem regular_inverse_norm_le (η : Character) {s : ℂ} (hs : (3/2 : ℝ) ≤ s.re) :
-    ‖(regular η s)⁻¹‖ ≤ 5 * HeckeReciprocalBound.bound (3/2) := by
-  have h0 : s ≠ 0 := by intro h; norm_num [h] at hs
-  have h1 : s ≠ 1 := by intro h; norm_num [h] at hs
-  have hL := HeckeReciprocalBound.reciprocal_norm_le η (by norm_num : (1 : ℝ)<3/2) hs
-  rw [HeckeReciprocal.reciprocal_eq_inv η h0 h1] at hL
-  have hB : 0 ≤ HeckeReciprocalBound.bound (3/2) := tsum_nonneg (fun _ => norm_nonneg _)
-  by_cases hη : η.residue = 1
-  · have hlow : (1/2 : ℝ) ≤ ‖s-1‖ := by
-      have hr := Complex.re_le_norm (s-1)
-      simp only [Complex.sub_re, Complex.one_re] at hr
-      linarith
-    have hratio : ‖s+1‖ / ‖s-1‖ ≤ 5 := by
-      apply (div_le_iff₀ (by linarith : 0 < ‖s-1‖)).mpr
-      have hr := norm_add_le (s-1) (2 : ℂ)
-      norm_num only [Complex.norm_ofNat] at hr
-      rw [show s-1+2=s+1 by ring] at hr
-      linarith
-    simp only [regular, ite_eq_left hη, HeckePrincipalStrip.sourceNormalized,
-      HeckeOrigin.poleRemoved_eq η h0 h1, inv_div, norm_div, norm_mul]
-    calc
-      _ = (‖s+1‖ / ‖s-1‖) * ‖(LFunction η s)⁻¹‖ := by rw [norm_inv]; ring
-      _ ≤ _ := mul_le_mul hratio hL (norm_nonneg _) (by norm_num)
-  · rw [regular_eq_nonprincipal η hη]
-    linarith
 
 def uniformConstant : ℝ :=
   108*((1+HeckeStrip.leftConstant)*HeckeReciprocalBound.bound (11/10))

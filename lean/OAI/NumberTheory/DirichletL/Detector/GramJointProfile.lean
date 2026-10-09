@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Foundation
 import OAI.NumberTheory.DirichletL.Detector.GramLatticeDecay
 import OAI.NumberTheory.DirichletL.Detector.GramAnnularLattice
 import OAI.NumberTheory.DirichletL.Detector.GramJointConstruction
-
 namespace OAI
 
 noncomputable section

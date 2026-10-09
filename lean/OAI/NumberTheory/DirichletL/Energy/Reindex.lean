@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.SlotHeight
-
 namespace OAI
 
 noncomputable section

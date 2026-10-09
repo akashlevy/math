@@ -1,7 +1,7 @@
-import OAI.NumberTheory.DirichletL.PrimeRows.NonfloorNormalized
+import OAI.NumberTheory.DirichletL.PrimeRows.NonfloorArithmetic
+import OAI.NumberTheory.DirichletL.PrimeRows.CubeNormalizer
 import OAI.NumberTheory.DirichletL.PrimeRows.CubeFloorDyadic
 import OAI.NumberTheory.DirichletL.PrimeRows.CubeBinPartition
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialDetectorSource
-
 namespace OAI
 
 noncomputable section

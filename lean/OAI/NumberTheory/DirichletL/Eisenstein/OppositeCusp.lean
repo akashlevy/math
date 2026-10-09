@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.SourceQuotient
-
 namespace OAI
 
 noncomputable section
@@ -8,77 +7,24 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
 
-open scoped BigOperators Classical MatrixGroups Matrix
-open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal CompletedGauss
+open scoped MatrixGroups Matrix
+open CubicJacobiGlobal CompletedGauss
 open PrimaryIdealUnitReindex (GoodIdeal)
 local notation "Eis" => ActualEisensteinCubic.O
 
@@ -195,18 +141,6 @@ lemma opposite_summand (z:ℂ) (v:ℝ) (hv:0<v) (s:ℂ) (p:OppositeData):
     simp only [Complex.ofReal_div,inv_div]
   rw [hi,Complex.inv_cpow_ofReal_nonneg (div_nonneg hp.le hv.le),Complex.cpow_neg]
 
-theorem oppositeEisenstein_eq_rows (z:ℂ) (v:ℝ) (hv:0<v) (s:ℂ):
-    oppositeEisenstein z v hv s=∑'p:OppositeData,oppositeTerm z v s p.1.val p.2.val:=by
-  rw [oppositeEisenstein,eisenstein,←primitiveRowEquiv.symm.tsum_eq,
-    ←oppositeDataEquiv.tsum_eq]
-  exact tsum_congr (opposite_summand z v hv s)
-
-theorem opposite_rows_summable_norm (z:ℂ) (v:ℝ) (hv:0<v) (s:ℂ) (hs:2<s.re):
-    Summable (fun p:OppositeData=>‖oppositeTerm z v s p.1.val p.2.val‖):=by
-  have hh:=(oppositeDataEquiv.trans primitiveRowEquiv.symm).summable_iff.mpr
-    (summable_norm_summand (oppositeMatrix*upperSection z v hv) s hs)
-  exact hh.congr (fun p=>congrArg norm (opposite_summand z v hv s p))
-
 def primaryLowerIdealEquiv:PrimaryLower≃GoodIdeal where
   toFun c:=⟨Ideal.span {c.val},by rw [primaryGenerator_span c.val (primaryLower_ne_zero c) (primaryLower_primary c)];exact primaryLower_ne_zero c⟩
   invFun I:=⟨primaryGenerator I.val,three_dvd_primary_sub_one _ (primaryGenerator_spec I.val I.2).2⟩
@@ -217,8 +151,7 @@ end
 
 section
 
-open scoped BigOperators Classical
-open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal CompletedGauss
+open CubicJacobiGlobal CompletedGauss
 open PrimaryIdealUnitReindex (GoodIdeal)
 local notation "Eis" => ActualEisensteinCubic.O
 
@@ -322,9 +255,8 @@ end
 
 section
 
-open MeasureTheory Set Filter Module
-open scoped BigOperators Classical ENNReal MatrixGroups Matrix
-open ActualEisensteinCubic ConcreteTraceCRT
+open Module
+open scoped ENNReal MatrixGroups Matrix
 
 lemma continuous_inverse_fixed_left_operator (a:SL(2,ℂ)) (v:ℝ) (hv:0<v):
     Continuous (fun z:ℂ=>rowOperator (a*upperSection z v hv)⁻¹):=by
@@ -404,9 +336,8 @@ end
 
 section
 
-open MeasureTheory Set Filter
-open scoped BigOperators Classical ENNReal
-open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal CompletedGauss
+open scoped ENNReal
+open CubicJacobiGlobal CompletedGauss
 local notation "Eis" => ActualEisensteinCubic.O
 
 def oppositeIntegral (v:ℝ) (s freq:ℂ) (c x:Eis):ℂ:=
@@ -505,23 +436,9 @@ theorem oppositeEisenstein_fourier (v:ℝ) (hv:0<v) (s:ℂ) (hs:2<s.re) (h:Eis):
   simp_rw [he]
   exact tsum_mul_left
 
-theorem oppositeEisenstein_fourier_unramified (v:ℝ) (hv:0<v) (s:ℂ) (hs:2<s.re) (h:Eis):
-    (∫z in periodDomain,oppositeEisenstein z v hv s*
-      ShortDraftTrace.breveE (-(eisEmbedding h/eisLam)*z))=
-      ((v:ℂ)^(2-s)*sourceFourierKernel s ((eisEmbedding h/eisLam)*v))*
-        unramifiedCubicGaussSeries s h:=by
-  have hf:cuspFrequency (3*h)=eisEmbedding h/eisLam:=by
-    unfold cuspFrequency
-    rw [map_mul,map_ofNat]
-    field_simp
-  have hh:=oppositeEisenstein_fourier v hv s hs (3*h)
-  rw [hf,show (9:Eis)*(3*h)=27*h by ring,unramifiedCubicGaussSeries_twentySeven] at hh
-  exact hh
-
 end
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ENNReal
+open scoped ENNReal
 
 local instance : MeasureSpace UnitAddCircle := ⟨AddCircle.haarAddCircle⟩
 local instance : Measure.IsAddHaarMeasure (volume : Measure UnitAddCircle) :=
@@ -619,16 +536,6 @@ lemma periodTorusL2Lift_frequency_integral (f : ℂ→ℂ)
     (∫z in periodDomain,periodTorusL2Lift f hf (periodTorus z)*
       ShortDraftTrace.breveE (-cuspFrequency h*z))=
     ∫z in periodDomain,f z*ShortDraftTrace.breveE (-cuspFrequency h*z) := by
-  apply integral_congr_ae
-  filter_upwards [periodTorusL2Lift_pullback f hf] with z hz
-  rw [hz]
-
-lemma periodTorusL2Lift_fourierCoeff (f : ℂ→ℂ) (hf : MemLp f 2 (volume.restrict periodDomain))
-    (n : Fin 2→ℤ) :
-    UnitAddTorus.mFourierCoeff (periodTorusL2Lift f hf) n=(2/(9*Real.sqrt 3):ℝ) •
-      (∫z in periodDomain,f z*ShortDraftTrace.breveE (-cuspFrequency (periodFrequencyEquiv n)*z)) := by
-  rw [periodTorus_fourierCoeff]
-  congr 1
   apply integral_congr_ae
   filter_upwards [periodTorusL2Lift_pullback f hf] with z hz
   rw [hz]

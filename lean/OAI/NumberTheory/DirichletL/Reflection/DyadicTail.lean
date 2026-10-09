@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.FullDyadic
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -43,33 +42,6 @@ theorem tsum_cut_dyadic (f : RawTailIndex→ℂ) (cut : (ℕ×ℕ×ℕ)→Prop)
   · simp only [hl,ite_eq_left hi]
   · simp only [hl,ite_eq_right hi,Finset.sum_const_zero]
 
-theorem literal_reflected_dyadic_tail (lo hi : ℝ) (hlo : 0<lo) (A : ℕ) :
-    ∃ (orders : Finset (ℕ×ℕ)) (C : ℝ), 0<C ∧
-    ∀ (V : SchwartzMap ℝ ℂ), Function.support (V : ℝ→ℂ)⊆Set.Icc lo hi →
-    ∀ (G : PrimeFamily ι) (D : ControlledStratumArithmetic G.generator N a c mode)
-      (s : FixedCuspShape (ControlledStratumArithmetic.fixedCusp a c mode)) (hc : c≠0),
-      (9:Eis)*c∣N → (if mode then ConcretePrimeRowBridge.goodLambda^2∣a-1 else ConcretePrimeRowBridge.goodLambda^2∣c-1) →
-      (∀ i, ringChar (Eis⧸G.ideal i)≠2) →
-    ∀ (j : ι→ℕ), (∀ i, j i<6) → ∀ (S : Finset ι) (u : Eisˣ) (scale T : ℝ), 0<scale → 0<T →
-    ∀ cut : (ℕ×ℕ×ℕ)→Prop,
-      (∀ i, cut i → 16*T≤rawDyadicCenter scale i) →
-      ‖∑' i : ℕ×ℕ×ℕ, if cut i then
-        ∑ n : dualIdealDyad i.2.2, ∑ b : dualIdealDyad i.2.1,
-          rawDualKernelTerm V scale 1 completedRamifiedStep
-            (literalRawCoefficient G D s hc j S u)
-            (i.1,⟨n.val,((mem_dualIdealDyad _ _).mp n.property).1⟩,
-              ⟨b.val,((mem_dualIdealDyad _ _).mp b.property).1⟩) else 0‖≤
-        C*orders.sup (schwartzSeminormFamily ℝ ℝ ℂ) V*(Ideal.absNorm (∏ i,G.ideal i):ℝ)*T^(-(A:ℝ))*(scale^2)⁻¹ := by
-  obtain ⟨orders,C,hC,hb⟩ := literal_reflected_raw_tail (ι:=ι) (N:=N) (a:=a) (c:=c) (mode:=mode) lo hi hlo A
-  refine ⟨orders,C,hC,?_⟩
-  intro V hV G D s hc hN hbase hchar j hj S u scale T hs hT cut hcut
-  obtain ⟨hn,hh⟩ := hb V hV G D s hc hN hbase hchar j hj S u scale T hs hT
-    (fun x => cut (rawDyadicLabel x)) (fun x hx => by
-      have hc' := hcut (rawDyadicLabel x) hx
-      have hl := rawDyadicCenter_lower scale hs.le x
-      linarith)
-  rw [tsum_cut_dyadic _ cut hn.of_norm] at hh
-  exact hh
 end
 end SevenEighths.InverseReflectedPhase
 

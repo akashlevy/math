@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.SourceBatch
 import OAI.NumberTheory.DirichletL.Hecke.DetectorAmplitudeFirst
-
 namespace OAI
 
 noncomputable section

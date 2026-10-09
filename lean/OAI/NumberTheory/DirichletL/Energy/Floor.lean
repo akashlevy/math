@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.State
-
 namespace OAI
 
 noncomputable section

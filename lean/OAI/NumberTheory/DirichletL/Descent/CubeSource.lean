@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondSourceTuples
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

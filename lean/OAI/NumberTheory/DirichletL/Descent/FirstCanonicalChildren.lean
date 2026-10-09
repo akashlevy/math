@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstLabelCellStepChildren
 import OAI.NumberTheory.DirichletL.Descent.ActualDepthBudget
-
 namespace OAI
 
 noncomputable section

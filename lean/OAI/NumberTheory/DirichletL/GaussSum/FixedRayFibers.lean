@@ -1,79 +1,23 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.FixedThetaTwists
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
-
-open scoped Classical BigOperators ContDiff
+open scoped ContDiff
+open Set
 
 namespace CompletedGauss.FreeReflection
 open ActualEisensteinCubic CubicEisenstein CanonicalQuadraticSieve
@@ -145,8 +89,6 @@ theorem fixedRayFiber_value (c:Eis) (hc:c≠0) (I F Q Q0:Ideal Eis) (hI:I≠0) (
 
 end CompletedGauss.FreeReflection
 
-open scoped BigOperators Classical
-
 namespace CompletedGauss
 
 section
@@ -158,61 +100,6 @@ def residualArgumentPhase (K:Ideal Eis) (z:Eis) (D E:Ideal Eis) : ℂ :=
 
 lemma residualArgumentPhase_norm_le_one (K:Ideal Eis) (z:Eis) (D E:Ideal Eis) :
     ‖residualArgumentPhase K z D E‖≤1 := quadraticRow_norm_le_one _ _
-
-theorem residual_bracket_extracted_argument (I F Q:Ideal Eis) (hFQ:F∣Q)
-    (hbad:∀P∈fixedBadPrimes,P∣Q) (z:Eis) (D E n b:Ideal Eis) :
-    (∏P:PrimeIndex (rowResidualPart I Q),
-      bracket (actualSextic P.val
-        (admissiblePrimeGood _ (rowResidualPart_admissible I Q hbad) P))
-        (completedLocalExponent I F P.val)
-        (Ideal.Quotient.mk P.val
-          (z*primaryGenerator (D*n)*(primaryGenerator (E*b))^3)))=
-      residualArgumentPhase (rowResidualPart I Q) z D E *
-        quadraticRow (rowResidualPart I Q) (primaryGenerator (n*b)) := by
-  simp_rw [completedLocalExponent_residual I F Q hFQ]
-  rw [residual_bracket_product]
-  rw [←quadraticRow_eq_primeIndex _ (rowResidualPart_admissible I Q hbad),
-    ←quadraticRow_eq_primeIndex _ (rowResidualPart_admissible I Q hbad)]
-  simp only [primaryGenerator_mul,residualArgumentPhase,
-    canonical_quadraticRow_argument_mul _ (rowResidualPart_admissible I Q hbad)]
-  ring
-
-def residualArgumentRowPhase {K:ℝ} (rowPhase:ℕ→idealRange K→ℂ)
-    (residualArgument:ℕ→Eis) (D E:Ideal Eis) (m:ℕ) (k:idealRange K) : ℂ :=
-  rowPhase m k*residualArgumentPhase k.val (residualArgument m) D E
-
-lemma residualArgumentRowPhase_norm_le_one {K:ℝ} (rowPhase:ℕ→idealRange K→ℂ)
-    (hphase:∀m k,‖rowPhase m k‖≤1) (residualArgument:ℕ→Eis)
-    (D E:Ideal Eis) (m:ℕ) (k:idealRange K) :
-    ‖residualArgumentRowPhase rowPhase residualArgument D E m k‖≤1 := by
-  rw [residualArgumentRowPhase,norm_mul]
-  exact (mul_le_of_le_one_left (norm_nonneg _)
-    (hphase m k)).trans (residualArgumentPhase_norm_le_one k.val _ D E)
-
-theorem residual_coefficient_eq_canonical_argument {ι:Type*} [Fintype ι]
-    (I F Q:Ideal Eis) (hFQ:F∣Q) (hbad:∀P∈fixedBadPrimes,P∣Q)
-    (P:ι→Ideal Eis) [∀i,(P i).IsMaximal] (hg:∀i,lambda∉P i)
-    (j:ι→ℕ) (e:ι→Fin 3) (ρ q:ℝ) (residualArgument:ℕ→Eis)
-    (η:ℕ→Ideal Eis→Ideal Eis→ℂ) (rowPhase:ℕ→ℂ) (m:ℕ) (n b:Ideal Eis) :
-    let D:=reflectionExtractedDivisor P j e 1
-    let E:=reflectionExtractedDivisor P j e 2
-    (rowPhase m*(∏p:PrimeIndex (rowResidualPart I Q),
-        bracket (actualSextic p.val (admissiblePrimeGood _ (rowResidualPart_admissible I Q hbad) p))
-          (completedLocalExponent I F p.val)
-          (Ideal.Quotient.mk p.val (residualArgument m*primaryGenerator (D*n)*(primaryGenerator (E*b))^3))) *
-      η m (D*n) (E*b)*reflectedBranch P hg j e (primaryGenerator (D*n)) (primaryGenerator (E*b)))/
-        ((ramifiedScale ρ q m*Real.sqrt (Ideal.absNorm (D*n):ℝ)*(Ideal.absNorm (E*b):ℝ):ℝ):ℂ)=
-      4*canonicalRawBranchCoefficient P hg j e ρ q
-        (fun l a c=>η l (D*a) (E*c))
-        (fun l=>rowPhase l*residualArgumentPhase (rowResidualPart I Q) (residualArgument l) D E)
-        (rowResidualPart I Q) m n b := by
-  dsimp only
-  rw [residual_bracket_extracted_argument I F Q hFQ hbad]
-  unfold canonicalRawBranchCoefficient reflectedDyadicCoefficient
-  push_cast
-  simp only [div_eq_mul_inv,mul_inv_rev]
-  norm_num
-  ring
 
 end
 
@@ -359,32 +246,9 @@ theorem tsum_nonzeroDualDilation (D E:Ideal Eis) (hD:D≠0) (hE:E≠0)
   · intro x
     rfl
 
-theorem fixedCuspBranch_tsum_extract {ι:Type*} [Fintype ι]
-    (P:ι→Ideal Eis) [∀i,(P i).IsMaximal] (hg:∀i,lambda∉P i)
-    (hcop:Pairwise (fun i k=>IsCoprime (P i) (P k)))
-    (j:ι→ℕ) (e:ι→Fin 3) (cusp:Fin 3) (u:Eisˣ)
-    (phaseArray:ℕ→Ideal Eis→Ideal Eis→ℂ)
-    (kernel:(ℕ×NonzeroDualIdeal×NonzeroDualIdeal)→ℂ) :
-    let D:=reflectionExtractedDivisor P j e 1
-    let E:=reflectionExtractedDivisor P j e 2
-    let hD:=reflectionExtractedDivisor_ne_zero P (fun i=>NeZero.ne (P i)) j e 1
-    let hE:=reflectionExtractedDivisor_ne_zero P (fun i=>NeZero.ne (P i)) j e 2
-    (∑'x:ℕ×NonzeroDualIdeal×NonzeroDualIdeal,
-      fixedCuspBranchNumerator P hg j e cusp u phaseArray x.1 x.2.1.val x.2.2.val*kernel x)=
-    ∑'x:ℕ×NonzeroDualIdeal×NonzeroDualIdeal,
-      fixedCuspBranchNumerator P hg j e cusp u phaseArray x.1 (D*x.2.1.val) (E*x.2.2.val)*
-        kernel (nonzeroDualDilation D E hD hE x) := by
-  dsimp only
-  apply tsum_nonzeroDualDilation
-  intro x hx
-  have hcoeff:fixedCuspBranchNumerator P hg j e cusp u phaseArray x.1 x.2.1.val x.2.2.val≠0:=
-    (mul_ne_zero_iff.mp hx).1
-  have hs:=fixedCuspBranchNumerator_support P hg hcop j e cusp u phaseArray x.1 x.2.1.val x.2.2.val hcoeff
-  exact ⟨hs.1,hs.2.1⟩
-
 end CompletedGauss
 
-open scoped BigOperators Classical MatrixGroups
+open scoped MatrixGroups
 
 namespace CubicEisenstein
 

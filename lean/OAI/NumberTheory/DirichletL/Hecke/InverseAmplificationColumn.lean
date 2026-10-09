@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationRows
 import OAI.NumberTheory.DirichletL.Hecke.DyadicContour
-
 namespace OAI
 
 noncomputable section

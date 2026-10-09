@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LowPhysicalInverseBound
 import OAI.NumberTheory.DirichletL.Detector.LowUnselectedMass
-
 namespace OAI
 
 noncomputable section

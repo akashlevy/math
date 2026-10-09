@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.Conductor
 import OAI.NumberTheory.DirichletL.Hecke.ReciprocalGrowth
 import OAI.NumberTheory.DirichletL.Hecke.DyadicScale
-
 namespace OAI
 
 noncomputable section

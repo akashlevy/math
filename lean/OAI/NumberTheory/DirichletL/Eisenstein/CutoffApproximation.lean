@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.RowCompletion.ThetaNonvanishing
-
 namespace OAI
 
 noncomputable section
@@ -8,75 +7,21 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ContDiff Manifold
+open scoped Manifold
 
 section BoundedConvergence
 variable {α E : Type*} [MeasurableSpace α] [NormedAddCommGroup E]
@@ -208,12 +153,6 @@ lemma kernelFunctionCutoff_field (n : ℕ) (f : KernelQuotient→ℂ)
     (hf : ContMDiff 𝓘(ℝ,SpatialCoordinates) 𝓘(ℝ,ℂ) ∞ f) :
     kernelTestField (kernelFunctionCutoff n f hf)=
       fun p => (kernelExhaustionCutoff n (kernelEuclideanProjection p):ℂ)*kernelFunctionField f p := rfl
-
-lemma kernelFunctionGradient_of_test (f : kernelSmoothTests) (w : HyperbolicSpace) :
-    kernelFunctionGradient f.1 w=kernelGradientAt w f := by
-  unfold kernelFunctionGradient
-  simp only [euclideanCoordinateVector_eq_basis]
-  rfl
 
 lemma kernelFunctionCutoff_field_eventually (f : KernelQuotient→ℂ)
     (hf : ContMDiff 𝓘(ℝ,SpatialCoordinates) 𝓘(ℝ,ℂ) ∞ f)
@@ -360,28 +299,8 @@ lemma kernelEisensteinRemainderL2_ae (a b : ℝ) (ha : 1<a) (hab : a<b)
       kernelEisensteinRemainder a b s (by linarith) :=
   (kernel_eisenstein_sub_seed_memLp a b ha.le hab s hs).coeFn_toLp
 
-theorem kernelEisensteinRemainder_energy (a b : ℝ) (ha : 1<a) (hab : a<b)
-    (s : ℂ) (hs : 4<s.re) :
-    ∃u : KernelEnergyGraph,kernelEnergyMass u=kernelEisensteinRemainderL2 a b ha hab s hs := by
-  let f := kernelEisensteinRemainder a b s (by linarith)
-  have hf := kernelEisensteinRemainder_smooth a b ha hab s (by linarith)
-  have hfL : MemLp f 2 (integralQuotientVolume globalKubotaKernel) :=
-    kernel_eisenstein_sub_seed_memLp a b ha.le hab s hs
-  have hfB : ∀q,‖f q‖≤eisensteinRemainderBound b s := by
-    intro q
-    induction q using Quotient.inductionOn with
-    | _ w => exact eisenstein_sub_seed_bounded a b ha.le hab s hs w
-  obtain ⟨G,hG,hgrad⟩ := kernelEisensteinRemainder_scaled_fderiv_bound a b ha hab s hs
-  have hgrad' : ∀p : EuclideanSpatial,0<p 2→∀j : Fin 3,
-      ‖(p 2:ℂ)*fderiv ℝ (kernelFunctionField f) p (euclideanCoordinateVector j)‖≤G := hgrad
-  have hgL := kernelFunctionGradient_memLp f hf G hG hgrad'
-  obtain ⟨u,hu,hgu⟩ := kernel_bounded_smooth_energy_exists f hf hfL hgL
-    (eisensteinRemainderBound b s) G (eisensteinRemainderBound_nonneg b s) hG hfB hgrad'
-  exact ⟨u,hu⟩
-
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ContDiff Manifold Matrix
+open scoped Matrix
 
 lemma axis_update_contDiff (p : SpatialCoordinates) (j : Fin 3) :
     ContDiff ℝ ∞ (fun t => Function.update p j t) := by
@@ -460,9 +379,6 @@ theorem kernelEisensteinRemainder_operator_equation (a b : ℝ) (ha : 1<a) (hab 
   rfl
 
 end
-
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ContDiff Manifold
 
 lemma kernelFunctionCutoff_uniform_near (f : KernelQuotient→ℂ)
     (hf : ContMDiff 𝓘(ℝ,SpatialCoordinates) 𝓘(ℝ,ℂ) ∞ f)
@@ -546,9 +462,6 @@ theorem kernel_bounded_smooth_operator_graph (f : KernelQuotient→ℂ)
   rw [hum] at hm
   rw [kernelEnergyLaplacian_graph,mem_kernelLaplacianGraph]
   exact hm.symm
-
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ContDiff Manifold
 
 theorem kernelEisensteinRemainderL2_graph (a b : ℝ) (ha : 1<a) (hab : a<b)
     (s : ℂ) (hs : 4<s.re) :

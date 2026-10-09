@@ -1,77 +1,25 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.MaskedPrincipalBounds
 import OAI.NumberTheory.DirichletL.CubicSieve.GlobalEncoding
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 
 section
@@ -94,120 +42,6 @@ theorem globalSecondLabel_span (x : GlobalSecondData ι) :
     Ideal.span {globalSecondLabel p x}=newLabel (globalSecondTuple p x) :=
   actualSecondLabel_span p x.cube.support x.common x.source.divisor x.source.overlap
     x.cube.leftExponent x.cube.rightExponent x.cube.leftBit x.cube.rightBit
-
-def globalSecondLabelUnit (x : GlobalSecondData ι) : Oˣ :=
-  Classical.choose (exists_label_unit (globalSecondLabel p x)
-    (newLabel (globalSecondTuple p x)) (globalSecondLabel_span p x))
-
-omit [∀ (i : ι), (span {p i}).IsMaximal] in
-theorem globalSecondLabelUnit_spec (x : GlobalSecondData ι) :
-    globalSecondLabel p x=(globalSecondLabelUnit p x : O)*idealGenerator (newLabel (globalSecondTuple p x)) :=
-  Classical.choose_spec (exists_label_unit (globalSecondLabel p x)
-    (newLabel (globalSecondTuple p x)) (globalSecondLabel_span p x))
-
-theorem global_second_energy_pushforward
-    (hinj : Function.Injective (fun i => Ideal.span {p i})) (ε : ℝ) (hε : 0 < ε) :
-    ∃ C : ℝ,0 < C ∧ ∀ (s : Finset (GlobalSecondData ι)) (t : Finset (Ideal O × O))
-      (q : Ideal O × Ideal O × Ideal O) (w : GlobalSecondData ι → ℂ) (B lengthScale : ℝ)
-      (F : Finset ι) (Ψ : O →* ℂ) (m : O) (H : Finset ι → ℂ) (negative : Bool),
-      q.1 ≠ ⊥ → 0 ≤ B → 0 ≤ lengthScale →
-      (∀ x∈s,GlobalSecondAdmissible x) → (∀ x∈s,globalSecondFixedTriple p x=q) →
-      (∀ x∈s,(newLabel (globalSecondTuple p x),newRow (globalSecondTuple p x))∈t) →
-      (∀ z∈t,z.1 ≠ ⊥) → (∀ z∈t,(Ideal.absNorm z.1 : ℝ) ≤ lengthScale) →
-      (∀ x∈s,‖w x‖ ≤ B) →
-      (∑ x∈s,‖w x‖ * ‖fixedChildRow p hp hcop hg F Ψ m H (globalSecondLabel p x)
-        (if negative then -newRow (globalSecondTuple p x) else newRow (globalSecondTuple p x))‖^2) ≤
-      B*C*(lengthScale*Ideal.absNorm q.1)^ε *
-        ∑ u : Oˣ,∑ z∈t,‖idealChildRow p hp hcop hg F Ψ m H negative u z‖^2 := by
-  obtain ⟨C,hC,hcard⟩ := globalSecond_fiber_card p hinj ε hε
-  refine ⟨C,hC,?_⟩
-  intro s t q w B lengthScale F Ψ m H negative hq hB hL hs hfixed hmap ht hnorm hw
-  let f : GlobalSecondData ι → Oˣ × (Ideal O × O) := fun x =>
-    (globalSecondLabelUnit p x,newLabel (globalSecondTuple p x),newRow (globalSecondTuple p x))
-  let P : Oˣ × (Ideal O × O) → ℂ := fun z => idealChildRow p hp hcop hg F Ψ m H negative z.1 z.2
-  have hm : ∀ x∈s,f x∈Finset.univ ×ˢ t := by
-    intro x hx
-    exact Finset.mem_product.mpr ⟨Finset.mem_univ _,hmap x hx⟩
-  have hpush := DescentWeightedCauchy.bounded_energy_pushforward s (Finset.univ ×ˢ t) f w P B hm hw
-  have he : (∑ x∈s,‖w x‖ * ‖fixedChildRow p hp hcop hg F Ψ m H (globalSecondLabel p x)
-      (if negative then -newRow (globalSecondTuple p x) else newRow (globalSecondTuple p x))‖^2) =
-      ∑ x∈s,‖w x‖ * ‖P (f x)‖^2 := by
-    apply Finset.sum_congr rfl
-    intro x hx
-    rw [globalSecondLabelUnit_spec p x]
-    rfl
-  rw [he]
-  apply hpush.trans
-  calc
-    _ ≤ ∑ z∈Finset.univ ×ˢ t,B*C*(lengthScale*Ideal.absNorm q.1)^ε * ‖P z‖^2 := by
-      apply Finset.sum_le_sum
-      intro z hz
-      have hzt := (Finset.mem_product.mp hz).2
-      have hc := hcard (s.filter (fun x => f x=z)) q z.2.1 z.2.2
-        (fun x hx => hs x (Finset.mem_filter.mp hx).1) (ht z.2 hzt) hq
-        (fun x hx => hfixed x (Finset.mem_filter.mp hx).1)
-        (fun x hx => congrArg (fun z : Oˣ × (Ideal O × O) => z.2.1) (Finset.mem_filter.mp hx).2)
-        (fun x hx => congrArg (fun z : Oˣ × (Ideal O × O) => z.2.2) (Finset.mem_filter.mp hx).2)
-      have hn : (Ideal.absNorm z.2.1 : ℝ)*Ideal.absNorm q.1 ≤ lengthScale*Ideal.absNorm q.1 :=
-        mul_le_mul_of_nonneg_right (hnorm z.2 hzt) (by positivity)
-      have hc' := hc.trans (mul_le_mul_of_nonneg_left
-        (Real.rpow_le_rpow (by positivity) hn hε.le) hC.le)
-      have hfinal := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hc' hB) (sq_nonneg ‖P z‖)
-      simpa only [mul_assoc] using hfinal
-    _ = _ := by
-      rw [← Finset.mul_sum,Finset.sum_product]
-
-def globalSecondMode (s : Finset (GlobalSecondData ι)) (w : GlobalSecondData ι → ℂ)
-    (F : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m : O) (H₁ H₂ : Finset ι → ℂ) : ℂ :=
-  ∑ x∈s,w x * star (fixedChildRow p hp hcop hg F Ψ₁ m H₁
-    (globalSecondLabel p x) (newRow (globalSecondTuple p x))) *
-    fixedChildRow p hp hcop hg F Ψ₂ m H₂ (globalSecondLabel p x) (-newRow (globalSecondTuple p x))
-
-theorem global_second_mode_transfer
-    (hinj : Function.Injective (fun i => Ideal.span {p i})) (ε : ℝ) (hε : 0 < ε) :
-    ∃ C : ℝ,0 < C ∧ ∀ (s : Finset (GlobalSecondData ι)) (t : Finset (Ideal O × O))
-      (q : Ideal O × Ideal O × Ideal O) (w : GlobalSecondData ι → ℂ) (B lengthScale : ℝ)
-      (F : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m : O) (H₁ H₂ : Finset ι → ℂ),
-      q.1 ≠ ⊥ → 0 ≤ B → 0 ≤ lengthScale →
-      (∀ x∈s,GlobalSecondAdmissible x) → (∀ x∈s,globalSecondFixedTriple p x=q) →
-      (∀ x∈s,(newLabel (globalSecondTuple p x),newRow (globalSecondTuple p x))∈t) →
-      (∀ z∈t,z.1 ≠ ⊥) → (∀ z∈t,(Ideal.absNorm z.1 : ℝ) ≤ lengthScale) →
-      (∀ x∈s,‖w x‖ ≤ B) →
-      ‖globalSecondMode p hp hcop hg s w F Ψ₁ Ψ₂ m H₁ H₂‖ ≤
-      B*C*(lengthScale*Ideal.absNorm q.1)^ε *
-        Real.sqrt (∑ u : Oˣ,∑ z∈t,‖idealChildRow p hp hcop hg F Ψ₁ m H₁ false u z‖^2) *
-        Real.sqrt (∑ u : Oˣ,∑ z∈t,‖idealChildRow p hp hcop hg F Ψ₂ m H₂ true u z‖^2) := by
-  obtain ⟨C,hC,hpush⟩ := global_second_energy_pushforward p hp hcop hg hinj ε hε
-  refine ⟨C,hC,?_⟩
-  intro s t q w B lengthScale F Ψ₁ Ψ₂ m H₁ H₂ hq hB hL hs hfixed hmap ht hnorm hw
-  let P₁ := fun x => fixedChildRow p hp hcop hg F Ψ₁ m H₁ (globalSecondLabel p x) (newRow (globalSecondTuple p x))
-  let P₂ := fun x => fixedChildRow p hp hcop hg F Ψ₂ m H₂ (globalSecondLabel p x) (-newRow (globalSecondTuple p x))
-  have h₁ := hpush s t q w B lengthScale F Ψ₁ m H₁ false hq hB hL hs hfixed hmap ht hnorm hw
-  have h₂ := hpush s t q w B lengthScale F Ψ₂ m H₂ true hq hB hL hs hfixed hmap ht hnorm hw
-  simp only [Bool.false_eq_true,ite_false,ite_true] at h₁ h₂
-  let D := B*C*(lengthScale*Ideal.absNorm q.1)^ε
-  have hD : 0 ≤ D := by dsimp [D]; positivity
-  have hCau := DescentWeightedCauchy.weighted_cauchy s w P₂ P₁
-  have he : globalSecondMode p hp hcop hg s w F Ψ₁ Ψ₂ m H₁ H₂ =
-      ∑ x∈s,w x*P₂ x*star (P₁ x) := by
-    unfold globalSecondMode
-    apply Finset.sum_congr rfl
-    intro x hx
-    dsimp [P₁,P₂]
-    ring
-  rw [he]
-  apply hCau.trans
-  calc
-    _ ≤ Real.sqrt (D*∑ u : Oˣ,∑ z∈t,‖idealChildRow p hp hcop hg F Ψ₂ m H₂ true u z‖^2) *
-      Real.sqrt (D*∑ u : Oˣ,∑ z∈t,‖idealChildRow p hp hcop hg F Ψ₁ m H₁ false u z‖^2) := by
-        gcongr
-    _ = _ := by
-      rw [Real.sqrt_mul hD,Real.sqrt_mul hD]
-      calc
-        _ = (Real.sqrt D)^2 *
-          Real.sqrt (∑ u : Oˣ,∑ z∈t,‖idealChildRow p hp hcop hg F Ψ₁ m H₁ false u z‖^2) *
-          Real.sqrt (∑ u : Oˣ,∑ z∈t,‖idealChildRow p hp hcop hg F Ψ₂ m H₂ true u z‖^2) := by ring
-        _ = _ := by rw [Real.sq_sqrt hD]
 
 end
 
@@ -333,7 +167,6 @@ theorem globalSecondRawRow_fixed_pool
 
 end SecondPassArithmetic
 
-open scoped BigOperators Classical SchwartzMap
 namespace CanonicalQuadraticSieve
 
 section
@@ -588,40 +421,6 @@ theorem HasSieveExponent.dual_large_principal_sum {α : ℝ} (hexp : HasSieveExp
   intro d i hd
   exact dual_large_cut_lower M F B (Ideal.absNorm (rows i)) N T (Ideal.absNorm d) hM hF (by linarith)
     (by linarith [(hrows i).2.1]) (hrows i).2.2 (by linarith) hT ((hZ i).trans hd.le)
-
-omit [DecidableEq m] [DecidableEq n] [DecidableEq p] in
-theorem dual_large_principal_normalization
-    (rows : m → Ideal O) (left : n → Ideal O) (right : p → Ideal O)
-    (a : n → ℂ) (b : p → ℂ) (M F : ℝ) (P : Ideal O → m → Prop)
-    (hM : 0 < M) (hF : 0 < F)
-    (hrows : ∀ i, rows i ≠ 0) (hleft : ∀ j, left j ≠ 0) (hright : ∀ k, right k ≠ 0) :
-    (∑ i, ∑ j, ∑ k, originalTerm rows left right a b 1 1 i j k *
-      (((M/(Real.sqrt ((Ideal.absNorm (left j):ℝ)*(Ideal.absNorm (right k):ℝ))*F):ℝ):ℂ) *
-        ((Real.sqrt (F*(Ideal.absNorm (left j):ℝ)*(Ideal.absNorm (right k):ℝ)/
-          (M*(Ideal.absNorm (rows i):ℝ))):ℝ):ℂ) *
-        ∑ d ∈ idealDivisors (left j*right k), if P d i then
-          (UniqueFactorizationMonoid.moebius d:ℂ)/(Ideal.absNorm d:ℂ) else 0)) =
-      principalDivisorCorrection rows left right a b (M/F) P := by
-  classical
-  have hpos (I : Ideal O) (hI : I ≠ 0) : 0 < (Ideal.absNorm I:ℝ) := by
-    exact_mod_cast Nat.pos_iff_ne_zero.mpr (fun h => hI (Ideal.absNorm_eq_zero_iff.mp h))
-  unfold principalDivisorCorrection
-  apply Finset.sum_congr rfl
-  intro i _
-  apply Finset.sum_congr rfl
-  intro j _
-  apply Finset.sum_congr rfl
-  intro k _
-  rw [←Complex.ofReal_mul, dual_principal_prefactor_identity M F (Ideal.absNorm (rows i))
-    (Ideal.absNorm (left j)) (Ideal.absNorm (right k)) hM hF (hpos _ (hrows i))
-      (hpos _ (hleft j)) (hpos _ (hright k)), Finset.mul_sum]
-  congr 1
-  apply Finset.sum_congr rfl
-  intro d _
-  by_cases hd : P d i
-  · simp only [hd,ite_true,Complex.ofReal_div,Complex.ofReal_natCast]
-    ring
-  · simp only [hd,ite_false,mul_zero]
 
 end CanonicalQuadraticSieve
 

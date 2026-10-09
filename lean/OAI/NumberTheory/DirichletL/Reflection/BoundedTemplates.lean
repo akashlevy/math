@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.Columns
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -57,13 +56,6 @@ theorem canonical_bounded_cusp_templates {α : Type*} {ι : α → Type*}
     change actualCuspColumn (E x) s hc u m n b = boundedExtension _
     rw [← hA x u m n b]
     exact (boundedExtension_eq _ (actualCuspColumn_norm_le_one (E x) s hc u m n b)).symm
-
-theorem common_frozen_branch_bound {φ Q : Type*} [Fintype φ]
-    (F : PrimeFamily φ) (jF : φ → ℕ) (e : φ → Fin 3)
-    (A : Q → Eisˣ → ℕ → Ideal Eis → Ideal Eis → ℂ)
-    (hA : ∀ q u m n b, ‖A q u m n b‖ ≤ 1) (q : Q) (u : Eisˣ) (m : ℕ) (n b : Ideal Eis) :
-    ‖frozenBranchColumn F jF e (A q u m) n b‖ ≤ frozenBranchScale F jF e :=
-  frozenBranchColumn_norm_le F jF e (A q u m) (hA q u m) n b
 
 end
 end SevenEighths.InverseReflectedPhase

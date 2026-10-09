@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.OriginalSource
 import OAI.NumberTheory.DirichletL.Energy.Bands
-
 namespace OAI
 
 noncomputable section
@@ -56,26 +55,6 @@ theorem input_affine_capacity (s:Input ι)(Z κ M:ℝ)(hZ:1<Z)
   have h1:=raw_log_le_length Z s.X₁ hZ s.X₁_pos
   have h2:=raw_log_le_length Z s.X₂ hZ s.X₂_pos
   nlinarith
-
-theorem input_reference_affine_capacity (s:Input ι)(Z κ M:ℝ)(hZ:1<Z)
-    (hcap:length Z s.X₁+length Z s.X₂+6*κ*(∑i,Real.logb Z (s.P i))≤M):
-    Real.logb Z (s.Y₁*s.Y₂*∏i,s.P i)+(6*κ-1)*(∑i,Real.logb Z (s.P i))≤M := by
-  rw [s.same_product]
-  exact input_affine_capacity s Z κ M hZ hcap
-
-theorem original_slot_logs (s:Input ι)(Z:ℝ)(hZ:1<Z)(w:ι→ℝ)
-    (hw:∀i,0≤w i)(hP:∀i,s.P i=Z^(w i)):
-    (∀i,1≤s.P i) ∧ (∀i,Real.logb Z (s.P i)=w i) := by
-  constructor
-  · intro i;rw [hP i];exact Real.one_le_rpow hZ.le (hw i)
-  · intro i;rw [hP i,Real.logb_rpow (zero_lt_one.trans hZ) hZ.ne']
-
-theorem original_exponent_capacity (s:Input ι)(Z κ M:ℝ)(hZ:1<Z)(w:ι→ℝ)
-    (hP:∀i,s.P i=Z^(w i))
-    (hcap:length Z s.X₁+length Z s.X₂+6*κ*(∑i,w i)≤M):
-    Real.logb Z (volume s)+(6*κ-1)*(∑i,Real.logb Z (s.P i))≤M := by
-  apply input_affine_capacity s Z κ M hZ
-  simpa only [hP,Real.logb_rpow (zero_lt_one.trans hZ) hZ.ne'] using hcap
 
 theorem original_volume_cap (s:Input ι)(Z κ M:ℝ)(hZ:1<Z)(hk:1/6≤κ)
     (hP:∀i,1≤s.P i)

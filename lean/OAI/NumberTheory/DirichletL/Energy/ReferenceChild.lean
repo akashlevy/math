@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Energy.ReferenceReflection
 import OAI.NumberTheory.DirichletL.Energy.AllocatedChildren
 import OAI.NumberTheory.DirichletL.Energy.SlotHeight
 import OAI.NumberTheory.DirichletL.Energy.Profiles
-
 namespace OAI
 
 noncomputable section

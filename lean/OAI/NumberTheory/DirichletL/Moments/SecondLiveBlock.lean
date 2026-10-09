@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondBlockAggregate
 import OAI.NumberTheory.DirichletL.Moments.SecondRetainedWidth
-
 namespace OAI
 
 noncomputable section
@@ -63,16 +62,6 @@ lemma physicalBlock_live_rows (η:Character) (t:ℝ) (S:Finset (Ideal O)) (β:Id
   · simp only [hr,ne_eq,not_true_eq_false,physicalKernel,Complex.ofReal_zero,
       mul_zero,zero_mul,Finset.sum_const_zero,ite_self]
   · simp only [hr,ne_eq,not_false_eq_true,ite_true]
-
-lemma physicalBlock_row_split (η:Character) (t:ℝ) (S:Finset (Ideal O)) (β:Ideal O→ℂ)
-    (C D:Ideal O) (hC:Supported C) (hD:Supported D) (U:Finset (CommonIndex C D))
-    (R:ℝ) (rows:Finset O) (W:𝓢(ℝ,ℂ)) (K:ℝ) (n:Fin 4→ℤ) (p:O→Prop):
-    physicalBlock η t S β C D hC hD U R rows W K n=
-      physicalBlock η t S β C D hC hD U R ((liveRows C D U R rows).filter p) W K n+
-      physicalBlock η t S β C D hC hD U R ((liveRows C D U R rows).filter (fun z=>¬p z)) W K n:=by
-  rw [physicalBlock_live_rows η t S β C D hC hD U R rows W K n]
-  unfold physicalBlock
-  exact (Finset.sum_filter_add_sum_filter_not _ p _).symm
 
 theorem original_live_blocks (η:Character) (t:ℝ)
     (S:Finset (Ideal O)) (β:Ideal O→ℂ) (W:𝓢(ℝ,ℂ))

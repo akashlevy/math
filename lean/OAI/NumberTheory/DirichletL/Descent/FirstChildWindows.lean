@@ -1,6 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.SecondChildWindows
-import OAI.NumberTheory.DirichletL.Descent.FirstUnequalRetainedEnergy
-
+import OAI.NumberTheory.DirichletL.Descent.FirstUnequalPhysicalEnergy
+import OAI.NumberTheory.DirichletL.Descent.FirstActualSecondEnergy
 namespace OAI
 
 noncomputable section

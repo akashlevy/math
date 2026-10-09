@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.ThreeBlocks
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

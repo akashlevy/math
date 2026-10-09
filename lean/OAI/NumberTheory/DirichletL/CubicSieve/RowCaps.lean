@@ -1,77 +1,25 @@
 import OAI.NumberTheory.DirichletL.GaussSum.PowerfulParts
 import OAI.NumberTheory.DirichletL.MeanSquare.LogarithmicBins
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 
 section
@@ -142,62 +90,8 @@ open ActualEisensteinCubic
 open FirstPassCubeLabels (primeProduct dilationLabel)
 open ConcreteTraceCRT (eisEmbedding)
 
-theorem globalTwoPassage_original_ranges
-    (W g₁ g₂ V₁ V₂ : 𝓢(ℝ,ℂ)) (M₁ M₂ N₁ N₂ : ℝ)
-    (hM₁ : 0≤M₁) (hM₂ : 0≤M₂) (hN₁ : 0≤N₁) (hN₂ : 0≤N₂)
-    (hg₁ : ∀ t,g₁ t≠0 → |t|≤M₁) (hg₂ : ∀ t,g₂ t≠0 → |t|≤M₂)
-    (hV₁ : ∀ t,V₁ t≠0 → |t|≤N₁) (hV₂ : ∀ t,V₂ t≠0 → |t|≤N₂)
-    (ε deltaLoss : ℝ) (hε : 0<ε) (hδ : 0<deltaLoss) (A J N : ℕ) :
-    ∃ (windows₁ windows₂ : Fin 7 → ℝ → ℂ) (Cfirst C₁ Ct₁ C₂ Ct₂ : ℝ),
-      0≤Cfirst ∧ 0≤C₁ ∧ 0<Ct₁ ∧ 0≤C₂ ∧ 0<Ct₂ ∧
-      (∀ i,HasCompactSupport (windows₁ i)) ∧ (∀ i,ContDiff ℝ ∞ (windows₁ i)) ∧
-      (∀ i t,windows₁ i t≠0 → |t|≤M₁+6+1) ∧
-      (∀ i,HasCompactSupport (windows₂ i)) ∧ (∀ i,ContDiff ℝ ∞ (windows₂ i)) ∧
-      (∀ i t,windows₂ i t≠0 → |t|≤M₂+6+1) ∧
-      ∀ {ι : Type*} [DecidableEq ι]
-      (p : ι → O) (hp : ∀ i,p i ≠ 0) [∀ i,(Ideal.span {p i}).IsMaximal]
-      (_hinj : Function.Injective (fun i => Ideal.span {p i}))
-      (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-      (hg : ∀ i,lambda ∉ Ideal.span {p i})
-      (_hc : ∀ i,ringChar (O ⧸ Ideal.span {p i}) ≠ 2) (_hpr : ∀ i,lambda^2 ∣ p i-1)
-      (pool : Finset ι) (blocks : Finset (GlobalCubeBlock ι))
-      (s : GlobalCubeBlock ι → Finset (Ideal O × O)) (a : GlobalCubeBlock ι → Ideal O × O → ℂ)
-      (w : GlobalCubeBlock ι → ℝ)
-      (Ψ₁ Ψ₂ : O →* ℂ) (m₁ m₂ : O) (Γ K ell B F H : ℝ),
-      0≤Γ → 0<K → 0<ell → 0<B → 0<F → 0≤H →
-      (∀ u,‖Ψ₁ u‖≤1) → (∀ u,‖Ψ₂ u‖≤1) →
-      (∀ b∈blocks,0≤w b ∧ w b≤Γ) → (∀ b∈blocks,∀ x∈s b,‖a b x‖≤w b) →
-      (∀ b∈blocks,GlobalCubeAdmissible b) →
-      (∀ b∈blocks,‖eisEmbedding (primeProduct p b.cube.support b.cube.leftExponent)‖^2≤B) →
-      (∀ b∈blocks,‖eisEmbedding (primeProduct p b.cube.support b.cube.rightExponent)‖^2≤B) →
-      (∀ b∈blocks,∀ x∈s b,Squarefree x.1) → (∀ b∈blocks,∀ x∈s b,x.2≠0) →
-      (∀ b∈blocks,∀ x∈s b,(Ideal.absNorm x.1 : ℝ)≤F) →
-      (∀ b∈blocks,∀ x∈s b,‖eisEmbedding x.2‖^2≤globalFirstFrequencyScale p K ell b) →
-      ‖(ell*B^2*F : ℂ)⁻¹*∑ b∈blocks,globalCubeFirstBlock p hp hcop hg pool b (s b) (a b)
-        Ψ₁ Ψ₂ m₁ m₂ g₁ g₂ W V₁ V₂ K ell‖ ≤
-      Cfirst*(globalFirstRowCap K ell B F)^deltaLoss*
-        Real.sqrt (globalFirstFamilyBudget p hp hcop hg pool blocks w Ψ₁ m₁ g₁ V₁ windows₁ C₁ Ct₁ Γ ε K ell B F M₁ H A J N true) *
-        Real.sqrt (globalFirstFamilyBudget p hp hcop hg pool blocks w Ψ₂ m₂ g₂ V₂ windows₂ C₂ Ct₂ Γ ε K ell B F M₂ H A J N false) := by
-  obtain ⟨windows₁,windows₂,Cfirst,C₁,Ct₁,C₂,Ct₂,hCfirst,hC₁,hCt₁,hC₂,hCt₂,
-    hwc₁,hws₁,hwb₁,hwc₂,hws₂,hwb₂,htransfer⟩ :=
-    globalTwoPassage_transfer W g₁ g₂ V₁ V₂ M₁ M₂ N₁ N₂ hM₁ hM₂ hN₁ hN₂ hg₁ hg₂ hV₁ hV₂ ε deltaLoss hε hδ A J N
-  refine ⟨windows₁,windows₂,Cfirst,C₁,Ct₁,C₂,Ct₂,hCfirst,hC₁,hCt₁,hC₂,hCt₂,
-    hwc₁,hws₁,hwb₁,hwc₂,hws₂,hwb₂,?_⟩
-  intro ι _ p hp _ hinj hcop hg hc hpr pool blocks s a w Ψ₁ Ψ₂ m₁ m₂ Γ K ell B F H
-    hΓ hK hell hB hF hH hΨ₁ hΨ₂ hw ha hadm hb₁ hb₂ hsf hs0 hf hh
-  exact htransfer p hp hinj hcop hg hc hpr pool blocks s a w
-    (fun b => globalCubeFirstTargets p b (s b)) Ψ₁ Ψ₂ m₁ m₂ Γ K ell B F H (globalFirstRowCap K ell B F)
-    hΓ hK hell hB hF hH (globalFirstRowCap_pos K ell B F hK hell hB hF).le hΨ₁ hΨ₂ hw ha hadm hb₁ hb₂
-    (fun b hb => globalFirstPooledRow_le_cap p hp K ell B F hK hell hB hF b (hadm b hb) (hb₁ b hb) (hb₂ b hb))
-    hsf hs0
-    (fun b _ x hx => globalCubeFirstTargets_mem p b (s b) x hx)
-    (fun b hb z hz => globalCubeFirstTargets_ne_zero p hp b (s b) (hsf b hb) (hs0 b hb) z hz)
-    (fun b hb z hz => globalCubeFirstTargets_norm_bound p hp b (s b) K ell B F hK hell hB hF
-      (hb₁ b hb) (hb₂ b hb) (hf b hb) (hh b hb) z hz)
-
 end SecondPassArithmetic
 
-open scoped BigOperators Classical
 namespace CompletedGauss
 open ActualEisensteinCubic LocalReflectionBrackets
 
@@ -216,74 +110,10 @@ theorem bracket_four_eq_sum_exceptionalPiece (P : Ideal O) [P.IsMaximal]
   simp [Fin.sum_univ_succ,exceptionalPiece]
   ring
 
-def exceptionalBranch {ι : Type*} [Fintype ι] (P : ι→Ideal O)
-    [∀i,(P i).IsMaximal] (e : ι→Fin 3) (n b : O) : ℂ :=
-  ∏i, exceptionalPiece (P i) (e i) n b
-
-theorem prod_bracket_four_eq_branches {ι : Type*} [Fintype ι]
-    (P : ι→Ideal O) [∀i,(P i).IsMaximal] (hg : ∀i,lambda∉P i) (n b : O) :
-    (∏i,bracket (actualSextic (P i) (hg i)) 4 (Ideal.Quotient.mk (P i) (n*b^3))) =
-      ∑e : ι→Fin 3, exceptionalBranch P e n b := by
-  simp_rw [bracket_four_eq_sum_exceptionalPiece]
-  simpa only [Fintype.piFinset_univ,exceptionalBranch] using
-    Finset.prod_univ_sum (fun _ : ι => (Finset.univ : Finset (Fin 3)))
-      (fun i e => exceptionalPiece (P i) e n b)
-
-def exceptionalDivisor {ι : Type*} [Fintype ι] (P : ι→Ideal O)
-    (e : ι→Fin 3) (v : Fin 3) : Ideal O := ∏i, if e i=v then P i else 1
-
-theorem exceptionalBranch_support {ι : Type*} [Fintype ι]
-    (P : ι→Ideal O) [∀i,(P i).IsMaximal] (e : ι→Fin 3) (n b : O)
-    (hne : exceptionalBranch P e n b≠0) :
-    (∀i,e i=1 → n∈P i) ∧ (∀i,e i=2 → n∉P i ∧ b∈P i) := by
-  have hn i : exceptionalPiece (P i) (e i) n b≠0 :=
-    (Finset.prod_ne_zero_iff.mp hne) i (Finset.mem_univ i)
-  constructor
-  · intro i hi
-    by_contra h
-    exact hn i (by simp [exceptionalPiece,hi,h])
-  · intro i hi
-    by_contra h
-    exact hn i (by simp [exceptionalPiece,hi,h])
-
-theorem exceptionalBranch_divisibility {ι : Type*} [Fintype ι]
-    (P : ι→Ideal O) [∀i,(P i).IsMaximal]
-    (hcop : Pairwise (fun i j => IsCoprime (P i) (P j)))
-    (e : ι→Fin 3) (n b : O) (hne : exceptionalBranch P e n b≠0) :
-    exceptionalDivisor P e 1 ∣ Ideal.span {n} ∧
-    exceptionalDivisor P e 2 ∣ Ideal.span {b} ∧
-    (∀i,e i=2 → n∉P i) := by
-  have hs := exceptionalBranch_support P e n b hne
-  have hprod (v : Fin 3) (z : O) (hz : ∀i,e i=v → z∈P i) :
-      exceptionalDivisor P e v ∣ Ideal.span {z} := by
-    rw [exceptionalDivisor]
-    apply Fintype.prod_dvd_of_coprime
-    · intro i j hij
-      change IsCoprime (if e i=v then P i else 1) (if e j=v then P j else 1)
-      by_cases hi : e i=v
-      · rw [ite_eq_left hi]
-        by_cases hj : e j=v
-        · rw [ite_eq_left hj]
-          exact hcop hij
-        · rw [ite_eq_right hj]
-          exact isCoprime_one_right
-      · rw [ite_eq_right hi]
-        exact isCoprime_one_left
-    · intro i
-      split_ifs with hi
-      · rw [Ideal.dvd_iff_le,Ideal.span_le,Set.singleton_subset_iff,SetLike.mem_coe]
-        exact hz i hi
-      · exact one_dvd _
-  exact ⟨hprod 1 n hs.1,hprod 2 b (fun i hi => (hs.2 i hi).2),fun i hi => (hs.2 i hi).1⟩
-
 theorem rootCard_eq_sqrt_absNorm (P : Ideal O) [P.IsMaximal] :
     rootCard (O ⧸ P)=Real.sqrt (Ideal.absNorm P:ℝ) := by
   rw [rootCard,←Nat.card_eq_fintype_card]
   rfl
-
-def exceptionalSize {ι : Type*} [Fintype ι] (P : ι→Ideal O)
-    [∀i,(P i).IsMaximal] (e : ι→Fin 3) : ℝ :=
-  ∏i, if e i=0 then (rootCard (O ⧸ P i))⁻¹ else rootCard (O ⧸ P i)
 
 theorem exceptionalPiece_norm_le (P : Ideal O) [P.IsMaximal]
     (e : Fin 3) (n b : O) :
@@ -293,67 +123,6 @@ theorem exceptionalPiece_norm_le (P : Ideal O) [P.IsMaximal]
   · simp [abs_of_nonneg hr]
   · by_cases hn : n∈P <;> simp [hn,abs_of_nonneg hr,hr]
   · by_cases hn : n∉P ∧ b∈P <;> simp [hn,abs_of_nonneg hr,hr]
-
-theorem exceptionalBranch_norm_le {ι : Type*} [Fintype ι]
-    (P : ι→Ideal O) [∀i,(P i).IsMaximal] (e : ι→Fin 3) (n b : O) :
-    ‖exceptionalBranch P e n b‖≤exceptionalSize P e := by
-  rw [exceptionalBranch,norm_prod,exceptionalSize]
-  exact Finset.prod_le_prod₀ (fun i _ => norm_nonneg _) (fun i _ => exceptionalPiece_norm_le _ _ _ _)
-
-theorem exceptionalDivisor_ne_zero {ι : Type*} [Fintype ι]
-    (P : ι→Ideal O) (hp : ∀i,P i≠0) (e : ι→Fin 3) (v : Fin 3) :
-    exceptionalDivisor P e v≠0 := by
-  rw [exceptionalDivisor]
-  apply Finset.prod_ne_zero_iff.mpr
-  intro i _
-  split_ifs
-  · exact hp i
-  · exact one_ne_zero
-
-theorem sqrt_norm_exceptionalDivisor {ι : Type*} [Fintype ι]
-    (P : ι→Ideal O) [∀i,(P i).IsMaximal] (e : ι→Fin 3) (v : Fin 3) :
-    Real.sqrt (Ideal.absNorm (exceptionalDivisor P e v):ℝ)=
-      ∏i,if e i=v then rootCard (O ⧸ P i) else 1 := by
-  rw [exceptionalDivisor,map_prod,Nat.cast_prod,Real.sqrt_prod]
-  · apply Finset.prod_congr rfl
-    intro i _
-    split_ifs with hi
-    · rw [rootCard_eq_sqrt_absNorm]
-    · simp
-  · intro i _
-    exact Nat.cast_nonneg _
-
-theorem exceptionalSize_eq {ι : Type*} [Fintype ι]
-    (P : ι→Ideal O) [∀i,(P i).IsMaximal] (e : ι→Fin 3) :
-    exceptionalSize P e=
-      Real.sqrt (Ideal.absNorm (exceptionalDivisor P e 1):ℝ)*
-      Real.sqrt (Ideal.absNorm (exceptionalDivisor P e 2):ℝ)/
-      Real.sqrt (Ideal.absNorm (exceptionalDivisor P e 0):ℝ) := by
-  rw [sqrt_norm_exceptionalDivisor,sqrt_norm_exceptionalDivisor,sqrt_norm_exceptionalDivisor,
-    ←Finset.prod_mul_distrib,←Finset.prod_div_distrib]
-  apply Finset.prod_congr rfl
-  intro i _
-  generalize e i=x
-  fin_cases x <;> simp
-
-theorem exceptional_normalized_bound {ι : Type*} [Fintype ι]
-    (P : ι→Ideal O) [∀i,(P i).IsMaximal] (hp : ∀i,P i≠0)
-    (e : ι→Fin 3) (n b : O) (U B : ℝ) (hU : 0<U) (hB : 0<B) :
-    ‖exceptionalBranch P e n b‖ /
-      (Real.sqrt ((Ideal.absNorm (exceptionalDivisor P e 1):ℝ)*U)*
-        ((Ideal.absNorm (exceptionalDivisor P e 2):ℝ)*B)) ≤
-      1/(Real.sqrt U*B*Real.sqrt ((Ideal.absNorm (exceptionalDivisor P e 0):ℝ)*
-        (Ideal.absNorm (exceptionalDivisor P e 2):ℝ))) := by
-  have hn (v : Fin 3) : 0<(Ideal.absNorm (exceptionalDivisor P e v):ℝ) := by
-    exact_mod_cast Nat.pos_of_ne_zero (fun hz => exceptionalDivisor_ne_zero P hp e v (Ideal.absNorm_eq_zero_iff.mp hz))
-  have hs (v : Fin 3) : 0<Real.sqrt (Ideal.absNorm (exceptionalDivisor P e v):ℝ) := Real.sqrt_pos.mpr (hn v)
-  have hsu : 0<Real.sqrt U := Real.sqrt_pos.mpr hU
-  apply (div_le_div_of_nonneg_right (exceptionalBranch_norm_le P e n b) (by positivity)).trans
-  rw [exceptionalSize_eq,Real.sqrt_mul (hn 1).le,Real.sqrt_mul (hn 0).le]
-  have he := Real.sq_sqrt (hn 2).le
-  apply le_of_eq
-  field_simp [(hs 0).ne', (hs 1).ne', (hs 2).ne', (hn 2).ne', hsu.ne', hB.ne']
-  nlinarith
 
 end CompletedGauss
 
@@ -410,35 +179,9 @@ theorem product_quadratic_norm_scaled (ε : ℝ) (hε : 0<ε) :
     _ ≤ lengthScale^2*(C*(K*(U*B))^ε*(K+U*B)*(U*B)) := mul_le_mul_of_nonneg_left hb (sq_nonneg _)
     _ = _ := by ring
 
-theorem completed_quadratic_dyad (ε : ℝ) (hε : 0<ε) :
-    ∃C : ℝ,0<C ∧ ∀K U B r S₀ E : ℝ,
-      1≤K → 1≤U → 1≤B → 0<r → 0<S₀ → 0<E →
-    ∀S T : Finset (Ideal O),
-      (∀I∈S,I≠0 ∧ (Ideal.absNorm I:ℝ)≤U) →
-      (∀I∈T,I≠0 ∧ (Ideal.absNorm I:ℝ)≤B) →
-    ∀β : Ideal O→Ideal O→ℂ,
-      (∀n∈S,∀b∈T,‖β n b‖≤1/(Real.sqrt U*B*r*Real.sqrt (S₀*E))) →
-      (∑k : idealRange K,‖∑n∈S,∑b∈T,
-        quadraticRow k.val (primaryGenerator (n*b))*β n b‖^2)≤
-      C*(K*(U*B))^ε*(K+U*B)/(B*r^2*S₀*E) := by
-  obtain ⟨C,hC,hbound⟩ := product_quadratic_norm_scaled ε hε
-  refine ⟨C,hC,?_⟩
-  intro K U B r S₀ E hK hU hB hr hS₀ hE S T hS hT β hβ
-  apply (hbound K U B _ hK hU hB (by positivity) S T hS hT β hβ).trans
-  apply le_of_eq
-  have hU0 : U≠0 := by linarith
-  have hB0 : B≠0 := by linarith
-  have hr0 := ne_of_gt hr
-  have hS0 := ne_of_gt hS₀
-  have hE0 := ne_of_gt hE
-  simp only [one_div,inv_pow,mul_pow,Real.sq_sqrt (show 0≤U by linarith),
-    Real.sq_sqrt (show 0≤S₀*E by positivity)]
-  field_simp
-
 end CanonicalQuadraticSieve
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups Matrix ContDiff
+open scoped MatrixGroups Matrix
 
 namespace CubicEisenstein
 
@@ -557,8 +300,7 @@ lemma hyperbolicSpatial_isOpenEmbedding : Topology.IsOpenEmbedding hyperbolicSpa
 
 end CubicEisenstein
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups Matrix ContDiff Manifold
+open scoped Manifold
 
 namespace CubicEisenstein
 

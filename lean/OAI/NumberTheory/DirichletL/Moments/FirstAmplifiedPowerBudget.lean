@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.FirstAnnularActiveInput
 import OAI.NumberTheory.DirichletL.Moments.AmplificationRadicalChoice
 import OAI.NumberTheory.DirichletL.Moments.FirstErrorAllocationPower
 import OAI.NumberTheory.DirichletL.Moments.FirstAnnularInputAmplification
-
 namespace OAI
 
 noncomputable section

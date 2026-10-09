@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.CanonicalCaps
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

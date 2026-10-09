@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.Physical
 import OAI.NumberTheory.DirichletL.Detector.RowAnalytic
-
 namespace OAI
 
 noncomputable section
@@ -38,13 +37,6 @@ theorem CalibrationData.Xi_norm_one (C : CalibrationData) (a : O)
   rw [idealRowHom_argument_pow _ _ _ ha, ite_eq_left hc] at h6
   change ‖C.residueMonoid a * idealRowHom C.generator (Ideal.span {a})‖ = 1
   rw [norm_mul, hξ, Complex.norm_eq_one_of_pow_eq_one h6 (by decide : (6 : ℕ) ≠ 0), mul_one]
-
-theorem calibrated_rowCoefficient_apply (η : HeckeFamily.Character) (C : CalibrationData)
-    (s : O) (hs : Supported (Ideal.span {s})) (m a : O)
-    (ha : Supported (Ideal.span {a})) (hcop : IsCoprime C.generator a) :
-    rowCoefficient η C.Xi s hs m a = HeckeFamily.elementCoeff η a * (C.Xi a)⁻¹ *
-      sexticReciprocityPhase a s * idealRowHom m (Ideal.span {a}) :=
-  rowCoefficient_apply_unit η C.Xi s hs m a (C.Xi_norm_one a ha hcop)
 
 theorem physicalRow_integrable (η : HeckeFamily.Character) (C : CalibrationData)
     (D : Ideal O) (s : O) (hs : Supported (Ideal.span {s})) (m : O)

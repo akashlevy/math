@@ -1,77 +1,25 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.GcdReduction
 import OAI.NumberTheory.DirichletL.CubicSieve.RowMajorants
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace CanonicalQuadraticSieve
 
 section
@@ -141,7 +89,7 @@ theorem poolPrimary_good (F : Finset (Ideal O)) (hF : ∀ I ∈ F, Admissible I)
 theorem poolPrimary_odd (F : Finset (Ideal O)) (hF : ∀ I ∈ F, Admissible I) (i : primePool F) :
     ringChar (O ⧸ Ideal.span {poolPrimary F i}) ≠ 2 := by rw [poolPrimary_span F hF i]; exact poolOdd F hF i
 
-open ActualEisensteinCubic CompletedGauss ConcretePrimeRowBridge ActualEisensteinCoordinates
+open ActualEisensteinCoordinates
 
 theorem quadraticRow_eq_primaryPool (F : Finset (Ideal O)) (hF : ∀ I ∈ F, Admissible I)
     (I : Ideal O) (hIF : I ∈ F) (z : O) :
@@ -248,20 +196,8 @@ theorem quadratic_pair_zero_of_nontrivial (I J : Ideal O) (hI : Admissible I) (h
   · rw [quadraticRow_zero_of_ne_one I hI h, zero_mul]
   · rw [quadraticRow_zero_of_ne_one J hJ h, mul_zero]
 
-theorem quadratic_pair_tsum_remove_zero (I J : Ideal O) (hI : Admissible I) (hJ : Admissible J)
-    (h : I ≠ 1 ∨ J ≠ 1) (f : O → ℂ) :
-    (∑' z : O, quadraticRow I z * quadraticRow J z * f z) =
-      ∑' z : O, if z = 0 then 0 else quadraticRow I z * quadraticRow J z * f z := by
-  apply tsum_congr
-  intro z
-  by_cases hz : z = 0
-  · subst z
-    rw [quadratic_pair_zero_of_nontrivial I J hI hJ h, zero_mul, ite_eq_left rfl]
-  · rw [ite_eq_right hz]
-
 end CanonicalQuadraticSieve
 
-open scoped BigOperators Classical SchwartzMap
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 open ConcreteTraceCRT (eisEmbedding)
@@ -279,26 +215,6 @@ def radialPairKernel (e k : O) (W : 𝓢(ℝ, ℂ))
     normalizedColumn p (fun U => V₂ (columnLog p X₂ U)) T *
     paperRadialFourier W (Y * ‖eisEmbedding k‖ ^ 2 /
       (‖eisEmbedding e‖ ^ 2 * primeProductNorm p S * primeProductNorm p T))
-
-theorem actualSecondKernel_eq_coupled
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (F : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m r c d e k : O)
-    (W : 𝓢(ℝ, ℂ)) (V₁ V₂ : ℝ → ℂ) (X₁ X₂ Y : ℝ) :
-    actualSecondKernel p hp hg hinj F Ψ₁ Ψ₂ m r c d e k W V₁ V₂ X₁ X₂ Y =
-      (Y : ℂ) * secondKernelPair p hp hg hinj F Ψ₁ Ψ₂ m r c d e k
-        (radialPairKernel p e k W V₁ V₂ X₁ X₂ Y) := by
-  simp only [actualSecondKernel, secondKernelPair, Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro S hS
-  apply Finset.sum_congr rfl
-  intro T hT
-  by_cases hd : Disjoint S T
-  · simp only [ite_eq_left hd, radialPairKernel, normalizedColumn,
-      FirstPassCubeLabels.primeProductNorm_union p S T hd, Finset.prod_union hd,
-      map_mul, norm_mul, Complex.ofReal_mul,  Complex.star_def,
-      Complex.conj_ofReal, div_eq_mul_inv, mul_inv_rev, map_inv₀]
-    ring_nf
-  · simp [hd]
 
 theorem secondChildKernelPair_fixed_pool
     (F V : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m r c d e k₁ k₂ : O)
@@ -337,23 +253,8 @@ theorem secondChildKernelPair_fixed_pool
         (d*e*k₁) (fun _ => 1) V N (hzero N hNF hNV), star_zero]
       simp only [zero_mul, Finset.sum_const_zero]
 
-theorem actualSecondKernel_eq_coupled_children
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1)
-    (F : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m r c d e k : O)
-    (W : 𝓢(ℝ, ℂ)) (V₁ V₂ : ℝ → ℂ) (X₁ X₂ Y : ℝ) :
-    actualSecondKernel p hp hg hinj F Ψ₁ Ψ₂ m r c d e k W V₁ V₂ X₁ X₂ Y =
-      (Y : ℂ) * ∑ z : SecondRayIndex, ∑ V ∈ F.powerset,
-        secondTotalWeight p hp hcop hg Ψ₁ Ψ₂ m r c d e k (z,V) *
-          secondChildKernelPair p hp hcop hg F V (secondRayMinus Ψ₁ z) (secondRayPlus Ψ₂ z)
-            m r c d e k (-k) (radialPairKernel p e k W V₁ V₂ X₁ X₂ Y) := by
-  rw [actualSecondKernel_eq_coupled,
-    secondKernelPair_eq_children p hp hcop hg hinj hc hpr]
-
 end SecondPassArithmetic
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace SecondPassIntegration
 open ActualEisensteinCubic JointLogSeparation FirstPassCubeLabels
 open ConcreteTraceCRT (eisEmbedding)
@@ -441,7 +342,6 @@ theorem normalizedColumn_pair_union {ι : Type*} [DecidableEq ι]
 
 end SecondPassIntegration
 
-open scoped BigOperators Classical SchwartzMap
 namespace SecondPassArithmetic
 
 section

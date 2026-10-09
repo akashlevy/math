@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerGeometry
-
 namespace OAI
 
 noncomputable section
@@ -67,31 +66,11 @@ theorem retained_child_squarefree
 def childLabels (S:Finset (Source (ι:=ι) 0)) : Finset (Ideal Eis) :=
   (coprimeSource p S).image (fun x=>sourceIdeal p x.divisor*sourceIdeal p x.overlap)
 
-include hp in
-omit [DecidableEq ι] [∀i,(Ideal.span {p i}).IsMaximal] in
-theorem childLabels_ne_zero (S:Finset (Source (ι:=ι) 0)) :
-    ∀f∈childLabels p S,f≠0 := by
-  intro f hf
-  obtain ⟨x,hx,rfl⟩ := Finset.mem_image.mp hf
-  exact mul_ne_zero (sourceIdeal_ne_zero p hp _) (sourceIdeal_ne_zero p hp _)
-
-include hcop in
-theorem childLabels_squarefree (S:Finset (Source (ι:=ι) 0))
-    (hdiv:∀x∈S,x.divisor⊆x.common) : ∀f∈childLabels p S,Squarefree f := by
-  intro f hf
-  obtain ⟨x,hx,rfl⟩ := Finset.mem_image.mp hf
-  exact retained_child_squarefree p hcop S hdiv hx 1
-
 omit [DecidableEq ι] in
 theorem child_label_mem (S:Finset (Source (ι:=ι) 0))
     {x:Source (ι:=ι) 0}(hx:x∈coprimeSource p S)(u:Eisˣ) :
     (initialChild (toTuple p (sectorSource u x))).2.1∈childLabels p S :=
   Finset.mem_image.mpr ⟨x,hx,rfl⟩
-
-theorem nonzero_child_ball_neg (R:ℝ)(k:Eis)(hk:k∈nonzeroChildFrequencyBall 1 R) :
-    -k∈nonzeroChildFrequencyBall 1 R := by
-  rw [mem_nonzeroChildFrequencyBall 1 one_ne_zero,one_mul] at hk ⊢
-  simpa only [map_neg,norm_neg] using hk
 
 end SevenEighths.InverseInitialEnergyCallerSourceMask
 

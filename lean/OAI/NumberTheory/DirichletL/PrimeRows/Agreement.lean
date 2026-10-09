@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.Continuation
-
 namespace OAI
 
 noncomputable section
@@ -81,15 +80,6 @@ theorem continuedCorrection_eq_initial (S : Finset (Ideal O)) (hS : SourceExclus
       (continuedCorrection S hS η u x w z) := by
     simpa only [hlocal,continuedCorrection,unramifiedProduct] using he
   exact hh.tprod_eq.symm
-
-theorem high_L_factorization_continued (S : Finset (Ideal O)) (hS : SourceExclusions S)
-    (η : Character) (u : FreeRow) (x w z : ℂ)
-    (hx : 3/2<x.re) (hw : 2<w.re) (hz : 1/6<z.re) :
-    markedIdealHighSeries S 1 η u.val x w z=
-      LFunction (fixedSourcePrincipal S hS.prime) (6*z)*LFunction (rowCharacter S hS.prime u) w /
-        LFunction ((targetRow η u).excludePrimes S hS.prime) x*continuedCorrection S hS η u x w z := by
-  rw [continuedCorrection_eq_initial S hS η u x w z hx hw hz]
-  exact high_L_factorization S hS.prime hS.bad η u x w z hx hw hz
 
 end SevenEighths.ProbeHighRowFamily
 

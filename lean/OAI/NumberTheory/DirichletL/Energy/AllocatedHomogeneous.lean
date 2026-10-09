@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.AllocatedClipped
-
 namespace OAI
 
 noncomputable section

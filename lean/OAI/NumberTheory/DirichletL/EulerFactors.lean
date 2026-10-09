@@ -3,7 +3,6 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.Calculus.FDeriv.Mul
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Linarith
-
 namespace OAI
 
 namespace SevenEighths.EulerFactors
@@ -61,14 +60,6 @@ theorem differentiable_deletedProduct {ι : Type*} (S : Finset ι) (N : ι → �
       simp only [deletedProduct, Finset.prod_insert hp]
     rw [heq]
     exact (differentiable_factor hpN (a p)).mul (ih hSN)
-
-theorem deleted_eq_zero_iff {ι : Type*} (S : Finset ι) (N : ι → ℝ)
-    (a : ι → ℂ) (hN : ∀ p ∈ S, 1 < N p) (ha : ∀ p ∈ S, ‖a p‖ ≤ 1)
-    {L Ldeleted : ℂ → ℂ} {s : ℂ} (hs : 0 < s.re)
-    (hidentity : Ldeleted s = deletedProduct S N a s * L s) :
-    Ldeleted s = 0 ↔ L s = 0 := by
-  rw [hidentity, mul_eq_zero]
-  exact or_iff_right (deletedProduct_ne_zero S N a hN ha hs)
 
 end
 

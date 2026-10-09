@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SlotRemoval
 import OAI.NumberTheory.DirichletL.Moments.RetainedEnergy
-
 namespace OAI
 
 noncomputable section

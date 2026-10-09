@@ -1,5 +1,4 @@
-import OAI.NumberTheory.DirichletL.Energy.ReferenceLowEmpty
-
+import OAI.NumberTheory.DirichletL.Energy.ReferenceLowBands
 namespace OAI
 
 noncomputable section

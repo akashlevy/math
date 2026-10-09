@@ -3,7 +3,6 @@ import OAI.NumberTheory.DirichletL.Moments.SecondFrozenLiveDescent
 import OAI.NumberTheory.DirichletL.Moments.SourceInputReindex
 import OAI.NumberTheory.DirichletL.Moments.SecondSourceRemainder
 import OAI.NumberTheory.DirichletL.Moments.SecondFrozenLiveSource
-
 namespace OAI
 
 noncomputable section
@@ -38,7 +37,7 @@ open CenteredMomentFiniteProfileExceptional CenteredMomentFiniteProfileException
 open CenteredMomentOriginalChildEnergy CenteredMomentSupportedTailAggregate
 open CenteredMomentSourceInputTailUniform EisensteinSchwartzPoisson
 
-open CenteredMomentLogDyadic CenteredMomentSecondWindowSource
+open CenteredMomentLogDyadic
 open MeasureTheory UniqueFactorizationMonoid CenteredMomentAllocatedDetectorAmplitude CenteredMomentCommonExceptionalCost
 
 theorem original_subsets_source_descent (wlo whi:ℝ)(hwlo:0<wlo)(hwhi:0≤whi)

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.LiveDomain
 import OAI.NumberTheory.DirichletL.Moments.RestrictedWindow
-
 namespace OAI
 
 noncomputable section

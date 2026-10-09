@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.RawCoefficient
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GaussianWindows
-
 namespace OAI
 
 noncomputable section

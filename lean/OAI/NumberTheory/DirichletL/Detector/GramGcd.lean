@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GramJointSource
-
 namespace OAI
 
 noncomputable section
@@ -47,11 +46,6 @@ def multiplyTriple (t : CoprimeTriple) : SupportedIdeal×SupportedIdeal :=
   (⟨t.val.1.val*t.val.2.1.val,(supported_mul_iff _ _).mpr ⟨t.val.1.property,t.val.2.1.property⟩⟩,
    ⟨t.val.1.val*t.val.2.2.val,(supported_mul_iff _ _).mpr ⟨t.val.1.property,t.val.2.2.property⟩⟩)
 
-lemma multiply_gcdTriple (p : SupportedIdeal×SupportedIdeal) : multiplyTriple (gcdTriple p)=p := by
-  apply Prod.ext <;> apply Subtype.ext
-  · exact gcd_common_left _ _
-  · exact gcd_common_right _ _
-
 lemma gcdTriple_multiply (t : CoprimeTriple) : gcdTriple (multiplyTriple t)=t := by
   have he : gcd (t.val.1.val*t.val.2.1.val) (t.val.1.val*t.val.2.2.val)=t.val.1.val := by
     rw [_root_.gcd_mul_left,normalize_eq,Ideal.isCoprime_iff_gcd.mp t.property,mul_one]
@@ -67,16 +61,6 @@ lemma gcdTriple_multiply (t : CoprimeTriple) : gcdTriple (multiplyTriple t)=t :=
       dsimp only [multiplyTriple]
       rw [he]
       exact mul_left_cancel₀ t.val.1.property.1 (idealQuotient_mul (dvd_mul_right _ _))
-
-def gcdPairEquiv : (SupportedIdeal×SupportedIdeal)≃CoprimeTriple where
-  toFun := gcdTriple
-  invFun := multiplyTriple
-  left_inv := multiply_gcdTriple
-  right_inv := gcdTriple_multiply
-
-lemma gcdPair_tsum (f : SupportedIdeal×SupportedIdeal→ℂ) :
-    (∑'p,f p)=∑'t : CoprimeTriple,f (multiplyTriple t) := by
-  exact (gcdPairEquiv.symm.tsum_eq f).symm
 
 end SevenEighths.ProbeGramCommon
 end

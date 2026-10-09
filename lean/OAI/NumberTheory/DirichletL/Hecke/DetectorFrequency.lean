@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Hecke.DetectorFourierWitness
 import OAI.NumberTheory.DirichletL.Hecke.DetectorProfilesCutoffs
 import OAI.NumberTheory.DirichletL.Hecke.DetectorCoefficientBounds
 import OAI.NumberTheory.DirichletL.Hecke.DetectorDyadicSupport
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,8 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.FirstNeighborhood
-import OAI.NumberTheory.DirichletL.PrimeRows.Origin
-
+import OAI.NumberTheory.DirichletL.PrimeRows.Agreement
+import OAI.NumberTheory.DirichletL.Hecke.Reciprocal
+import OAI.NumberTheory.DirichletL.PrimeRows.FirstContinuation
+import OAI.NumberTheory.DirichletL.Hecke.Origin
 namespace OAI
 
 noncomputable section
@@ -51,15 +53,6 @@ theorem continuedCorrection_first_boundary_z (eps : ℝ) (heps : 0<eps)
   exact (ramifiedCorrection_first_analytic_z η u P.val _
     (by exact_mod_cast hS.tail.norm_four P.val (Finset.mem_filter.mp P.property).2)
     x w (by linarith)) z (by change (1/3:ℝ)<z.re; linarith)
-
-theorem continuedHighSeries_first_boundary_w (eps : ℝ) (heps : 0<eps)
-    (S : Finset (Ideal O)) (hS : SourceExclusions S) (hfirst : FirstTail (eps/2) S)
-    (η : Character) (u : FreeRow) (x w z : ℂ)
-    (hx : (51/100:ℝ)≤x.re) (hw : -(1/100:ℝ)≤w.re) (hz : (17/50:ℝ)≤z.re)
-    (hxw : 1+eps≤x.re+w.re) (hpole : w≠1 ∨ (rowCharacter S hS.prime u).residue≠1) :
-    DifferentiableAt ℂ (fun w=>continuedHighSeries S hS η u x w z) w := by
-  exact (((HeckeOrigin.continued_differentiableAt _ hpole).const_mul _).mul_const _).mul
-    (continuedCorrection_first_boundary_w eps heps S hS hfirst η u x w z hx hw hz hxw).differentiableAt
 
 end SevenEighths.ProbeHighRowFamily
 

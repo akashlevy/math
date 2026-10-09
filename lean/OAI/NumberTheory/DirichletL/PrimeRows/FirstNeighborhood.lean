@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.FirstContinuation
 import OAI.NumberTheory.DirichletL.Detector.HighRowsFirstNeighborhood
-
 namespace OAI
 
 noncomputable section

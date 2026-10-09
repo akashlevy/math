@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.ReferenceChildProfiles
 import OAI.NumberTheory.DirichletL.Energy.Bands
-
 namespace OAI
 
 noncomputable section

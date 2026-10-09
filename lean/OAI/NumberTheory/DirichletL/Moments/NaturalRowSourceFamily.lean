@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.NaturalRowSourceMask
 import OAI.NumberTheory.DirichletL.Moments.NonprincipalGate
-
 namespace OAI
 
 noncomputable section
@@ -48,15 +47,6 @@ lemma NaturalRow.masked_ideal {η : Character} {z : O} (F : NaturalRow η z)
       idealCoeff η I*idealRowHom ((fixedBadMask*idealGenerator R)^6*z) I := by
   simpa only [one_pow,mul_one] using idealCoeff_eq_row η (excluded F.character R)
     (fixedBadMask*idealGenerator R) 1 z (F.masked_element R hR) I
-
-lemma NaturalRow.masked_element_span {η : Character} {z : O} (F : NaturalRow η z)
-    (r : O) (hr : r≠0) (n : O) :
-    elementCoeff (excluded F.character (Ideal.span {r})) n=
-      rowTwist (elementHom η) (fixedBadMask*r) 1 z n := by
-  rw [excluded_element F.character F.element_zero (Ideal.span {r})
-    (Ideal.span_singleton_eq_bot.not.mpr hr),Ideal.isCoprime_span_singleton_iff,F.element]
-  simpa only [one_mul] using
-    (row_mask_mul η fixedBadMask r 1 z n (dvd_mul_right _ _) (dvd_mul_left _ _)).symm
 
 theorem NaturalRow.nonprincipal {η : Character} {z : O} (F : NaturalRow η z)
     (hz : z≠0) (Q R : Ideal O) (hR : R≠0)

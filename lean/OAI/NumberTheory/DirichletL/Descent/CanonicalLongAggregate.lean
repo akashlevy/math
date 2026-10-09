@@ -1,5 +1,6 @@
-import OAI.NumberTheory.DirichletL.Descent.CanonicalLongCaller
-
+import OAI.NumberTheory.DirichletL.Descent.CanonicalLongWeight
+import OAI.NumberTheory.DirichletL.Descent.CanonicalLongCount
+import OAI.NumberTheory.DirichletL.Descent.CanonicalLongIntegral
 namespace OAI
 
 noncomputable section
@@ -9,17 +10,6 @@ namespace SevenEighths.InverseMoment
 open ActualEisensteinCubic CompletedGauss CanonicalRowCompletion ConcretePrimeRowBridge
 open CanonicalQuadraticSieve FirstPassCubeLabels SecondPassArithmetic
 local notation "O"=>ActualEisensteinCubic.O
-
- theorem actual_marked_bin_empty
-    {σ:Type*}[DecidableEq σ](S:Finset (Ideal O))(D:ℕ)
-    (Q:Finset (primePool (InitialMeanSquare.outsideSquarefreeIdeals S D)→₀ℕ))
-    (Ψ:O→*ℂ)(m f z:O)(W:ℝ→ℂ)(X H₀:ℝ)(slots:Finset σ)
-    (lists:σ→Finset (primePool (InitialMeanSquare.outsideSquarefreeIdeals S D)))
-    (a:σ→primePool (InitialMeanSquare.outsideSquarefreeIdeals S D)→ℂ)
-    (he:¬(progressingCubes S D H₀ Q).Nonempty) :
-    markedReopenedCubeBin S D Q Ψ m f z W X H₀ slots lists a=0 := by
-  rw [marked_long_filter,Finset.not_nonempty_iff_eq_empty.mp he]
-  simp only [markedReopenedCubeBin,Finset.sum_empty]
 
 theorem actual_large_bins_aggregate
     {σ:Type*}[DecidableEq σ](S:Finset (Ideal O))(D:ℕ)

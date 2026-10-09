@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.UniformDivisorShell
-
 namespace OAI
 
 noncomputable section
@@ -45,9 +44,6 @@ def Data.childEnergy (s:Data ι) (D:Ideal O)
 
 def Data.profileFactor (s:Data ι) : ℝ :=
   (2*(max 1 s.b₁*max 1 s.b₂))*(∏i,s.M i)^2
-
-lemma Data.energy_nonneg (s:Data ι) (D:Ideal O) : 0≤s.energy D :=
-  Finset.sum_nonneg (fun z hz=>mul_nonneg (s.weight_nonneg z hz) (sq_nonneg _))
 
 lemma Data.child_nonneg (s:Data ι) (D:Ideal O)
     (a:Allocation D (Finset.univ:Finset (ι⊕Fin 2))) : 0≤s.childEnergy D a :=
@@ -95,40 +91,6 @@ theorem actual_source_from_children (N:ℕ) (hslots:Fintype.card ι≤N) (ε:ℝ
       apply Finset.sum_congr rfl
       intro a ha
       ring
-
-lemma sqrt_sum_le {α:Type*} (S:Finset α) (f:α→ℝ) (hf:∀a∈S,0≤f a) :
-    Real.sqrt (∑a∈S,f a)≤∑a∈S,Real.sqrt (f a) := by
-  apply Real.sqrt_le_iff.mpr
-  refine ⟨Finset.sum_nonneg (fun a _=>Real.sqrt_nonneg _),?_⟩
-  have hh:=Finset.sum_sq_le_sq_sum_of_nonneg (s:=S) (f:=fun a=>Real.sqrt (f a))
-    (fun a _=>Real.sqrt_nonneg _)
-  have he:(∑a∈S,Real.sqrt (f a)^2)=∑a∈S,f a:=Finset.sum_congr rfl (fun a ha=>Real.sq_sqrt (hf a ha))
-  rwa [he] at hh
-
-lemma sqrt_reciprocal (x:ℝ) (_hx:0<x) : Real.sqrt (1/x)=1/Real.sqrt x := by
-  rw [Real.sqrt_div (by norm_num:0≤(1:ℝ)),Real.sqrt_one]
-
-theorem actual_source_root_from_children (N:ℕ) (hslots:Fintype.card ι≤N) (ε:ℝ) (hε:0<ε) :
-    ∃C:ℝ,0<C ∧ ∀s:Data ι,∀D:Ideal O,Squarefree D → ∀E:ℝ,0≤E →
-      (∀a∈s.toSource.active D,s.childEnergy D a≤E) →
-      Real.sqrt (s.energy D)≤C*Real.sqrt ((Ideal.absNorm D:ℝ)^ε)*Real.sqrt (s.profileFactor*E)*
-        ∑a∈s.toSource.active D,1/Real.sqrt (formalReductionFactor D a s.P) := by
-  obtain ⟨C,hC,hbase⟩:=actual_source_from_children (ι:=ι) N hslots ε hε
-  refine ⟨Real.sqrt C,Real.sqrt_pos.mpr hC,?_⟩
-  intro s D hD E hE hc
-  have hp:0≤(Ideal.absNorm D:ℝ)^ε:=Real.rpow_nonneg (Nat.cast_nonneg _) _
-  have he:0≤s.profileFactor*E:=mul_nonneg s.profile_nonneg hE
-  have hs:=sqrt_sum_le (s.toSource.active D) (fun a=>1/formalReductionFactor D a s.P)
-    (fun a _=>div_nonneg zero_le_one (s.reduction_pos D a).le)
-  simp_rw [sqrt_reciprocal _ (s.reduction_pos D _)] at hs
-  have hh:=Real.sqrt_le_sqrt (hbase s D hD E hE hc)
-  have hrew:C*(Ideal.absNorm D:ℝ)^ε*s.profileFactor*E*
-      (∑a∈s.toSource.active D,1/formalReductionFactor D a s.P)=
-      (C*(Ideal.absNorm D:ℝ)^ε*(s.profileFactor*E))*
-      (∑a∈s.toSource.active D,1/formalReductionFactor D a s.P):=by ring
-  rw [hrew,Real.sqrt_mul (mul_nonneg (mul_nonneg hC.le hp) he),
-    Real.sqrt_mul (mul_nonneg hC.le hp),Real.sqrt_mul hC.le] at hh
-  exact hh.trans (mul_le_mul_of_nonneg_left hs (by positivity))
 
 end SevenEighths.CenteredMomentEligibleEnergy
 

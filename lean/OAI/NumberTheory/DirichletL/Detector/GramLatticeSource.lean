@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GramPrimaryLattice
-
 namespace OAI
 
 noncomputable section

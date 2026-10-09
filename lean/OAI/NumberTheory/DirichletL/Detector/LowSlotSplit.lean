@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowSelectedSum
-
 namespace OAI
 
 noncomputable section

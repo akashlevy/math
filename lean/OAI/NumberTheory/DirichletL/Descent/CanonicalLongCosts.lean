@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalCompleteState
 import OAI.NumberTheory.DirichletL.Descent.CanonicalLongGeometry
-
 namespace OAI
 
 noncomputable section
@@ -42,24 +41,6 @@ theorem actual_long_uniform_parent_cost (Z ell N V L epsilon Ccoef C A loss:ℝ)
     _=(C*Ccoef^2*Real.exp (2*epsilon))*(1+A)*
         (Z^(2*L*epsilon)*Z^((N-3*ell)+3*ell+V+loss)):=by ring
     _=_:=by rw [hpow]
-
-theorem complete_state_power_absorption (Z F cstar eps loss C A height E:ℝ)
-    (hZ:1≤Z)(hc:0≤cstar)(heps:0≤eps)(hloss:0≤loss)
-    (hC:0≤C)(_hA:0≤A)(hheight:0≤height)
-    (hE:E≤A*height*Z^(F+loss)):
-    C*(height*Z^(F-cstar/256)+Z^eps*E)≤
-      C*(1+A)*height*Z^(F+loss+eps) := by
-  have hz:0<Z:=zero_lt_one.trans_le hZ
-  have hs:height*Z^(F-cstar/256)≤height*Z^(F+loss+eps):=by
-    apply mul_le_mul_of_nonneg_left _ hheight
-    exact Real.rpow_le_rpow_of_exponent_le hZ (by linarith)
-  have ht:Z^eps*E≤A*height*Z^(F+loss+eps):=by
-    have hh:=mul_le_mul_of_nonneg_left hE (Real.rpow_nonneg hz.le eps)
-    apply hh.trans_eq
-    rw [Real.rpow_add hz (F+loss) eps]
-    ring
-  have hh:=mul_le_mul_of_nonneg_left (add_le_add hs ht) hC
-  convert hh using 1 ; ring
 
 end SevenEighths.InverseMoment
 

@@ -1,5 +1,5 @@
-import OAI.NumberTheory.DirichletL.Detector.HighRowsFiniteBounds
-
+import OAI.NumberTheory.DirichletL.Detector.HighRowsTermBounds
+import OAI.NumberTheory.DirichletL.Detector.EulerRegion
 namespace OAI
 
 noncomputable section
@@ -13,23 +13,6 @@ def ramifiedClosed (eta a rho x w z : ℂ) (j : ℕ) : ℂ :=
   1+(1-coordV (Ideal.absNorm (Ideal.span {p})) z)*
     rowClosedMarked p hp hg eta a ((Ideal.absNorm (Ideal.span {p}):ℂ)^(-x))
       ((Ideal.absNorm (Ideal.span {p}):ℂ)^(-w)) (coordV (Ideal.absNorm (Ideal.span {p})) z) rho j
-
-include hc in
-theorem ramifiedClosed_bound (eta a rho x w z : ℂ)
-    (hQ : (4:ℝ)≤Ideal.absNorm (Ideal.span {p}))
-    (heta : ‖eta‖≤1) (ha : ‖a‖≤1) (hρ : rho^6=1)
-    (hx : (7/8:ℝ)≤x.re) (hw : (19/20:ℝ)≤w.re) (hz : (33/200:ℝ)≤z.re) (j : ℕ) :
-    ‖ramifiedClosed p hp hg eta a rho x w z j‖≤193 := by
-  have hb := rowClosedMarked_second_region p hp hg hc eta a rho x w z hQ heta ha hρ hx hw hz j
-  have hv := second_region_V_half _ hQ z hz
-  have hs := norm_sub_le (1:ℂ) (coordV (Ideal.absNorm (Ideal.span {p})) z)
-  simp only [norm_one] at hs
-  unfold ramifiedClosed
-  apply (norm_add_le _ _).trans
-  rw [norm_one,norm_mul]
-  have hm := mul_le_mul (show ‖1-coordV (Ideal.absNorm (Ideal.span {p})) z‖≤3/2 by linarith)
-    hb (norm_nonneg _) (by norm_num : (0:ℝ)≤3/2)
-  linarith
 
 include hc in
 

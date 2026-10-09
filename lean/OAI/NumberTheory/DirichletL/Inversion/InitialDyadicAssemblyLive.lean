@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialDyadicAssemblyBounds
-
 namespace OAI
 
 noncomputable section
@@ -61,21 +60,6 @@ theorem physicalBlock_live_partition
   rw [physicalBlock_cap_filter p hp hcop hg pool S a b w Ψ j marks W₁ W₂ Φ Z D m hcap]
   exact physicalBlock_window_partition p hp hcop hg pool (cappedSource p S a b) a b ha
     (fun x hx=>(Finset.mem_filter.mp hx).2) w Ψ j marks W₁ W₂ Φ Z D m hZ
-
-theorem physicalBlock_live_norm
-    (pool:Finset ι)(S:Finset (Source (ι:=ι) 0))(a b:Fin 4→ℝ)(ha:∀i,0<a i)
-    (w:Source (ι:=ι) 0→ℂ)(Ψ:Eis→*ℂ)(j:Eis)(marks:Finset ι→ℂ)
-    (W₁ W₂:ℝ→ℂ)(Φ:𝓢(ℝ,ℂ))(Z D m:ℝ)(hZ:1<Z)
-    (hcap:∀x∈S,∀N∈(pool\x.overlap).powerset,∀M∈(pool\x.overlap).powerset,
-      ∀ρ:SecondRayIndex,w x*physicalTerm p hp hcop hg Ψ j marks W₁ W₂ Φ Z D m
-        (sourcePoint x N M) ρ≠0→∀i,sourceNorms p x i∈Set.Icc (a i) (b i))
-    (E:ℝ)(he:∀k:Windows a b,‖windowBlock p hp hcop hg pool (cappedSource p S a b)
-      w Ψ j marks W₁ W₂ Φ Z D m (fun i=>(k i).val)‖≤E) :
-    ‖physicalBlock p hp hcop hg (pointSource pool S) (w∘erasePoint)
-      Ψ j marks W₁ W₂ Φ Z D m‖≤(Fintype.card (Windows a b):ℝ)*E := by
-  rw [physicalBlock_cap_filter p hp hcop hg pool S a b w Ψ j marks W₁ W₂ Φ Z D m hcap]
-  exact physicalBlock_norm_le_windows p hp hcop hg pool (cappedSource p S a b) a b ha
-    (fun x hx=>(Finset.mem_filter.mp hx).2) w Ψ j marks W₁ W₂ Φ Z D m hZ E he
 
 end SevenEighths.InverseInitialDyadicAssembly
 

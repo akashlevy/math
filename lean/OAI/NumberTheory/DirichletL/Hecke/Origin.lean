@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.Reciprocal
 import OAI.NumberTheory.DirichletL.Hecke.MellinIdentity
-
 namespace OAI
 
 noncomputable section
@@ -25,10 +24,6 @@ theorem poleRemoved_eq (χ : Character) {s : ℂ} (h0 : s ≠ 0) (h1 : s ≠ 1) 
   rw [HeckeMellinIdentity.regularized_eq _ (pair_k _) h0 h1,
     Complex.Gamma_add_one s h0, mul_inv_rev]
   field_simp
-
-theorem poleRemoved_zero (χ : Character) :
-    poleRemoved χ 0 = coefficients χ (0,0) / 6 := by
-  simp [poleRemoved, HeckeMellinIdentity.regularized, pair_f₀]
 
 theorem poleRemoved_one (χ : Character) :
     poleRemoved χ 1 = HeckeReciprocal.regularizedL χ 1 := by
@@ -66,13 +61,6 @@ theorem continued_differentiableAt (χ : Character) {s : ℂ}
       simp [continued, hχ]
     rw [heq]
     exact ((HeckeCharacterAnalytic.continuedLattice_entire_nonprincipal χ hχ).div_const 6) s
-
-theorem continued_zero (χ : Character) : continued χ 0 = -coefficients χ (0,0) / 6 := by
-  by_cases hχ : χ.residue = 1
-  · simp [continued, hχ, poleRemoved_zero]
-    ring
-  · rw [HeckeCharacterAnalytic.coefficients_zero_of_nonprincipal χ hχ]
-    simp [continued, hχ, LFunction, continuedLattice, latticeL, Complex.Gamma_zero]
 
 end SevenEighths.HeckeOrigin
 

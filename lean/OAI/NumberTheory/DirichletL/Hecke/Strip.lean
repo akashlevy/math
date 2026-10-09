@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.ThetaRegularity
 import Mathlib.Analysis.Complex.PhragmenLindelof
-
 namespace OAI
 
 noncomputable section

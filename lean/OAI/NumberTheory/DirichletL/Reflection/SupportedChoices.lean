@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.TupleMasks
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -33,25 +32,6 @@ def supportedSlotSplit (L : σ→Finset (Ideal Eis)) (T : Finset σ) (F : φ→I
     · exact congrArg Prod.snd ((slotChoiceSplit L T).apply_symm_apply (q.2.val,q.1.val))
     · exact congrArg Prod.fst ((slotChoiceSplit L T).apply_symm_apply (q.2.val,q.1.val))
 
-theorem sum_supported_slot_choices (L : σ→Finset (Ideal Eis)) (T : Finset σ)
-    (F : φ→Ideal Eis) (K : Ideal Eis) (H : supportedSlotChoices L F K→ℂ) :
-    (∑ p : supportedSlotChoices L F K,
-      (∏ i∈(Finset.univ:Finset σ)\T,(Ideal.absNorm (p.val i).val:ℂ)⁻¹)*H p)=
-    ∑ b : supportedSlotChoices (fun i : {i // i∉T} => L i.val) F K,
-      (∏ i : {i // i∉T},(Ideal.absNorm (b.val i).val:ℂ)⁻¹)*
-        ∑ a : supportedSlotChoices (fun i : T => L i.val) F K,
-          H ((supportedSlotSplit L T F K).symm (b,a)) := by
-  rw [←(supportedSlotSplit L T F K).symm.sum_comp]
-  rw [Fintype.sum_prod_type]
-  apply Finset.sum_congr rfl
-  intro b hb
-  rw [Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro a ha
-  congr 1
-  change (∏ i∈(Finset.univ:Finset σ)\T,
-    (Ideal.absNorm (((slotChoiceSplit L T).symm (a.val,b.val)) i).val:ℂ)⁻¹)=_
-  rw [slot_choice_inactive_weight,Equiv.apply_symm_apply]
 end
 end SevenEighths.InverseReflectedPhase
 

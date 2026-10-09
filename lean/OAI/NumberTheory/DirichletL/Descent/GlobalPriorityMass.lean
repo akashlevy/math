@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.GlobalPriorityBranches
 import OAI.NumberTheory.DirichletL.Descent.GlobalPrincipalMassPrefactor
-
 namespace OAI
 
 noncomputable section

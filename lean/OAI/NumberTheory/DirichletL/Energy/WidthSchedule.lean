@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SuccessorPaidParameters
 import OAI.NumberTheory.DirichletL.Moments.LiveCapacity
-
 namespace OAI
 
 noncomputable section
@@ -89,14 +88,6 @@ theorem one_time_losses (M B κ ε:ℝ)(hM:0≤M)(hB:0≤B)(hκ:0≤κ)(hε:0<ε
   · unfold diagonal
     nlinarith
 
-lemma mesh_lt_prime_width (M B κ ε:ℝ)(hM:0≤M)(hB:0≤B)(hκ:0≤κ)(hε:0<ε):
-    mesh M B κ ε<amplification ε/6:=by
-  have h:=bounds M B κ ε hM hB hκ hε
-  have hp:=h.1
-  have hm:=h.2.2.2.2.2.1
-  have hr:=h.2.2.2.2.2.2.2.1
-  linarith
-
 lemma width_zero (M B ε:ℝ):width M B ε 0=reserve M B ε/16:=by simp [width]
 lemma loss_zero (M B ε:ℝ):loss M B ε 0=reserve M B ε:=by simp [loss]
 lemma width_succ (M B ε:ℝ)(k:ℕ):
@@ -136,26 +127,6 @@ lemma next_paid_loss (M B κ ε:ℝ)(hM:0≤M)(hB:0≤B)(hκ:0≤κ)(hε:0<ε)
   rw [loss_succ]
   unfold edge
   linarith
-
-theorem actual_removal_path {ι:Type*}[DecidableEq ι]
-    (M B κ ε:ℝ)(hM:0≤M)(hB:0≤B)(hκ:0<κ)(hε:0<ε)
-    (n:ℕ)(J:Fin n→Finset ι)(w:Fin n→ι→ℝ)(x y state:Fin n→ℝ)
-    (hw:∀k,∀i∈J k,0≤w k i)(hm:∀k,∀i∈J k,w k i≤mesh M B κ ε):
-    ∃R:Fin n→Finset ι,(∀k,R k⊆J k) ∧
-      (∀k,R k=J k ∨ x k+y k+6*κ*(∑i∈J k\R k,w k i)≤state k) ∧
-      (∑k,κ*(∑i∈R k,w k i))≤
-        (∑k,CenteredMomentLiveCapacity.excess (J k) (w k) (x k) (y k) (state k) κ/6)+
-          (n:ℝ)*reserve M B ε:=by
-  have hb:=bounds M B κ ε hM hB hκ.le hε
-  have hmesh:=hb.2.2.2.2.1
-  have hcost:=hb.2.2.2.2.2.2.1
-  choose R hR hcap hpay using fun k=>CenteredMomentLiveCapacity.removal_excess_cost
-    (J k) (w k) (x k) (y k) (state k) κ (mesh M B κ ε) hκ hmesh.le (hw k) (hm k)
-  refine ⟨R,hR,hcap,?_⟩
-  calc
-    _≤∑k,(CenteredMomentLiveCapacity.excess (J k) (w k) (x k) (y k) (state k) κ/6+
-        reserve M B ε):=Finset.sum_le_sum (fun k _=>(hpay k).trans (by linarith))
-    _=_:=by rw [Finset.sum_add_distrib];simp
 
 end SevenEighths.CenteredMomentEnergyWidthSchedule
 

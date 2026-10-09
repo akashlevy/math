@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.OriginalDictionary
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -45,12 +44,6 @@ lemma poolPrimeFamily_fiber_exponent (R I F Q Q₀ : Ideal Eis)
     completedLocalExponent I F ((poolPrimeFamily R Q Q₀).ideal P)=completedLocalExponent R F P.val :=
   nonresidualPoolEquiv_exponent R I F Q Q₀ hR hI hQ hpow hmask P
 
-lemma pool_restrict_completion_coprime (R Q Q₀ : Ideal Eis)
-    (B : Finset (FreeReflection.pool R Q Q₀)) (c : Eis)
-    (hc : Ideal.span {c}=Ideal.span {(9:Eis)}*Q₀) :
-    ∀ b : B, IsCoprime (Ideal.span {(9:Eis)*c}) (((poolPrimeFamily R Q Q₀).restrict B).ideal b) := by
-  exact ((poolPrimeFamily R Q Q₀).restrict B).level_coprime Q₀ c hc
-    (fun b => poolPrimeFamily_period R Q Q₀ b.val)
 end
 end SevenEighths.InverseReflectedPhase
 

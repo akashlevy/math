@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.Growth
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

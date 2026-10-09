@@ -1,78 +1,24 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.RadialProfiles
 import OAI.NumberTheory.DirichletL.CubicSieve.CanonicalLogEnergy
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 
@@ -103,52 +49,6 @@ lemma kernelCoreLift_laplacian (χ : PositiveChartCutoff) (f : kernelSmoothTests
   simp only [upperPositiveLaplacian,kernelCoordinateLaplacian,hdd,
     SchwartzMap.lineDerivOp_apply_eq_fderiv,he.fderiv_eq]
 
-lemma kernelDirichletForm_coordinate_equation_chart (χ : PositiveChartCutoff)
-    (hinj : Set.InjOn kernelEuclideanProjection (tsupport χ.func))
-    (f g : kernelSmoothTests) (hg : tsupport g.1⊆kernelChartCoreImage χ)
-    (A : KernelQuotient→ℂ) (hA : MemLp A 2 (integralQuotientVolume globalKubotaKernel))
-    (heq : ∀p,0<p 2→kernelCoordinateLaplacian f p=A (kernelEuclideanProjection p)) :
-    kernelDirichletForm f g=∫q,star (A q)*g.1 q∂integralQuotientVolume globalKubotaKernel := by
-  let S := tsupport χ.func
-  have hS : MeasurableSet S := χ.compact.measurableSet
-  have hi : Integrable (fun q => star (A q)*g.1 q) (integralQuotientVolume globalKubotaKernel) :=
-    hA.star.integrable_mul (kernelSmoothTests_memLp g)
-  have himg : kernelChartCoreImage χ⊆kernelEuclideanProjection '' S :=
-    Set.image_mono (kernelChartCore_subset χ)
-  rw [kernelDirichletForm_eq_chart_laplacian χ hinj f g hg]
-  calc
-    _ = ∫p in S,star (upperPositiveLaplacian (kernelCoreLift χ f) p)*kernelCoreLift χ g p/(p 2:ℂ)^3 := by
-      symm
-      apply setIntegral_eq_integral_of_forall_compl_eq_zero
-      intro p hp
-      have hz : kernelCoreLift χ g p=0 := image_eq_zero_of_notMem_tsupport
-        (fun h => hp (kernelCoreLift_tsupport_outer χ g h))
-      rw [hz,mul_zero,zero_div]
-    _ = ∫p in S,star (A (kernelEuclideanProjection p))*g.1 (kernelEuclideanProjection p)/(p 2:ℂ)^3 := by
-      apply setIntegral_congr_fun hS
-      intro p hp
-      dsimp only
-      rw [kernelCoreLift_eq_on_outer χ hinj g hg hp]
-      by_cases hc : p∈kernelChartCore χ
-      · rw [kernelCoreLift_laplacian χ f p hc,heq p (χ.positive hp)]
-        rfl
-      · have hz : kernelCoreLift χ g p=0 := image_eq_zero_of_notMem_tsupport
-          (fun h => hc (kernelCoreLift_tsupport χ hinj g hg h))
-        rw [kernelCoreLift_eq_on_outer χ hinj g hg hp] at hz
-        change g.1 (kernelEuclideanProjection p)=0 at hz
-        change star _*g.1 (kernelEuclideanProjection p)/_=star _*g.1 (kernelEuclideanProjection p)/_
-        rw [hz,mul_zero,zero_div,mul_zero,zero_div]
-    _ = ∫p in S,star (A (kernelEuclideanProjection p))*g.1 (kernelEuclideanProjection p)
-        ∂hyperbolicEuclideanVolume :=
-      (hyperbolicEuclidean_setIntegral_complex S hS χ.positive _).symm
-    _ = ∫q in kernelEuclideanProjection '' S,star (A q)*g.1 q∂integralQuotientVolume globalKubotaKernel :=
-      kernelEuclideanProjection_integral_complex S hS χ.positive hinj _ hi.aestronglyMeasurable
-    _ = _ := by
-      apply setIntegral_eq_integral_of_forall_compl_eq_zero
-      intro q hq
-      have hz : g.1 q=0 := image_eq_zero_of_notMem_tsupport (fun h => hq (himg (hg h)))
-      rw [hz,mul_zero]
-
 lemma kernelDirichletForm_sum_right {ι : Type*} (f : kernelSmoothTests)
     (t : Finset ι) (g : ι→kernelSmoothTests) :
     kernelDirichletForm f (∑i∈t,g i)=∑i∈t,kernelDirichletForm f (g i) := by
@@ -158,30 +58,6 @@ lemma kernelDirichletForm_sum_right {ι : Type*} (f : kernelSmoothTests)
     simpa only [Finset.sum_empty,zero_smul,zero_mul] using hz
   | @insert i t hi ih =>
     simp only [Finset.sum_insert hi,kernelDirichletForm_add_right,ih]
-
-theorem kernelDirichletForm_coordinate_equation (f : kernelSmoothTests)
-    (A : KernelQuotient→ℂ) (hA : MemLp A 2 (integralQuotientVolume globalKubotaKernel))
-    (heq : ∀p,0<p 2→kernelCoordinateLaplacian f p=A (kernelEuclideanProjection p))
-    (g : kernelSmoothTests) :
-    kernelDirichletForm f g=∫q,star (A q)*g.1 q∂integralQuotientVolume globalKubotaKernel := by
-  obtain ⟨t,G,hG,hGsupp⟩ := kernelSmoothTest_finite_chart_partition g
-  calc
-    _ = ∑i : t,kernelDirichletForm f (G i) := by
-      rw [←hG,kernelDirichletForm_sum_right]
-    _ = ∑i : t,∫q,star (A q)*(G i).1 q∂integralQuotientVolume globalKubotaKernel := by
-      apply Finset.sum_congr rfl
-      intro i hi
-      exact kernelDirichletForm_coordinate_equation_chart i.1.1 i.1.2 f (G i) (hGsupp i) A hA heq
-    _ = ∫q,∑i : t,star (A q)*(G i).1 q∂integralQuotientVolume globalKubotaKernel := by
-      symm
-      exact integral_finsetSum _ (fun i hi => hA.star.integrable_mul (kernelSmoothTests_memLp (G i)))
-    _ = _ := by
-      apply integral_congr_ae
-      exact Eventually.of_forall (fun q => by
-        have hq := congrArg (fun k : kernelSmoothTests => k.1 q) hG
-        simp only [Submodule.coe_sum,Finset.sum_apply] at hq
-        dsimp only
-        rw [←Finset.mul_sum,hq])
 
 end
 
@@ -202,56 +78,10 @@ lemma kernelL2_inner_toLp_smooth (A : KernelQuotient→ℂ)
       rw [hq,hg,RCLike.inner_apply]
       simp only [RCLike.star_def,mul_comm]
 
-lemma kernelCoordinateLaplacian_form (f : kernelSmoothTests)
-    (A : KernelQuotient→ℂ) (hA : MemLp A 2 (integralQuotientVolume globalKubotaKernel))
-    (heq : ∀p,0<p 2→kernelCoordinateLaplacian f p=A (kernelEuclideanProjection p))
-    (v : KernelEnergyGraph) :
-    inner ℂ (kernelEnergyGradient (kernelEnergyGraphCore f)) (kernelEnergyGradient v)=
-      inner ℂ (hA.toLp A) (kernelEnergyMass v) := by
-  exact kernelEnergyGraphCore_dense.induction_on v
-    (isClosed_eq (by fun_prop : Continuous (fun u : KernelEnergyGraph =>
-      inner ℂ (kernelEnergyGradient (kernelEnergyGraphCore f)) (kernelEnergyGradient u)))
-      (by fun_prop : Continuous (fun u : KernelEnergyGraph => inner ℂ (hA.toLp A) (kernelEnergyMass u))))
-    (fun g => by
-      rw [kernelEnergyGradient_core,kernelEnergyGradient_core,kernelEnergyMass_core,
-        kernelGradientToL2_inner,kernelL2_inner_toLp_smooth]
-      exact kernelDirichletForm_coordinate_equation f A hA heq g)
-
-theorem kernelEnergyLaplacian_graph_of_coordinate (f : kernelSmoothTests)
-    (A : KernelQuotient→ℂ) (hA : MemLp A 2 (integralQuotientVolume globalKubotaKernel))
-    (heq : ∀p,0<p 2→kernelCoordinateLaplacian f p=A (kernelEuclideanProjection p)) :
-    (kernelSmoothTestsToL2 f,hA.toLp A)∈kernelEnergyLaplacian.graph := by
-  have hu : kernelEnergyGraphCore f=
-      kernelVariationalSolution (kernelSmoothTestsToL2 f+hA.toLp A) := by
-    apply kernelVariationalSolution_unique
-    intro v
-    rw [kernelEnergyMass_core,kernelCoordinateLaplacian_form f A hA heq,inner_add_left]
-  have hm := congrArg kernelEnergyMass hu
-  rw [kernelEnergyMass_core] at hm
-  rw [kernelEnergyLaplacian_graph,mem_kernelLaplacianGraph]
-  exact hm.symm
-
-lemma kernelEnergyLaplacian_domain_of_coordinate (f : kernelSmoothTests)
-    (A : KernelQuotient→ℂ) (hA : MemLp A 2 (integralQuotientVolume globalKubotaKernel))
-    (heq : ∀p,0<p 2→kernelCoordinateLaplacian f p=A (kernelEuclideanProjection p)) :
-    kernelSmoothTestsToL2 f∈kernelEnergyLaplacian.domain :=
-  LinearPMap.mem_domain_of_mem_graph (kernelEnergyLaplacian_graph_of_coordinate f A hA heq)
-
-lemma kernelEnergyLaplacian_apply_of_coordinate (f : kernelSmoothTests)
-    (A : KernelQuotient→ℂ) (hA : MemLp A 2 (integralQuotientVolume globalKubotaKernel))
-    (heq : ∀p,0<p 2→kernelCoordinateLaplacian f p=A (kernelEuclideanProjection p)) :
-    kernelEnergyLaplacian ⟨kernelSmoothTestsToL2 f,kernelEnergyLaplacian_domain_of_coordinate f A hA heq⟩=
-      hA.toLp A :=
-  kernelEnergyLaplacian.mem_graph_snd_inj
-    (kernelEnergyLaplacian.mem_graph ⟨kernelSmoothTestsToL2 f,kernelEnergyLaplacian_domain_of_coordinate f A hA heq⟩)
-    (kernelEnergyLaplacian_graph_of_coordinate f A hA heq) rfl
-
 end CubicEisenstein
 
 section
 
-open scoped BigOperators Classical
-open MeasureTheory
 namespace SecondPassIntegration
 open ActualEisensteinCubic SecondPassArithmetic ConcreteTraceCRT
 
@@ -318,7 +148,6 @@ theorem globalCanonicalLabels_bounds (source : Finset (GlobalSecondData ι)) (si
 end SecondPassArithmetic
 end
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 open FirstPassCubeLabels (primeProduct jLabel)
@@ -361,7 +190,7 @@ open MeasureTheory
 open scoped BigOperators Classical
 open ActualEisensteinCubic
 open CompletedGauss hiding O
-open ConcretePrimeRowBridge hiding O columnWeight
+open ConcretePrimeRowBridge hiding O
 open CanonicalQuadraticSieve hiding O
 
 theorem finite_integral_energy_polynomial {κ : Type*} [Fintype κ]
@@ -436,39 +265,15 @@ theorem outsideCanonicalRow_binned_energy
 
 end CanonicalRowCompletion
 
-open scoped BigOperators Classical
 namespace CanonicalCoefficientClass
 
 section
 open ActualEisensteinCubic
-open SecondPassArithmetic (rayMonoid conjugateRayMonoid rayMonoid_apply conjugateRayMonoid_apply
-  FirstCoreIndex firstCoreTwist sideRayMonoid SecondRayIndex secondRayMinus secondRayPlus)
+open SecondPassArithmetic (rayMonoid conjugateRayMonoid rayMonoid_apply conjugateRayMonoid_apply FirstCoreIndex firstCoreTwist sideRayMonoid SecondRayIndex secondRayMinus secondRayPlus)
 open RayFourExpansion (RayCharacter)
 
 def IsBaseRayTwist (base Ψ : ActualEisensteinCubic.O→*ℂ) : Prop :=
   Ψ=base ∨ ∃χ : RayCharacter, Ψ=rayMonoid χ*base
-
-def baseRayOrbit (base : ActualEisensteinCubic.O→*ℂ) : Finset (ActualEisensteinCubic.O→*ℂ) :=
-  insert base (Finset.univ.image (fun χ : RayCharacter => rayMonoid χ*base))
-
-lemma mem_baseRayOrbit (base Ψ : ActualEisensteinCubic.O→*ℂ) : Ψ∈baseRayOrbit base ↔ IsBaseRayTwist base Ψ := by
-  simp only [baseRayOrbit,Finset.mem_insert,Finset.mem_image,Finset.mem_univ,true_and,IsBaseRayTwist]
-  constructor
-  · rintro (h|⟨χ,h⟩)
-    · exact Or.inl h
-    · exact Or.inr ⟨χ,h.symm⟩
-  · rintro (h|⟨χ,h⟩)
-    · exact Or.inl h
-    · exact Or.inr ⟨χ,h.symm⟩
-
-lemma baseRayOrbit_card (base : ActualEisensteinCubic.O→*ℂ) : (baseRayOrbit base).card≤17 := by
-  have h1 := Finset.card_insert_le base (Finset.univ.image (fun χ : RayCharacter => rayMonoid χ*base))
-  have h2 := Finset.card_image_le (s := (Finset.univ : Finset RayCharacter))
-    (f := fun χ : RayCharacter => rayMonoid χ*base)
-  have h3 := RayFourExpansion.rayCharacter_card_le
-  simp only [Finset.card_univ] at h2
-  unfold baseRayOrbit
-  omega
 
 lemma rayMonoid_mul (χ η : RayCharacter) : rayMonoid (χ*η)=rayMonoid χ*rayMonoid η := by
   ext x
@@ -554,14 +359,6 @@ lemma initialBase_norm {q : ℕ} (χ : DirichletCharacter ℂ q) (x : ActualEise
   rw [norm_star]
   exact InitialMeanSquare.normCharacter_norm_le_one χ x
 
-lemma initial_minus_member {q : ℕ} (χ : DirichletCharacter ℂ q) (r : SecondRayIndex) :
-    IsBaseRayTwist (initialBase χ) (secondRayMinus (initialBase χ) r) :=
-  IsBaseRayTwist.secondMinus (Or.inl rfl : IsBaseRayTwist (initialBase χ) (initialBase χ)) r
-
-lemma initial_plus_member {q : ℕ} (χ : DirichletCharacter ℂ q) (r : SecondRayIndex) :
-    IsBaseRayTwist (initialBase χ) (secondRayPlus (initialBase χ) r) :=
-  IsBaseRayTwist.secondPlus (Or.inl rfl : IsBaseRayTwist (initialBase χ) (initialBase χ)) r
-
 end
 
 open ActualEisensteinCubic
@@ -626,14 +423,6 @@ lemma fixedBaseConductor_ne_zero (m : ℕ) (hm : m≠0) : fixedBaseConductor m�
   change Ideal.span {((4*m : ℕ) : ActualEisensteinCubic.O)}≠⊥
   rw [ne_eq,Ideal.span_singleton_eq_bot]
   exact_mod_cast Nat.mul_ne_zero (by decide : (4:ℕ)≠0) hm
-
-lemma fixedBaseConductor_norm (m : ℕ) (hm : m≠0) :
-    Ideal.absNorm (fixedBaseConductor m)=16*m^2 := by
-  rw [fixedBaseConductor_principal]
-  have h := rational_modulus_card (4*m) (Nat.mul_ne_zero (by decide) hm)
-  rw [Ideal.absNorm_apply,Submodule.cardQuot_apply]
-  rw [h]
-  ring
 
 end CanonicalCoefficientClass
 

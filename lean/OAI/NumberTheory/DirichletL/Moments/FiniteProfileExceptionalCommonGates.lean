@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalCommonAsymmet
 import OAI.NumberTheory.DirichletL.Moments.CommonExceptionalGates
 import OAI.NumberTheory.DirichletL.Moments.CommonLinearSource
 import OAI.NumberTheory.DirichletL.Moments.FixedRowMask
-
 namespace OAI
 
 noncomputable section

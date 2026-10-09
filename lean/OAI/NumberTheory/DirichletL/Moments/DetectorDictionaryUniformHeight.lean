@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.DetectorDictionaryUniformLog
-
 namespace OAI
 
 noncomputable section

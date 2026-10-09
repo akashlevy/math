@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.NaturalFixedRaySourceNaturalPrime
 import OAI.NumberTheory.DirichletL.Moments.LiveCapacity
 import OAI.NumberTheory.DirichletL.Moments.SlotNormalization
-
 namespace OAI
 
 noncomputable section

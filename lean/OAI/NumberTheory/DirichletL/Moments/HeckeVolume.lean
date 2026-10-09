@@ -1,8 +1,8 @@
-import OAI.NumberTheory.DirichletL.Moments.MaskedVolume
+import OAI.NumberTheory.DirichletL.Moments.Primary
+import OAI.NumberTheory.DirichletL.Moments.Mask
 import OAI.NumberTheory.DirichletL.CenteredExceptionalProfile
 import OAI.NumberTheory.DirichletL.Hecke.Euler
 import OAI.NumberTheory.DirichletL.Moments.ExceptionalPair
-
 namespace OAI
 
 noncomputable section
@@ -263,38 +263,6 @@ def density (c : O) (hc : c ≠ 0) (ψ : Character) (R : Ideal O) : ℂ :=
   letI : Fintype (O ⧸ Ideal.span {c}) := Fintype.ofFinite _
   (∑ D ∈ idealDivisors R, (moebius D:ℂ)*primaryCoefficient ψ D/(Ideal.absNorm D:ℂ)) *
     (1/(‖eisEmbedding c‖^2:ℂ))*(∑ r : O ⧸ Ideal.span {c}, periodicValue c ψ r)
-
-theorem density_norm_le (c : O) (hc : c ≠ 0) (ψ : Character) (R : Ideal O) (hR : R ≠ 0) :
-    ‖density c hc ψ R‖ ≤
-      ((idealDivisors R).card:ℝ)*(Nat.card (O ⧸ Ideal.span {c}):ℝ)/‖eisEmbedding c‖^2 := by
-  let := finite_quotient_span hc
-  let : Fintype (O ⧸ Ideal.span {c}) := Fintype.ofFinite _
-  have hdiv : ‖∑ D ∈ idealDivisors R, (moebius D:ℂ)*primaryCoefficient ψ D/(Ideal.absNorm D:ℂ)‖ ≤
-      ((idealDivisors R).card:ℝ) := by
-    calc
-      _ ≤ ∑ D ∈ idealDivisors R, ‖(moebius D:ℂ)*primaryCoefficient ψ D/(Ideal.absNorm D:ℂ)‖ := norm_sum_le _ _
-      _ ≤ ∑ _D ∈ idealDivisors R, (1:ℝ) := by
-        apply Finset.sum_le_sum
-        intro D hD
-        have hD0 : D ≠ 0 := ne_zero_of_dvd_ne_zero hR ((mem_idealDivisors hR).mp hD)
-        have hN : (1:ℝ) ≤ Ideal.absNorm D := by exact_mod_cast Nat.one_le_iff_ne_zero.mpr (Ideal.absNorm_eq_zero_iff.not.mpr hD0)
-        rw [norm_div,norm_mul,Complex.norm_natCast]
-        apply (div_le_one (by linarith : 0 < (Ideal.absNorm D:ℝ))).mpr
-        exact ((mul_le_of_le_one_left (norm_nonneg _) (norm_ideal_moebius_le_one D)).trans
-          (primaryCoefficient_norm ψ D)).trans hN
-      _ = _ := by simp
-  have hres : ‖∑ r : O ⧸ Ideal.span {c}, periodicValue c ψ r‖ ≤
-      (Nat.card (O ⧸ Ideal.span {c}):ℝ) := by
-    calc
-      _ ≤ ∑ r : O ⧸ Ideal.span {c}, ‖periodicValue c ψ r‖ := norm_sum_le _ _
-      _ ≤ ∑ _r : O ⧸ Ideal.span {c}, (1:ℝ) := Finset.sum_le_sum (fun r hr => periodicValue_norm c ψ r)
-      _ = _ := by simp [Nat.card_eq_fintype_card]
-  unfold density
-  rw [norm_mul,norm_mul,norm_div,norm_one,norm_pow,Complex.norm_real,Real.norm_eq_abs,abs_of_nonneg (norm_nonneg _)]
-  calc
-    _ ≤ (((idealDivisors R).card:ℝ)*(1/‖eisEmbedding c‖^2))*(Nat.card (O ⧸ Ideal.span {c}):ℝ) :=
-      mul_le_mul (mul_le_mul_of_nonneg_right hdiv (by positivity)) hres (norm_nonneg _) (by positivity)
-    _ = _ := by ring
 
 theorem actual_induced_volume (η χ ψ : Character) (Q : Ideal O) (hQ : Q ≠ 0)
     (hQψ : Q ≤ ψ.modulus) (hind : CenteredExceptionalProfile.InducedBy χ ψ)

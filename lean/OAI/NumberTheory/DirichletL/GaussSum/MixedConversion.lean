@@ -1,70 +1,23 @@
 import OAI.NumberTheory.DirichletL.GaussSum.ActiveConductor
 import OAI.NumberTheory.DirichletL.GaussSum.CubicTrace
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-
-open scoped BigOperators Classical
+open scoped ContDiff
 
 namespace MixedGaussConversion
 abbrev O := ActualEisensteinCubic.O
@@ -191,8 +144,6 @@ theorem moebius_mixed_gauss_conversion {ι : Type*} [Fintype ι]
 
 end MixedGaussConversion
 
-open scoped BigOperators Classical SchwartzMap ContDiff
-
 namespace GaussGeneratorTransport
 open ActualEisensteinCubic ConcreteTraceCRT EisensteinSchwartzPoisson FiniteGaussPhase
 open MixedGaussConversion
@@ -235,105 +186,7 @@ def activeConvertedGauss
     ∏ i : activeSupport S T,
       convertedLocal (p i.val) (hp i.val) (hgood i.val) (decide (i.val ∈ S \ T))
 
-def activePairDualSeries
-    {ι : Type*} [DecidableEq ι] (p : ι → O) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hgood : ∀ i, lambda ∉ Ideal.span {p i})
-    (S T : Finset ι) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) : ℂ :=
-  let row := finiteSexticRow (activePrimes (fun i => Ideal.span {p i}) S T)
-    (fun i => hgood i.val) (activeExponent S T)
-  let n := ∏ i : activeSupport S T, p i.val
-  ∑ E ∈ (S ∩ T).powerset,
-    let d := primeSubsetGenerator (fun i => Ideal.span {p i}) E
-    ((UniqueFactorizationMonoid.moebius (∏ i ∈ E, Ideal.span {p i}) : ℂ) * row d /
-      (‖eisEmbedding d‖ ^ 2 : ℝ)) *
-      ∑' h : O, star (row h) * paperRadialFourier W
-        (scale * ‖eisEmbedding h‖ ^ 2 /
-          (‖eisEmbedding d‖ ^ 2 * ‖eisEmbedding n‖ ^ 2))
-
-def convertedPairPoissonKernel
-    {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hgood : ∀ i, lambda ∉ Ideal.span {p i})
-    (S T : Finset ι) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) : ℂ :=
-  ((scale : ℂ) / (‖eisEmbedding (∏ i : activeSupport S T, p i.val)‖ : ℂ)) *
-    activeConvertedGauss p hp hgood S T * activePairDualSeries p hgood S T W scale
-
-theorem moebius_squarefreePairPoissonKernel_conversion
-    {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hgood : ∀ i, lambda ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hprimary : ∀ i, lambda ^ 2 ∣ p i - 1)
-    (S T : Finset ι) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) :
-    ((UniqueFactorizationMonoid.moebius (∏ i ∈ S, Ideal.span {p i}) : ℂ) *
-      (UniqueFactorizationMonoid.moebius (∏ i ∈ T, Ideal.span {p i}) : ℂ)) *
-      squarefreePairPoissonKernel (fun i => Ideal.span {p i}) hinj hgood S T W scale =
-      convertedPairPoissonKernel p hp hgood S T W scale := by
-  let q : activeSupport S T → O := fun i => p i.val
-  let hQ := activePrimes_pairwise_isCoprime (fun i => Ideal.span {p i}) hinj S T
-  have hg : (UniqueFactorizationMonoid.moebius (Ideal.span {∏ i, q i}) : ℂ) *
-      canonicalProductGauss q (fun i => hp i.val) hQ (fun i => hgood i.val)
-        (activeExponent S T) = activeConvertedGauss p hp hgood S T := by
-    have he : activeExponent S T =
-        (fun i : activeSupport S T => if decide (i.val ∈ S \ T) then 5 else 1) := by
-      funext i
-      simp only [activeExponent, decide_eq_true_eq]
-    unfold activeConvertedGauss
-    rw [he]
-    exact moebius_mixed_gauss_conversion q (fun i => hp i.val) hQ (fun i => hgood i.val)
-      (fun i => hchar i.val) (fun i => hprimary i.val) (fun i => decide (i.val ∈ S \ T))
-  rw [pair_moebius_eq_active p hinj S T, squarefreePairPoissonKernel_eq_product p hp hinj hgood]
-  change (UniqueFactorizationMonoid.moebius (Ideal.span {∏ i, q i}) : ℂ) *
-      (((scale : ℂ) * canonicalProductGauss q (fun i => hp i.val) hQ
-        (fun i => hgood i.val) (activeExponent S T) / (‖eisEmbedding (∏ i, q i)‖ : ℂ)) *
-          activePairDualSeries p hgood S T W scale) = _
-  calc
-    _ = ((scale : ℂ) / (‖eisEmbedding (∏ i, q i)‖ : ℂ)) *
-        ((UniqueFactorizationMonoid.moebius (Ideal.span {∏ i, q i}) : ℂ) *
-          canonicalProductGauss q (fun i => hp i.val) hQ (fun i => hgood i.val)
-            (activeExponent S T)) * activePairDualSeries p hgood S T W scale := by ring
-    _ = _ := by rw [hg]; rfl
-
-theorem moebius_pair_radial_poisson_converted
-    {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hgood : ∀ i, lambda ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hprimary : ∀ i, lambda ^ 2 ∣ p i - 1)
-    (S T : Finset ι) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) (hscale : 0 < scale) :
-    ((UniqueFactorizationMonoid.moebius (∏ i ∈ S, Ideal.span {p i}) : ℂ) *
-      (UniqueFactorizationMonoid.moebius (∏ i ∈ T, Ideal.span {p i}) : ℂ)) *
-      (∑' z : O, (star (finiteSquarefreeRow (fun i => Ideal.span {p i}) hgood S z) *
-        finiteSquarefreeRow (fun i => Ideal.span {p i}) hgood T z) *
-          W (‖eisEmbedding z‖ ^ 2 / scale)) =
-      convertedPairPoissonKernel p hp hgood S T W scale := by
-  rw [finiteSquarefreeRow_pair_radial_poisson (fun i => Ideal.span {p i}) hinj hgood hchar
-    S T W scale hscale]
-  exact moebius_squarefreePairPoissonKernel_conversion p hp hinj hgood hchar hprimary S T W scale
-
-theorem moebius_pair_kernel_conversion_of_generators
-    {ι : Type*} [DecidableEq ι] (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hinj : Function.Injective P) (hgood : ∀ i, lambda ∉ P i)
-    (hchar : ∀ i, ringChar (O ⧸ P i) ≠ 2)
-    (p : ι → O) (hP : ∀ i, P i = Ideal.span {p i}) (hp : ∀ i, p i ≠ 0)
-    (hprimary : ∀ i, lambda ^ 2 ∣ p i - 1)
-    (S T : Finset ι) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) :
-    letI : ∀ i, (Ideal.span {p i}).IsMaximal := fun i =>
-      (hP i) ▸ (inferInstance : (P i).IsMaximal)
-    let hg : ∀ i, lambda ∉ Ideal.span {p i} := fun i => (hP i) ▸ hgood i
-    ((UniqueFactorizationMonoid.moebius (∏ i ∈ S, P i) : ℂ) *
-      (UniqueFactorizationMonoid.moebius (∏ i ∈ T, P i) : ℂ)) *
-      squarefreePairPoissonKernel P hinj hgood S T W scale =
-      convertedPairPoissonKernel p hp hg S T W scale := by
-  have hPeq : P = fun i => Ideal.span {p i} := funext hP
-  subst P
-  exact moebius_squarefreePairPoissonKernel_conversion p hp hinj hgood hchar hprimary S T W scale
-
 end GaussGeneratorTransport
-
-open scoped BigOperators Classical SchwartzMap ContDiff
 
 namespace ConcretePrimeRowBridge
 open ActualEisensteinCubic ShortDraftHeckeBridge ConcreteTraceCRT EisensteinSchwartzPoisson
@@ -348,179 +201,9 @@ noncomputable def conjugateIdealRowSum
     (C : Ideal O → ℂ) (y : O) : ℂ :=
   ∑ I ∈ F, mobiusIdealColumn C I * star (idealSexticRow F hFpos hFgood I y)
 
-theorem conjugateIdealRowSum_eq_star
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (hFgood : ∀ I ∈ F,
-      ∀ P ∈ UniqueFactorizationMonoid.normalizedFactors I, goodLambda ∉ P)
-    (C : Ideal O → ℂ) (y : O) :
-    conjugateIdealRowSum F hFpos hFgood C y =
-      star (∑ I ∈ F, star (mobiusIdealColumn C I) * idealSexticRow F hFpos hFgood I y) := by
-  simp only [conjugateIdealRowSum, star_sum, star_mul, star_star, mul_comm]
-
-theorem conjugateIdealRowSum_smoothed_summable
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (hFgood : ∀ I ∈ F,
-      ∀ P ∈ UniqueFactorizationMonoid.normalizedFactors I, goodLambda ∉ P)
-    (C : Ideal O → ℂ) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) (hscale : 0 < scale) :
-    Summable (fun y : O => W (‖eisEmbedding y‖ ^ 2 / scale) *
-      (↑(‖conjugateIdealRowSum F hFpos hFgood C y‖ ^ 2) : ℂ)) := by
-  simp_rw [conjugateIdealRowSum_eq_star, norm_star]
-  let : ∀ i : primePool F, (i.val).IsMaximal := primePool_maximal F hFpos
-  exact finiteSquarefreeRow_smoothed_mean_square_summable
-    (fun i : primePool F => i.val) (primePool_good F hFgood)
-    F (idealSupport F) (fun I => star (mobiusIdealColumn C I)) W scale hscale
-
-theorem conjugateIdealRowSum_smoothed_poisson
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (hFgood : ∀ I ∈ F,
-      ∀ P ∈ UniqueFactorizationMonoid.normalizedFactors I, goodLambda ∉ P)
-    (hchar : ∀ i : primePool F, ringChar (O ⧸ i.val) ≠ 2)
-    (C : Ideal O → ℂ) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) (hscale : 0 < scale) :
-    (∑' y : O, W (‖eisEmbedding y‖ ^ 2 / scale) *
-      (↑(‖conjugateIdealRowSum F hFpos hFgood C y‖ ^ 2) : ℂ)) =
-      ∑ I ∈ F, ∑ J ∈ F,
-        (star (mobiusIdealColumn C I) * mobiusIdealColumn C J) *
-        idealPairPoissonKernel F hFpos hFgood J I W scale := by
-  simp_rw [conjugateIdealRowSum_eq_star, norm_star]
-  let : ∀ i : primePool F, (i.val).IsMaximal := primePool_maximal F hFpos
-  change (∑' y : O, W (‖eisEmbedding y‖ ^ 2 / scale) *
-    (↑(‖∑ I ∈ F, star (mobiusIdealColumn C I) *
-      finiteSquarefreeRow (fun i : primePool F => i.val) (primePool_good F hFgood)
-        (idealSupport F I) y‖ ^ 2) : ℂ)) = _
-  rw [finiteSquarefreeRow_smoothed_mean_square_expand
-    (fun i : primePool F => i.val) (primePool_good F hFgood)
-    F (idealSupport F) (fun I => star (mobiusIdealColumn C I)) W scale hscale,
-    Finset.sum_comm]
-  apply Finset.sum_congr rfl
-  intro I hI
-  apply Finset.sum_congr rfl
-  intro J hJ
-  rw [finiteSquarefreeRow_pair_radial_poisson
-    (fun i : primePool F => i.val) Subtype.val_injective (primePool_good F hFgood)
-    hchar (idealSupport F J) (idealSupport F I) W scale hscale, star_star]
-  rw [mul_comm (mobiusIdealColumn C J)]
-  rfl
-
-theorem mobiusIdealColumn_eq_zero_of_not_squarefree
-    (C : Ideal O → ℂ) {I : Ideal O} (hI : ¬ Squarefree I) :
-    mobiusIdealColumn C I = 0 := by
-  simp only [mobiusIdealColumn, UniqueFactorizationMonoid.moebius_of_not_squarefree hI,
-    Int.cast_zero, zero_mul]
-
-theorem conjugateIdealRowSum_zeroMode_offDiagonal
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (hFgood : ∀ I ∈ F,
-      ∀ P ∈ UniqueFactorizationMonoid.normalizedFactors I, goodLambda ∉ P)
-    (C : Ideal O → ℂ) {I J : Ideal O} (hI : I ∈ F) (hJ : J ∈ F) (hIJ : I ≠ J)
-    (W : 𝓢(ℝ, ℂ)) (scale : ℝ) :
-    (star (mobiusIdealColumn C I) * mobiusIdealColumn C J) *
-      idealPairPoissonZeroMode F hFpos hFgood J I W scale = 0 := by
-  by_cases hsI : Squarefree I
-  · by_cases hsJ : Squarefree J
-    · have hsupport : idealSupport F J ≠ idealSupport F I := fun h =>
-        hIJ (idealSupport_injective_on_squarefree F hJ hI hsJ hsI h).symm
-      let : ∀ i : primePool F, (i.val).IsMaximal := primePool_maximal F hFpos
-      have hz : idealPairPoissonZeroMode F hFpos hFgood J I W scale = 0 :=
-        squarefreePairPoissonZeroMode_eq_zero_of_ne (fun i : primePool F => i.val)
-          Subtype.val_injective (primePool_good F hFgood) hsupport W scale
-      rw [hz, mul_zero]
-    · simp [mobiusIdealColumn_eq_zero_of_not_squarefree C hsJ]
-  · simp [mobiusIdealColumn_eq_zero_of_not_squarefree C hsI]
-
-theorem conjugateIdealRowSum_zeroMode_formula
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (hFgood : ∀ I ∈ F,
-      ∀ P ∈ UniqueFactorizationMonoid.normalizedFactors I, goodLambda ∉ P)
-    (C : Ideal O → ℂ) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) :
-    (∑ I ∈ F, ∑ J ∈ F,
-      (star (mobiusIdealColumn C I) * mobiusIdealColumn C J) *
-        idealPairPoissonZeroMode F hFpos hFgood J I W scale) =
-    (scale : ℂ) * paperRadialFourier W 0 *
-      ∑ I ∈ F, (↑(‖mobiusIdealColumn C I‖ ^ 2) : ℂ) * idealPrimeDensity F I := by
-  rw [Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro I hI
-  rw [Finset.sum_eq_single I]
-  · rw [idealPairPoissonZeroMode_diag, Complex.sq_norm, Complex.normSq_eq_conj_mul_self]
-    change (star _ * _) * _ = _ * ((star _ * _) * _)
-    ring
-  · intro J hJ hJI
-    exact conjugateIdealRowSum_zeroMode_offDiagonal F hFpos hFgood C hI hJ hJI.symm W scale
-  · exact fun h => (h hI).elim
-
-theorem conjugateIdealRowSum_smoothed_poisson_zero_split
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (hFgood : ∀ I ∈ F,
-      ∀ P ∈ UniqueFactorizationMonoid.normalizedFactors I, goodLambda ∉ P)
-    (hchar : ∀ i : primePool F, ringChar (O ⧸ i.val) ≠ 2)
-    (C : Ideal O → ℂ) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) (hscale : 0 < scale) :
-    (∑' y : O, W (‖eisEmbedding y‖ ^ 2 / scale) *
-      (↑(‖conjugateIdealRowSum F hFpos hFgood C y‖ ^ 2) : ℂ)) =
-    (scale : ℂ) * paperRadialFourier W 0 *
-      (∑ I ∈ F, (↑(‖mobiusIdealColumn C I‖ ^ 2) : ℂ) * idealPrimeDensity F I) +
-      ∑ I ∈ F, ∑ J ∈ F,
-        (star (mobiusIdealColumn C I) * mobiusIdealColumn C J) *
-          idealPairPoissonNonzeroMode F hFpos hFgood J I W scale := by
-  rw [conjugateIdealRowSum_smoothed_poisson F hFpos hFgood hchar C W scale hscale]
-  simp_rw [idealPairPoissonKernel_zero_split F hFpos hFgood _ _ W scale hscale,
-    mul_add, Finset.sum_add_distrib]
-  rw [conjugateIdealRowSum_zeroMode_formula F hFpos hFgood C W scale]
-
-theorem norm_mobiusIdealColumn_le (C : Ideal O → ℂ) (I : Ideal O) :
-    ‖mobiusIdealColumn C I‖ ≤ ‖C I‖ := by
-  by_cases hI : Squarefree I
-  · simp only [mobiusIdealColumn, hI.moebius_eq, Int.cast_pow, Int.cast_neg,
-      Int.cast_one, norm_mul, norm_pow, norm_neg, norm_one, one_pow, one_mul, le_refl]
-  · rw [mobiusIdealColumn_eq_zero_of_not_squarefree C hI, norm_zero]
-    exact norm_nonneg _
-
-theorem norm_conjugateIdealRowSum_zeroMode_le
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (hFgood : ∀ I ∈ F,
-      ∀ P ∈ UniqueFactorizationMonoid.normalizedFactors I, goodLambda ∉ P)
-    (C : Ideal O → ℂ) (W : 𝓢(ℝ, ℂ)) (scale : ℝ) :
-    ‖∑ I ∈ F, ∑ J ∈ F,
-      (star (mobiusIdealColumn C I) * mobiusIdealColumn C J) *
-        idealPairPoissonZeroMode F hFpos hFgood J I W scale‖ ≤
-      (|scale| * ‖paperRadialFourier W 0‖) * ∑ I ∈ F, ‖C I‖ ^ 2 := by
-  rw [conjugateIdealRowSum_zeroMode_formula F hFpos hFgood C W scale,
-    norm_mul, norm_mul, Complex.norm_real, Real.norm_eq_abs]
-  gcongr
-  refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun I hI => ?_)
-  rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _),
-    Complex.norm_real, Real.norm_eq_abs,
-    abs_of_nonneg (idealPrimeDensity_mem_Icc F hFpos I).1]
-  calc
-    _ ≤ ‖mobiusIdealColumn C I‖ ^ 2 := mul_le_of_le_one_right
-      (sq_nonneg _) (idealPrimeDensity_mem_Icc F hFpos I).2
-    _ ≤ ‖C I‖ ^ 2 := by gcongr; exact norm_mobiusIdealColumn_le C I
-
-theorem norm_secondPoisson_zeroMode_fixed_factors
-    (F : Finset (Ideal O)) (hFpos : ∀ I ∈ F, I ≠ ⊥)
-    (hFgood : ∀ I ∈ F,
-      ∀ P ∈ UniqueFactorizationMonoid.normalizedFactors I, goodLambda ∉ P)
-    (ξ ρ : Ideal O → ℂ) (A : ℕ → ℂ)
-    (hξ : ∀ I ∈ F, ‖ξ I‖ ≤ 1) (hρ : ∀ I ∈ F, ‖ρ I‖ ≤ 1)
-    (W : 𝓢(ℝ, ℂ)) (scale : ℝ) :
-    let C : Ideal O → ℂ := fun I => ξ I * ρ I * A (Ideal.absNorm I)
-    ‖∑ I ∈ F, ∑ J ∈ F,
-      (star (mobiusIdealColumn C I) * mobiusIdealColumn C J) *
-        idealPairPoissonZeroMode F hFpos hFgood J I W scale‖ ≤
-      (|scale| * ‖paperRadialFourier W 0‖) * ∑ I ∈ F, ‖A (Ideal.absNorm I)‖ ^ 2 := by
-  dsimp only
-  refine (norm_conjugateIdealRowSum_zeroMode_le F hFpos hFgood
-    (fun I => ξ I * ρ I * A (Ideal.absNorm I)) W scale).trans ?_
-  gcongr with I hI
-  simp only [norm_mul]
-  calc
-    ‖ξ I‖ * ‖ρ I‖ * ‖A (Ideal.absNorm I)‖ ≤
-        1 * 1 * ‖A (Ideal.absNorm I)‖ := by gcongr; exact hξ I hI; exact hρ I hI
-    _ = _ := by ring
-
 end ConcretePrimeRowBridge
 
-open MeasureTheory Set
-open scoped BigOperators
+open Set
 
 namespace EisensteinSchwartzPoisson
 

@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.SecondUniformCutoff
 import OAI.NumberTheory.DirichletL.Descent.ActualChildStateTriples
 import OAI.NumberTheory.DirichletL.Descent.GlobalPrioritySource
-
 namespace OAI
 
 noncomputable section

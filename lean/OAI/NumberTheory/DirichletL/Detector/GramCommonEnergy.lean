@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GramEnergyNonzero
 import OAI.NumberTheory.DirichletL.Detector.GramWindowGcd
-
 namespace OAI
 
 noncomputable section

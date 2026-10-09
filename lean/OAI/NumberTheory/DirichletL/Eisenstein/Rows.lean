@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.RayCoefficients
-
 namespace OAI
 
 noncomputable section
@@ -8,76 +7,27 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
 section
-open scoped BigOperators Classical MatrixGroups
+open scoped MatrixGroups
 
 section
 abbrev K := ActualEisensteinCubic.K
 abbrev O := ActualEisensteinCubic.O
-open ActualEisensteinCubic CubicKubota ConcreteTraceCRT
+open CubicKubota
 
 def row (M : levelThree) : Fin 2 → O := (M : SL(2,O)) 1
 
@@ -251,7 +201,6 @@ lemma embeddedRow_rightEquiv (M : levelThree) (x : CuspCosets) :
 end
 
 section
-open ActualEisensteinCubic ConcreteTraceCRT
 
 def integerLattice : Submodule ℤ ((Fin 2 × Fin 2) → ℝ) :=
   Submodule.span ℤ (Set.range (Pi.basisFun ℝ (Fin 2 × Fin 2)))
@@ -332,7 +281,7 @@ lemma coordinates_norm_bound (v : Fin 2 → O) :
 
 end
 
-open ActualEisensteinCubic CubicKubota ConcreteTraceCRT
+open CubicKubota
 
 def rowEnergy (v : Fin 2 → ℂ) : ℝ := ‖v 0‖ ^ 2 + ‖v 1‖ ^ 2
 
@@ -480,13 +429,6 @@ theorem eisenstein_automorphy (M : levelThree) (g : SL(2,ℂ)) (s : ℂ) (hs : 2
   have hscale := hreindex.mul_left (complexCharacter M)
   exact hleft.hasSum.unique (hscale.congr_fun (fun x => summand_automorphy M g s x))
 
-lemma summand_differentiable (g : SL(2,ℂ)) (x : CuspCosets) :
-    Differentiable ℂ (fun s : ℂ => summand g s x) := by
-  have hq : (rowEnergy (rowOperator g (embeddedRow x)) : ℂ) ≠ 0 :=
-    Complex.ofReal_ne_zero.mpr
-      (rowEnergy_pos _ (rowOperator_ne_zero g _ (embeddedRow_ne_zero x))).ne'
-  exact ((differentiable_id.neg).const_cpow (Or.inl hq)).const_mul _
-
 lemma norm_summand_strip (g : SL(2,ℂ)) (a b : ℝ) (s : ℂ)
     (ha : a ≤ s.re) (hb : s.re ≤ b) (x : CuspCosets) :
     ‖summand g s x‖ ≤ ‖summand g (a : ℂ) x‖ + ‖summand g (b : ℂ) x‖ := by
@@ -499,40 +441,11 @@ lemma norm_summand_strip (g : SL(2,ℂ)) (a b : ℝ) (s : ℂ)
         (neg_le_neg hb)).trans
       (le_add_of_nonneg_left (Real.rpow_nonneg hq.le _))
 
-theorem eisenstein_differentiableOn_strip (g : SL(2,ℂ)) (a b : ℝ)
-    (ha : 2 < a) (hab : a < b) :
-    DifferentiableOn ℂ (eisenstein g) {s : ℂ | a < s.re ∧ s.re < b} := by
-  have hsa := summable_norm_summand g (a : ℂ) (by simpa using ha)
-  have hsb := summable_norm_summand g (b : ℂ) (by simpa using lt_trans ha hab)
-  apply Complex.differentiableOn_tsum_of_summable_norm (hsa.add hsb)
-    (fun x => (summand_differentiable g x).differentiableOn)
-  · exact (isOpen_lt continuous_const Complex.continuous_re).inter
-      (isOpen_lt Complex.continuous_re continuous_const)
-  · intro x s hs
-    exact norm_summand_strip g a b s hs.1.le hs.2.le x
-
-theorem eisenstein_differentiableAt (g : SL(2,ℂ)) (s : ℂ) (hs : 2 < s.re) :
-    DifferentiableAt ℂ (eisenstein g) s := by
-  let a := (2+s.re)/2
-  let b := s.re+1
-  have ha : 2 < a := by dsimp [a]; linarith
-  have hab : a < b := by dsimp [a,b]; linarith
-  have hsU : s ∈ {z : ℂ | a < z.re ∧ z.re < b} := by
-    constructor <;> dsimp [a,b] <;> linarith
-  exact (eisenstein_differentiableOn_strip g a b ha hab s hsU).differentiableAt
-    (((isOpen_lt continuous_const Complex.continuous_re).inter
-      (isOpen_lt Complex.continuous_re continuous_const)).mem_nhds hsU)
-
-theorem eisenstein_differentiableOn (g : SL(2,ℂ)) :
-    DifferentiableOn ℂ (eisenstein g) {s : ℂ | 2 < s.re} := by
-  intro s hs
-  exact (eisenstein_differentiableAt g s hs).differentiableWithinAt
-
 end
 
-open scoped BigOperators Classical MatrixGroups Matrix
+open scoped MatrixGroups Matrix
 
-open ActualEisensteinCubic CubicKubota ConcreteTraceCRT
+open CubicKubota
 
 def upperSection (z : ℂ) (v : ℝ) (hv : 0 < v) : SL(2,ℂ) :=
   ⟨!![(Real.sqrt v : ℂ), z / (Real.sqrt v : ℂ); 0, (Real.sqrt v : ℂ)⁻¹], by
@@ -584,16 +497,6 @@ lemma summand_upperSection (z : ℂ) (v : ℝ) (hv : 0 < v) (s : ℂ) (x : CuspC
 
 def upperEisenstein (z : ℂ) (v : ℝ) (hv : 0 < v) (s : ℂ) : ℂ :=
   eisenstein (upperSection z v hv) s
-
-theorem upperEisenstein_eq_source_series (z : ℂ) (v : ℝ) (hv : 0 < v) (s : ℂ) :
-    upperEisenstein z v hv s = ∑' x : CuspCosets, (cosetCharacter x)⁻¹ *
-      (transformedHeight z v (embeddedRow x) : ℂ) ^ s :=
-  tsum_congr (summand_upperSection z v hv s)
-
-theorem source_series_summable (z : ℂ) (v : ℝ) (hv : 0 < v) (s : ℂ) (hs : 2 < s.re) :
-    Summable (fun x : CuspCosets => (cosetCharacter x)⁻¹ *
-      (transformedHeight z v (embeddedRow x) : ℂ) ^ s) :=
-  (summable_summand (upperSection z v hv) s hs).congr (summand_upperSection z v hv s)
 
 lemma ofReal_rowEnergy (u : Fin 2 → ℂ) :
     (rowEnergy u : ℂ) = dotProduct u (star u) := by

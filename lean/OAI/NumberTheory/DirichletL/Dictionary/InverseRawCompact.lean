@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseRawEnergy
 import OAI.NumberTheory.DirichletL.Moments.OriginalReflectionErrorMass
-
 namespace OAI
 
 noncomputable section
@@ -104,18 +103,6 @@ theorem reference_energy_linear (W : SchwartzMap ℝ ℂ) (a b : ℝ) (ha : 0<a)
       (nonzero_element_rows_card rows H hH hrows) (by positivity)
     _=(128*A^2)*H*D := by ring
 
-theorem subunit_rows_reference_energy (W : SchwartzMap ℝ ℂ) (a b : ℝ) (ha : 0<a)
-    (hs : Function.support W⊆Set.Icc a b) :
-    ∃C0:ℝ,0<C0 ∧ ∀(χ:NonzeroElement→Character) (rows:Finset NonzeroElement)
-      (s H D:ℝ),1≤H → 0<D → D≤1 →
-      (∀v∈rows,((Ideal.span {v.val}).absNorm:ℝ)≤H) →
-      (∑v∈rows,‖polynomial (χ v) true (childLogTest W s) D 0 0‖^2)≤C0*H := by
-  obtain ⟨K,hK,hbound⟩:=reference_energy_linear W a b ha hs
-  refine ⟨K,hK,?_⟩
-  intro χ rows s H D hH hD hD1 hrows
-  exact (hbound χ rows s H D hH hD hrows).trans
-    (mul_le_of_le_one_right (by positivity) hD1)
-
 lemma scale_le_rows (c H D : ℝ) (hc : 0≤c) (hH : 1≤H)
     (_hD : 0<D) (hDH : D^(1+c)≤H) : D≤H := by
   by_cases hD1:D≤1
@@ -125,21 +112,6 @@ lemma scale_le_rows (c H D : ℝ) (hc : 0≤c) (hH : 1≤H)
       D=D^(1:ℝ) := (Real.rpow_one D).symm
       _≤D^(1+c) := Real.rpow_le_rpow_of_exponent_le hd (by linarith)
       _≤H := hDH
-
-theorem small_rows_reference_energy (W : SchwartzMap ℝ ℂ) (a b : ℝ) (ha : 0<a)
-    (hs : Function.support W⊆Set.Icc a b) (H0 : ℝ) (hH0 : 1≤H0) :
-    ∃C0:ℝ,0<C0 ∧ ∀(χ:NonzeroElement→Character) (rows:Finset NonzeroElement)
-      (s H D c:ℝ),1≤H → H≤H0 → 0≤c → 0<D → D^(1+c)≤H →
-      (∀v∈rows,((Ideal.span {v.val}).absNorm:ℝ)≤H) →
-      (∑v∈rows,‖polynomial (χ v) true (childLogTest W s) D 0 0‖^2)≤C0*H := by
-  obtain ⟨K,hK,hbound⟩:=reference_energy_linear W a b ha hs
-  refine ⟨K*H0,by positivity,?_⟩
-  intro χ rows s H D c hH hHH0 hc hD hDH hrows
-  calc
-    _≤K*H*D := hbound χ rows s H D hH hD hrows
-    _≤K*H*H0 := mul_le_mul_of_nonneg_left ((scale_le_rows c H D hc hH hD hDH).trans hHH0)
-      (by positivity)
-    _=(K*H0)*H := by ring
 
 lemma raw_majorant_ge_linear (C C0 H D κ s : ℝ) (J : ℕ)
     (hC : 0≤C) (hC0 : 0≤C0) (hH : 1≤H) (hκ : 0≤κ) :
@@ -182,23 +154,6 @@ theorem rawMoment_of_large_rows_ge_one (W : SchwartzMap ℝ ℂ) (a b : ℝ) (ha
   · apply (hlarge s H D (le_of_not_ge hHH0) (le_of_not_ge hD1) hDH rows hrows).trans
     gcongr
     exact le_add_of_nonneg_right (by positivity)
-
-theorem rawMoment_of_large_rows (W : SchwartzMap ℝ ℂ) (a b : ℝ) (ha : 0<a)
-    (hs : Function.support W⊆Set.Icc a b) (H0 : ℝ) (hH0 : 1≤H0) :
-    ∃C0:ℝ,0<C0 ∧ ∀(data:RowData) (c κ C:ℝ) (J:ℕ),
-      0≤c → 0≤κ → 0≤C →
-      (∀(s H D:ℝ),H0≤H → 0<D → D^(1+c)≤H →
-        ∀rows:Finset NonzeroElement,
-          (∀v∈rows,((Ideal.span {v.val}).absNorm:ℝ)≤H) →
-          (∑v∈rows,‖polynomial (data.character v) true (childLogTest W s) D 0 0‖^2)≤
-            (C*(1+‖s‖)^(2*J))*H*(H*max 1 D)^κ) →
-      ∀s:ℝ,RawMoment data (childLogTest W s) c κ ((C+C0)*(1+‖s‖)^(2*J)) := by
-  obtain ⟨C0,hC0,hcomplete⟩:=rawMoment_of_large_rows_ge_one W a b ha hs H0 hH0
-  refine ⟨C0,hC0,?_⟩
-  intro data c κ C J hc hκ hC hlarge
-  apply hcomplete data c κ C J hc hκ hC
-  intro s H D hH hD hDH rows hrows
-  exact hlarge s H D hH (zero_lt_one.trans_le hD) hDH rows hrows
 
 end SevenEighths.DetectorDictionaryInverseRawCompact
 

@@ -1,79 +1,23 @@
 import OAI.NumberTheory.DirichletL.RowCompletion.BranchDecoding
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
-
-open scoped BigOperators Classical ContDiff
+open scoped ContDiff
+open Set
 
 namespace CanonicalRowCompletion.ActualFiber
 open ActualEisensteinCubic CompletedGauss CanonicalQuadraticSieve CubicEisenstein
@@ -185,32 +129,11 @@ theorem actual_fixedShellModels (q:ℕ) (hq:q≠0) (χ:DirichletCharacter ℂ q)
     (hrows R hR).1 hF (fun I hI=>(hrows I hI).1) u Ψ hperiod hnorm K
     (fun I hI=>(hrows I hI).2) J W a b ha hs hW X hX
 
-theorem exists_actual_fixedShellModels (q:ℕ) [NeZero q] (χ:DirichletCharacter ℂ q) :
-    ∃(rays:ℕ) (scale:ℂ),
-      HasFixedShellModels (reflectionExcludedPrimes q) (initialBase χ)
-        rays scale 1 completedRamifiedStep (fixedCuspLevelBound (reflectionConductor q)) := by
-  exact ⟨fixedReflectionRayCount (reflectionConductor q) (reflectionConductor_ne_zero q (NeZero.ne q)),
-    actualReflectionScale,actual_fixedShellModels q (NeZero.ne q) χ⟩
-
 end
-
-theorem dirichletTarget_unconditional : ShortDraft.DirichletTarget :=
-  dirichletTarget_of_reflection_shells exists_actual_fixedShellModels
 
 end CanonicalRowCompletion
 
 namespace ShortDraft
-
-theorem dirichlet_LFunction_ne_zero (q:ℕ) [NeZero q]
-    (χ:DirichletCharacter ℂ q) (s:ℂ)
-    (hs:(23/24:ℝ)<s.re) (hpole:¬(χ=1 ∧ s=1)) :
-    DirichletCharacter.LFunction χ s≠0 :=
-  CanonicalRowCompletion.dirichletTarget_unconditional q χ s hs hpole
-
-theorem riemannZeta_ne_zero_of_re_gt (s:ℂ)
-    (hs:(23/24:ℝ)<s.re) (hs1:s≠1) : riemannZeta s≠0 :=
-  zeta_nonvanishing_of_dirichletTarget
-    CanonicalRowCompletion.dirichletTarget_unconditional s hs hs1
 
 end ShortDraft
 

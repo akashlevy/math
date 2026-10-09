@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.RowInterchange
 import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
-
 namespace OAI
 
 noncomputable section
@@ -50,24 +49,6 @@ lemma gaussian_completed_norm_power (a b Z : ℝ) (ha : 0<a) (hb : 0<b) (hZ : 0<
   rw [hp,Complex.cpow_neg (Z:ℂ),div_inv_eq_mul]
   rw [show (3:ℂ)*(-t)= -(3*t) by ring]
   ring
-
-lemma gaussianMellinProfile_norm (y : ℝ) (hy : 0<y) :
-    ‖gaussianMellinProfile y‖=
-      ‖((1/(2*Real.pi):ℝ):ℂ)*(Real.pi:ℂ)^(1/2:ℂ)‖*
-        Real.exp (-(Real.log y)^2/4) := by
-  unfold gaussianMellinProfile
-  rw [norm_mul,Complex.norm_exp,←Complex.ofReal_log hy.le]
-  congr 2
-  simp [←Complex.ofReal_pow]
-
-lemma gaussianMellinProfile_power_bound (y : ℝ) (hy : 0<y) (a : ℝ) :
-    ‖gaussianMellinProfile y‖≤
-      ‖((1/(2*Real.pi):ℝ):ℂ)*(Real.pi:ℂ)^(1/2:ℂ)‖*Real.exp (a^2)*y^(-a) := by
-  rw [gaussianMellinProfile_norm y hy,Real.rpow_def_of_pos hy]
-  rw [mul_assoc,←Real.exp_add]
-  apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-  apply Real.exp_le_exp.mpr
-  nlinarith [sq_nonneg (Real.log y/2-a)]
 
 end SevenEighths.ProbePhysical
 end

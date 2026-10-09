@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorProfilesUniform
-
 namespace OAI
 
 namespace SevenEighths.HeckeDetectorFourier
@@ -51,40 +50,6 @@ theorem schwartz_weighted_tail (g : SchwartzMap ℝ ℂ) (J N : ℕ)
     _ ≤ (1+‖t‖)^N*((1+‖t‖)^J*‖(𝓕 g) t‖) :=
       mul_le_mul_of_nonneg_right hp (by positivity)
     _ = _ := by rw [pow_add]; ring
-
-theorem uniform_fourier_tail (Ω : ℝ → ℂ) (V T : SchwartzMap ℝ ℂ)
-    (hΩc : HasCompactSupport Ω) (hΩ : ContDiff ℝ ∞ Ω)
-    (L : ℝ) (hL : 0 ≤ L) (hwindow : tsupport Ω ⊆ Set.Icc (-L) L) (J N : ℕ) :
-    ∃ C : ℝ, 0 ≤ C ∧ ∀ A B D : ℝ, 0 ≤ A → 0 ≤ B → 0 ≤ D →
-      ∀ R : ℝ, 0 < R →
-      (∫ t : ℝ in {t | R < ‖t‖}, (1+‖t‖)^J *
-        ‖(𝓕 (logSource Ω V T hΩc hΩ (V.smooth ⊤) (T.smooth ⊤) A B D)) t‖) ≤ C/R^N := by
-  obtain ⟨C,hC,hb⟩ := uniform_fourier_moment Ω V T hΩc hΩ L hL hwindow (J+N)
-  refine ⟨C,hC,?_⟩
-  intro A B D hA hB hD R hR
-  apply (le_div_iff₀ (pow_pos hR N)).mpr
-  simpa [mul_comm] using (schwartz_weighted_tail
-    (logSource Ω V T hΩc hΩ (V.smooth ⊤) (T.smooth ⊤) A B D) J N R hR).trans
-    (hb A B D hA hB hD)
-
-theorem logSource_product_inversion (Ω V T : ℝ → ℂ)
-    (hΩc : HasCompactSupport Ω) (hΩ : ContDiff ℝ ∞ Ω)
-    (hV : ContDiff ℝ ∞ V) (hT : ContDiff ℝ ∞ T)
-    (A B D x y : ℝ) :
-    logSourceFun Ω V T A B D (x+y) =
-      ∫ t : ℝ, FourierBridge.logPhase t x * FourierBridge.logPhase t y *
-        (𝓕 (logSource Ω V T hΩc hΩ hV hT A B D)) t := by
-  have hh := FourierBridge.schwartz_log_inversion
-    (logSource Ω V T hΩc hΩ hV hT A B D) (x+y)
-  change logSourceFun Ω V T A B D (x+y) = _ at hh
-  rw [hh]
-  apply integral_congr_ae
-  filter_upwards [] with t
-  rw [← FourierBridge.logPhase_add]
-  congr 1
-  simp only [FourierBridge.logPhase, RCLike.inner_apply, conj_trivial]
-  congr 2
-  ring_nf
 
 end
 end SevenEighths.HeckeDetectorFourier

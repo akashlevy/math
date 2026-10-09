@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.PrimePowerGaussSums
-
 namespace OAI
 
 noncomputable section
@@ -8,76 +7,22 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
+open scoped MatrixGroups
 
 section
 local notation "Eis" => ActualEisensteinCubic.O
@@ -178,7 +123,7 @@ theorem translatedHeightFourier_opposite_residue (a b:ℝ) (ha:0<a) (ρ:BoundedC
 
 end
 
-open CubicKubota ActualEisensteinCubic ConcreteTraceCRT
+open CubicKubota
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma rational_height_fourier_right_T (a b:ℝ) (ha:0<a) (ρ:BoundedContinuousFunction ℝ ℂ)
@@ -309,8 +254,6 @@ theorem kernelSourceProjection_height_fourier (a b:ℝ) (ha:0<a) (ρ:BoundedCont
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
 
 section
 local notation "Eis" => ActualEisensteinCubic.O
@@ -489,9 +432,6 @@ lemma sourceBesselFunction_height_memLp (v:ℝ) (hv:0<v) :
 
 end
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
-
 local notation "O" => ActualEisensteinCubic.O
 
 lemma sourceResidualFullMode_density_integrable (a b : ℝ) (ha : 0<a) (h : ActualEisensteinCubic.O) :
@@ -581,13 +521,6 @@ theorem cubicSourceResidualFunction_eq_bessel : cubicSourceResidualFunction=sour
     exact hw.symm.trans hs
   exact Measure.eq_of_ae_eq he cubicSourceResidualFunction_continuous sourceBesselFunction_continuous
 
-theorem cubicSourceResidualFunction_fourier_full (v:ℝ) (hv:0<v) (h:ActualEisensteinCubic.O) :
-    (∫z in periodDomain,cubicSourceResidualFunction (upperPoint z v hv)*
-      ShortDraftTrace.breveE (-cuspFrequency h*z))=
-      ((9*Real.sqrt 3/2:ℝ):ℂ)*sourceResidualFullModeAmplitude v h := by
-  rw [cubicSourceResidualFunction_eq_bessel]
-  exact sourceBesselFunction_fourier v hv h
-
 theorem cubicSourceResidualFunction_bessel (v:ℝ) (hv:0<v) (z:ℂ) :
     cubicSourceResidualFunction (upperPoint z v hv)=
       (3*(Real.pi:ℂ))*constantArithmeticResidue*(v:ℂ)^(2/3:ℂ)+
@@ -597,24 +530,6 @@ theorem cubicSourceResidualFunction_bessel (v:ℝ) (hv:0<v) (z:ℂ) :
     SubexponentialBesselCoefficients.function,hyperbolicHeight_upperPoint,hyperbolicHorizontal_upperPoint,
     sourceBesselCoefficients.series_bessel v hv z]
   rfl
-
-theorem sourceResidual_series_uniform (a b:ℝ) (ha:0<a) (hab:a≤b) :
-    TendstoUniformlyOn (fun t : Finset ActualEisensteinCubic.O => fun p : ℝ × ℂ => ∑ h ∈ t, sourceBesselCoefficients.term h p)
-      sourceBesselCoefficients.series atTop {p : ℝ × ℂ | p.1 ∈ Set.Icc a b} :=
-  sourceBesselCoefficients.series_uniform a b ha hab
-
-theorem sourceResidual_bessel_normal (a b:ℝ) (ha:0<a) (hab:a≤b) :
-    ∃g : ActualEisensteinCubic.O→ℝ, Summable g ∧ ∀(h:ActualEisensteinCubic.O)(v:ℝ),v∈Set.Icc a b→∀z:ℂ,
-      ‖(if h=0 then 0 else sourceResidualFourierCoefficient h*(v:ℂ)*
-        schlafliBesselK (1/3) (4*Real.pi*‖cuspFrequency h‖*v))*
-          ShortDraftTrace.breveE (cuspFrequency h*z)‖≤g h := by
-  obtain ⟨C,hC,hbound⟩:=sourceBesselCoefficients.slab_bound a b ha hab
-  refine ⟨fun h=>C*Real.exp (-(Real.pi*a)*‖cuspFrequency h‖),
-    (summable_exp_neg_cuspFrequency_norm (Real.pi*a) (mul_pos Real.pi_pos ha)).mul_left C,?_⟩
-  intro h v hv z
-  have he:=hbound h (v,z) hv
-  rw [sourceBesselCoefficients.term_eq_amplitude v (ha.trans_le hv.1) h z] at he
-  exact he
 
 end CubicEisenstein
 

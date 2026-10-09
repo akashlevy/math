@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.ReferenceRobustBounded
-
 namespace OAI
 
 noncomputable section

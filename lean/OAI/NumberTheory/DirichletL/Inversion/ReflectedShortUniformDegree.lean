@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.ShortReflectedEnergy
 import OAI.NumberTheory.DirichletL.Reflection.CubeCompletedEnergyUniformDegree
-
 namespace OAI
 noncomputable section
 open scoped BigOperators Classical ContDiff

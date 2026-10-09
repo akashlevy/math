@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.FinalAssemblyData
 import OAI.NumberTheory.DirichletL.Detector.FinalAssemblyMomentMono
-
 namespace OAI
 
 noncomputable section
@@ -31,14 +30,6 @@ lemma SourceMomentBound.mono_constant {Δ : ℝ} {D : HighData Δ} {F : SourceDa
     (fun _ y=>(F.w y:ℂ)) Z d a D.ε τ (7/8) 2 D.t D.t i z Δ _ _ C C' height D.t
     hZ hC (h rows d a hd hd' ha ha' hrows i z hz hzh)
 
-def RawMomentInput : Prop :=
-  ∀_hβ : (7/8:ℝ)<HeckeZeroSupremum.beta,
-    ∀D : HighData (HeckeZeroSupremum.beta-7/8),∀F : SourceData D,
-    ∀counts : CountParameters F.modulus ⊤ D.t,
-    ∃J : ℝ,0≤J ∧ ∀η : Character,∃C : ℝ,0<C ∧
-      ∀τ : ℝ,0<τ → τ≤1 → ∀ᶠZ : ℝ in atTop,
-        SourceMomentBound F counts η Z τ (C*(1+Z^(2*τ))^J) (Z^(2*τ))
-
 lemma polynomial_height_absorption (C Z τ J t : ℝ)
     (hC : 0≤C) (hZ : 1≤Z) (hτ : 0≤τ) (hJ : 0≤J) (hbudget : 2*τ*(1+J)≤t) :
     C*(1+Z^(2*τ))^J≤(C*2^J)*Z^t := by
@@ -52,23 +43,6 @@ lemma polynomial_height_absorption (C Z τ J t : ℝ)
     _≤(C*2^J)*Z^t := by
       apply mul_le_mul_of_nonneg_left _ (by positivity)
       exact Real.rpow_le_rpow_of_exponent_le hZ (by nlinarith)
-
-theorem raw_input_chosen_height (h : RawMomentInput) (hβ : (7/8:ℝ)<HeckeZeroSupremum.beta)
-    (D : HighData (HeckeZeroSupremum.beta-7/8)) (F : SourceData D)
-    (counts : CountParameters F.modulus ⊤ D.t) :
-    ∃τ : ℝ,0<τ ∧ τ<(1/200:ℝ)/2 ∧ 4*τ<(1/200:ℝ)*D.cost ∧ τ<D.t ∧
-      2*τ≤D.t ∧ τ*(2+4*D.eps)<D.t ∧
-      ∀η : Character,∃C : ℝ,0<C ∧ ∀ᶠZ : ℝ in atTop,
-        SourceMomentBound F counts η Z τ (C*Z^D.t) (Z^(2*τ)) := by
-  obtain ⟨J,hJ,hbound⟩ := h hβ D F counts
-  obtain ⟨τ,hτ,hτd,hτcost,hτt,hτJ,hτeps⟩ := D.height_choice J hJ
-  have htau1 : τ≤1 := by linarith
-  refine ⟨τ,hτ,hτd,hτcost,hτt,by nlinarith,hτeps,?_⟩
-  intro η
-  obtain ⟨C,hC,hbound⟩ := hbound η
-  refine ⟨C*2^J,by positivity,?_⟩
-  filter_upwards [hbound τ hτ htau1,eventually_ge_atTop (1:ℝ)] with Z hb hZ
-  exact hb.mono_constant (by linarith) (polynomial_height_absorption C Z τ J D.t hC.le hZ hτ.le hJ hτJ)
 
 end SevenEighths.ProbeFinalAssembly
 

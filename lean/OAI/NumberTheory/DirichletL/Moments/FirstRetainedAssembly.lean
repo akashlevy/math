@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstRetainedBlock
-
 namespace OAI
 
 noncomputable section

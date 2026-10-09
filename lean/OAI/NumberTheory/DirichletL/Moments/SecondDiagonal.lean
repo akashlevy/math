@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.GaussEnergy
 import OAI.NumberTheory.DirichletL.IdealCharacter
-
 namespace OAI
 
 noncomputable section
@@ -188,24 +187,6 @@ theorem secondZeroEnergy_divisor_bound {α : Type*} (S : Finset α) (a : α → 
     _ = B^2*(S.card : ℝ) := by simp [mul_comm]
     _ ≤ B^2*(128*Y/(Ideal.absNorm s : ℝ)) :=
       mul_le_mul_of_nonneg_left (primary_column_card S a ha hp hinj s hs hdiv Y hY hN) (sq_nonneg _)
-    _ = _ := by ring
-
-theorem normalized_secondZeroEnergy_bound {α : Type*} (S : Finset α) (a : α → O)
-    (ha : ∀ i, Supported (Ideal.span {a i}))
-    (hp : ∀ i, ConcretePrimeRowBridge.goodLambda^2 ∣ a i-1)
-    (hinj : Set.InjOn a S) (c : α → ℂ) (B : ℝ) (hB : 0 ≤ B)
-    (hc : ∀ i ∈ S, ‖c i‖ ≤ B) (s : Ideal O) (hs : s ≠ 0)
-    (hdiv : ∀ i ∈ S, s ∣ Ideal.span {a i}) (Y : ℝ) (hY : 0 ≤ Y)
-    (hN : ∀ i ∈ S, (Ideal.absNorm (Ideal.span {a i}) : ℝ) ≤ Y)
-    (κ : ℂ) (T : ℝ) (hT : 0 < T) :
-    ‖(κ/(T:ℂ))*secondZeroEnergy S a ha c‖ ≤
-      128*‖κ‖*B^2*Y/(T*(Ideal.absNorm s : ℝ)) := by
-  rw [norm_mul,norm_div,Complex.norm_real,Real.norm_eq_abs,abs_of_pos hT]
-  calc
-    _ ≤ (‖κ‖/T)*(128*B^2*Y/(Ideal.absNorm s : ℝ)) :=
-      mul_le_mul_of_nonneg_left
-        (secondZeroEnergy_divisor_bound S a ha hp hinj c B hB hc s hs hdiv Y hY hN)
-        (div_nonneg (norm_nonneg _) hT.le)
     _ = _ := by ring
 
 end SevenEighths.CenteredMomentSecondDiagonal

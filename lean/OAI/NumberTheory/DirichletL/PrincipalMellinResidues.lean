@@ -4,7 +4,6 @@ import OAI.NumberTheory.DirichletL.Hecke.RayFamily
 import OAI.NumberTheory.DirichletL.Detector.Physical
 import OAI.NumberTheory.DirichletL.Detector.RadialMellin
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-
 namespace OAI
 
 noncomputable section
@@ -279,16 +278,6 @@ theorem verticalIntegral_hecke_six (χ : Character) (K : ℂ → ℂ) {a b : ℝ
     push_cast
     field_simp
 
-theorem source_w_shift (χ : Character) (K : ℂ → ℂ → ℂ) (z : ℂ) {cw : ℝ}
-    (hcw : 1<cw)
-    (hK : DifferentiableOn ℂ (fun w => K w z)
-      {w : ℂ | 19/20≤w.re ∧ w.re≤cw})
-    (hB : BoundaryControl (fun w => K w z * LFunction χ w) (19/20) cw) :
-    verticalIntegral cw (fun w => K w z * LFunction χ w) =
-      verticalIntegral (19/20) (fun w => K w z * LFunction χ w) +
-      K 1 z * HeckeReciprocal.regularizedL χ 1 :=
-  verticalIntegral_hecke χ (fun w => K w z) (by norm_num) (by norm_num) hcw hK hB
-
 theorem source_residue_z_shift (χ : Character) (K : ℂ → ℂ) {e : ℝ} (he : 0<e)
     (hK : DifferentiableOn ℂ K {z : ℂ | 33/200≤z.re ∧ z.re≤1/6+e})
     (hB : BoundaryControl (fun z => K z * LFunction χ (6*z)) (33/200) (1/6+e)) :
@@ -352,29 +341,12 @@ abbrev fixedPrincipal (M : Ideal O) [NeZero M] : Character :=
 def fixedPrincipalResidue (M : Ideal O) [NeZero M] : ℂ :=
   HeckeReciprocal.regularizedL (fixedPrincipal M) 1
 
-theorem fixedPrincipalResidue_ne_zero (M : Ideal O) [NeZero M] :
-    fixedPrincipalResidue M ≠ 0 := by
-  rw [fixedPrincipalResidue, ← HeckeOrigin.poleRemoved_one]
-  exact HeckeRayFamily.principal_pole_ne_zero M
-
 def sourceMultiplier (W0 W1 : SchwartzMap ℝ ℂ) (X Y Z : ℝ)
     (eta : Character) (s : ℂ) (H B : ℂ → ℂ → ℂ) (w z : ℂ) : ℂ :=
   (X:ℂ)^(1/2-z) * (Z:ℂ)^(s+z-1) * (Y:ℂ)^(w-1) *
     Complex.exp ((s+z-1)^2) *
     mellin (EisensteinSchwartzPoisson.paperRadialFourier W0) z * mellin W1 w /
       LFunction eta s * H w z * B w z
-
-theorem sourceMultiplier_integrand (W0 W1 : SchwartzMap ℝ ℂ) (X Y Z : ℝ)
-    (eta principal : Character) (s : ℂ) (H B : ℂ → ℂ → ℂ) (w z : ℂ) :
-    sourceMultiplier W0 W1 X Y Z eta s H B w z *
-      LFunction principal (6*z) * LFunction principal w =
-    (X:ℂ)^(1/2-z) * (Z:ℂ)^(s+z-1) * (Y:ℂ)^(w-1) *
-      Complex.exp ((s+z-1)^2) *
-      mellin (EisensteinSchwartzPoisson.paperRadialFourier W0) z * mellin W1 w *
-      LFunction principal (6*z) * LFunction principal w /
-      LFunction eta s * H w z * B w z := by
-  unfold sourceMultiplier
-  ring
 
 def sourceResidueConstant (W0 W1 : SchwartzMap ℝ ℂ) (M : Ideal O) [NeZero M] : ℂ :=
   mellin W1 1 * mellin (EisensteinSchwartzPoisson.paperRadialFourier W0) (1/6) *
@@ -392,25 +364,6 @@ theorem source_double_residue (W0 W1 : SchwartzMap ℝ ℂ) (M : Ideal O) [NeZer
     show s+(1/6:ℂ)-1=s-5/6 by ring]
   simp only [sub_self, Complex.cpow_zero, mul_one]
   ring
-
-theorem source_axes_separated (t : ℝ) {cw e : ℝ} (hcw : 1<cw) (he : 0<e) :
-    (1/20:ℝ) ≤ ‖((19/20:ℂ)+t*I)-1‖ ∧
-    (1/100:ℝ) ≤ ‖6*((33/200:ℂ)+t*I)-1‖ ∧
-    6*e ≤ ‖6*(((1/6+e:ℝ):ℂ)+t*I)-1‖ ∧
-    cw-1 ≤ ‖((cw:ℂ)+t*I)-1‖ := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · have h := Complex.abs_re_le_norm (((19/20:ℂ)+t*I)-1)
-    norm_num at h ⊢
-    exact h
-  · have h := Complex.abs_re_le_norm (6*((33/200:ℂ)+t*I)-1)
-    norm_num at h ⊢
-    exact h
-  · have h := Complex.abs_re_le_norm (6*(((1/6+e:ℝ):ℂ)+t*I)-1)
-    have hr : (6*(((1/6+e:ℝ):ℂ)+t*I)-1).re=6*e := by simp; ring
-    rw [hr, abs_of_pos (by positivity)] at h
-    exact h
-  · have h := Complex.abs_re_le_norm (((cw:ℂ)+t*I)-1)
-    simpa [abs_of_pos (sub_pos.mpr hcw)] using h
 
 end SevenEighths.PrincipalMellinResidues
 

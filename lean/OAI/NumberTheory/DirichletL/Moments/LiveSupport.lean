@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SourceLiveColumn
 import OAI.NumberTheory.DirichletL.Moments.SourceCommonMask
-
 namespace OAI
 
 noncomputable section

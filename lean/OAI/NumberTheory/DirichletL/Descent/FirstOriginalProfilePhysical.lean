@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileFiltered
 import OAI.NumberTheory.DirichletL.Descent.FirstHeightBudget
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

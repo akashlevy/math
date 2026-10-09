@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerReference
 import OAI.NumberTheory.DirichletL.Descent.SecondSquarefree
 import OAI.NumberTheory.DirichletL.Descent.ChildCutoff
-
 namespace OAI
 
 noncomputable section
@@ -30,20 +29,6 @@ theorem outerCoefficient_nonzero_coprime
       from ⟨i,hi,hmc⟩)]
   apply hn
   simp only [outerCoefficient,initialColumn,hz,mul_zero,zero_mul,star_zero]
-
-theorem original_nonzero_child_squarefree
-    (Ψ:Eis→*ℂ)(j:Eis)(x:Source (ι:=ι) 0)(ρ:SecondRayIndex)
-    (hd:x.divisor⊆x.common)
-    (hn:outerCoefficient p hp hcop hg Ψ j (sourcePoint x ∅ ∅) ρ≠0)(u:Eisˣ) :
-    Squarefree (initialChild (toTuple p (sectorSource u x))).2.1 := by
-  change Squarefree (sourceIdeal p x.divisor*sourceIdeal p x.overlap)
-  have hc := outerCoefficient_nonzero_coprime p hp hcop hg Ψ j (sourcePoint x ∅ ∅) ρ hn
-  change IsCoprime (sourceIdeal p x.overlap) (sourceIdeal p x.common) at hc
-  have hdv := sourceIdeal_dvd p x.divisor x.common hd
-  have hcd : IsCoprime (sourceIdeal p x.divisor) (sourceIdeal p x.overlap) :=
-    hc.symm.of_isCoprime_of_dvd_left hdv
-  exact squarefree_mul_iff.mpr ⟨hcd.isRelPrime,sourceIdeal_squarefree p hcop x.divisor,
-    sourceIdeal_squarefree p hcop x.overlap⟩
 
 omit [DecidableEq ι] in
 theorem initial_child_label_norm (x:Source (ι:=ι) 0)(u:Eisˣ) :

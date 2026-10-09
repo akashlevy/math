@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DyadicScaled
-
 namespace OAI
 
 noncomputable section

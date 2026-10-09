@@ -1,10 +1,9 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondChildPowerBudget
 import OAI.NumberTheory.DirichletL.Moments.FirstAmplifiedPowerBudget
 import OAI.NumberTheory.DirichletL.Moments.FirstCommonReferencePower
-import OAI.NumberTheory.DirichletL.Moments.FirstMixedExceptionalDeclared
+import OAI.NumberTheory.DirichletL.Moments.FirstMixedExceptionalLow
 import OAI.NumberTheory.DirichletL.Moments.FirstMixedDiagonal
 import OAI.NumberTheory.DirichletL.Moments.SuccessorPaidParameters
-
 namespace OAI
 
 noncomputable section
@@ -457,18 +456,6 @@ theorem source_normalized_identity (P:Finset (Ideal O))(mainFactor b V C q Z all
   simp only [shortened_power (V/C) _ _ _ hx.le (hnorm _)]
   simp only [div_eq_mul_inv,mul_add,add_mul,Finset.mul_sum,Finset.sum_mul]
   ring_nf
-
-theorem eventually_prime_average_gates
-    (M:Ideal O)[NeZero M](H:Subgroup (O⧸M)ˣ)(hH:RayOrthogonality.globalUnits M≤H)
-    (Sbad:Finset (Ideal O))(sigma primeLoss:ℝ)(hs:0<sigma)(hloss:0<primeLoss):
-    ∀ᶠ Z:ℝ in Filter.atTop,1<Z ∧
-      (primePool M H Sbad (1/2) 1 (Z^(sigma/3))).Nonempty ∧
-      Z^(sigma/3-primeLoss)≤(primePool M H Sbad (1/2) 1 (Z^(sigma/3))).card := by
-  filter_upwards [eventually_actual_pool_card M H hH Sbad (sigma/3) primeLoss (by positivity) hloss,
-    Filter.eventually_gt_atTop (1:ℝ)] with Z hc hZ
-  refine ⟨hZ,?_,hc⟩
-  apply Finset.card_pos.mp
-  exact_mod_cast (Real.rpow_pos_of_pos (zero_lt_one.trans hZ) (sigma/3-primeLoss)).trans_le hc
 
 lemma source_coefficients_nonneg (P:Finset (Ideal O))(mainFactor:ℝ)(hmain:0≤mainFactor)
     (amain:Fin 4→ℝ)(aerror:elementPool P→Fin 3→Ray→Fin 4→ℝ)(alpha:Fin 4→ℝ)

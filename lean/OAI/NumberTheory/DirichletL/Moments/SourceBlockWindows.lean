@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondBlockSupport
 import OAI.NumberTheory.DirichletL.Moments.SourceDyadicShell
-
 namespace OAI
 
 noncomputable section

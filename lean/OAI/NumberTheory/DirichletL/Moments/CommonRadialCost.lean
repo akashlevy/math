@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.CommonRadialData
-
 namespace OAI
 
 noncomputable section

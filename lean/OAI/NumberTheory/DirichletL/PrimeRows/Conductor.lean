@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.Euler
 import OAI.NumberTheory.DirichletL.ConductorBounds
-
 namespace OAI
 
 noncomputable section

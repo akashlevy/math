@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.Smooth
-
 namespace OAI
 
 noncomputable section
@@ -40,23 +39,6 @@ theorem wholeKernel_actual (W : 𝓢(ℝ, ℂ)) (V : Fin 4 → ℝ → ℂ)
     rootWindow_log_ratio _ B B₀ hB hB₀,
     logarithmic_kernel_argument K H A B K₀ H₀ A₀ B₀ hK hH hA hB hK₀ hH₀ hA₀ hB₀]
   ring
-
-theorem normalized_kernel_actual (W : 𝓢(ℝ, ℂ)) (V : Fin 4 → ℝ → ℂ)
-    (K H A B K₀ H₀ A₀ B₀ : ℝ)
-    (hK : 0 < K) (hH : 0 < H) (hA : 0 < A) (hB : 0 < B)
-    (hK₀ : 0 < K₀) (hH₀ : 0 < H₀) (hA₀ : 0 < A₀) (hB₀ : 0 < B₀) :
-    (K : ℂ) / ((Real.sqrt A : ℂ) * (Real.sqrt B : ℂ)) *
-      (V 0 (Real.log (K / K₀)) * V 1 (Real.log (H / H₀)) *
-        V 2 (Real.log (A / A₀)) * V 3 (Real.log (B / B₀))) *
-      paperRadialFourier W (K * H / (A * B)) =
-    (K : ℂ) / ((Real.sqrt A₀ : ℂ) * (Real.sqrt B₀ : ℂ)) *
-      wholeKernel W V (K₀ * H₀ / (A₀ * B₀))
-        (Real.log (K / K₀)) (Real.log (H / H₀))
-        (Real.log (A / A₀)) (Real.log (B / B₀)) := by
-  rw [wholeKernel_actual W V K H A B K₀ H₀ A₀ B₀ hK hH hA hB hK₀ hH₀ hA₀ hB₀]
-  have ha : (Real.sqrt A₀ : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (Real.sqrt_pos.mpr hA₀).ne'
-  have hb : (Real.sqrt B₀ : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (Real.sqrt_pos.mpr hB₀).ne'
-  field_simp
 
 end SevenEighths.CenteredMomentScale
 

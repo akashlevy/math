@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.FrozenNorms
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

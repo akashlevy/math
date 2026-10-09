@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.PrincipalNormalizer
 import OAI.NumberTheory.DirichletL.Detector.FiniteProductBounds
-
 namespace OAI
 
 noncomputable section

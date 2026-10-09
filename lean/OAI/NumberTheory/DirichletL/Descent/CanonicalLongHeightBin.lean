@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalLongUniformTestBin
 import OAI.NumberTheory.DirichletL.Descent.CanonicalReopeningHeight
-
 namespace OAI
 
 noncomputable section

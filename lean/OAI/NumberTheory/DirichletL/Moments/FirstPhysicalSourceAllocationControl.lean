@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstAllocationGaussEnergy
 import OAI.NumberTheory.DirichletL.Moments.AmplificationChildInput
 import OAI.NumberTheory.DirichletL.Moments.AllocationCost
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.RayMaskedFloor
 import OAI.NumberTheory.DirichletL.Energy.State
-
 namespace OAI
 
 noncomputable section

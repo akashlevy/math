@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.RayPoolGood
 import OAI.NumberTheory.DirichletL.Detector.HighRowsCentralLower
-
 namespace OAI
 
 noncomputable section

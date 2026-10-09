@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialProfile
 import OAI.NumberTheory.DirichletL.Descent.SecondSeparatedColumns
 import OAI.NumberTheory.DirichletL.Inversion.AmbientProfileTower
-
 namespace OAI
 
 noncomputable section
@@ -70,18 +69,6 @@ theorem freshColumns_initial_clipping_shift (pool : Finset ι) (w : ℝ → ℂ)
   refine ⟨sub_nonneg.mpr (le_max_right _ _), ?_⟩
   exact (mul_le_mul_iff_left₀ (Real.log_pos hZ)).mp (hl.trans hthreshold)
 
-include hp in
-omit [DecidableEq ι] [∀ i, (Ideal.span {p i}).IsMaximal] in
-theorem clippedTest_support_of_freshColumns (pool : Finset ι) (w : ℝ → ℂ)
-    (a b Z N h : ℝ) (ha : 0 < a) (hb : 1 ≤ b) (hZ : 1 < Z)
-    (hw : Function.support w ⊆ Set.Icc a b)
-    (hn : (freshColumns p pool w (Z^N)).Nonempty) :
-    Function.support (clippedTest w (Z^(max 0 N-N)) h) ⊆ Set.Icc (a/b) b := by
-  obtain ⟨hc,hcb⟩ := freshColumns_clipping_range p hp pool w a b Z N hZ hb hw hn
-  have hs := InverseClippingProfiles.clipped_positive_support w a b _ ha hc hcb hw
-  intro x hx
-  exact hs (mul_ne_zero_iff.mp hx).1
-
 theorem canonical_row_zero_of_freshColumns_empty
     (pool : Finset ι) (Ψ : Eis →* ℂ) (m f k : Eis)
     (slots : Finset σ) (lists : σ → Finset ι) (a : σ → ι → ℂ)
@@ -97,16 +84,6 @@ theorem canonical_row_zero_of_freshColumns_empty
     rw [he] at hu
     exact Finset.notMem_empty U hu
   simp only [secondChildColumn,childLogTest,hw,zero_mul,mul_zero]
-
-theorem canonical_row_nonzero_freshColumns
-    (pool : Finset ι) (Ψ : Eis →* ℂ) (m f k : Eis)
-    (slots : Finset σ) (lists : σ → Finset ι) (a : σ → ι → ℂ)
-    (w : ℝ → ℂ) (X h : ℝ)
-    (hn : finiteCanonicalMarkedRow p hp hcop hg pool Ψ m f k slots lists a
-      (childLogTest w h) X ≠ 0) : (freshColumns p pool w X).Nonempty := by
-  by_contra he
-  exact hn (canonical_row_zero_of_freshColumns_empty p hp hcop hg pool Ψ m f k
-    slots lists a w X h (Finset.not_nonempty_iff_eq_empty.mp he))
 
 theorem canonical_row_clipping
     (pool : Finset ι) (Ψ : Eis →* ℂ) (m f k : Eis)
@@ -155,46 +132,6 @@ theorem columnEnergy_clipping
       (clippedTest w (Z^(max 0 N-N)) h) (Z^(max 0 N)) := by
   unfold columnEnergy
   simp_rw [canonical_row_clipping_norm p hp hcop hg pool Ψ m _ _ slots lists a w hZ N h]
-
-theorem canonical_pair_clipping
-    (pool : Finset ι) (Ψ : Eis →* ℂ) (m f k : Eis)
-    (slots₁ slots₂ : Finset σ) (lists₁ lists₂ : σ → Finset ι)
-    (a₁ a₂ : σ → ι → ℂ) (w₁ w₂ : ℝ → ℂ)
-    {Z : ℝ} (hZ : 0 < Z) (N h₁ h₂ : ℝ) :
-    finiteCanonicalMarkedRow p hp hcop hg pool Ψ m f k slots₁ lists₁ a₁
-      (childLogTest w₁ h₁) (Z^N) *
-    star (finiteCanonicalMarkedRow p hp hcop hg pool Ψ m f k slots₂ lists₂ a₂
-      (childLogTest w₂ (-h₂)) (Z^N)) =
-    logPhase (h₁+h₂) (Real.log (Z^(max 0 N-N))) *
-      (finiteCanonicalMarkedRow p hp hcop hg pool Ψ m f k slots₁ lists₁ a₁
-        (clippedTest w₁ (Z^(max 0 N-N)) h₁) (Z^(max 0 N)) *
-      star (finiteCanonicalMarkedRow p hp hcop hg pool Ψ m f k slots₂ lists₂ a₂
-        (clippedTest w₂ (Z^(max 0 N-N)) (-h₂)) (Z^(max 0 N)))) := by
-  rw [canonical_row_clipping p hp hcop hg pool Ψ m f k slots₁ lists₁ a₁ w₁ hZ,
-    canonical_row_clipping p hp hcop hg pool Ψ m f k slots₂ lists₂ a₂ w₂ hZ]
-  simp only [star_mul,SecondPassIntegration.logPhase_conjugate,neg_neg,
-    logPhase_add_frequency]
-  ring
-
-theorem canonical_pair_clipping_left_conjugate
-    (pool : Finset ι) (Ψ : Eis →* ℂ) (m f k : Eis)
-    (slots₁ slots₂ : Finset σ) (lists₁ lists₂ : σ → Finset ι)
-    (a₁ a₂ : σ → ι → ℂ) (w₁ w₂ : ℝ → ℂ)
-    {Z : ℝ} (hZ : 0 < Z) (N h₁ h₂ : ℝ) :
-    star (finiteCanonicalMarkedRow p hp hcop hg pool Ψ m f k slots₁ lists₁ a₁
-      (childLogTest w₁ (-h₁)) (Z^N)) *
-    finiteCanonicalMarkedRow p hp hcop hg pool Ψ m f k slots₂ lists₂ a₂
-      (childLogTest w₂ h₂) (Z^N) =
-    logPhase (h₁+h₂) (Real.log (Z^(max 0 N-N))) *
-      (star (finiteCanonicalMarkedRow p hp hcop hg pool Ψ m f k slots₁ lists₁ a₁
-        (clippedTest w₁ (Z^(max 0 N-N)) (-h₁)) (Z^(max 0 N))) *
-      finiteCanonicalMarkedRow p hp hcop hg pool Ψ m f k slots₂ lists₂ a₂
-        (clippedTest w₂ (Z^(max 0 N-N)) h₂) (Z^(max 0 N))) := by
-  rw [canonical_row_clipping p hp hcop hg pool Ψ m f k slots₁ lists₁ a₁ w₁ hZ,
-    canonical_row_clipping p hp hcop hg pool Ψ m f k slots₂ lists₂ a₂ w₂ hZ]
-  simp only [star_mul,SecondPassIntegration.logPhase_conjugate,neg_neg,
-    logPhase_add_frequency]
-  ring
 
 def normalizedColumnEnergy (pool : Finset ι) (Ψ : Eis →* ℂ) (m : Eis)
     (slots : Finset σ) (lists : σ → Finset ι) (a : σ → ι → ℂ)
@@ -256,42 +193,6 @@ theorem rightHeight_eq (z : Frequency × (Fin 6 → ℝ)) :
   simp [rightHeight,profileHeight,secondLeftSlope,secondRightSlope,secondKernelSlope]
   ring
 
-def clippingPhase (c : ℝ) (z : Frequency × (Fin 6 → ℝ)) : ℂ :=
-  logPhase (leftHeight z+rightHeight z) (Real.log c)
-
-theorem clippingPhase_norm (c : ℝ) (z : Frequency × (Fin 6 → ℝ)) :
-    ‖clippingPhase c z‖ = 1 := logPhase_norm _ _
-
-theorem clippingPhase_continuous (c : ℝ) : Continuous (clippingPhase c) := by
-  unfold clippingPhase leftHeight rightHeight logPhase
-  fun_prop
-
-theorem fresh_pair_mode_clipping (w₁ w₂ : ℝ → ℂ)
-    {Z q₁ q₂ : ℝ} (hZ : 0 < Z) (hq₁ : 0 < q₁) (hq₂ : 0 < q₂)
-    (N : ℝ) (y : Fin 6 → ℝ) (z : Frequency × (Fin 6 → ℝ))
-    (hy₁ : y 4 = Real.log (q₁/Z^N)) (hy₂ : y 5 = Real.log (q₂/Z^N)) :
-    (w₁ (q₁/Z^N)*star (w₂ (q₂/Z^N))) *
-      pureProfileMode secondLeftSlope secondRightSlope secondKernelSlope y z.1 z.2 =
-    secondOuterPhase (profileHeight secondLeftSlope secondRightSlope secondKernelSlope z.1 z.2) y *
-      clippingPhase (Z^(max 0 N-N)) z *
-      (clippedTest w₁ (Z^(max 0 N-N)) (leftHeight z) (q₁/Z^(max 0 N)) *
-      star (clippedTest w₂ (Z^(max 0 N-N)) (-rightHeight z) (q₂/Z^(max 0 N)))) := by
-  rw [second_mode_split,← leftHeight_eq,← rightHeight_eq,hy₁,hy₂]
-  have h1 := child_test_clipping w₁ hZ hq₁ N (leftHeight z)
-  have h2 := child_test_clipping w₂ hZ hq₂ N (-rightHeight z)
-  calc
-    _ = secondOuterPhase
-        (profileHeight secondLeftSlope secondRightSlope secondKernelSlope z.1 z.2) y *
-        (childLogTest w₁ (leftHeight z) (q₁/Z^N) *
-          star (childLogTest w₂ (-rightHeight z) (q₂/Z^N))) := by
-      simp only [childLogTest,star_mul,SecondPassIntegration.logPhase_conjugate,neg_neg]
-      ring
-    _ = _ := by
-      rw [h1,h2]
-      simp only [clippingPhase,star_mul,SecondPassIntegration.logPhase_conjugate,
-        neg_neg,logPhase_add_frequency]
-      ring
-
 theorem child_height_moment_bound (K : ℕ) (z : Frequency × (Fin 6 → ℝ)) :
     (1+‖leftHeight z‖)^K * (1+‖rightHeight z‖)^K ≤
       tripleHeight (2*K) z.1 * coordinateHeight (2*K) z.2 := by
@@ -303,78 +204,6 @@ theorem child_height_moment_bound (K : ℕ) (z : Frequency × (Fin 6 → ℝ)) :
 
 def outerCutoff (ψ : Fin 4 → ℝ → ℂ) (x : Fin 6 → ℝ) : ℂ :=
   ψ 0 (x 0)*ψ 1 (x 1)*ψ 2 (x 2)*ψ 3 (x 3)
-
-def retainedCutoffs (ψ : Fin 4 → ℝ → ℂ) (w₁ w₂ : ℝ → ℂ) : Fin 6 → ℝ → ℂ :=
-  ![ψ 0,ψ 1,ψ 2,ψ 3,w₁,w₂]
-
-theorem retainedCutoffs_nonzero (ψ : Fin 4 → ℝ → ℂ) (w₁ w₂ : ℝ → ℂ)
-    (x : Fin 6 → ℝ) (ho : outerCutoff ψ x ≠ 0)
-    (h₁ : w₁ (x 4) ≠ 0) (h₂ : w₂ (x 5) ≠ 0) :
-    ∀ i, retainedCutoffs ψ w₁ w₂ i (x i) ≠ 0 := by
-  have h := mul_ne_zero_iff.mp ho
-  have h' := mul_ne_zero_iff.mp h.1
-  have h'' := mul_ne_zero_iff.mp h'.1
-  intro i
-  fin_cases i <;> simp only [retainedCutoffs]
-  · exact h''.1
-  · exact h''.2
-  · exact h'.2
-  · exact h.2
-  · exact h₁
-  · exact h₂
-
-theorem larger_windows_one (ψ : Fin 4 → ℝ → ℂ) (w₁ w₂ : ℝ → ℂ)
-    (Ω : Fin 6 → ℝ → ℂ)
-    (hΩ : ∀ i x, retainedCutoffs ψ w₁ w₂ i x ≠ 0 → Ω i x = 1)
-    (x : Fin 6 → ℝ) (hx : ∀ i, 0 < x i) (ho : outerCutoff ψ x ≠ 0)
-    (h₁ : w₁ (x 4) ≠ 0) (h₂ : w₂ (x 5) ≠ 0) :
-    ∀ i, Ω i (Real.exp (Real.log (x i))) = 1 := by
-  intro i
-  rw [Real.exp_log (hx i)]
-  exact hΩ i (x i) (retainedCutoffs_nonzero ψ w₁ w₂ x ho h₁ h₂ i)
-
-theorem retained_physical_kernel_restore
-    (W₁ W₂ w₁ w₂ : ℝ → ℂ) (Φ : 𝓢(ℝ, ℂ))
-    (ψ : Fin 4 → ℝ → ℂ) (Ω : Fin 6 → ℝ → ℂ)
-    (a b A₀ B₀ A₂ B₂ : ℝ) (hA₀ : 0 < A₀) (hA₂ : 0 < A₂)
-    (hW₁ : Function.support W₁ ⊆ Set.Icc a b)
-    (hW₂ : Function.support W₂ ⊆ Set.Icc a b)
-    (hψ₀ : ∀ x, ψ 0 x ≠ 0 → x ∈ Set.Icc A₀ B₀)
-    (hψ₂ : ∀ x, ψ 2 x ≠ 0 → x ∈ Set.Icc A₂ B₂)
-    (hw₁ : ∀ x ∈ Set.Icc (a/(B₀*B₂)) (b/(A₀*A₂)), w₁ x = 1)
-    (hw₂ : ∀ x ∈ Set.Icc (a/(B₀*B₂)) (b/(A₀*A₂)), w₂ x = 1)
-    (hΩ : ∀ i x, retainedCutoffs ψ w₁ w₂ i x ≠ 0 → Ω i x = 1)
-    {Z : ℝ} (hZ : 0 < Z) (D B v m θ H η : ℝ)
-    (q : Fin 6 → ℝ) (hq : ∀ i, 0 < q i) :
-    let x := InverseInitialProfile.relativeNorm q Z D B v θ H
-    outerCutoff ψ x * InverseInitialProfile.physicalKernel W₁ W₂ Φ Z D m q =
-      (Z^(InverseInitialProfile.prefactorCenter m D B θ+3*η) : ℝ) *
-        outerCutoff ψ x * (w₁ (x 4)*w₂ (x 5)) *
-        InverseInitialProfile.normalizedProfile W₁ W₂ Φ (fun i y => Ω i (Real.exp y))
-          (Z^(InverseInitialProfile.radialCenter m H θ D B)) (η*Real.log Z)
-          (InverseInitialProfile.relativeLog q Z D B v θ H) := by
-  dsimp only
-  let x := InverseInitialProfile.relativeNorm q Z D B v θ H
-  have hx : ∀ i, 0 < x i := InverseInitialProfile.relativeNorm_pos q hq hZ D B v θ H
-  by_cases ho : outerCutoff ψ x = 0
-  · change outerCutoff ψ x * _ = _ * outerCutoff ψ x * _ * _
-    simp only [ho,zero_mul,mul_zero]
-  have hc : ψ 0 (x 0) ≠ 0 := ((mul_ne_zero_iff.mp (mul_ne_zero_iff.mp ho).1).1 |> mul_ne_zero_iff.mp).1
-  have hs : ψ 2 (x 2) ≠ 0 := (mul_ne_zero_iff.mp (mul_ne_zero_iff.mp ho).1).2
-  have h1 : W₁ (x 0*x 2*x 4) ≠ 0 → w₁ (x 4) = 1 :=
-    fresh_window_eq_one W₁ w₁ a b A₀ B₀ A₂ B₂ (x 0) (x 2) (x 4)
-      hW₁ hA₀ hA₂ (hψ₀ _ hc) (hψ₂ _ hs) (hx 4).le hw₁
-  have h2 : W₂ (x 0*x 2*x 5) ≠ 0 → w₂ (x 5) = 1 :=
-    fresh_window_eq_one W₂ w₂ a b A₀ B₀ A₂ B₂ (x 0) (x 2) (x 5)
-      hW₂ hA₀ hA₂ (hψ₀ _ hc) (hψ₂ _ hs) (hx 5).le hw₂
-  have hcut : w₁ (x 4) ≠ 0 → w₂ (x 5) ≠ 0 →
-      ∀ i, Ω i (Real.exp (InverseInitialProfile.relativeLog q Z D B v θ H i)) = 1 := by
-    intro hleft hright
-    exact larger_windows_one ψ w₁ w₂ Ω hΩ x hx ho hleft hright
-  have he := InverseInitialProfile.initial_kernel_restore W₁ W₂ w₁ w₂ Φ
-    (fun i y => Ω i (Real.exp y)) hZ D B v m θ H η q hq h1 h2 hcut
-  rw [he]
-  ring
 
 end SevenEighths.InverseInitialClippedColumns
 

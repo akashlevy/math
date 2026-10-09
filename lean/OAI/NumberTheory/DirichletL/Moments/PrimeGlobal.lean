@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.PrimeRay
 import OAI.NumberTheory.DirichletL.Hecke.ZeroSupremum
-
 namespace OAI
 
 noncomputable section

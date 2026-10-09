@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorCountFromMoments
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRowCountEndpoint
-
 namespace OAI
 
 noncomputable section

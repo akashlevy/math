@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.CompleteCommon
-
 namespace OAI
 
 noncomputable section
@@ -59,22 +58,6 @@ theorem reconstructed_commonParts (C D a b : Ideal O)
   · rw [commonPart_eq_supportExtract,commonSupport_comm (D*b) (C*a),hs,
       supportExtract_mul D b hD hb,
       supportExtract_of_subset D hD _ (by rw [hCD]),supportExtract_of_disjoint b _ h₂.symm,mul_one]
-
-theorem reconstructed_residualParts (C D a b : Ideal O)
-    (hC : C≠0) (hD : D≠0) (ha : a≠0) (hb : b≠0)
-    (hCD : primeSupport C=primeSupport D)
-    (hCa : IsCoprime C a) (hCb : IsCoprime C b) (hab : IsCoprime a b) :
-    residualPart (C*a) (D*b)=a ∧ residualPart (D*b) (C*a)=b := by
-  obtain ⟨h₁,h₂⟩ := reconstructed_commonParts C D a b hC hD ha hb hCD hCa hCb hab
-  constructor
-  · apply mul_left_cancel₀ hC
-    have he := reconstruct (C*a) (D*b) (mul_ne_zero hC ha)
-    rw [h₁] at he
-    exact he.symm
-  · apply mul_left_cancel₀ hD
-    have he := reconstruct (D*b) (C*a) (mul_ne_zero hD hb)
-    rw [h₂] at he
-    exact he.symm
 
 end SevenEighths.CenteredMomentCommonSectors
 

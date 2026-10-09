@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.PhysicalRadial
 import OAI.NumberTheory.DirichletL.Detector.OuterMellin
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.RayPrimeNormalizer
 import OAI.NumberTheory.DirichletL.Moments.AmplificationCount
-
 namespace OAI
 
 noncomputable section

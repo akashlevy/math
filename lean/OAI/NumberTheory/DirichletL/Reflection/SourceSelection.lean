@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.OriginalChosen
 import OAI.NumberTheory.DirichletL.Reflection.MarkedChosenDual
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

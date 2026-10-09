@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.CorrectionBounds
 import OAI.NumberTheory.DirichletL.Detector.Row
-
 namespace OAI
 
 noncomputable section

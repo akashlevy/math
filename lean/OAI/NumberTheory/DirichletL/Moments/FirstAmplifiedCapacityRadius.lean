@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstMixedNormalizationActual
 import OAI.NumberTheory.DirichletL.Moments.FirstMixedCommonRadius
-
 namespace OAI
 
 noncomputable section

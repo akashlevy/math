@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialFibers
-
 namespace OAI
 
 namespace SevenEighths.InverseSecondFibers
@@ -42,12 +41,6 @@ structure Valid {Jo Jn : ℕ} (x : SecondTuple Jo Jn)
   row_eq : primaryGenerator (x.core 7) * primaryGenerator (x.core 2) * x.frequency = k
   old_dvd : ∀ i, (x.oldAssigned i).val ∣ γ.q0 * f * γ.quotient
   new_dvd : ∀ i, (x.newAssigned i).val ∣ f * γ.residual
-
-lemma poisson_divisor_source (d C R rest B : Ideal O)
-    (hR : R * rest = B.radical) (hd : d ∣ C * rest) : d ∣ C * B.radical := by
-  apply hd.trans
-  rw [← hR]
-  exact mul_dvd_mul_left C (dvd_mul_left rest R)
 
 lemma core_dvd_label {Jo Jn : ℕ} {x : SecondTuple Jo Jn}
     {γ : OuterTriple} {f : Ideal O} {k : O} (hx : Valid x γ f k) (i : Fin 4) :
@@ -238,165 +231,6 @@ theorem valid_tuple_card_le_slot_cap {Jo Jn : ℕ} (T : Finset (SecondTuple Jo J
     (pow_le_pow_right₀ (divisor_card_pos γ.q0 hq) (by omega)))
     (pow_le_pow_right₀ (divisor_card_pos γ.quotient ht) ho))
     (pow_le_pow_right₀ (divisor_card_pos γ.residual hr) hn)
-
-theorem valid_label_squarefree {Jo Jn : ℕ} {x : SecondTuple Jo Jn}
-    {γ : OuterTriple} {f : Ideal O} {k : O} (hx : Valid x γ f k)
-    (hJ : Squarefree (x.core 0)) (hC : Squarefree (x.core 1))
-    (hg : Squarefree x.extractedCommon) (hv : Squarefree x.commonResidual)
-    (hJC : IsCoprime (x.core 0) (x.core 1))
-    (hgmask : IsCoprime x.extractedCommon (x.core 1 * x.core 0))
-    (hvmask : IsCoprime x.commonResidual (x.extractedCommon * x.core 1 * x.core 0)) :
-    Squarefree f := by
-  have hdg : x.core 2 ∣ x.extractedCommon := ⟨γ.residual, hx.extracted_eq.symm⟩
-  have hdJC : IsCoprime (x.core 2) (x.core 0 * x.core 1) := by
-    simpa only [mul_comm] using hgmask.of_isCoprime_of_dvd_left hdg
-  have hdiv : (x.core 0 * x.core 1) * x.core 2 ∣
-      x.extractedCommon * x.core 1 * x.core 0 := by
-    convert mul_dvd_mul_left (x.core 0 * x.core 1) hdg using 1
-    ring
-  have hvJCd := hvmask.of_isCoprime_of_dvd_right hdiv
-  rw [← hx.label]
-  exact squarefree_mul_iff.mpr ⟨hvJCd.symm.isRelPrime,
-    squarefree_mul_iff.mpr ⟨hdJC.symm.isRelPrime,
-      squarefree_mul_iff.mpr ⟨hJC.isRelPrime, hJ, hC⟩,
-      hg.squarefree_of_dvd hdg⟩, hv⟩
-
-theorem cube_quotient_norm_sq_le {Jo Jn : ℕ} {x : SecondTuple Jo Jn}
-    {γ : OuterTriple} {f : Ideal O} {k : O} (hx : Valid x γ f k)
-    (hf : f ≠ 0) (hq : γ.q0 ≠ 0) :
-    Ideal.absNorm γ.q0 ^ 2 ≤ Ideal.absNorm (x.core 4) * Ideal.absNorm x.secondCube := by
-  have hj0 : x.cubeResidual ≠ 0 := by
-    intro hz
-    have he := hx.j_split
-    rw [hz, mul_zero] at he
-    exact core_ne_zero hx hf hq 0 he.symm
-  have hp0 : x.core 4 * x.secondCube ≠ 0 := by
-    rw [hx.b_split]
-    exact mul_ne_zero (mul_ne_zero (pow_ne_zero 2 hq) (pow_ne_zero 2 hj0))
-      (core_ne_zero hx hf hq 3)
-  have hdiv : γ.q0^2 ∣ x.core 4 * x.secondCube := by
-    rw [hx.b_split]
-    exact dvd_mul_of_dvd_left (dvd_mul_right _ _) _
-  have hn := Nat.le_of_dvd
-    (Nat.pos_of_ne_zero (fun hz => hp0 (Ideal.absNorm_eq_zero_iff.mp hz)))
-    (map_dvd Ideal.absNorm hdiv)
-  simpa only [map_pow, map_mul] using hn
-
-theorem cube_quotient_norm_le {Jo Jn : ℕ} {x : SecondTuple Jo Jn}
-    {γ : OuterTriple} {f : Ideal O} {k : O} (hx : Valid x γ f k)
-    (hf : f ≠ 0) (hq : γ.q0 ≠ 0) (N : ℕ)
-    (hpair : Ideal.absNorm (x.core 4) * Ideal.absNorm x.secondCube ≤ N^2) :
-    Ideal.absNorm γ.q0 ≤ N := by
-  have hh := (cube_quotient_norm_sq_le hx hf hq).trans hpair
-  nlinarith
-
-def originalSource {Jo Jn : ℕ} (source : Finset (SecondTuple Jo Jn))
-    (oldLists : Fin Jo → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (newLists : Fin Jn → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (keep : SecondTuple Jo Jn → Prop) : Finset (SecondTuple Jo Jn) :=
-  source.filter fun x => (∀ i, x.oldAssigned i ∈ oldLists i) ∧
-    (∀ i, x.newAssigned i ∈ newLists i) ∧ keep x
-
-def sourceTriples {Jo Jn : ℕ} (source : Finset (SecondTuple Jo Jn))
-    (oldLists : Fin Jo → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (newLists : Fin Jn → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (keep : SecondTuple Jo Jn → Prop) : Finset OuterTriple :=
-  (originalSource source oldLists newLists keep).image SecondTuple.outer
-
-theorem mem_sourceTriples {Jo Jn : ℕ} (source : Finset (SecondTuple Jo Jn))
-    (oldLists : Fin Jo → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (newLists : Fin Jn → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (keep : SecondTuple Jo Jn → Prop) (γ : OuterTriple) :
-    γ ∈ sourceTriples source oldLists newLists keep ↔
-      ∃ x ∈ source, (∀ i, x.oldAssigned i ∈ oldLists i) ∧
-        (∀ i, x.newAssigned i ∈ newLists i) ∧ keep x ∧ x.outer = γ := by
-  simp only [sourceTriples, originalSource, Finset.mem_image, Finset.mem_filter]
-  aesop
-
-theorem sourceTriples_property {Jo Jn : ℕ} (source : Finset (SecondTuple Jo Jn))
-    (oldLists : Fin Jo → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (newLists : Fin Jn → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (keep : SecondTuple Jo Jn → Prop) (P : OuterTriple → Prop)
-    (hP : ∀ x ∈ originalSource source oldLists newLists keep, P x.outer)
-    (γ : OuterTriple) (hγ : γ ∈ sourceTriples source oldLists newLists keep) : P γ := by
-  obtain ⟨x, hx, rfl⟩ := Finset.mem_image.mp hγ
-  exact hP x hx
-
-theorem sourceTriples_cube_norm_le {Jo Jn : ℕ} (source : Finset (SecondTuple Jo Jn))
-    (oldLists : Fin Jo → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (newLists : Fin Jn → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (keep : SecondTuple Jo Jn → Prop) (N : ℕ)
-    (hsrc : ∀ x ∈ originalSource source oldLists newLists keep,
-      ∃ f k, Valid x x.outer f k ∧ f ≠ 0 ∧ x.outer.q0 ≠ 0 ∧
-        Ideal.absNorm (x.core 4) * Ideal.absNorm x.secondCube ≤ N^2)
-    (γ : OuterTriple) (hγ : γ ∈ sourceTriples source oldLists newLists keep) :
-    Ideal.absNorm γ.q0 ≤ N := by
-  apply sourceTriples_property source oldLists newLists keep
-    (fun γ => Ideal.absNorm γ.q0 ≤ N) ?_ γ hγ
-  intro x hx
-  obtain ⟨f, k, hv, hf, hq, hpair⟩ := hsrc x hx
-  exact cube_quotient_norm_le hv hf hq N hpair
-
-def secondFiber {Jo Jn : ℕ} (source : Finset (SecondTuple Jo Jn))
-    (oldLists : Fin Jo → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (newLists : Fin Jn → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (keep : SecondTuple Jo Jn → Prop) (γ : OuterTriple) (f : Ideal O) (k : O) :
-    Finset (SecondTuple Jo Jn) :=
-  (originalSource source oldLists newLists keep).filter (fun x => Valid x γ f k)
-
-theorem secondFiber_outer_mem {Jo Jn : ℕ} (source : Finset (SecondTuple Jo Jn))
-    (oldLists : Fin Jo → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (newLists : Fin Jn → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (keep : SecondTuple Jo Jn → Prop) (γ : OuterTriple) (f : Ideal O) (k : O)
-    (x : SecondTuple Jo Jn) (hx : x ∈ secondFiber source oldLists newLists keep γ f k) :
-    γ ∈ sourceTriples source oldLists newLists keep := by
-  obtain ⟨hsrc, hv⟩ := Finset.mem_filter.mp hx
-  exact Finset.mem_image.mpr ⟨x, hsrc, hv.outer_eq⟩
-
-theorem secondFiber_empty_of_not_sourceTriple {Jo Jn : ℕ}
-    (source : Finset (SecondTuple Jo Jn))
-    (oldLists : Fin Jo → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (newLists : Fin Jn → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (keep : SecondTuple Jo Jn → Prop) (γ : OuterTriple) (f : Ideal O) (k : O)
-    (hγ : γ ∉ sourceTriples source oldLists newLists keep) :
-    secondFiber source oldLists newLists keep γ f k = ∅ := by
-  apply Finset.eq_empty_iff_forall_notMem.mpr
-  intro x hx
-  exact hγ (secondFiber_outer_mem source oldLists newLists keep γ f k x hx)
-
-theorem secondFiber_card_le {Jo Jn : ℕ} (source : Finset (SecondTuple Jo Jn))
-    (oldLists : Fin Jo → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (newLists : Fin Jn → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (keep : SecondTuple Jo Jn → Prop) (γ : OuterTriple) (f : Ideal O) (k : O)
-    (hf : f ≠ 0) (hq : γ.q0 ≠ 0) (ht : γ.quotient ≠ 0) (hr : γ.residual ≠ 0)
-    (K : ℕ) (ho : Jo ≤ 2*K) (hn : Jn ≤ 2*K) :
-    (secondFiber source oldLists newLists keep γ f k).card ≤
-      (idealDivisors f).card^(9+4*K) * (idealDivisors γ.q0).card^(5+2*K) *
-      (idealDivisors γ.quotient).card^(2*K) * (idealDivisors γ.residual).card^(2*K) :=
-  valid_tuple_card_le_slot_cap _ γ f k hf hq ht hr
-    (fun _x hx => (Finset.mem_filter.mp hx).2) K ho hn
-
-theorem secondFiber_weight_bound {Jo Jn : ℕ} (source : Finset (SecondTuple Jo Jn))
-    (oldLists : Fin Jo → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (newLists : Fin Jn → Finset SmoothMobiusCorrection.PrimeIdeal)
-    (keep : SecondTuple Jo Jn → Prop) (γ : OuterTriple) (f : Ideal O) (k : O)
-    (hf : f ≠ 0) (hq : γ.q0 ≠ 0) (ht : γ.quotient ≠ 0) (hr : γ.residual ≠ 0)
-    (K : ℕ) (ho : Jo ≤ 2*K) (hn : Jn ≤ 2*K)
-    (w : SecondTuple Jo Jn → ℂ) (C : ℝ) (hC : 0 ≤ C)
-    (hw : ∀ x ∈ secondFiber source oldLists newLists keep γ f k, ‖w x‖ ≤ C) :
-    (∑ x ∈ secondFiber source oldLists newLists keep γ f k, ‖w x‖) ≤
-      C * ((idealDivisors f).card : ℝ)^(9+4*K) *
-        ((idealDivisors γ.q0).card : ℝ)^(5+2*K) *
-        ((idealDivisors γ.quotient).card : ℝ)^(2*K) *
-        ((idealDivisors γ.residual).card : ℝ)^(2*K) := by
-  calc
-    _ ≤ ∑ _x ∈ secondFiber source oldLists newLists keep γ f k, C := Finset.sum_le_sum hw
-    _ = ((secondFiber source oldLists newLists keep γ f k).card : ℝ) * C := by simp
-    _ ≤ ((idealDivisors f).card^(9+4*K) * (idealDivisors γ.q0).card^(5+2*K) *
-        (idealDivisors γ.quotient).card^(2*K) * (idealDivisors γ.residual).card^(2*K) : ℕ) * C :=
-      mul_le_mul_of_nonneg_right
-        (by exact_mod_cast (secondFiber_card_le source oldLists newLists keep γ f k hf hq ht hr K ho hn)) hC
-    _ = _ := by push_cast; ring
 
 end
 end SevenEighths.InverseSecondFibers

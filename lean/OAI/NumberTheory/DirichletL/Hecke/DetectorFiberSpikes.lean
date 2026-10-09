@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorWitnessRows
 import OAI.NumberTheory.DirichletL.Hecke.DetectorPhysicalSelection
-
 namespace OAI
 
 noncomputable section

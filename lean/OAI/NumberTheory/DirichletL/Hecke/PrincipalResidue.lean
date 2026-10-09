@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.RayFamily
-
 namespace OAI
 
 noncomputable section

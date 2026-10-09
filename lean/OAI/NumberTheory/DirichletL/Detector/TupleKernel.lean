@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.TupleRows
-
 namespace OAI
 
 noncomputable section

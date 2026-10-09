@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondAssignedSource
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -89,23 +88,6 @@ theorem assignedSecondSource_sum {Jo : ℕ} (source : Finset (MarkedSecondSource
   rw [←Finset.sum_filter]
   dsimp only
   rw [paired_assignment_filter]
-
-theorem assignedSecondSource_sum_marks {Jo : ℕ} (source : Finset (MarkedSecondSource ι Jo 0))
-    (J₁ J₂ : Finset σ) (L₁ L₂ : σ → Finset ι) (a₁ a₂ : σ → ι → ℂ)
-    (w P : MarkedSecondSource ι Jo 0 → ℂ) :
-    (∑ y ∈ source, w y * (star (primeMark J₁ L₁ a₁ (y.second.sourceCommon∪y.second.overlap)) *
-      primeMark J₂ L₂ a₂ (y.second.sourceCommon∪y.second.overlap)) * P y) =
-    ∑ x ∈ assignedSecondSource source J₁ J₂ L₁ L₂,
-      (w (eraseSecondSlots x)*assignedSecondCoefficient J₁ J₂ a₁ a₂ x) * P (eraseSecondSlots x) := by
-  rw [assignedSecondSource_sum]
-  apply Finset.sum_congr rfl
-  intro y hy
-  rw [paired_primeMark_assignments]
-  simp only [Finset.mul_sum,Finset.sum_mul]
-  apply Finset.sum_congr rfl
-  intro q hq
-  rw [assignedSecondCoefficient_attach]
-  simp only [attachPairedSlots,erase_attachSecondSlots]
 
 theorem assignedSecondCoefficient_norm_le_one {Jo : ℕ}
     (source : Finset (MarkedSecondSource ι Jo 0)) (J₁ J₂ : Finset σ)

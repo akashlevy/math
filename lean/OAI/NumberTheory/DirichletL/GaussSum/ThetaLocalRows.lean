@@ -1,26 +1,18 @@
 import OAI.NumberTheory.DirichletL.GaussSum.AbelPhaseLimit
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
+open RationalPrimeExtraction ShortDraftLatticeCount
 
 namespace ActualEisensteinCubic
 
@@ -73,7 +65,6 @@ theorem actual_fixed_kernel_eq_dualFixedTerm
   rw [hreal, hphase]
   rfl
 
-open EisensteinEmbedding ConcreteTraceCRT Complex
 open scoped Topology
 open Filter
 
@@ -385,12 +376,6 @@ theorem quadraticGammaO_eq_fourTerms (a b : ℤ)
 
 end
 
-theorem quadraticGammaO_formula (a b : ℤ)
-    (hc : ActualEisensteinCoordinates.eval a b ≠ 0) :
-    quadraticGammaO (ActualEisensteinCoordinates.eval a b) hc =
-      (1 + Complex.I ^ (-b) + Complex.I ^ a + Complex.I ^ (b-a)) / 2 := by
-  rw [quadraticGammaO_eq_fourTerms a b hc, breveGaussianFourTerms_formula]
-
 end ActualEisensteinCubic
 
 theorem theta_counter_lambda_eq : ActualEisensteinCubic.lambda =
@@ -400,187 +385,9 @@ theorem theta_counter_lambda_eq : ActualEisensteinCubic.lambda =
   rw [ActualEisensteinCubic.lambda, ActualEisensteinCoordinates.eval, homega]
   ring
 
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-
-private noncomputable def pSeven : ActualEisensteinCubic.O := ActualEisensteinCoordinates.eval 1 3
-private noncomputable def PSeven : Ideal ActualEisensteinCubic.O := Ideal.span {pSeven}
-
-private theorem pSeven_norm : ShortDraftLatticeCount.qNat pSeven = 7 := by
-  unfold ShortDraftLatticeCount.qNat pSeven
-  rw [ShortDraftLatticeCount.coords_eval]
-  norm_num [ShortDraftLatticeCount.q]
-
-private theorem pSeven_ne : pSeven ≠ 0 := by
-  intro h
-  have hh : ActualEisensteinCoordinates.eval 1 3 = ActualEisensteinCoordinates.eval 0 0 := by
-    simpa [pSeven, ActualEisensteinCoordinates.eval] using h
-  have := (ActualEisensteinCoordinates.unique_coordinates hh).1
-  omega
-
-private theorem PSeven_absNorm : Ideal.absNorm PSeven = 7 := by
-  simpa only [PSeven, ActualEisensteinCubic.qNat_eq_absNorm_span] using pSeven_norm
-
-private theorem PSeven_maximal : PSeven.IsMaximal := by
-  have hprime : PSeven.IsPrime := Ideal.isPrime_of_irreducible_absNorm (by
-    rw [PSeven_absNorm, Nat.irreducible_iff_nat_prime]
-    exact (by decide : Nat.Prime 7))
-  apply hprime.isMaximal
-  exact Ideal.span_singleton_eq_bot.not.mpr pSeven_ne
-
-private theorem lambda7_norm :
-    ShortDraftLatticeCount.qNat (ActualEisensteinCoordinates.eval (-1) 1) = 3 := by
-  unfold ShortDraftLatticeCount.qNat
-  rw [ShortDraftLatticeCount.coords_eval]
-  norm_num [ShortDraftLatticeCount.q]
-
-private theorem nonreal_cube_ne_conj (γ z : ℂ) (hz : z ≠ 0)
-    (hIm : z.im ≠ 0)
-    (hc : γ ^ 3 = -z / (‖z‖ : ℂ)) : γ ≠ star γ := by
-  intro hγ
-  have hstar : star (γ ^ 3) = γ ^ 3 := by
-    rw [star_pow, ← hγ]
-  have hn : (‖z‖ : ℂ) ≠ 0 := by
-    exact_mod_cast (norm_ne_zero_iff.mpr hz)
-  have hq : -(star z) / (‖z‖ : ℂ) = -z / (‖z‖ : ℂ) := by
-    calc
-      -(star z) / (‖z‖ : ℂ) = star (γ ^ 3) := by
-        rw [hc, star_div₀]
-        simp
-      _ = γ ^ 3 := hstar
-      _ = _ := hc
-  have heq : star z = z := by
-    have hh := (div_left_inj' hn).mp hq
-    exact neg_injective hh
-  exact hIm (Complex.conj_eq_iff_im.mp heq)
-
-private theorem pSeven_embedding_im_ne_zero : (eisEmbedding pSeven).im ≠ 0 := by
-  rw [pSeven, ActualEisensteinCubic.eisEmbedding_eval]
-  have h : ((((1 : ℤ) : ℂ) + ((3 : ℤ) : ℂ) * omega3).im) = 3 * omega3.im := by
-    simp
-  rw [h]
-  exact mul_ne_zero (by norm_num) omega3_im_ne_zero
-
-noncomputable def thetaGammaSeven : ℂ := by
-  letI : PSeven.IsMaximal := PSeven_maximal
-  exact breveGamma2 PSeven
-    (by
-      rw [theta_counter_lambda_eq]
-      intro hh
-      obtain ⟨x, hx⟩ := Ideal.mem_span_singleton.mp hh
-      have hnorm := congrArg ShortDraftLatticeCount.qNat hx
-      rw [ShortDraftLatticeCount.qNat_mul, pSeven_norm, lambda7_norm] at hnorm
-      omega)
-    pSeven rfl pSeven_ne
-
-theorem thetaGammaSeven_cube :
-    thetaGammaSeven ^ 3 = -eisEmbedding pSeven / (‖eisEmbedding pSeven‖ : ℂ) := by
-  unfold thetaGammaSeven
-  let : PSeven.IsMaximal := PSeven_maximal
-  exact ActualEisensteinCubic.breveGamma2_cube PSeven
-    (by
-      rw [theta_counter_lambda_eq]
-      intro hh
-      obtain ⟨x, hx⟩ := Ideal.mem_span_singleton.mp hh
-      have hnorm := congrArg ShortDraftLatticeCount.qNat hx
-      rw [ShortDraftLatticeCount.qNat_mul, pSeven_norm, lambda7_norm] at hnorm
-      omega)
-    pSeven rfl pSeven_ne
-    (by
-      rw [theta_counter_lambda_eq]
-      refine ⟨-1, ?_⟩
-      rw [pow_two, ActualEisensteinCoordinates.eval_mul]
-      norm_num [pSeven, ActualEisensteinCoordinates.eval])
-
-theorem thetaGammaSeven_ne_conj : thetaGammaSeven ≠ star thetaGammaSeven := by
-  have hz : eisEmbedding pSeven ≠ 0 := by
-    intro h
-    have := pSeven_embedding_im_ne_zero
-    rw [h] at this
-    exact this rfl
-  exact nonreal_cube_ne_conj thetaGammaSeven (eisEmbedding pSeven) hz
-    pSeven_embedding_im_ne_zero thetaGammaSeven_cube
-
-open MulChar AddChar
+open EisensteinEmbedding ConcreteTraceCRT
 
 namespace ShortDraftLocal
-
-variable {F : Type*} [Field F] [Fintype F] [DecidableEq F]
-
-theorem direct_theta_jone_inversion (χ : MulChar F ℂ) (ψ : AddChar F ℂ)
-    (a : F) :
-    (∑ h : Fˣ, (χ⁻¹ * χ ^ 2) (h : F) *
-      ψ (a * ((h⁻¹ : Fˣ) : F))) =
-      gaussSum χ⁻¹ (ψ.mulShift a) := by
-  classical
-  have hchar : χ⁻¹ * χ ^ 2 = χ := by group
-  rw [hchar]
-  calc
-    (∑ h : Fˣ, χ (h : F) * ψ (a * ((h⁻¹ : Fˣ) : F))) =
-        ∑ y : Fˣ, χ⁻¹ (y : F) * ψ (a * (y : F)) := by
-      apply Fintype.sum_equiv (Equiv.inv Fˣ)
-      intro y
-      simp only [Equiv.inv_apply, Units.val_inv_eq_inv_val]
-      rw [MulChar.inv_apply']
-      simp
-    _ = gaussSum χ⁻¹ (ψ.mulShift a) := by
-      rw [gaussSum_eq_units_sum]
-      simp only [AddChar.mulShift_apply]
-
-theorem direct_theta_jone_local_row (χ : MulChar F ℂ) (ψ : AddChar F ℂ)
-    (hχ : χ ≠ 1) (σ : Fˣ) (ε x : F) :
-    (Fintype.card F : ℂ)⁻¹ *
-      (∑ h : Fˣ,
-        (∑ t : F, χ t * ψ (-(h * t))) *
-        (χ ^ 2) (σ * h) *
-        ψ ((ε * x) * ((h⁻¹ : Fˣ) : F))) =
-      (χ ^ 2) σ *
-      ((Fintype.card F : ℂ)⁻¹ *
-        gaussSum χ (ψ.mulShift (-1)) * gaussSum χ⁻¹ ψ * χ ε) * χ x := by
-  classical
-  have hsum :
-      (∑ h : Fˣ,
-        (∑ t : F, χ t * ψ (-(h * t))) *
-        (χ ^ 2) (σ * h) *
-        ψ ((ε * x) * ((h⁻¹ : Fˣ) : F))) =
-        (χ ^ 2) σ * gaussSum χ (ψ.mulShift (-1)) *
-          (∑ h : Fˣ,
-            (χ⁻¹ * χ ^ 2) (h : F) *
-              ψ ((ε * x) * ((h⁻¹ : Fˣ) : F))) := by
-    rw [Finset.mul_sum]
-    apply Finset.sum_congr rfl
-    intro h _
-    rw [nontrivial_fourier_coefficient χ ψ hχ, map_mul]
-    simp only [MulChar.mul_apply]
-    ring
-  rw [hsum, direct_theta_jone_inversion χ ψ (ε * x)]
-  have hinv : χ⁻¹ ≠ 1 := by
-    intro h
-    apply hχ
-    calc χ = (χ⁻¹)⁻¹ := by group
-      _ = 1 := by rw [h]; simp
-  rw [gaussSum_mulShift_any χ⁻¹ ψ hinv (ε * x)]
-  simp only [inv_inv, map_mul]
-  ring
-
-theorem direct_theta_jone_zero (χ : MulChar F ℂ) (ψ : AddChar F ℂ)
-    (hχ : χ ≠ 1) (σ : Fˣ) (ε : F) :
-    (Fintype.card F : ℂ)⁻¹ *
-      (∑ h : Fˣ,
-        (∑ t : F, χ t * ψ (-(h * t))) *
-        (χ ^ 2) (σ * h) *
-        ψ ((ε * 0) * ((h⁻¹ : Fˣ) : F))) = 0 := by
-  rw [direct_theta_jone_local_row χ ψ hχ σ ε 0]
-  simp
-
-omit [Fintype F] [DecidableEq F] in
-theorem direct_theta_jone_not_quadratic (χ : MulChar F ℂ)
-    (hχ₂ : χ ^ 2 ≠ 1) : χ ≠ χ ^ 3 := by
-  intro h
-  apply hχ₂
-  calc
-    χ ^ 2 = χ ^ 3 * χ⁻¹ := by group
-    _ = χ * χ⁻¹ := by rw [← h]
-    _ = 1 := by group
 
 end ShortDraftLocal
 

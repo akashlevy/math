@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstReferenceBlock
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalActiveDictionary
 import OAI.NumberTheory.DirichletL.Moments.FirstNonexceptionalLocalWeightSum
-
 namespace OAI
 
 noncomputable section

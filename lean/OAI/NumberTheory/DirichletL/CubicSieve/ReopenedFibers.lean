@@ -1,79 +1,24 @@
 import OAI.NumberTheory.DirichletL.MeanSquare.CanonicalTailBounds
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 
 section
@@ -181,13 +126,6 @@ lemma mem_reopenedCubeFamily (Q : Finset (ι →₀ ℕ)) (b : CubeCoordinates �
 lemma reopenedCubeFamily_admissible (Q : Finset (ι →₀ ℕ)) :
     ∀ b ∈ reopenedCubeFamily Q,b.Admissible :=
   fun b hb => ((mem_reopenedCubeFamily Q b).mp hb).2.2
-
-lemma reopenedCubeFamily_support (pool : Finset ι) (Q : Finset (ι →₀ ℕ))
-    (hQ : ∀ v ∈ Q,v.support ⊆ pool) :
-    ∀ b ∈ reopenedCubeFamily Q,b.support ⊆ pool := by
-  intro b hb
-  obtain ⟨hl,hr,ha⟩ := (mem_reopenedCubeFamily Q b).mp hb
-  exact Finset.union_subset (hQ _ hl) (hQ _ hr)
 
 theorem sum_reopenedCubeFamily {M : Type*} [AddCommMonoid M]
     (Q : Finset (ι →₀ ℕ)) (f : CubeCoordinates ι → M) :
@@ -319,118 +257,14 @@ open ActualEisensteinCubic FirstPassCubeLabels
 open ConcreteTraceCRT (eisEmbedding)
 
 section
-variable {ι : Type*} [DecidableEq ι]
-
-theorem reopenedCubeFamily_card (Q : Finset (ι →₀ ℕ)) :
-    (reopenedCubeFamily Q).card =
-      ∑ v₂ ∈ Q,∑ v₁ ∈ Q,(2^((v₁.support∪v₂.support).card))^2 := by
-  have h := sum_reopenedCubeFamily Q (fun _ => (1 : ℕ))
-  simpa [pow_two] using h
-
-theorem reopenedCubeFamily_card_le (pool : Finset ι) (Q : Finset (ι →₀ ℕ))
-    (hQ : ∀ v ∈ Q,v.support ⊆ pool) :
-    (reopenedCubeFamily Q).card ≤ Q.card^2*(2^pool.card)^2 := by
-  rw [reopenedCubeFamily_card]
-  calc
-    _ ≤ ∑ v₂ ∈ Q,∑ v₁ ∈ Q,(2^pool.card)^2 := by
-      apply Finset.sum_le_sum
-      intro v₂ hv₂
-      apply Finset.sum_le_sum
-      intro v₁ hv₁
-      have hc := Finset.card_le_card (Finset.union_subset (hQ v₁ hv₁) (hQ v₂ hv₂))
-      exact pow_le_pow_left₀ (by positivity) (pow_le_pow_right₀ (by decide : (1 : ℕ) ≤ 2) hc) 2
-    _ = _ := by simp [pow_two,mul_assoc]
-
-theorem reopenedSourceBlocks_bounds (p : ι → ActualEisensteinCubic.O) (pool : Finset ι) (Q : Finset (ι →₀ ℕ))
-    (B : ℝ) (hQ : ∀ v ∈ Q,‖eisEmbedding (primeProduct p v.support v)‖^2 ≤ B) :
-    ∀ q ∈ canonicalSourceBlocks pool (reopenedCubeFamily Q),GlobalCubeAdmissible q ∧
-      ‖eisEmbedding (primeProduct p q.cube.support q.cube.leftExponent)‖^2 ≤ B ∧
-      ‖eisEmbedding (primeProduct p q.cube.support q.cube.rightExponent)‖^2 ≤ B := by
-  intro q hq
-  exact ⟨canonicalSourceBlocks_admissible pool _ (reopenedCubeFamily_admissible Q) q hq,
-    canonicalSourceBlocks_cube_norms p pool _ B
-      (fun b hb => (reopenedCubeFamily_cube_norms p Q B hQ b hb).1)
-      (fun b hb => (reopenedCubeFamily_cube_norms p Q B hQ b hb).2) q hq⟩
 
 end
-
-theorem reopenedCubeFamily_small_power (ε : ℝ) (hε : 0 < ε) :
-    ∃ C : ℝ,0 < C ∧ ∀ {ι : Type*} [DecidableEq ι]
-      (p : ι → ActualEisensteinCubic.O) (_hp : ∀ i,p i ≠ 0) [∀ i,(Ideal.span {p i}).IsMaximal]
-      (_hinj : Function.Injective (fun i => Ideal.span {p i}))
-      (Q : Finset (ι →₀ ℕ)) (B : ℝ),1 ≤ B →
-      (∀ v ∈ Q,‖eisEmbedding (primeProduct p v.support v)‖^2 ≤ B) →
-      ((reopenedCubeFamily Q).card : ℝ) ≤ C*B^(2+ε) := by
-  obtain ⟨C,hC,hcount⟩ := cube_coordinates_parity_count ε hε
-  refine ⟨C,hC,?_⟩
-  intro ι _ p hp _ hinj Q B hB hQ
-  have hBp := zero_lt_one.trans_le hB
-  have hb := reopenedCubeFamily_cube_norms p Q B hQ
-  have hactive (b : CubeCoordinates ι) (hbf : b ∈ reopenedCubeFamily Q) :
-      ‖eisEmbedding (∏ i ∈ cubeActiveSupport b.support
-        (fun i => b.leftExponent i+b.rightExponent i) b.leftBit b.rightBit,p i)‖ ≤ B := by
-    have hn : primeProductNorm p (cubeActiveSupport b.support
-        (fun i => b.leftExponent i+b.rightExponent i) b.leftBit b.rightBit) ≤ B^2 :=
-      (primeProductNorm_mono p hp (Finset.filter_subset _ _)).trans
-        (cubeCoordinates_radical_bound p hp b B hBp.le (hb b hbf).1 (hb b hbf).2)
-    change ‖eisEmbedding (∏ i ∈ cubeActiveSupport b.support
-      (fun i => b.leftExponent i+b.rightExponent i) b.leftBit b.rightBit,p i)‖^2 ≤ B^2 at hn
-    nlinarith [norm_nonneg (eisEmbedding (∏ i ∈ cubeActiveSupport b.support
-      (fun i => b.leftExponent i+b.rightExponent i) b.leftBit b.rightBit,p i))]
-  have h := hcount p hp hinj (reopenedCubeFamily Q) B B hB hBp.le
-    (reopenedCubeFamily_admissible Q) (fun b hb' => (hb b hb').1)
-    (fun b hb' => (hb b hb').2) hactive
-  apply h.trans_eq
-  calc
-    C*B^(1+ε)*B = C*(B^(1+ε)*B^(1 : ℝ)) := by rw [Real.rpow_one]; ring
-    _ = C*B^((1+ε)+1) := by rw [Real.rpow_add hBp (1+ε) (1 : ℝ)]
-    _ = C*B^(2+ε) := by congr 2; ring
 
 end
 
 open ActualEisensteinCubic FirstPassCubeLabels
 open ConcreteTraceCRT (eisEmbedding)
 open ConcretePrimeRowBridge (idealGenerator)
-
-theorem reopenedCanonicalRow_smoothed_split {ι : Type*} [DecidableEq ι]
-    (p : ι → ActualEisensteinCubic.O) (hp : ∀ i,p i ≠ 0) [∀ i,(Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i,lambda ∉ Ideal.span {p i})
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hc : ∀ i,ringChar (ActualEisensteinCubic.O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i,lambda^2 ∣ p i-1)
-    (pool : Finset ι) (Q : Finset (ι →₀ ℕ)) (hQ : ∀ v ∈ Q,v.support ⊆ pool)
-    (labels : Finset (Ideal ActualEisensteinCubic.O)) (β : Ideal ActualEisensteinCubic.O → (ι →₀ ℕ) → ℂ)
-    (Ψ : ActualEisensteinCubic.O →* ℂ) (m : ActualEisensteinCubic.O) (g W : 𝓢(ℝ,ℂ)) (Ksrc K ell : ℝ)
-    (hKsrc : 0 < Ksrc) (hK : 0 ≤ K) :
-    (∑ I ∈ labels,∑' z : ActualEisensteinCubic.O,W (‖eisEmbedding z‖^2/Ksrc)*
-      (‖reopenedCanonicalRow p hp hcop hg pool Q (β I) Ψ m (idealGenerator I)
-        (fun S => g (columnLog p ell S)) z‖^2 : ℝ)) =
-    canonicalSourceZero p hp hcop hg pool (reopenedCubeFamily Q) labels
-      (reopenedPairCoefficient β) Ψ Ψ m m g g W Ksrc ell+
-    canonicalSourceFinite p hp hcop hg pool (reopenedCubeFamily Q) labels
-      (reopenedPairCoefficient β) Ψ Ψ m m g g W Ksrc K ell+
-    canonicalSourceTail p hp hcop hg pool (reopenedCubeFamily Q) labels
-      (reopenedPairCoefficient β) Ψ Ψ m m g g W Ksrc K ell := by
-  rw [reopenedCanonicalRow_smoothed_eq_source p hp hcop hg hinj hpr pool Q hQ labels β Ψ m g W Ksrc ell hKsrc]
-  exact canonicalSourceTotal_split p hp hcop hg hinj hc pool (reopenedCubeFamily Q) labels
-    (reopenedPairCoefficient β) Ψ Ψ m m g g W Ksrc K ell hKsrc hK
-
-theorem reopenedCanonicalBlockCoefficient_bound {ι : Type*} [DecidableEq ι]
-    (p : ι → ActualEisensteinCubic.O) (hp : ∀ i,p i ≠ 0) [∀ i,(Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i,lambda ∉ Ideal.span {p i})
-    (hc : ∀ i,ringChar (ActualEisensteinCubic.O ⧸ Ideal.span {p i}) ≠ 2)
-    (pool : Finset ι) (Q : Finset (ι →₀ ℕ)) (labels : Finset (Ideal ActualEisensteinCubic.O))
-    (β : Ideal ActualEisensteinCubic.O → (ι →₀ ℕ) → ℂ) (Γ : ℝ) (hΓ : 0 ≤ Γ)
-    (hβ : ∀ I ∈ labels,∀ v ∈ Q,‖β I v‖ ≤ Γ)
-    (Ψ : ActualEisensteinCubic.O →* ℂ) (hΨ : ∀ u,‖Ψ u‖ ≤ 1) (m : ActualEisensteinCubic.O) (K ell : ℝ)
-    (b : GlobalCubeBlock ι) (hb : b ∈ canonicalSourceBlocks pool (reopenedCubeFamily Q))
-    (x : Ideal ActualEisensteinCubic.O × ActualEisensteinCubic.O) (hx : x ∈ canonicalBlockFrequencies p K ell labels b) :
-    ‖canonicalBlockCoefficient p hp hcop hg (reopenedPairCoefficient β) Ψ Ψ m m b x‖ ≤ Γ^2 := by
-  exact canonicalBlockCoefficient_bound p hp hcop hg hc pool (reopenedCubeFamily Q) labels
-    (reopenedPairCoefficient β) Ψ Ψ m m (Γ^2) K ell (sq_nonneg _) hΨ hΨ
-    (fun b hb C hC I hI => reopenedPairCoefficient_bound Q labels β Γ hΓ hβ b hb C I hI) b hb x hx
 
 end SecondPassArithmetic
 
@@ -516,15 +350,8 @@ lemma euclideanNativeLpBorelEquiv_schwartz (f : 𝓢(EuclideanSpatial,ℂ)) :
 
 end CubicEisenstein
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ContDiff SchwartzMap
-
 namespace CubicEisenstein
 open RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean
-
-lemma euclideanOriginalMeasurable_eq_borel :
-    (inferInstance : MeasurableSpace EuclideanSpatial)=borel EuclideanSpatial :=
-  BorelSpace.measurable_eq
 
 local instance : MeasurableSpace EuclideanSpatial := borel EuclideanSpatial
 local instance : BorelSpace EuclideanSpatial := ⟨rfl⟩

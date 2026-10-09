@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.NaturalFixedRaySourceNaturalPrime
-
 namespace OAI
 
 noncomputable section

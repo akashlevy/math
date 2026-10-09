@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.LocalUnitFrequency
 import OAI.NumberTheory.DirichletL.Detector.HighRowsSeries
 import OAI.NumberTheory.DirichletL.Detector.HighRowsLocal
-
 namespace OAI
 
 noncomputable section

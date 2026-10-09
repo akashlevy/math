@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.FixedSquare
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

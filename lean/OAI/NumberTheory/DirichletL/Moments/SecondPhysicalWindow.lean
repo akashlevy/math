@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.LogDyadic
 import OAI.NumberTheory.DirichletL.Moments.SecondSectorRetained
-
 namespace OAI
 
 noncomputable section

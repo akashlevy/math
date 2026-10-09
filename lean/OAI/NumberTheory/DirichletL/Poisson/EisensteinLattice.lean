@@ -1,56 +1,22 @@
 import OAI.NumberTheory.DirichletL.GaussSum.SecondPoissonScale
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
 
 namespace EisensteinSchwartzPoisson
 
@@ -463,8 +429,7 @@ theorem actual_eisenstein_poisson_explicit (f : 𝓢(ℂ, ℂ)) (c : O) (hc : c 
   simpa only [eisensteinDualFrequency_explicit, explicitDualFrequency] using
     actual_eisenstein_periodic_fourier f c hc P
 
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open scoped FourierTransform SchwartzMap RealInnerProductSpace ContDiff
+open scoped ContDiff
 
 def radialTest (W : 𝓢(ℝ, ℂ)) : 𝓢(ℂ, ℂ) :=
   SchwartzMap.compCLM ℂ (Function.hasTemperateGrowth_norm_sq ℂ)
@@ -475,32 +440,7 @@ def radialTest (W : 𝓢(ℝ, ℂ)) : 𝓢(ℂ, ℂ) :=
 @[simp] theorem radialTest_apply (W : 𝓢(ℝ, ℂ)) (z : ℂ) :
     radialTest W z = W (‖z‖ ^ 2) := rfl
 
-def compactRadialTest (W : ℝ → ℂ) (hWc : HasCompactSupport W)
-    (hWs : ContDiff ℝ ∞ W) : 𝓢(ℂ, ℂ) :=
-  radialTest (hWc.toSchwartzMap hWs)
-
-@[simp] theorem compactRadialTest_apply (W : ℝ → ℂ) (hWc : HasCompactSupport W)
-    (hWs : ContDiff ℝ ∞ W) (z : ℂ) :
-    compactRadialTest W hWc hWs z = W (‖z‖ ^ 2) := rfl
-
-theorem actual_radial_poisson (W : ℝ → ℂ) (hWc : HasCompactSupport W)
-    (hWs : ContDiff ℝ ∞ W) (c : O) (hc : c ≠ 0)
-    (P : O ⧸ Ideal.span {c} → ℂ) :
-    letI : Finite (O ⧸ Ideal.span {c}) := finite_quotient_span hc
-    letI : Fintype (O ⧸ Ideal.span {c}) := Fintype.ofFinite _
-    (∑' z : O, P (Ideal.Quotient.mk (Ideal.span {c}) z) * W (‖eisEmbedding z‖ ^ 2)) =
-      (2 / (Real.sqrt 3 * ‖eisEmbedding c‖ ^ 2)) • ∑' p : ℤ × ℤ,
-        (∑ r : O ⧸ Ideal.span {c}, P r *
-          (Real.fourierChar (inner ℝ
-            (eisEmbedding (GaussianShiftedPartition.representative c r))
-            (explicitDualFrequency (eisEmbedding c) p)) : ℂ)) *
-          (𝓕 (compactRadialTest W hWc hWs)) (explicitDualFrequency (eisEmbedding c) p) := by
-  simpa only [compactRadialTest_apply] using
-    actual_eisenstein_poisson_explicit (compactRadialTest W hWc hWs) c hc P
-
 end EisensteinSchwartzPoisson
-
-open scoped BigOperators Classical
 
 namespace IdealGaussCRT
 
@@ -605,22 +545,6 @@ noncomputable def quotientProdEquivPi {ι A : Type*} [Fintype ι] [CommRing A]
       Ideal.Quotient.mk (P i) a := by
   simp only [quotientProdEquivPi, RingEquiv.trans_apply, Ideal.quotEquivOfEq_mk]
   rfl
-
-theorem gauss_transform_finite_ideal_crt {ι A : Type*} [Fintype ι] [CommRing A]
-    (P : ι → Ideal A) (hc : Pairwise (Function.onFun IsCoprime P))
-    [∀ i, (P i).IsMaximal]
-    [Fintype (A ⧸ ∏ i, P i)] [∀ i, Fintype (A ⧸ P i)]
-    (χ : ∀ i, MulChar (A ⧸ P i) ℂ)
-    (ψ : AddChar (A ⧸ ∏ i, P i) ℂ) (hχ : ∀ i, χ i ≠ 1)
-    (h : A ⧸ ∏ i, P i) :
-    (∑ x : A ⧸ ∏ i, P i, (∏ i, χ i (quotientProdEquivPi P hc x i)) * ψ (h * x)) =
-      ∏ i, if quotientProdEquivPi P hc h i = 0 then 0 else
-        (χ i (quotientProdEquivPi P hc h i))⁻¹ *
-          gaussSum (χ i) (coordinateAddChar (fun i => A ⧸ P i)
-            (quotientProdEquivPi P hc) ψ i) := by
-  let (i : ι) : Field (A ⧸ P i) := Ideal.Quotient.field (P i)
-  exact gauss_transform_finite_crt (fun i => A ⧸ P i)
-    (quotientProdEquivPi P hc) χ ψ hχ h
 
 end IdealGaussCRT
 

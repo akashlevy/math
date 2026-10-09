@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.PhysicalPartition
 import OAI.NumberTheory.DirichletL.PrimeRows.PhysicalSmallTail
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SourceLowerSupport
 import OAI.NumberTheory.DirichletL.Moments.SecondActiveDyadic
-
 namespace OAI
 
 noncomputable section

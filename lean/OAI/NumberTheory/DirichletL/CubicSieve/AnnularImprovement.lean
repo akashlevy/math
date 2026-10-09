@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.CostGrowth
 import OAI.NumberTheory.DirichletL.CubicSieve.ColumnShells
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

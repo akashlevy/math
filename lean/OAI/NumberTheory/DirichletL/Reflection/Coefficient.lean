@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Reflection.IdealBridge
 import OAI.NumberTheory.DirichletL.Reflection.Norms
 import OAI.NumberTheory.DirichletL.Reflection.FrozenSplit
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

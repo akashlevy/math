@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstLabelCellStepGates
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.PrimeDyadicControl
 import OAI.NumberTheory.DirichletL.Hecke.PrimeDyadicEstimates
-
 namespace OAI
 
 noncomputable section

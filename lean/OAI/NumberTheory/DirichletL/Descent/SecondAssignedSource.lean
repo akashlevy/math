@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondCanonicalSplit
 import OAI.NumberTheory.DirichletL.Descent.SlotAssignments
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.RaySlots
 import OAI.NumberTheory.DirichletL.Hecke.PrimeRow
-
 namespace OAI
 
 noncomputable section

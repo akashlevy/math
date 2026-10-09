@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.CentralRepeatedProduct
 import OAI.NumberTheory.DirichletL.Detector.CentralRepeatedChoices
-
 namespace OAI
 
 noncomputable section

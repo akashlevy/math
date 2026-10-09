@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.EulerFinsupp
-
 namespace OAI
 
 noncomputable section

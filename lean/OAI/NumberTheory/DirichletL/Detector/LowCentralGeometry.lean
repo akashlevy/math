@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowNominalGeometry
-
 namespace OAI
 
 noncomputable section

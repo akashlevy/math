@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.ZeroGrowthMoments
-
 namespace OAI
 
 noncomputable section

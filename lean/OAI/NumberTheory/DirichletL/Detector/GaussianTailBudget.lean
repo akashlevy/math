@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GaussianDensityBudget
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GramCommonEnergy
 import OAI.NumberTheory.DirichletL.Detector.GramIdealMass
-
 namespace OAI
 
 noncomputable section

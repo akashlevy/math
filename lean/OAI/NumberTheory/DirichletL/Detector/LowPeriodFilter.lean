@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowPeriodSupport
-
 namespace OAI
 
 noncomputable section
@@ -38,15 +37,6 @@ def lowPeriodIdeal (η : HeckeFamily.Character) (S : Finset Id) (hS : ∀P∈S,P
   lowBaseModulus η (calibrationForSet S hS) (calibrationForSet S hS).generator
     (calibrationLowData S hS)*Ideal.span {(72:O)}
 
-def lowPeriodSlotFilter {ι : Type*} (η : HeckeFamily.Character) (S : Finset Id)
-    (hS : ∀P∈S,P.IsMaximal) (T : ι→Finset O) : ι→Finset O :=
-  fun i=>(T i).filter (fun a=>IsCoprime (Ideal.span {a}) (lowPeriodIdeal η S hS))
-
-lemma lowPeriodSlotFilter_coprime {ι : Type*} (η : HeckeFamily.Character) (S : Finset Id)
-    (hS : ∀P∈S,P.IsMaximal) (T : ι→Finset O) (i : ι) (a : O)
-    (ha : a∈lowPeriodSlotFilter η S hS T i) :
-    IsCoprime (Ideal.span {a}) (lowPeriodIdeal η S hS) := (Finset.mem_filter.mp ha).2
-
 lemma canonical_prime_calibration_coprime (S : Finset Id) (hS : ∀P∈S,P.IsMaximal)
     (P : PrimeIdeal) (hP : CanonicalQuadraticSieve.Supported P.val) (hout : P.val∉S) :
     IsCoprime (calibrationForSet S hS).generator (CompletedGauss.primaryGenerator P.val) := by
@@ -57,26 +47,6 @@ lemma canonical_prime_calibration_coprime (S : Finset Id) (hS : ∀P∈S,P.IsMax
   have he : P.val=Q := Ideal.IsMaximal.eq_of_le hpmax (hS Q hQ).ne_top (Ideal.dvd_iff_le.mp hdiv)
   exact hout (he.symm ▸ hQ)
 
-lemma canonical_slot_calibration_coprime (S : Finset Id) (hS : ∀P∈S,P.IsMaximal)
-    (T : Finset PrimeIdeal)
-    (hT : ∀P∈T,CanonicalQuadraticSieve.Supported P.val) (hout : ∀P∈T,P.val∉S)
-    (a : O) (ha : a∈canonicalSlotSupport T) : IsCoprime (calibrationForSet S hS).generator a := by
-  obtain ⟨P,hP,rfl⟩ := Finset.mem_image.mp ha
-  exact canonical_prime_calibration_coprime S hS P (hT P hP) (hout P hP)
-
-theorem low_slot_polynomial_period_filter {ι : Type*} [Fintype ι]
-    (η : HeckeFamily.Character) (S : Finset Id) (hS : ∀P∈S,P.IsMaximal)
-    (hbad : CanonicalQuadraticSieve.fixedBadPrimes⊆S) (T : ι→Finset O)
-    (hcop : ∀i a,a∈T i→IsCoprime (calibrationForSet S hS).generator a)
-    (W : ι→ℝ→ℂ) (P : ι→ℝ) (t : ℝ) (F : (ι→O)→ℂ) :
-    (∑p : ∀i,T i,(∏i,lowSingleSlotWeight η (W i) (P i) t (p i).val)*F (fun i=>(p i).val))=
-      ∑p : ∀i,lowPeriodSlotFilter η S hS T i,
-        (∏i,lowSingleSlotWeight η (W i) (P i) t (p i).val)*F (fun i=>(p i).val) := by
-  apply sum_tuple_filter_zero T (fun i a=>IsCoprime (Ideal.span {a}) (lowPeriodIdeal η S hS))
-    (fun i a=>lowSingleSlotWeight η (W i) (P i) t a) _ F
-  intro i a ha hnot
-  exact lowSingleSlotWeight_zero_of_period η S hS hbad (W i) (P i) t a (hcop i a ha) hnot
-
 def lowPeriodPrimeList (η : HeckeFamily.Character) (S : Finset Id)
     (hS : ∀P∈S,P.IsMaximal) (T : Finset PrimeIdeal) : Finset PrimeIdeal :=
   T.filter (fun P=>IsCoprime P.val (lowPeriodIdeal η S hS))
@@ -84,11 +54,6 @@ def lowPeriodPrimeList (η : HeckeFamily.Character) (S : Finset Id)
 lemma lowPeriodPrimeList_subset (η : HeckeFamily.Character) (S : Finset Id)
     (hS : ∀P∈S,P.IsMaximal) (T : Finset PrimeIdeal) :
     lowPeriodPrimeList η S hS T⊆T := Finset.filter_subset _ _
-
-lemma lowPeriodPrimeList_coprime (η : HeckeFamily.Character) (S : Finset Id)
-    (hS : ∀P∈S,P.IsMaximal) (T : Finset PrimeIdeal)
-    (P : PrimeIdeal) (hP : P∈lowPeriodPrimeList η S hS T) :
-    IsCoprime P.val (lowPeriodIdeal η S hS) := (Finset.mem_filter.mp hP).2
 
 lemma lowPeriodPrimeList_disjoint {ι : Type*} (η : HeckeFamily.Character) (S : Finset Id)
     (hS : ∀P∈S,P.IsMaximal) (T : ι→Finset PrimeIdeal)

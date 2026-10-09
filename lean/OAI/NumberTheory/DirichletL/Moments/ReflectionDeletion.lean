@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.ComparisonReflection
 import OAI.NumberTheory.DirichletL.Hecke.ModulusRefinement
-
 namespace OAI
 
 noncomputable section
@@ -270,15 +269,6 @@ theorem normalized_restoration (η : Character) (S : Finset (Ideal O))
     intro D
     exact (normalized_restoration_term η S hS F X hX D).symm
 
-theorem reflected_normalized_restoration (η : Character) (S : Finset (Ideal O))
-    (hS : ∀ P ∈ S, Prime P) (W : 𝓢(ℝ,ℂ)) (X : ℝ) (hX : 0<X) :
-    Summable (fun D : SmoothIdeal S => idealCoeff η D.val.val / (Real.sqrt (norm D.val) : ℂ) *
-      HeckeDyadic.polynomial (η.excludePrimes S hS) false (paperRadialFourier W) (X / norm D.val) 0 0) ∧
-    HeckeDyadic.polynomial η false (paperRadialFourier W) X 0 0 =
-      ∑' D : SmoothIdeal S, idealCoeff η D.val.val / (Real.sqrt (norm D.val) : ℂ) *
-        HeckeDyadic.polynomial (η.excludePrimes S hS) false (paperRadialFourier W) (X / norm D.val) 0 0 :=
-  normalized_restoration η S hS _ (reflected_decayTwo W) X hX
-
 def outsideSum (η : Character) (S : Finset (Ideal O)) (F : ℝ → ℂ) (X : ℝ) : ℂ :=
   ∑' I : NI, (if outside S I.val then idealCoeff η I.val else 0) * F (norm I / X)
 
@@ -535,21 +525,6 @@ theorem primitive_deleted_reflection (c : O) [NeZero c]
     (schwartz_decayTwo W) (reflected_decayTwo W) _ _ _
     (fun Y hY => primitive_normalized_reflection c χ hu hp hχ W Y hY) X hX
   exact sq_pos_of_pos (norm_pos_iff.mpr (eisEmbedding_ne_zero (NeZero.ne c)))
-
-theorem primitive_deleted_reflection_absolute (c : O) [NeZero c]
-    (χ : MulChar (O⧸Ideal.span {c}) ℂ)
-    (hu : ∀ u : Oˣ, χ (Ideal.Quotient.mk (Ideal.span {c}) u.val) = 1)
-    (hp : FiniteFourier.IsPrimitiveOnIdeals χ) (hχ : χ ≠ 1)
-    (S : Finset (Ideal O)) (hS : ∀ P ∈ S, Prime P)
-    (W : 𝓢(ℝ,ℂ)) (X : ℝ) (hX : 0<X) :
-    let η := HeckePrimitive.character c χ hu
-    let ηi := HeckePrimitive.character c χ⁻¹ (HeckePrimitive.inverse_unit_trivial c χ hu)
-    let Q := ‖eisEmbedding c‖^2
-    Summable (fun H : SmoothIdeal S => ∑ D ∈ S.powerset,
-      ‖reflectedTerm η ηi S hS (paperRadialFourier W) X Q D H‖) := by
-  dsimp only
-  exact summable_sum (fun D hD =>
-    ((primitive_deleted_reflection c χ hu hp hχ S hS W X hX).1 D hD).norm)
 
 end SevenEighths.CenteredMomentReflectionDeletion
 

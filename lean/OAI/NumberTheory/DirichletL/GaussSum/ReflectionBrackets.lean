@@ -1,73 +1,23 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.LocalBrackets
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
 namespace LocalReflectionBrackets
 open scoped Classical BigOperators
@@ -75,15 +25,6 @@ open AddChar MulChar
 
 section
 variable {F : Type*} [Field F] [Fintype F]
-
-theorem bracket_eq_zero_iff (χ : MulChar F ℂ) (j : ℕ) (hj4 : j ≠ 4) (x : F) :
-    bracket χ j x = 0 ↔ x = 0 := by
-  have hr : (rootCard F : ℂ)⁻¹ ≠ 0 := inv_ne_zero (Complex.ofReal_ne_zero.mpr (ne_of_gt rootCard_pos))
-  by_cases hj0 : j = 0
-  · simp only [bracket, ite_eq_right hj4, ite_eq_left hj0, mul_eq_zero, hr, false_or,
-      MulChar.apply_eq_zero_iff, isUnit_iff_ne_zero, not_not]
-  · simp only [bracket, ite_eq_right hj4, ite_eq_right hj0, MulChar.apply_eq_zero_iff,
-      isUnit_iff_ne_zero, not_not]
 
 theorem norm_bracket_nonexceptional_le_one (χ : MulChar F ℂ) (j : ℕ)
     (hj4 : j ≠ 4) (hj0 : j ≠ 0) (x : F) : ‖bracket χ j x‖ ≤ 1 := by
@@ -99,63 +40,6 @@ theorem norm_bracket_zero_le (χ : MulChar F ℂ) (x : F) :
 open ActualEisensteinCubic
 noncomputable local instance quotientFieldBounds (P : Ideal O) [P.IsMaximal] : Field (O ⧸ P) := Ideal.Quotient.field P
 noncomputable local instance quotientFintypeBounds (P : Ideal O) [P.IsMaximal] : Fintype (O ⧸ P) := Fintype.ofFinite _
-
-theorem canonical_A5_norm_cases (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (hchar : ringChar (O ⧸ P) ≠ 2)
-    (ψ : AddChar (O ⧸ P) ℂ) (hψ : ψ.IsPrimitive)
-    (j : ℕ) (hj6 : j < 6) (σ ε : (O ⧸ P)ˣ) (x : O ⧸ P) :
-    ‖activeRow (canonicalSextic P hgood) ψ j σ ε x‖ =
-      if j = 4 then
-        (if x = 0 then ((Fintype.card (O ⧸ P) : ℝ) - 1) / rootCard (O ⧸ P)
-         else (rootCard (O ⧸ P))⁻¹)
-      else if j = 0 then (rootCard (O ⧸ P))⁻¹ * (if x = 0 then 0 else 1)
-      else if x = 0 then 0 else 1 := by
-  rw [canonical_A5_norm_eq_bracket P hgood hchar ψ hψ j hj6 σ ε x]
-  by_cases hj4 : j = 4
-  · subst j
-    simp only [↓reduceIte]
-    by_cases hx : x = 0
-    · subst x
-      simp only [↓reduceIte]
-      exact norm_bracket_four_zero _
-    · rw [ite_eq_right hx]
-      exact norm_bracket_four_nonzero _ x hx
-  · rw [ite_eq_right hj4]
-    by_cases hj0 : j = 0
-    · subst j
-      simp only [↓reduceIte]
-      exact norm_bracket_zero _ x
-    · rw [ite_eq_right hj0]
-      exact norm_bracket_nonexceptional _ j hj4 hj0 x
-
-theorem actual_trace_A5_normalized (p : O) (hp : p ≠ 0) [(Ideal.span {p}).IsMaximal]
-    (hgood : lambda ∉ Ideal.span {p}) (hchar : ringChar (O ⧸ Ideal.span {p}) ≠ 2)
-    (j : ℕ) (hj6 : j < 6) (σ ε : (O ⧸ Ideal.span {p})ˣ) (x : O ⧸ Ideal.span {p}) :
-    let χ := canonicalSextic (Ideal.span {p}) hgood
-    let ψ := ConcreteTraceCRT.eisTraceModChar ShortDraftTrace.breveE
-      ConcreteBreveE.breveE_period_coordinates p hp
-    activeRow χ ψ j σ ε x = ((χ⁻¹) ^ 2) σ * phase χ ψ j ε * bracket χ j x := by
-  exact canonical_A5_normalized (Ideal.span {p}) hgood hchar _
-    (PrimitiveTrace.eisTraceModChar_breveE_primitive (Ideal.span {p}) p rfl hp) j hj6 σ ε x
-
-theorem actual_bracket_four_divisibility_split (p : O) [(Ideal.span {p}).IsMaximal]
-    (hgood : lambda ∉ Ideal.span {p}) (n b : O) :
-    bracket (canonicalSextic (Ideal.span {p}) hgood) 4 (Ideal.Quotient.mk (Ideal.span {p}) (n * b ^ 3)) =
-      -(rootCard (O ⧸ Ideal.span {p}) : ℂ)⁻¹ +
-      (rootCard (O ⧸ Ideal.span {p}) : ℂ) * (if p ∣ n then 1 else 0) +
-      (rootCard (O ⧸ Ideal.span {p}) : ℂ) * (if ¬p ∣ n ∧ p ∣ b then 1 else 0) := by
-  simpa only [Ideal.mem_span_singleton] using canonical_bracket_four_cube_split (Ideal.span {p}) hgood n b
-
-theorem actual_bracket_zero_iff (p : O) [(Ideal.span {p}).IsMaximal]
-    (hgood : lambda ∉ Ideal.span {p}) (j : ℕ) (hj4 : j ≠ 4) (n : O) :
-    bracket (canonicalSextic (Ideal.span {p}) hgood) j (Ideal.Quotient.mk (Ideal.span {p}) n) = 0 ↔ p ∣ n := by
-  rw [bracket_eq_zero_iff _ j hj4, Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton]
-
-theorem rootCard_span (p : O) [(Ideal.span {p}).IsMaximal] :
-    rootCard (O ⧸ Ideal.span {p}) = ‖ConcreteTraceCRT.eisEmbedding p‖ := by
-  rw [rootCard, ← Nat.card_eq_fintype_card]
-  change Real.sqrt (Ideal.absNorm (Ideal.span {p}) : ℝ) = _
-  rw [← eisEmbedding_norm_sq_eq_absNorm_span, Real.sqrt_sq (norm_nonneg _)]
 
 end
 
@@ -204,22 +88,6 @@ theorem canonical_zeroFourierCoefficient (P : Ideal O) [P.IsMaximal]
     simpa using zeroFourierCoefficient_zero (canonicalSextic P hgood)
   · rw [ite_eq_right hj]
     exact zeroFourierCoefficient_nontrivial _ j (canonicalSextic_pow_ne_one P hgood hchar hj hj6)
-
-theorem finite_active_scalar_norm_one {ι : Type*} [Fintype ι]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hgood : ∀ i, lambda ∉ P i) (hchar : ∀ i, ringChar (O ⧸ P i) ≠ 2)
-    (ψ : ∀ i, AddChar (O ⧸ P i) ℂ) (hψ : ∀ i, (ψ i).IsPrimitive)
-    (j : ι → ℕ) (hj6 : ∀ i, j i < 6)
-    (σ ε : ∀ i, (O ⧸ P i)ˣ) :
-    ‖∏ i, (((canonicalSextic (P i) (hgood i))⁻¹) ^ 2) (σ i) *
-      phase (canonicalSextic (P i) (hgood i)) (ψ i) (j i) (ε i)‖ = 1 := by
-  rw [norm_prod]
-  have hlocal (i : ι) :
-      ‖(((canonicalSextic (P i) (hgood i))⁻¹) ^ 2) (σ i) *
-        phase (canonicalSextic (P i) (hgood i)) (ψ i) (j i) (ε i)‖ = 1 := by
-    rw [norm_mul, FiniteRayExpansion.norm_char_unit,
-      canonical_phase_norm (P i) (hgood i) (hchar i) (ψ i) (hψ i) (j i) (hj6 i) (ε i), one_mul]
-  simp only [hlocal, Finset.prod_const_one]
 
 end LocalReflectionBrackets
 
@@ -305,7 +173,6 @@ theorem quadraticSquareProfile_principal_equal (W : 𝓢(ℝ, ℂ)) :
 
 end EisensteinSchwartzPoisson
 
-open scoped BigOperators Classical SchwartzMap
 namespace ActualEisensteinCubic
 open ConcreteTraceCRT ConcretePrimeRowBridge ActualEisensteinCoordinates EisensteinSchwartzPoisson
 
@@ -375,25 +242,8 @@ theorem masked_principal_radial_poisson_zero_split {ι : Type*} [DecidableEq ι]
   unfold maskedPrincipalRemainder
   ring
 
-theorem quadratic_square_poisson_main_cancel {ι : Type*} [DecidableEq ι]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal] (hinj : Function.Injective P)
-    (S : Finset ι) (W : 𝓢(ℝ, ℂ)) (M : ℝ) (hM : 0 < M) :
-    (∑' z : O, rowCoprimeMask P S z *
-      paperRadialFourier W ((‖eisEmbedding z‖ ^ 2 / M) ^ 2)) -
-    (∑' z : O, rowCoprimeMask P S z * W ((‖eisEmbedding z‖ ^ 2 / M) ^ 2)) =
-      maskedPrincipalRemainder P S (quadraticTransformedSquareProfile W) M -
-      maskedPrincipalRemainder P S (quadraticSquareProfile W) M := by
-  have h1 := masked_principal_radial_poisson_zero_split P hinj S
-    (quadraticTransformedSquareProfile W) M hM
-  have h2 := masked_principal_radial_poisson_zero_split P hinj S (quadraticSquareProfile W) M hM
-  simp only [quadraticTransformedSquareProfile_apply] at h1
-  simp only [quadraticSquareProfile_apply] at h2
-  rw [h1, h2, quadraticSquareProfile_principal_equal]
-  ring
-
 end ActualEisensteinCubic
 
-open scoped BigOperators Classical
 namespace PrimaryIdealUnitReindex
 abbrev O := ActualEisensteinCubic.O
 open ActualEisensteinCubic CompletedGauss ConcretePrimeRowBridge
@@ -524,7 +374,6 @@ theorem tsum_ramified_mask_unit_invariant (f : O → ℂ) (hf : Summable f)
 
 end PrimaryIdealUnitReindex
 
-open scoped BigOperators Classical
 namespace QuadraticUnitInvariance
 abbrev O := ActualEisensteinCubic.O
 open ActualEisensteinCubic ConcreteTraceCRT FiniteGaussPhase ActualEisensteinCoordinates

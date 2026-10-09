@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.DetectorPlainUnmarkedField
-
 namespace OAI
 
 noncomputable section
@@ -16,30 +15,9 @@ open CenteredMomentDetectorPlainExceptional CenteredMomentDetectorPlainUnmarkedS
 open CenteredMomentDetectorPlainMomentParameters CenteredMomentDetectorPlainProfileControl
 open CenteredMomentEnergyState CenteredMomentEnergyBands CenteredMomentNaturalFixedRaySource
 open QuadraticInitialBound
-local notation "O" => HeckeFamily.O
 
 open ProbeDetectorPlainUnmarkedField
 variable {Δ:ℝ}
-
-theorem source_zero_from_gated (D:Parameters.HighData Δ)
-    (S:ProbeFinalAssembly.SourceData D)
-    (henergy:∃degree:ℕ,∃control:Finset (ℕ×ℕ),∀η₀:Character,∀Q:Ideal O,
-      Q≤S.modulus→internalQ Q η₀≠0→internalQ Q η₀≠⊤→
-      internalQ Q η₀≤Ideal.span {(72:O)}→
-      ∃A:ℝ,0<A ∧ ∀ᶠU:ℝ in atTop,
-        ZeroAt (internalQ Q η₀) (1/4) (9/4) radialSupportUpper 0 1 2 (D.t/4)
-          U degree control A):
-    ∃degree:ℕ,∃control:Finset (ℕ×ℕ),∀η₀:Character,
-      ∃A:ℝ,0<A ∧ ∀ᶠU:ℝ in atTop,
-        ZeroAt (internalQ (sourceFixedIdeal S) η₀) (1/4) (9/4) radialSupportUpper
-          0 1 2 (D.t/4) U degree control A:=by
-  obtain ⟨degree,control,henergy⟩:=henergy
-  refine ⟨degree,control,?_⟩
-  intro η₀
-  exact henergy η₀ (sourceFixedIdeal S) (sourceFixedIdeal_le_modulus S)
-    (source_fixed_gates S η₀).1
-    (internalQ_ne_top _ (sourceFixedIdeal_ne_top S) η₀)
-    (source_fixed_gates S η₀).2.2.2
 
 theorem source_batch_plain_unmarked (D:Parameters.HighData Δ)
     (S:ProbeFinalAssembly.SourceData D)

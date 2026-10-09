@@ -1,78 +1,24 @@
 import OAI.NumberTheory.DirichletL.RowCompletion.PolynomialHeight
 import OAI.NumberTheory.DirichletL.CubicSieve.DensityBudgets
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace SecondPassArithmetic
 
@@ -113,15 +59,6 @@ theorem canonicalRankMargin_reserved (η : ℝ) (hη : 0≤η)
       (canonicalRankMargin_lower _ η hη r)
   · exact canonicalRankMargin_le _ η hη r
 
-theorem canonicalRankMargin_initial_bound (Z η R M : ℝ) (r : ℕ)
-    (hZ : 1≤Z) (hη : 0≤η) (hM : 0≤M)
-    (hbound : R≤M*Z^(-((1:ℝ)/20))) :
-    R≤M*Z^(-canonicalRankMargin ((1:ℝ)/20) η r) := by
-  apply hbound.trans
-  apply mul_le_mul_of_nonneg_left _ hM
-  exact Real.rpow_le_rpow_of_exponent_le hZ
-    (neg_le_neg (canonicalRankMargin_le _ η hη r))
-
 theorem canonicalRankMargin_final_bound (Z η R M : ℝ) (r : ℕ)
     (hZ : 1≤Z) (hη : 0≤η) (hM : 0≤M) (hbudget : 3000*η≤(1:ℝ)/40)
     (hbound : R≤M*Z^(-canonicalRankMargin ((1:ℝ)/20) η r)) :
@@ -133,11 +70,10 @@ theorem canonicalRankMargin_final_bound (Z η R M : ℝ) (r : ℕ)
 
 end SecondPassArithmetic
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace CanonicalRowCompletion
 open ActualEisensteinCubic
 open CompletedGauss hiding O
-open ConcretePrimeRowBridge hiding O columnWeight
+open ConcretePrimeRowBridge hiding O
 open CanonicalQuadraticSieve hiding O
 open SecondPassArithmetic hiding O
 open FirstPassCubeLabels hiding O
@@ -172,26 +108,6 @@ theorem canonicalLogEnergy_eq_completed_rows
     (poolPrimary_coprime F hF) (poolPrimary_good F hF) Finset.univ Ψ m H (idealGenerator I) z)
   funext T
   exact (radialFromLog_column (poolPrimary F) (poolPrimary_ne_zero F hF) V hVs A hV X hX T).symm
-
-theorem log_rows_family_binned_energy
-    (S : Finset (Ideal ActualEisensteinCubic.O)) (D : ℕ) (hbad : fixedBadPrimes ⊆ S)
-    (hSp : ∀ P ∈ S, Prime P) (Ψ : ActualEisensteinCubic.O →* ℂ) (m : ActualEisensteinCubic.O) (labels : Finset (Ideal ActualEisensteinCubic.O))
-    (V : ℝ → ℂ) (hVs : ContDiff ℝ ∞ V) (A : ℝ)
-    (hV : ∀ s, V s ≠ 0 → |s| ≤ A) (X H₀ K : ℝ)
-    (hX : 0 < X) (hK : 0 < K) (hD : Real.exp A*X ≤ D) :
-    let W := radialFromLog V hVs A hV
-    rowFamilyEnergy labels (fun I z => outsideCanonicalRow S D hbad Ψ m (idealGenerator I) z W X) K ≤
-      2*X*(rowFamilyEnergy labels (fun I z =>
-        shortCompletedSum (rowTwist Ψ (m*excludedGenerator S) (idealGenerator I) z) W X H₀) K +
-        (cubeLogRange (Real.exp A) X).card * ∑ j ∈ cubeLogRange (Real.exp A) X,
-          rowFamilyEnergy labels (fun I z =>
-            outsideCanonicalBin S D hbad (activeCubeLogBin S D (Real.exp A) X j)
-              Ψ m (idealGenerator I) z W X H₀) K) := by
-  dsimp only
-  exact outsideCanonicalRow_family_binned_energy S D hbad hSp Ψ m labels
-    (radialFromLog V hVs A hV) (radialFromLog_hasCompactSupport V hVs A hV)
-    (Real.exp A) X H₀ K (Real.exp_pos A).le hX hK
-    (fun t ht => (radialFromLog_support V hVs A hV t ht).2) hD
 
 end CanonicalRowCompletion
 
@@ -389,8 +305,6 @@ theorem uniform_polynomial_kernel_three_window {κ : Type*}
 
 end CompletedHeight
 
-open MeasureTheory
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace CompletedHeight
 open CompletedGauss hiding O
 open ActualEisensteinCubic
@@ -509,8 +423,6 @@ theorem uniform_polynomial_smooth_quadratic {κ : Type*}
 
 end CompletedHeight
 
-open MeasureTheory
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace CompletedHeight
 open CompletedGauss hiding O
 open ActualEisensteinCubic CompletedDyadic

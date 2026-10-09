@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseRawFourier
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationRaw
-
 namespace OAI
 
 noncomputable section

@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.RayFamily
 import OAI.NumberTheory.DirichletL.PrimeCounting.RayAsymptotic
 import OAI.NumberTheory.DirichletL.PrimeCounting.IdealPrimeMass
-
 namespace OAI
 
 noncomputable section
@@ -35,27 +34,11 @@ theorem analytic_family : PNT.RayAsymptotic.AnalyticFamily M
     intro hs1
     exact (HeckeOrigin.poleRemoved_eq _ hs0 hs1).symm
 
-theorem classCoeff_ratio_tendsto :
-    Tendsto (fun N : ℕ => cumsum (PNT.RayAsymptotic.classCoeff M) N / N)
-      atTop (𝓝 ((RayOrthogonality.rayCard M : ℝ)⁻¹)) :=
-  PNT.RayAsymptotic.classCoeff_ratio_tendsto M (analytic_family M)
-
 theorem quotientClassCoeff_ratio_tendsto
     (H : Subgroup (O ⧸ M)ˣ) (hH : RayOrthogonality.globalUnits M ≤ H) :
     Tendsto (fun N : ℕ => cumsum (PNT.RayAsymptotic.quotientClassCoeff M H) N / N)
       atTop (𝓝 ((RayQuotient.classNumber M H : ℝ)⁻¹)) :=
   PNT.RayAsymptotic.quotientClassCoeff_ratio_tendsto M H hH (analytic_family M)
-
-theorem primeLogMass_ratio_tendsto :
-    Tendsto (fun N : ℕ => PNT.IdealPrimeMass.primeLogMass (RayOrthogonality.principalIdeals M) N / N)
-      atTop (𝓝 ((RayOrthogonality.rayCard M : ℝ)⁻¹)) :=
-  PNT.IdealPrimeMass.primeLogMass_ratio_tendsto _ (classCoeff_ratio_tendsto M)
-
-theorem quotientPrimeLogMass_ratio_tendsto
-    (H : Subgroup (O ⧸ M)ˣ) (hH : RayOrthogonality.globalUnits M ≤ H) :
-    Tendsto (fun N : ℕ => PNT.IdealPrimeMass.primeLogMass (RayQuotient.identityClass M H) N / N)
-      atTop (𝓝 ((RayQuotient.classNumber M H : ℝ)⁻¹)) :=
-  PNT.IdealPrimeMass.primeLogMass_ratio_tendsto _ (quotientClassCoeff_ratio_tendsto M H hH)
 
 end SevenEighths.HeckeRayPrimes
 

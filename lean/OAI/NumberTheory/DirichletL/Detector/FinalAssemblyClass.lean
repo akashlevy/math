@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.NonfloorClass
 import OAI.NumberTheory.DirichletL.Detector.FinalAssemblySourceCount
-
 namespace OAI
 
 noncomputable section

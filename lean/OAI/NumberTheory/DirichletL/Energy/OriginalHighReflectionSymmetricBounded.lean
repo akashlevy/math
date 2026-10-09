@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.OriginalHighReflectionSymmetric
 import OAI.NumberTheory.DirichletL.Energy.OriginalHighReflectionBounded
-
 namespace OAI
 
 noncomputable section

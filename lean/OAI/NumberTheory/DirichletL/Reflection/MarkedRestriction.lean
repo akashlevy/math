@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.MarkedSource
 import OAI.NumberTheory.DirichletL.Descent.ReflectedDual
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -40,27 +39,6 @@ lemma localActiveWeight_restrict (P : PrimeFamily ι) (j : ι→ℕ) (A S : Fins
   funext x
   exact (mixedPrimeFunction_restrict P j A S i x).symm
 
-lemma active_sum_eq_mixed (P : PrimeFamily ι) (j : ι→ℕ) (S : Finset ι)
-    (hP : Pairwise (Function.onFun IsCoprime P.ideal))
-    (c : Eis) (G : ∀ h : Eis⧸Ideal.span {c}, FixedFourierGeometry c h)
-    (N : Eis) (hN : ∀ h, (9:Eis)*(G h).c0∣N)
-    (hNp : ∀ i, IsCoprime (Ideal.span {N}) (P.ideal i))
-    (h : Eis⧸Ideal.span {c}) (A : Finset ι) (W : ℝ→ℂ) (X : ℝ) :
-    (∑ v : ∀ i : A, (Eis⧸Ideal.span {P.generator i.val})ˣ,
-      localActiveWeight P.generator P.generator_ne_zero
-        (mixedPrimeFunction P.generator P.generator_good j S) A v *
-      (activeStratumDatum P.generator P.generator_ne_zero P.generator_primary
-        (P.activeControlled hP c G N hN hNp h) (hN h) (G h).denominator_ne_zero
-        (G h).primary (G h).shape A v).smoothedKernel W X)=
-    mixedSmoothedValue (P.activeControlled hP c G N hN hNp h A) (hN h)
-      (P.restrict A).generator_product_primary (G h).primary (G h).shape
-      (P.restrict A).generator_ne_zero (G h).denominator_ne_zero (P.restrict A).generator_good
-      (fun i => j i.val) (activeMarks A S) W X := by
-  unfold mixedSmoothedValue
-  apply Finset.sum_congr (by ext v; simp only [Finset.mem_univ])
-  intro v hv
-  rw [localActiveWeight_restrict]
-  rfl
 end
 end SevenEighths.InverseReflectedPhase
 

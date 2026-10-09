@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CanonicalRayCube
 import OAI.NumberTheory.DirichletL.PrimeRows.CubeNormalizer
-
 namespace OAI
 
 noncomputable section

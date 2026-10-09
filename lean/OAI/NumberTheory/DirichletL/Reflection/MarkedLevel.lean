@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.MarkedActualSource
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -30,23 +29,6 @@ lemma markedRowFamily_period {σ : Type*} {m f z : Eis}
   | inl P => exact freePrimeIndex_coprime _ _ P
   | inr i => exact hS i
 
-lemma markedRowFamily_odd {σ : Type*} {m f z : Eis}
-    (D : GoodMaskRowData m f z) (S : PrimeFamily σ) (Q : Ideal Eis)
-    (hS : ∀ i, ringChar (Eis⧸S.ideal i)≠2) :
-    ∀ i, ringChar (Eis⧸(markedRowFamily D S Q).ideal i)≠2 := by
-  intro i
-  cases i with
-  | inl P => exact (supported_factors_good D.movingIdeal D.movingSupported P.val.val
-      (Multiset.mem_toFinset.mp P.val.property)).2.2
-  | inr i => exact hS i
-
-lemma markedRowExponent_lt {σ : Type*} {m f z : Eis}
-    (D : GoodMaskRowData m f z) (Q : Ideal Eis) :
-    ∀ i : FreePrimeIndex D.movingIdeal (Q*Ideal.span {(72:Eis)})⊕σ, markedRowExponent D Q i<6 := by
-  intro i
-  cases i with
-  | inl P => exact Nat.mod_lt _ (by norm_num)
-  | inr i => norm_num [markedRowExponent]
 end
 end SevenEighths.InverseReflectedPhase
 

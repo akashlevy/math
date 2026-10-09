@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.LogarithmicControl
 import OAI.NumberTheory.DirichletL.Hecke.LogarithmicInput
-
 namespace OAI
 
 noncomputable section

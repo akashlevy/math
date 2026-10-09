@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.OriginalMask
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.RadialSpectral
 import OAI.NumberTheory.DirichletL.Detector.Transformed
-
 namespace OAI
 
 noncomputable section

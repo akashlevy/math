@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LowRayAmplitude
 import OAI.NumberTheory.DirichletL.Moments.ReflectedChild
-
 namespace OAI
 
 noncomputable section
@@ -31,40 +30,6 @@ lemma lowGaussColumn_row (C : CalibrationData) (W1 : ℝ→ℂ) (Y : ℝ)
     simp only [div_eq_mul_inv]
     ring
   · simp
-
-theorem lowRayAmplitude_gaussPolynomial (C : CalibrationData) (W1 : ℝ→ℂ)
-    (hW1 : HasCompactSupport W1) (Y : ℝ) (hY : 0<Y) :
-    ∃F : Finset {I : Id // Supported I},∀σ : RayRing,∀v : ℝ,∀m : O,
-      lowRayAmplitude C W1 Y σ m v=
-        gaussPolynomial F (fun s=>primaryGenerator s.val)
-          (fun s=>(supported_span_primaryGenerator_iff s.val).mpr s.property)
-          (lowGaussColumn C W1 Y σ v) (-m) := by
-  obtain ⟨F,hF⟩ := lowRayAmplitude_eq_finite C W1 hW1 Y hY
-  refine ⟨F,?_⟩
-  intro σ v m
-  rw [hF σ m v]
-  unfold gaussPolynomial
-  apply Finset.sum_congr rfl
-  intro s hs
-  exact lowGaussColumn_row C W1 Y σ v s m
-
-theorem lowRayAmplitude_energy (C : CalibrationData) (W1 : ℝ→ℂ)
-    (hW1 : HasCompactSupport W1) (Y : ℝ) (hY : 0<Y) :
-    ∃F : Finset {I : Id // Supported I},∀σ : RayRing,∀v : ℝ,
-      ∀U : SchwartzMap ℝ ℂ,∀Q : ℝ,0<Q→∀rows : Finset O,
-      (∀z : O,0≤(U (‖ConcreteTraceCRT.eisEmbedding z‖^2/Q)).re)→
-      (∀z∈rows,1≤(U (‖ConcreteTraceCRT.eisEmbedding z‖^2/Q)).re)→
-      (∑z∈rows,‖lowRayAmplitude C W1 Y σ z v‖^2)≤
-        (gaussEnergy F (fun s=>primaryGenerator s.val)
-          (fun s=>(supported_span_primaryGenerator_iff s.val).mpr s.property)
-          (lowGaussColumn C W1 Y σ v) U Q).re := by
-  obtain ⟨F,hF⟩ := lowRayAmplitude_gaussPolynomial C W1 hW1 Y hY
-  refine ⟨F,?_⟩
-  intro σ v U Q hQ rows hU hmajor
-  simp_rw [hF σ v]
-  exact CenteredMomentReflectedChild.finite_reflected_energy_le_gaussEnergy F
-    (fun s=>primaryGenerator s.val) (fun s=>(supported_span_primaryGenerator_iff s.val).mpr s.property)
-    (lowGaussColumn C W1 Y σ v) U Q hQ rows hU hmajor
 
 end SevenEighths.ProbePhysical
 end

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GramWeightedFrequency
 import OAI.NumberTheory.DirichletL.Detector.GramIdealSummation
-
 namespace OAI
 
 noncomputable section

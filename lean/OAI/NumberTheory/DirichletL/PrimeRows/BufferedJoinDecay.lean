@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.BufferedHeightGrowth
-import OAI.NumberTheory.DirichletL.PrimeRows.BufferedSlices
-
+import OAI.NumberTheory.DirichletL.PrimeRows.SliceIntegral
 namespace OAI
 
 noncomputable section

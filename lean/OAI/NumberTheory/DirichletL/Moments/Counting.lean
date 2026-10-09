@@ -1,12 +1,12 @@
-import OAI.NumberTheory.DirichletL.Moments.Cancellation
-
+import OAI.NumberTheory.DirichletL.Moments.Primary
+import OAI.NumberTheory.DirichletL.Moments.Mask
 namespace OAI
 
 noncomputable section
 open scoped BigOperators Classical SchwartzMap
 local notation "O" => ActualEisensteinCubic.O
 namespace SevenEighths.CenteredMomentCounting
-open CenteredMomentCancellation CenteredMomentPrimary
+open CenteredMomentPrimary
 open QuadraticInitialBound
 
 theorem norm_tsum_ideal_ball (f : Ideal O → ℂ) (H M : ℝ)
@@ -43,41 +43,6 @@ theorem norm_tsum_ideal_ball (f : Ideal O → ℂ) (H M : ℝ)
   · rw [Finset.not_nonempty_iff_eq_empty.mp hS]
     simp only [Finset.sum_empty, norm_zero]
     positivity
-
-theorem masked_coefficient_norm_le_one (c : O) (hc : c ≠ 0)
-    (χ : MulChar (O ⧸ Ideal.span {c}) ℂ) (R I : Ideal O) :
-    ‖(if IsCoprime I R then (1 : ℂ) else 0) * primaryIdealCharacter c χ I‖ ≤ 1 := by
-  split_ifs
-  · simpa only [one_mul] using primaryIdealCharacter_norm_le_one c hc χ I
-  · simp only [zero_mul, norm_zero, zero_le_one]
-
-theorem maskedSum_absolute (c : O) (hc : c ≠ 0)
-    [Nontrivial (O ⧸ Ideal.span {c})]
-    (χ : MulChar (O ⧸ Ideal.span {c}) ℂ) (R : Ideal O)
-    (W : ℝ → ℂ) (b M X : ℝ) (hb : 0 ≤ b) (hM : 0 ≤ M) (hX : 0 < X)
-    (hW : ∀ y, ‖W y‖ ≤ M) (hs : Function.support W ⊆ Set.Iic b) :
-    ‖maskedSum c χ R W X‖ ≤ (128 * b * M) * X := by
-  have hzero : primaryIdealCharacter c χ (⊥ : Ideal O) = 0 := by
-    apply primaryIdealCharacter_zero_of_bad
-    exact map_zero CompletedGauss.primaryGeneratorHom
-  have h := norm_tsum_ideal_ball
-    (fun I => (if IsCoprime I R then (1 : ℂ) else 0) *
-      (primaryIdealCharacter c χ I * W ((Ideal.absNorm I : ℝ) / X)))
-    (b * X) M (mul_nonneg hb hX.le) hM
-    (by simp only [hzero, zero_mul, mul_zero])
-    (by
-      intro I
-      rw [← mul_assoc, norm_mul]
-      exact (mul_le_mul (masked_coefficient_norm_le_one c hc χ R I)
-        (hW _) (norm_nonneg _) zero_le_one).trans_eq (one_mul M))
-    (by
-      intro I hI
-      have hw : W ((Ideal.absNorm I : ℝ) / X) ≠ 0 := by
-        intro hz
-        exact hI (by simp only [hz, mul_zero])
-      exact (div_le_iff₀ hX).mp (hs hw))
-  change ‖maskedSum c χ R W X‖ ≤ _ at h
-  convert h using 1 ; ring
 
 theorem norm_linear_coefficient_le (S : ℝ → ℂ) (v : ℂ) (C E : ℝ) (hE : 0 ≤ E)
     (herror : ∀ X : ℝ, 0 < X → ‖S X - (X : ℂ) * v‖ ≤ E)

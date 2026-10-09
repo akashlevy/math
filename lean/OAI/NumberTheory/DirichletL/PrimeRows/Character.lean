@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.PrimeRows.Valuation
 import OAI.NumberTheory.DirichletL.Detector.FixedEuler
 import OAI.NumberTheory.DirichletL.Hecke.RowClosure
 import OAI.NumberTheory.DirichletL.Hecke.Conjugation
-
 namespace OAI
 
 noncomputable section

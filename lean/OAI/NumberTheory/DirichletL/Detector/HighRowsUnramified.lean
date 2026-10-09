@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsActual
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.ScaleSupremum
-
 namespace OAI
 
 noncomputable section
@@ -9,8 +8,7 @@ open MeasureTheory Set Complex
 namespace SevenEighths.CenteredMomentFrequencyScaleSupremum
 open HeckeFamily HeckeDyadic HeckeDetectorRowwise HeckeDetectorDyadicBridge FourierBridge
 open CenteredMomentScaleSupremum (scaleTest scaleTest_continuous scaleTest_support)
-open HeckeInverseAmplification (scaleProfile scaleProfile_continuous scaleProfile_support
-  scale_normalization scaleSupport scaleSupport_cover)
+open HeckeInverseAmplification (scaleProfile scaleProfile_continuous scaleProfile_support scale_normalization scaleSupport scaleSupport_cover)
 def frequencyScaleSum (χ : Character) (inv : Bool) (W : ℝ→ℂ) (freq : ℝ) (S : Finset (Ideal O)) (l : ℝ) : ℂ :=
   Complex.exp (-(l : ℂ)/2)*∑ J∈S,
     (coefficient χ inv J*logPhase (freq/(2*Real.pi)) (Real.log (J.absNorm : ℝ)))*W ((J.absNorm : ℝ)*Real.exp (-l))
@@ -139,53 +137,6 @@ theorem paired_rowwise_scales {ι : Type*} (rows : Finset ι)
   simp only [norm_mul]
   rw [eqW i 0 (lx i) (hlx i hi),eqV i 0 (ly i) (hly i hi)]
   simp only [scaleTest,ite_true]
-
-theorem exists_paired_scale_majorant {ι : Type*} (rows : Finset ι)
-    (χ ψ : ι→Character) (freq₁ freq₂ : ι→ℝ) (P : ι→ℂ) (W V : ℝ→ℂ)
-    (a b c d : ℝ) (hb : 0≤b) (hd : 0≤d)
-    (hWs : Function.support W⊆Icc a b) (hVs : Function.support V⊆Icc c d)
-    (hW : ContDiff ℝ ∞ W) (hV : ContDiff ℝ ∞ V)
-    (lo hi low high E : ℝ) (hlh : lo≤hi) (hlw : low≤high)
-    (henergy : ∀ j k : Fin 2,∀ x∈Icc lo hi,∀ y∈Icc low high,
-      ∑ i∈rows,‖polynomial (χ i) false (scaleTest W j) (Real.exp x) 0 (freq₁ i) *
-        polynomial (ψ i) false (scaleTest V k) (Real.exp y) 0 (freq₂ i) * P i‖^2≤E) :
-    ∃ B : ι→ℝ,(∀i,0≤B i) ∧
-      (∀i,∀ x∈Icc lo hi,∀ y∈Icc low high,
-        ‖polynomial (χ i) false W (Real.exp x) 0 (freq₁ i) *
-          polynomial (ψ i) false V (Real.exp y) 0 (freq₂ i) * P i‖^2≤B i) ∧
-      (∑ i∈rows,B i)≤(1+2*(hi-lo))*((1+2*(high-low))*E) := by
-  let S := scaleSupport hi b
-  let T := scaleSupport high d
-  let F (i : ι) (p : ℝ×ℝ) :=
-    frequencyScaleSum (χ i) false W (freq₁ i) S p.1 * frequencyScaleSum (ψ i) false V (freq₂ i) T p.2 * P i
-  have hc (i : ι) : Continuous (F i) :=
-    (((frequencyScaleSum_continuous (χ i) false W (freq₁ i) S hW.continuous).comp continuous_fst).mul
-      ((frequencyScaleSum_continuous (ψ i) false V (freq₂ i) T hV.continuous).comp continuous_snd)).mul continuous_const
-  have heq (i : ι) (x y : ℝ) (hx : x∈Icc lo hi) (hy : y∈Icc low high) :
-      ‖F i (x,y)‖^2=‖polynomial (χ i) false W (Real.exp x) 0 (freq₁ i) *
-        polynomial (ψ i) false V (Real.exp y) 0 (freq₂ i) * P i‖^2 := by
-    dsimp only [F]
-    simp only [norm_mul]
-    rw [frequencyScaleSum_norm (χ i) false W (freq₁ i) S x
-      (scaleSupport_cover W a b hi x hb hWs hx.2),
-      frequencyScaleSum_norm (ψ i) false V (freq₂ i) T y
-      (scaleSupport_cover V c d high y hd hVs hy.2)]
-  have hm (i : ι) : ∃p∈(Icc lo hi)×ˢ(Icc low high),
-      ∀q∈(Icc lo hi)×ˢ(Icc low high),‖F i q‖^2≤‖F i p‖^2 := by
-    exact (isCompact_Icc.prod isCompact_Icc).exists_isMaxOn
-      ((nonempty_Icc.mpr hlh).prod (nonempty_Icc.mpr hlw)) ((hc i).norm.pow 2).continuousOn
-  choose p hp hmax using hm
-  refine ⟨fun i=>‖F i (p i)‖^2,fun i=>sq_nonneg _,?_,?_⟩
-  · intro i x hx y hy
-    have hh := hmax i (x,y) ⟨hx,hy⟩
-    rwa [heq i x y hx hy] at hh
-  · have hh := paired_rowwise_scales rows χ ψ freq₁ freq₂ P W V a b c d hb hd hWs hVs hW hV
-      lo hi low high E hlh hlw (fun i=>(p i).1) (fun i=>(p i).2)
-      (fun i _=>(hp i).1) (fun i _=>(hp i).2) henergy
-    convert hh using 1
-    apply Finset.sum_congr rfl
-    intro i hi
-    rw [←heq i (p i).1 (p i).2 (hp i).1 (hp i).2]
 
 end SevenEighths.CenteredMomentFrequencyScaleSupremum
 

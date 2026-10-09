@@ -1,16 +1,14 @@
 import OAI.NumberTheory.DirichletL.Arithmetic.EisensteinIdeals
 import OAI.NumberTheory.DirichletL.Mellin.LogProfiles
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 
 namespace ShortDraftFiniteGaussFourier
@@ -55,315 +53,10 @@ end ShortDraftFiniteGaussFourier
 namespace PoissonChildCRT
 open scoped Classical
 
-variable (n : ℕ) (χ : MulChar (ZMod n) ℂ)
-
-theorem inverse_as_row_and_label (hχ : χ ^ 6 = 1) (e : ℕ) :
-    (χ (e : ZMod n))⁻¹ = χ (e : ZMod n) * (χ (e : ZMod n)) ^ 4 := by
-  by_cases he : IsUnit (e : ZMod n)
-  · have h6 : (χ (e : ZMod n)) ^ 6 = 1 := by
-      rw [← MulChar.pow_apply' χ (by decide : 6 ≠ 0), hχ]
-      simp [MulChar.one_apply, he]
-    apply inv_eq_of_mul_eq_one_right
-    calc
-      χ (e : ZMod n) * (χ (e : ZMod n) * χ (e : ZMod n) ^ 4)
-          = (χ (e : ZMod n)) ^ 6 := by ring
-      _ = 1 := h6
-  · have hz : χ (e : ZMod n) = 0 := MulChar.map_nonunit χ he
-    simp [hz]
-
-theorem child_row_label_identity (hχ : χ ^ 6 = 1)
-    (d e k J C v : ℕ) :
-    (χ (e : ZMod n))⁻¹ * χ (d : ZMod n) * χ (k : ZMod n) *
-        (χ ((J * C : ℕ) : ZMod n)) ^ 4 * (χ (v : ZMod n)) ^ 4
-      = χ ((d * e * k : ℕ) : ZMod n) *
-        (χ ((J * C * e * v : ℕ) : ZMod n)) ^ 4 := by
-  rw [inverse_as_row_and_label n χ hχ e]
-  simp only [Nat.cast_mul, map_mul]
-  ring
-
-def mask (n m : ℕ) : ℂ := if n.Coprime m then 1 else 0
-
-theorem mask_mul (n a b : ℕ) :
-    mask n (a * b) = mask n a * mask n b := by
-  classical
-  simp only [mask]
-  by_cases hab : n.Coprime (a * b)
-  · have ha : n.Coprime a := (Nat.coprime_mul_iff_right.mp hab).1
-    have hb : n.Coprime b := (Nat.coprime_mul_iff_right.mp hab).2
-    rw [ite_eq_left hab, ite_eq_left ha, ite_eq_left hb]
-    norm_num
-  · have hna_or_hnb : ¬ n.Coprime a ∨ ¬ n.Coprime b := by
-      by_contra h
-      exact hab (Nat.coprime_mul_iff_right.mpr ⟨not_not.mp (not_or.mp h).1,
-        not_not.mp (not_or.mp h).2⟩)
-    rcases hna_or_hnb with hna | hnb
-    · rw [ite_eq_right hab, ite_eq_right hna]
-      simp
-    · rw [ite_eq_right hab, ite_eq_right hnb]
-      simp
-
-theorem mask_absorb_char (e : ℕ) :
-    mask n e * χ (e : ZMod n) = χ (e : ZMod n) := by
-  by_cases he : n.Coprime e
-  · simp [mask, he]
-  · have hnu : ¬ IsUnit (e : ZMod n) := by
-      intro hu
-      exact he ((ZMod.isUnit_iff_coprime e n).mp hu).symm
-    have hz : χ (e : ZMod n) = 0 := MulChar.map_nonunit χ hnu
-    simp [mask, he, hz]
-
-theorem mask_absorb_inv_char (e : ℕ) :
-    mask n e * (χ (e : ZMod n))⁻¹ = (χ (e : ZMod n))⁻¹ := by
-  by_cases he : n.Coprime e
-  · simp [mask, he]
-  · have hnu : ¬ IsUnit (e : ZMod n) := by
-      intro hu
-      exact he ((ZMod.isUnit_iff_coprime e n).mp hu).symm
-    have hz : χ (e : ZMod n) = 0 := MulChar.map_nonunit χ hnu
-    simp [mask, he, hz]
-
-theorem child_row_label_with_mask (hχ : χ ^ 6 = 1)
-    (b0 t g e r d k J C v : ℕ) (hg : g = e * r) :
-    mask n (b0 * t) * mask n g *
-      ((χ (e : ZMod n))⁻¹ * χ (d : ZMod n) * χ (k : ZMod n) *
-        (χ ((J * C : ℕ) : ZMod n)) ^ 4 * (χ (v : ZMod n)) ^ 4)
-      = mask n (b0 * t * r) *
-        (χ ((d * e * k : ℕ) : ZMod n) *
-          (χ ((J * C * e * v : ℕ) : ZMod n)) ^ 4) := by
-  rw [hg, mask_mul n e r]
-  have hmask : mask n (b0 * t) * (mask n e * mask n r) =
-      mask n (b0 * t * r) * mask n e := by
-    rw [mask_mul n (b0 * t) r]
-    ring
-  rw [hmask]
-  have hprior : mask n e *
-      ((χ (e : ZMod n))⁻¹ * χ (d : ZMod n) * χ (k : ZMod n) *
-        (χ ((J * C : ℕ) : ZMod n)) ^ 4 * (χ (v : ZMod n)) ^ 4) =
-      ((χ (e : ZMod n))⁻¹ * χ (d : ZMod n) * χ (k : ZMod n) *
-        (χ ((J * C : ℕ) : ZMod n)) ^ 4 * (χ (v : ZMod n)) ^ 4) := by
-    calc
-      mask n e * ((χ (e : ZMod n))⁻¹ * χ (d : ZMod n) * χ (k : ZMod n) *
-          (χ ((J * C : ℕ) : ZMod n)) ^ 4 * (χ (v : ZMod n)) ^ 4)
-          = (mask n e * (χ (e : ZMod n))⁻¹) *
-              (χ (d : ZMod n) * χ (k : ZMod n) *
-                (χ ((J * C : ℕ) : ZMod n)) ^ 4 * (χ (v : ZMod n)) ^ 4) := by ring
-      _ = _ := by rw [mask_absorb_inv_char n χ e]; ring
-  rw [mul_assoc, hprior, child_row_label_identity n χ hχ d e k J C v]
-
-theorem sum_child_row_label_with_mask
-    (S : Finset ℕ) (χ : (n : ℕ) → MulChar (ZMod n) ℂ)
-    (hχ : ∀ n, χ n ^ 6 = 1) (a : ℕ → ℂ)
-    (b0 t g e r d k J C v : ℕ) (hg : g = e * r) :
-    (∑ n ∈ S, a n *
-      (mask n (b0 * t) * mask n g *
-        ((χ n (e : ZMod n))⁻¹ * χ n (d : ZMod n) * χ n (k : ZMod n) *
-          (χ n ((J * C : ℕ) : ZMod n)) ^ 4 *
-          (χ n (v : ZMod n)) ^ 4))) =
-    (∑ n ∈ S, a n *
-      (mask n (b0 * t * r) *
-        (χ n ((d * e * k : ℕ) : ZMod n) *
-          (χ n ((J * C * e * v : ℕ) : ZMod n)) ^ 4))) := by
-  apply Finset.sum_congr rfl
-  intro n hn
-  rw [child_row_label_with_mask n (χ n) (hχ n) b0 t g e r d k J C v hg]
-
 end PoissonChildCRT
 
 namespace PoissonFirstLocal
 open scoped Classical
-
-def bit (b : Bool) : ℕ := if b then 1 else 0
-def localE (parityBit ε₁ ε₂ : Bool) : ZMod 6 :=
-  (bit ε₁ : ZMod 6) - (bit ε₂ : ZMod 6) + 3 * (bit parityBit : ZMod 6)
-def cExp₁ (parityBit ε₁ ε₂ : Bool) : ℕ :=
-  if localE parityBit ε₁ ε₂ = 0 then 0 else ((1 : ZMod 6) + localE parityBit ε₁ ε₂).val
-def cExp₂ (parityBit ε₁ ε₂ : Bool) : ℕ :=
-  if localE parityBit ε₁ ε₂ = 0 then 0 else ((1 : ZMod 6) - localE parityBit ε₁ ε₂).val
-def EExp (parityBit ε₁ ε₂ : Bool) : ℕ :=
-  if parityBit then bit ε₁ + bit ε₂ else 0
-def retained (parityBit ε₁ ε₂ : Bool) : Bool := parityBit || (ε₁ && ε₂)
-def totalExp₁ (parityBit ε₁ ε₂ : Bool) : ℕ :=
-  4 * bit ε₁ + cExp₁ parityBit ε₁ ε₂ + EExp parityBit ε₁ ε₂
-def totalExp₂ (parityBit ε₁ ε₂ : Bool) : ℕ :=
-  4 * bit ε₂ + cExp₂ parityBit ε₁ ε₂ + EExp parityBit ε₁ ε₂
-
-theorem exponent_table (parityBit ε₁ ε₂ : Bool) :
-    totalExp₁ parityBit ε₁ ε₂ % 6 = (if retained parityBit ε₁ ε₂ then 4 else 0) ∧
-    totalExp₂ parityBit ε₁ ε₂ % 6 = (if retained parityBit ε₁ ε₂ then 4 else 0) := by
-  cases parityBit <;> cases ε₁ <;> cases ε₂ <;> decide
-
-def mask (n p : ℕ) : ℂ := if n.Coprime p then 1 else 0
-
-private theorem mask_mul (n a b : ℕ) :
-    mask n (a * b) = mask n a * mask n b := by
-  classical
-  simp only [mask]
-  by_cases hab : n.Coprime (a * b)
-  · have ha : n.Coprime a := (Nat.coprime_mul_iff_right.mp hab).1
-    have hb : n.Coprime b := (Nat.coprime_mul_iff_right.mp hab).2
-    rw [ite_eq_left hab, ite_eq_left ha, ite_eq_left hb]
-    norm_num
-  · have hna_or_hnb : ¬ n.Coprime a ∨ ¬ n.Coprime b := by
-      by_contra h
-      exact hab (Nat.coprime_mul_iff_right.mpr ⟨not_not.mp (not_or.mp h).1,
-        not_not.mp (not_or.mp h).2⟩)
-    rcases hna_or_hnb with hna | hnb
-    · rw [ite_eq_right hab, ite_eq_right hna]
-      simp
-    · rw [ite_eq_right hab, ite_eq_right hnb]
-      simp
-
-def oldFactor (side : Bool) (parityBit ε₁ ε₂ : Bool)
-    (n p : ℕ) (χ : MulChar (ZMod n) ℂ) : ℂ :=
-  let q := χ (p : ZMod n)
-  mask n p * q ^ (4 * bit (if side then ε₂ else ε₁)) *
-    q ^ (if side then cExp₂ parityBit ε₁ ε₂ else cExp₁ parityBit ε₁ ε₂) *
-    q ^ EExp parityBit ε₁ ε₂
-
-def newFactor (parityBit ε₁ ε₂ : Bool)
-    (n p : ℕ) (χ : MulChar (ZMod n) ℂ) : ℂ :=
-  if retained parityBit ε₁ ε₂ then (χ (p : ZMod n)) ^ 4 else mask n p
-
-theorem first_local_identity (side parityBit ε₁ ε₂ : Bool)
-    (n p : ℕ) (χ : MulChar (ZMod n) ℂ) (hχ : χ ^ 6 = 1) :
-    oldFactor side parityBit ε₁ ε₂ n p χ = newFactor parityBit ε₁ ε₂ n p χ := by
-  let q := χ (p : ZMod n)
-  by_cases hcop : n.Coprime p
-  · have hunit : IsUnit (p : ZMod n) :=
-      (ZMod.isUnit_iff_coprime p n).mpr hcop.symm
-    have h6 : q ^ 6 = 1 := by
-      dsimp [q]
-      rw [← MulChar.pow_apply' χ (by decide : 6 ≠ 0), hχ]
-      simp [MulChar.one_apply, hunit]
-    have hmask : mask n p = 1 := by simp [mask, hcop]
-    change mask n p * q ^ (4 * bit (if side then ε₂ else ε₁)) *
-      q ^ (if side then cExp₂ parityBit ε₁ ε₂ else cExp₁ parityBit ε₁ ε₂) *
-      q ^ EExp parityBit ε₁ ε₂ =
-      (if retained parityBit ε₁ ε₂ then q ^ 4 else mask n p)
-    rw [hmask, one_mul, ← pow_add, ← pow_add]
-    cases side
-    · change q ^ (totalExp₁ parityBit ε₁ ε₂) =
-          (if retained parityBit ε₁ ε₂ then q ^ 4 else 1)
-      rw [pow_eq_pow_mod _ h6, (exponent_table parityBit ε₁ ε₂).1]
-      split_ifs <;> simp
-    · change q ^ (totalExp₂ parityBit ε₁ ε₂) =
-          (if retained parityBit ε₁ ε₂ then q ^ 4 else 1)
-      rw [pow_eq_pow_mod _ h6, (exponent_table parityBit ε₁ ε₂).2]
-      split_ifs <;> simp
-  · have hnu : ¬ IsUnit (p : ZMod n) := by
-      intro hu
-      exact hcop ((ZMod.isUnit_iff_coprime p n).mp hu).symm
-    have hzero : q = 0 := MulChar.map_nonunit χ hnu
-    simp [oldFactor, newFactor, mask, hcop, q, hzero]
-
-private theorem char_prod_four (n : ℕ) (χ : MulChar (ZMod n) ℂ)
-    (S : Finset ℕ) :
-    (∏ p ∈ S, (χ (p : ZMod n)) ^ 4) =
-      (χ ((∏ p ∈ S, p : ℕ) : ZMod n)) ^ 4 := by
-  classical
-  induction S using Finset.induction_on with
-  | empty => simp
-  | @insert p S hp ih =>
-      simp [hp, ih, Nat.cast_mul, map_mul, mul_pow]
-
-private theorem mask_prod (n : ℕ) (S : Finset ℕ) :
-    (∏ p ∈ S, mask n p) = mask n (∏ p ∈ S, p) := by
-  classical
-  induction S using Finset.induction_on with
-  | empty => simp [mask]
-  | @insert p S hp ih =>
-      simp [hp, ih]
-      exact (mask_mul n p (∏ p ∈ S, p)).symm
-
-theorem first_prime_product_identity
-    (side : Bool) (P : Finset ℕ)
-    (parityBit ε₁ ε₂ : ℕ → Bool)
-    (n : ℕ) (χ : MulChar (ZMod n) ℂ) (hχ : χ ^ 6 = 1) :
-    (∏ p ∈ P, oldFactor side (parityBit p) (ε₁ p) (ε₂ p) n p χ) =
-      (χ ((∏ p ∈ P with retained (parityBit p) (ε₁ p) (ε₂ p), p : ℕ) : ZMod n)) ^ 4 *
-      mask n (∏ p ∈ P with ¬retained (parityBit p) (ε₁ p) (ε₂ p), p) := by
-  classical
-  calc
-    (∏ p ∈ P, oldFactor side (parityBit p) (ε₁ p) (ε₂ p) n p χ) =
-        ∏ p ∈ P, newFactor (parityBit p) (ε₁ p) (ε₂ p) n p χ := by
-          apply Finset.prod_congr rfl
-          intro p hp
-          exact first_local_identity side (parityBit p) (ε₁ p) (ε₂ p) n p χ hχ
-    _ = (∏ p ∈ P with retained (parityBit p) (ε₁ p) (ε₂ p),
-            (χ (p : ZMod n)) ^ 4) *
-          (∏ p ∈ P with ¬retained (parityBit p) (ε₁ p) (ε₂ p), mask n p) := by
-          simp only [newFactor]
-          exact Finset.prod_ite _ _
-    _ = _ := by
-          rw [char_prod_four, mask_prod]
-
-theorem mask_redundant_overlap
-    (n J B₀ b₀ m : ℕ) (χ : MulChar (ZMod n) ℂ)
-    (hB : B₀ ∣ b₀) (hb : b₀ ∣ (B₀ * J) ^ m) :
-    (χ (J : ZMod n)) ^ 4 * mask n B₀ =
-      (χ (J : ZMod n)) ^ 4 * mask n b₀ := by
-  by_cases hJ : n.Coprime J
-  · have hiff : n.Coprime B₀ ↔ n.Coprime b₀ := by
-      constructor
-      · intro hB₀
-        have hprod : n.Coprime (B₀ * J) := hB₀.mul_right hJ
-        exact Nat.Coprime.of_dvd_right hb (hprod.pow_right m)
-      · intro hb₀
-        exact Nat.Coprime.of_dvd_right hB hb₀
-    simp only [mask]
-    split_ifs with h₁ h₂ <;> simp_all
-  · have hnu : ¬ IsUnit (J : ZMod n) := by
-      intro hu
-      exact hJ ((ZMod.isUnit_iff_coprime J n).mp hu).symm
-    have hz : χ (J : ZMod n) = 0 := MulChar.map_nonunit χ hnu
-    simp [hz]
-
-theorem first_prime_product_with_b0
-    (side : Bool) (P : Finset ℕ)
-    (parityBit ε₁ ε₂ : ℕ → Bool)
-    (n b₀ m : ℕ) (χ : MulChar (ZMod n) ℂ) (hχ : χ ^ 6 = 1)
-    (hB : (∏ p ∈ P with ¬retained (parityBit p) (ε₁ p) (ε₂ p), p) ∣ b₀)
-    (hb : b₀ ∣
-      ((∏ p ∈ P with ¬retained (parityBit p) (ε₁ p) (ε₂ p), p) *
-       (∏ p ∈ P with retained (parityBit p) (ε₁ p) (ε₂ p), p)) ^ m) :
-    (∏ p ∈ P, oldFactor side (parityBit p) (ε₁ p) (ε₂ p) n p χ) =
-      (χ ((∏ p ∈ P with retained (parityBit p) (ε₁ p) (ε₂ p), p : ℕ) : ZMod n)) ^ 4 *
-      mask n b₀ := by
-  rw [first_prime_product_identity side P parityBit ε₁ ε₂ n χ hχ]
-  exact mask_redundant_overlap n _ _ b₀ m χ hB hb
-
-theorem sum_first_prime_product_identity
-    (S P : Finset ℕ) (side : Bool)
-    (parityBit ε₁ ε₂ : ℕ → Bool)
-    (χ : (n : ℕ) → MulChar (ZMod n) ℂ)
-    (hχ : ∀ n, χ n ^ 6 = 1) (a : ℕ → ℂ) :
-    (∑ n ∈ S, a n *
-      (∏ p ∈ P, oldFactor side (parityBit p) (ε₁ p) (ε₂ p) n p (χ n))) =
-    (∑ n ∈ S, a n *
-      ((χ n ((∏ p ∈ P with retained (parityBit p) (ε₁ p) (ε₂ p), p : ℕ) : ZMod n)) ^ 4 *
-       mask n (∏ p ∈ P with ¬retained (parityBit p) (ε₁ p) (ε₂ p), p))) := by
-  apply Finset.sum_congr rfl
-  intro n hn
-  rw [first_prime_product_identity side P parityBit ε₁ ε₂ n (χ n) (hχ n)]
-
-theorem sum_first_prime_product_with_b0
-    (S P : Finset ℕ) (side : Bool)
-    (parityBit ε₁ ε₂ : ℕ → Bool)
-    (χ : (n : ℕ) → MulChar (ZMod n) ℂ)
-    (hχ : ∀ n, χ n ^ 6 = 1) (a : ℕ → ℂ)
-    (b₀ m : ℕ)
-    (hB : (∏ p ∈ P with ¬retained (parityBit p) (ε₁ p) (ε₂ p), p) ∣ b₀)
-    (hb : b₀ ∣
-      ((∏ p ∈ P with ¬retained (parityBit p) (ε₁ p) (ε₂ p), p) *
-       (∏ p ∈ P with retained (parityBit p) (ε₁ p) (ε₂ p), p)) ^ m) :
-    (∑ n ∈ S, a n *
-      (∏ p ∈ P, oldFactor side (parityBit p) (ε₁ p) (ε₂ p) n p (χ n))) =
-    (∑ n ∈ S, a n *
-      ((χ n ((∏ p ∈ P with retained (parityBit p) (ε₁ p) (ε₂ p), p : ℕ) : ZMod n)) ^ 4 *
-       mask n b₀)) := by
-  apply Finset.sum_congr rfl
-  intro n hn
-  rw [first_prime_product_with_b0 side P parityBit ε₁ ε₂ n b₀ m (χ n) (hχ n) hB hb]
 
 end PoissonFirstLocal
 
@@ -505,26 +198,6 @@ theorem omega_primitive : IsPrimitiveRoot omega 3 := by
   exact (IsCyclotomicExtension.zeta_spec 3 ℚ K).toInteger_isPrimitiveRoot
 
 def traceLambda : O := 1 + 2 * omega
-
-theorem traceLambda_eq_unit_mul_lambda : traceLambda = -omega * lambda := by
-  have hrel : omega ^ 2 + omega + 1 = 0 := by
-    simpa only [IsCyclotomicExtension.Rat.Three.coe_eta, omega] using
-      (IsCyclotomicExtension.Rat.Three.eta_sq_add_eta_add_one
-        (IsCyclotomicExtension.zeta_spec 3 ℚ K))
-  dsimp [traceLambda, lambda]
-  linear_combination hrel
-
-theorem neg_omega_isUnit : IsUnit (-omega) :=
-  (omega_primitive.isUnit (by decide)).neg
-
-theorem traceLambda_mem_iff (P : Ideal O) : traceLambda ∈ P ↔ lambda ∈ P := by
-  rw [traceLambda_eq_unit_mul_lambda, mul_comm]
-  exact P.mul_unit_mem_iff_mem neg_omega_isUnit
-
-theorem traceLambda_sq_dvd_iff (x : O) :
-    traceLambda ^ 2 ∣ x ↔ lambda ^ 2 ∣ x := by
-  rw [traceLambda_eq_unit_mul_lambda, mul_pow]
-  exact (neg_omega_isUnit.pow 2).mul_left_dvd
 
 theorem omega_reduced_primitive (P : Ideal O) [P.IsMaximal]
     (hgood : lambda ∉ P) :
@@ -826,29 +499,6 @@ theorem sexticChar_powers (P : Ideal O) [P.IsMaximal]
     (c ^ 2 * q) ^ 6 = ((c ^ 2 * q) ^ 3) ^ 2 := by group
     _ = 1 := by rw [hthree, hq]
 
-theorem cubicJacobi_unit_multiple (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (p : O) (hP : P = Ideal.span {p})
-    (hnorm : p * conjO p = (Nat.card (O ⧸ P) : O)) :
-    ∃ u : Oˣ, jacobiSum (cubicChar P hgood) (cubicChar P hgood) = p * u := by
-  classical
-  let J := jacobiSum (cubicChar P hgood) (cubicChar P hgood)
-  have hdiv : p ∣ J := (Ideal.mem_span_singleton).mp (hP ▸ cubicJacobi_mem_prime P hgood)
-  obtain ⟨v, hv⟩ := hdiv
-  have hqne : (Nat.card (O ⧸ P) : O) ≠ 0 := by
-    exact_mod_cast Nat.card_pos.ne'
-  have hpne : p * conjO p ≠ 0 := by rw [hnorm]; exact hqne
-  have hvnorm : v * conjO v = 1 := by
-    apply mul_left_cancel₀ hpne
-    calc
-      (p * conjO p) * (v * conjO v) = (p * v) * conjO (p * v) := by
-        rw [map_mul]; ring
-      _ = J * conjO J := by rw [hv]
-      _ = (Nat.card (O ⧸ P) : O) := cubicJacobi_mul_conj P hgood
-      _ = (p * conjO p) * 1 := by rw [← hnorm, mul_one]
-  have hvunit : IsUnit v := IsUnit.of_mul_eq_one (conjO v) hvnorm
-  refine ⟨hvunit.unit, ?_⟩
-  simpa only [hvunit.unit_spec] using hv
-
 theorem lambda_not_dvd_two : ¬ lambda ∣ (2 : O) := by
   let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hprime : Prime lambda :=
@@ -878,38 +528,6 @@ theorem lambda_not_dvd_two : ¬ lambda ∣ (2 : O) := by
   have heven := FiniteField.even_card_of_char_two hchar
   rw [← Nat.card_eq_fintype_card, hcard] at heven
   norm_num at heven
-
-theorem cubicJacobi_eq_neg_primary_generator (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (p : O) (hP : P = Ideal.span {p})
-    (hnorm : p * conjO p = (Nat.card (O ⧸ P) : O))
-    (hprimary : lambda ^ 2 ∣ p - 1) :
-    jacobiSum (cubicChar P hgood) (cubicChar P hgood) = -p := by
-  let J := jacobiSum (cubicChar P hgood) (cubicChar P hgood)
-  obtain ⟨u, hJu⟩ := cubicJacobi_unit_multiple P hgood p hP hnorm
-  change J = p * (u : O) at hJu
-  obtain ⟨z, _, hJ⟩ := cubicJacobi_primary P hgood
-  have hJmod : lambda ^ 2 ∣ J + 1 := by
-    refine ⟨z, ?_⟩
-    dsimp [J]
-    rw [hJ]
-    ring
-  have hucong : lambda ^ 2 ∣ (u : O) + 1 := by
-    have heq : (u : O) + 1 = (J + 1) - (p - 1) * (u : O) := by
-      rw [hJu]
-      ring
-    rw [heq]
-    exact dvd_sub hJmod (dvd_mul_of_dvd_left hprimary _)
-  have hunit : u = 1 ∨ u = -1 := by
-    apply IsCyclotomicExtension.Rat.Three.eq_one_or_neg_one_of_unit_of_congruent
-      (IsCyclotomicExtension.zeta_spec 3 ℚ K) u
-    refine ⟨(-1 : ℤ), ?_⟩
-    simpa only [lambda, omega, Int.cast_neg, Int.cast_one, sub_neg_eq_add] using hucong
-  rcases hunit with h1 | hneg
-  · have htwo : lambda ^ 2 ∣ (2 : O) := by
-      simpa [h1, one_add_one_eq_two] using hucong
-    exact False.elim (lambda_not_dvd_two ((dvd_pow_self lambda (by decide)).trans htwo))
-  · rw [hneg] at hJu
-    simpa only [Units.val_neg, Units.val_one, mul_neg, mul_one] using hJu
 
 private theorem conjK_ne_refl : conjK ≠ AlgEquiv.refl := by
   intro he
@@ -1103,20 +721,6 @@ theorem cubicJacobi_exists_primary_generator (P : Ideal O) [P.IsMaximal]
     rw [hJ]
     ring
 
-private theorem hgood_from_trace (P : Ideal O) (hgood : traceLambda ∉ P) :
-    lambda ∉ P := by
-  intro h
-  exact hgood ((traceLambda_mem_iff P).mpr h)
-
-theorem cubicJacobi_eq_neg_primary_generator_trace (P : Ideal O) [P.IsMaximal]
-    (hgood : traceLambda ∉ P) (p : O) (hP : P = Ideal.span {p})
-    (hprimary : traceLambda ^ 2 ∣ p - 1) :
-    jacobiSum (cubicChar P (hgood_from_trace P hgood))
-      (cubicChar P (hgood_from_trace P hgood)) = -p := by
-  let hgood' : lambda ∉ P := hgood_from_trace P hgood
-  simpa only using cubicJacobi_eq_neg_primary_generator_of_principal
-    P hgood' p hP ((traceLambda_sq_dvd_iff (p - 1)).mp hprimary)
-
 theorem cubicGauss_cube {E : Type*} [Field E] (ι : O →+* E)
     (hι : Function.Injective ι) (P : Ideal O) [P.IsMaximal]
     (hgood : lambda ∉ P) (p : O) (hP : P = Ideal.span {p})
@@ -1176,52 +780,6 @@ theorem cubicGauss_cube {E : Type*} [Field E] (ι : O →+* E)
     _ = (gaussSum ξ ψ * gaussSum ξ⁻¹ ψ) * jacobiSum ξ ξ := by ring
     _ = -(ι p) * (Nat.card (O ⧸ P) : E) := by rw [hgs, hJ]; ring
 
-private noncomputable def complexEmbedding : K →ₐ[ℚ] ℂ :=
-  IsAlgClosed.lift
-
-noncomputable def ringComplex : O →+* ℂ :=
-  complexEmbedding.toRingHom.comp (algebraMap O K)
-
-theorem ringComplex_injective : Function.Injective ringComplex :=
-  complexEmbedding.injective.comp NumberField.RingOfIntegers.coe_injective
-
-private theorem ringComplex_conjO (x : O) :
-    ringComplex (conjO x) = star (ringComplex x) := by
-  let z := ringComplex omega
-  have hz3 : z ^ 3 = 1 := by
-    change ringComplex omega ^ 3 = 1
-    rw [← map_pow, omega_primitive.pow_eq_one, map_one]
-  have hz0 : z ≠ 0 := by
-    intro h
-    rw [h, zero_pow (by decide)] at hz3
-    exact zero_ne_one hz3
-  have hznorm : ‖z‖ = 1 := Complex.norm_eq_one_of_pow_eq_one hz3 (by decide)
-  have hzstar : star z = z ^ 2 := by
-    apply mul_left_cancel₀ hz0
-    calc
-      z * star z = 1 := by rw [← starRingEnd_apply, Complex.mul_conj', hznorm]; norm_num
-      _ = z * z ^ 2 := by rw [← pow_succ', hz3]
-  have hhom : ringComplex.comp conjO.toRingHom = (starRingEnd ℂ).comp ringComplex := by
-    apply RingHom.toIntAlgHom_injective
-    apply (IsCyclotomicExtension.zeta_spec 3 ℚ K).integralPowerBasis.algHom_ext
-    rw [(IsCyclotomicExtension.zeta_spec 3 ℚ K).integralPowerBasis_gen]
-    change ringComplex (conjO omega) = star (ringComplex omega)
-    rw [conjO_omega, map_pow]
-    exact hzstar.symm
-  have hx := congrArg (fun f : O →+* ℂ => f x) hhom
-  exact hx
-
-theorem cubicGauss_cube_complex (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (p : O) (hP : P = Ideal.span {p})
-    (hprimary : lambda ^ 2 ∣ p - 1) :
-    gaussSum ((cubicChar P hgood).ringHomComp ringComplex)
-      (AddChar.FiniteField.primitiveChar_to_Complex (O ⧸ P)) ^ 3 =
-      -(ringComplex p) * (Nat.card (O ⧸ P) : ℂ) := by
-  let : Field (O ⧸ P) := Ideal.Quotient.field P
-  exact cubicGauss_cube ringComplex ringComplex_injective P hgood p hP hprimary
-    (AddChar.FiniteField.primitiveChar_to_Complex (O ⧸ P))
-    (AddChar.FiniteField.primitiveChar_to_Complex_isPrimitive (O ⧸ P))
-
 theorem primary_generator_mul_conj_eq_card (P : Ideal O) [P.IsMaximal]
     (hgood : lambda ∉ P) (p : O) (hP : P = Ideal.span {p})
     (hprimary : lambda ^ 2 ∣ p - 1) :
@@ -1230,50 +788,6 @@ theorem primary_generator_mul_conj_eq_card (P : Ideal O) [P.IsMaximal]
   rw [cubicJacobi_eq_neg_primary_generator_of_principal P hgood p hP hprimary,
     map_neg] at h
   simpa only [neg_mul_neg] using h
-
-theorem cubicGauss_normalized_cube_complex (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (p : O) (hP : P = Ideal.span {p})
-    (hprimary : lambda ^ 2 ∣ p - 1) :
-    (gaussSum ((cubicChar P hgood).ringHomComp ringComplex)
-      (AddChar.FiniteField.primitiveChar_to_Complex (O ⧸ P)) /
-      (‖ringComplex p‖ : ℂ)) ^ 3 =
-      -(ringComplex p) / (‖ringComplex p‖ : ℂ) := by
-  let z := ringComplex p
-  let g := gaussSum ((cubicChar P hgood).ringHomComp ringComplex)
-    (AddChar.FiniteField.primitiveChar_to_Complex (O ⧸ P))
-  have hnormO := primary_generator_mul_conj_eq_card P hgood p hP hprimary
-  have hnormC := congrArg ringComplex hnormO
-  rw [map_mul, ringComplex_conjO, map_natCast] at hnormC
-  have hq : (Nat.card (O ⧸ P) : ℂ) = (‖z‖ : ℂ) ^ 2 := by
-    simpa only [z, ← starRingEnd_apply, Complex.mul_conj'] using hnormC.symm
-  have hqne : (Nat.card (O ⧸ P) : ℂ) ≠ 0 := by
-    exact_mod_cast Nat.card_pos.ne'
-  have hn0 : (‖z‖ : ℂ) ≠ 0 := by
-    intro h
-    rw [h, zero_pow (by decide)] at hq
-    exact hqne hq
-  have hg : g ^ 3 = -z * (Nat.card (O ⧸ P) : ℂ) :=
-    cubicGauss_cube_complex P hgood p hP hprimary
-  change (g / (‖z‖ : ℂ)) ^ 3 = -z / (‖z‖ : ℂ)
-  rw [div_pow, hg, hq]
-  field_simp
-
-theorem cubicGauss_cube_mulShift {E : Type*} [Field E] (ι : O →+* E)
-    (P : Ideal O) [P.IsMaximal] (hgood : lambda ∉ P)
-    (ψ : AddChar (O ⧸ P) E) (a : (O ⧸ P)ˣ) :
-    gaussSum ((cubicChar P hgood).ringHomComp ι) (ψ.mulShift a) ^ 3 =
-      gaussSum ((cubicChar P hgood).ringHomComp ι) ψ ^ 3 := by
-  let : Field (O ⧸ P) := Ideal.Quotient.field P
-  let χ := (cubicChar P hgood).ringHomComp ι
-  have hχ3 : χ ^ 3 = 1 := by
-    change ((cubicChar P hgood).ringHomComp ι) ^ 3 = 1
-    rw [MulChar.ringHomComp_pow, cubicChar_pow_three P hgood,
-      MulChar.ringHomComp_one]
-  have hχinv3 : (χ⁻¹ a) ^ 3 = 1 := by
-    have h : (χ⁻¹) ^ 3 = 1 := by rw [inv_pow, hχ3, inv_one]
-    rw [← (χ⁻¹).pow_apply_coe, h, MulChar.one_apply_coe]
-  change gaussSum χ (ψ.mulShift a) ^ 3 = gaussSum χ ψ ^ 3
-  rw [gaussSum_mulShift_eq, mul_pow, hχinv3, one_mul]
 
 theorem quadraticCharO_ne_one (P : Ideal O) [P.IsMaximal]
     (hchar : ringChar (O ⧸ P) ≠ 2) : quadraticCharO P ≠ 1 := by
@@ -1319,20 +833,6 @@ theorem sexticChar_order (P : Ideal O) [P.IsMaximal]
     intro he
     norm_num [he] at hdiv
   omega
-
-theorem sexticChar_ne_quadratic_power (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (hchar : ringChar (O ⧸ P) ≠ 2) :
-    sexticChar P hgood ≠ (sexticChar P hgood) ^ 3 := by
-  intro h
-  have htwo : (sexticChar P hgood) ^ 2 = 1 := by
-    calc
-      (sexticChar P hgood) ^ 2 =
-          (sexticChar P hgood) ^ 3 * (sexticChar P hgood)⁻¹ := by group
-      _ = 1 := by rw [← h]; group
-  have hdiv : orderOf (sexticChar P hgood) ∣ 2 :=
-    orderOf_dvd_of_pow_eq_one htwo
-  rw [sexticChar_order P hgood hchar] at hdiv
-  norm_num at hdiv
 
 theorem sexticChar_reduce_unit (P : Ideal O) [P.IsMaximal]
     (hgood : lambda ∉ P) (hchar : ringChar (O ⧸ P) ≠ 2)
@@ -1389,22 +889,6 @@ theorem quotient_char_ne_two_of_two_not_mem (P : Ideal O) [P.IsMaximal]
   rw [heq] at hz
   apply h2
   exact (Ideal.Quotient.eq_zero_iff_mem).mp (by simpa only [map_ofNat, Nat.cast_ofNat] using hz)
-
-theorem sexticChar_zero_iff_mem (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (a : O) :
-    sexticChar P hgood (Ideal.Quotient.mk P a) = 0 ↔ a ∈ P := by
-  let : Field (O ⧸ P) := Ideal.Quotient.field P
-  rw [MulChar.apply_eq_zero_iff]
-  simpa only [isUnit_iff_ne_zero, not_not] using
-    (Ideal.Quotient.eq_zero_iff_mem (I := P) (a := a))
-
-theorem sexticChar_pow_zero_iff_mem (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (j : ℕ) (a : O) :
-    (sexticChar P hgood ^ j) (Ideal.Quotient.mk P a) = 0 ↔ a ∈ P := by
-  let : Field (O ⧸ P) := Ideal.Quotient.field P
-  rw [MulChar.apply_eq_zero_iff]
-  simpa only [isUnit_iff_ne_zero, not_not] using
-    (Ideal.Quotient.eq_zero_iff_mem (I := P) (a := a))
 
 end ActualEisensteinCubic
 

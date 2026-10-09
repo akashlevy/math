@@ -1,5 +1,4 @@
-import OAI.NumberTheory.DirichletL.Reflection.SurvivingEnergy
-
+import OAI.NumberTheory.DirichletL.Reflection.Surviving
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

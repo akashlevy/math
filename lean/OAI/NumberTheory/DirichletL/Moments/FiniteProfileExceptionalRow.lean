@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalRectangle
 import OAI.NumberTheory.DirichletL.Moments.ExceptionalCappedAmplitude
-
 namespace OAI
 noncomputable section
 open scoped Classical BigOperators SchwartzMap ContDiff

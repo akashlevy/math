@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LowSeparated
 import OAI.NumberTheory.DirichletL.Detector.GaussianSubset
-
 namespace OAI
 
 noncomputable section
@@ -49,22 +48,6 @@ theorem compensationRowTest_low_separated {K : ℕ} (η : HeckeFamily.Character)
     hW0 hW1 hWs _ _ (div_pos hX (slotProduct_norm_pos p hp J))
       (div_pos hY (slotProduct_norm_pos p hp J))
       (lowMarkedInverseRow η S hS (Ideal.span {slotProduct p (Finset.univ\J)}) T t)
-
-lemma compensationRowTest_low_integrable {K : ℕ} (η : HeckeFamily.Character)
-    (S : Finset Id) (hS : ∀P∈S,P.IsMaximal)
-    (W0 W1 : ℝ→ℂ) (a0 b0 a1 b1 : ℝ) (ha0 : 0<a0) (ha1 : 0<a1)
-    (hW0 : Function.support W0⊆Set.Icc a0 b0) (hW1 : Function.support W1⊆Set.Icc a1 b1)
-    (hWs : ContDiff ℝ ∞ W0) (p : Fin K→O) (hp : ∀i,p i≠0) (J : Finset (Fin K))
-    (X Y T t : ℝ) (hX : 0<X) (hY : 0<Y) :
-    Integrable (lowSeparatedIntegrand (calibrationForSet S hS) W0 W1
-      (lowOuterCutoff (a0*a1) (max 1 (b0*b1)))
-      (X/elementNorm (slotProduct p J)) (Y/elementNorm (slotProduct p J))
-      (lowMarkedInverseRow η S hS (Ideal.span {slotProduct p (Finset.univ\J)}) T t)) := by
-  exact lowSeparatedIntegrand_integrable (calibrationForSet S hS) W0 W1 _ a0 b0 ha0 hW0 hWs
-    (HasCompactSupport.of_support_subset_isCompact isCompact_Icc hW1)
-    (lowOuterCutoff_compact _ _ (mul_pos ha0 ha1) (lt_of_lt_of_le (by norm_num) (le_max_left _ _)))
-    (lowOuterCutoff_small _ _ (mul_pos ha0 ha1) 0 (by positivity)) _ _
-    (div_pos hX (slotProduct_norm_pos p hp J)) (div_pos hY (slotProduct_norm_pos p hp J)) _
 
 end SevenEighths.ProbePhysical
 end

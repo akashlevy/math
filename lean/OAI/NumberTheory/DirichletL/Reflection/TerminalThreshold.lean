@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.AnnularNormalization
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

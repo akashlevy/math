@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Mellin.SixthPowerAverage
-
 namespace OAI
 
 noncomputable section
@@ -8,79 +7,22 @@ namespace SmoothMobiusCorrection
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
-
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open ActualEisensteinCubic
 open IdealMobiusDivisorSum hiding O
-open UniqueFactorizationMonoid
 open CanonicalRowCompletion (primeValueHom primeValueHom_prime)
 
 abbrev PrimeIdeal := {P : Ideal ActualEisensteinCubic.O // Prime P}
@@ -187,8 +129,6 @@ theorem mobiusPrimeCoeff_euler (w : Ideal ActualEisensteinCubic.O → ℂ)
 end
 
 section
-open ActualEisensteinCubic
-open Filter
 
 lemma prime_norm_two_le (P : PrimeIdeal) : 2 ≤ Ideal.absNorm P.val := by
   have h0 : Ideal.absNorm P.val ≠ 0 := fun h => P.property.ne_zero (Ideal.absNorm_eq_zero_iff.mp h)
@@ -275,14 +215,6 @@ lemma correctionTerm_factor {q : ℕ} (χ : DirichletCharacter ℂ q) (S : Finse
     dsimp [primeDensity]
     ring
 
-lemma correctionFactor_ne_zero {q : ℕ} (χ : DirichletCharacter ℂ q) (S : Finset (Ideal ActualEisensteinCubic.O))
-    (P : PrimeIdeal) (s : ℂ) (hs : 0<s.re) : 1+correctionTerm χ S P s≠0 := by
-  rw [correctionTerm_factor χ S P s hs]
-  split_ifs
-  · exact one_ne_zero
-  · exact div_ne_zero (one_sub_ne_zero (primeCharacterTerm_norm_lt_one χ P s hs))
-      (correctionDenominator_ne_zero χ P s hs)
-
 lemma correctionTerm_uniform_bound {q : ℕ} (χ : DirichletCharacter ℂ q)
     (S : Finset (Ideal ActualEisensteinCubic.O)) (σ : ℝ) (hσ : 0<σ) (P : PrimeIdeal) (s : ℂ) (hs : σ≤s.re) :
     ‖correctionTerm χ S P s‖ ≤
@@ -330,11 +262,6 @@ lemma correctionTerm_summable {q : ℕ} (χ : DirichletCharacter ℂ q) (S : Fin
   apply Summable.of_nonneg_of_le (fun _ => norm_nonneg _)
     (fun P => correctionTerm_uniform_bound χ S s.re hs P s le_rfl)
   exact (prime_norm_series_summable s.re hs).mul_left _
-
-theorem eulerCorrection_ne_zero {q : ℕ} (χ : DirichletCharacter ℂ q) (S : Finset (Ideal ActualEisensteinCubic.O))
-    (s : ℂ) (hs : 0<s.re) : eulerCorrection χ S s≠0 :=
-  tprod_one_add_ne_zero_of_summable (fun P => correctionFactor_ne_zero χ S P s hs)
-    (correctionTerm_summable χ S s hs)
 
 lemma primeCharacterTerm_differentiable {q : ℕ} (χ : DirichletCharacter ℂ q)
     (P : PrimeIdeal) : Differentiable ℂ (primeCharacterTerm χ P) := by
@@ -388,10 +315,8 @@ theorem eulerCorrection_differentiableOn {q : ℕ} (χ : DirichletCharacter ℂ 
 end
 
 section
-open ActualEisensteinCubic
 open ShortDraftHeckeBridge hiding O
 open IdealMobiusDivisorSum hiding O
-open UniqueFactorizationMonoid
 open CanonicalRowCompletion (primeValueHom primeValueHom_prime)
 
 lemma prod_primeSet {M : Type*} [CommMonoid M] (I : Ideal ActualEisensteinCubic.O) (f : Ideal ActualEisensteinCubic.O→M) :
@@ -501,8 +426,6 @@ lemma dampedSeriesTerm_eq {q : ℕ} (χ : DirichletCharacter ℂ q) (S : Finset 
 
 end
 
-open ActualEisensteinCubic
-
 lemma ordinaryPrimeValue_norm_le {q : ℕ} (χ : DirichletCharacter ℂ q) (S : Finset (Ideal ActualEisensteinCubic.O))
     (P : PrimeIdeal) (s : ℂ) :
     ‖ordinaryPrimeValue χ S s P.val‖≤(Ideal.absNorm P.val:ℝ)^(-s.re) := by
@@ -581,8 +504,6 @@ theorem actual_dirichlet_correction {q : ℕ} (χ : DirichletCharacter ℂ q)
   intro P
   exact (local_correction_identity χ S P s (by linarith)).symm
 
-open scoped BigOperators Classical
-open ActualEisensteinCubic
 open ShortDraftHeckeBridge hiding O
 
 lemma normFiber_tsum (a : Ideal ActualEisensteinCubic.O→ℂ) (n : ℕ) :

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.Dyadic
 import OAI.NumberTheory.DirichletL.Hecke.StripActual
-
 namespace OAI
 
 noncomputable section

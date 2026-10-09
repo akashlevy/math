@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.BufferedContour
 import OAI.NumberTheory.DirichletL.Hecke.DetectorZeros
-
 namespace OAI
 
 noncomputable section
@@ -123,27 +122,12 @@ lemma detectorMaximum_attained (χ : ι→Character) (T : ℝ)
     have hz := (mem_detectorFamilyZeros χ T i s).mp hs
     exact ⟨i,s,hz.2.2.2.1,hz.2.2.2.2,hz.2.2.1,heq⟩
 
-lemma detectorMaximum_mono (χ : ι→Character) {T T' : ℝ} (hT : T≤T') :
-    detectorMaximum χ T≤detectorMaximum χ T' := by
-  rcases lt_or_ge (51/100:ℝ) (detectorMaximum χ T) with hm|hm
-  · obtain ⟨i,s,hz,hpole,ht,heq⟩ := detectorMaximum_attained χ T hm
-    rw [←heq]
-    exact detector_zero_re_le_maximum χ T' i (by rw [heq];exact hm.le) (ht.trans hT) hz hpole
-  · exact hm.trans (detectorMaximum_bounds χ T').1
-
 lemma detector_nonzero_above_maximum (χ : ι→Character) (T : ℝ) (i : ι) {s : ℂ}
     (hs : detectorMaximum χ T<s.re) (ht : |s.im|≤T)
     (hpole : ¬((χ i).residue=1 ∧ s=1)) : LFunction (χ i) s≠0 := by
   intro hz
   exact (not_lt_of_ge (detector_zero_re_le_maximum χ T i
     ((detectorMaximum_bounds χ T).1.trans hs.le) ht hz hpole)) hs
-
-lemma detector_reciprocal_differentiableAt (χ : ι→Character) (T : ℝ) (i : ι) {s : ℂ}
-    (hs : detectorMaximum χ T<s.re) (ht : |s.im|≤T) :
-    DifferentiableAt ℂ (HeckeReciprocal.reciprocal (χ i)) s := by
-  apply reciprocal_differentiableAt_of_nonzero (χ i) s
-    (by intro h;have hb:=(detectorMaximum_bounds χ T).1;norm_num [h] at hs;linarith)
-  exact detector_nonzero_above_maximum χ T i hs ht
 
 end SevenEighths.ProbeHighRowFamily
 

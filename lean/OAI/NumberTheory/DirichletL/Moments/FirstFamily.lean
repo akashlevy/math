@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.PrimaryCharacter
 import OAI.NumberTheory.DirichletL.Moments.FirstColumns
-
 namespace OAI
 
 noncomputable section

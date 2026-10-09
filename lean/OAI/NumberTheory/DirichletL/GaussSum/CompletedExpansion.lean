@@ -1,75 +1,23 @@
 import OAI.NumberTheory.DirichletL.Arithmetic.IdealMobius
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CompletedGauss
 
@@ -226,7 +174,7 @@ theorem completed_cube_inverse (Ψ : O →* ℂ) (W : ℝ → ℂ)
   intro I
   simpa only [mul_assoc] using (vstar_source_normalization Ψ W X hX I).symm
 
-open ActualEisensteinCubic ConcreteTraceCRT
+open ConcreteTraceCRT
 
 theorem normalizedFactors_product {ι : Type*} [Fintype ι]
     (p : ι → O) [∀ i, (Ideal.span {p i}).IsMaximal] :
@@ -410,16 +358,6 @@ theorem unitFourierCoeff_sum_norm_le (f : Rˣ → ℂ) (B : ℝ)
       Finset.sum_le_sum (fun χ _ => unitFourierCoeff_norm_le f B hf χ)
     _ = _ := by simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, character_card_eq_units]
 
-theorem unitFourierCoeff_sum_norm_le_sum (f : Rˣ → ℂ) :
-    (∑ χ : MulChar R ℂ, ‖unitFourierCoeff f χ‖) ≤ ∑ u : Rˣ, ‖f u‖ := by
-  have hN : (Fintype.card Rˣ : ℝ) ≠ 0 := by exact_mod_cast Fintype.card_ne_zero
-  calc
-    _ ≤ ∑ _χ : MulChar R ℂ, (∑ u : Rˣ, ‖f u‖) / (Fintype.card Rˣ : ℝ) :=
-      Finset.sum_le_sum (fun χ _ => unitFourierCoeff_norm_le_average f χ)
-    _ = _ := by
-      simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, character_card_eq_units]
-      field_simp
-
 def zeroExtendUnits (f : Rˣ → ℂ) (r : R) : ℂ :=
   if hr : IsUnit r then f hr.unit else 0
 
@@ -483,16 +421,6 @@ theorem unitTensorCoeff_sum_norm_le (f : Rˣ → Rˣ → ℂ) (B : ℝ)
       simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, character_card_eq_units]
       ring
 
-theorem unitTensorCoeff_sum_norm_le_sum (f : Rˣ → Rˣ → ℂ) :
-    (∑ χ : MulChar R ℂ, ∑ η : MulChar R ℂ, ‖unitTensorCoeff f χ η‖) ≤
-      ∑ u : Rˣ, ∑ v : Rˣ, ‖f u v‖ := by
-  rw [Finset.sum_comm]
-  calc
-    _ ≤ ∑ η : MulChar R ℂ, ∑ u : Rˣ, ‖unitFourierCoeff (f u) η‖ :=
-      Finset.sum_le_sum (fun η _ => unitFourierCoeff_sum_norm_le_sum (fun u => unitFourierCoeff (f u) η))
-    _ = ∑ u : Rˣ, ∑ η : MulChar R ℂ, ‖unitFourierCoeff (f u) η‖ := Finset.sum_comm
-    _ ≤ _ := Finset.sum_le_sum (fun u _ => unitFourierCoeff_sum_norm_le_sum (f u))
-
 def zeroExtendUnitPair (f : Rˣ → Rˣ → ℂ) (r s : R) : ℂ :=
   zeroExtendUnits (fun u => zeroExtendUnits (f u) s) r
 
@@ -520,8 +448,6 @@ theorem zeroExtendUnitPair_restrict (f : R → R → ℂ) (r s : R) :
   · simp only [zeroExtendUnitPair, zeroExtendUnits_nonunit _ _ hr, hr, ite_false, zero_mul]
 
 end FiniteRayExpansion
-
-open scoped BigOperators Classical
 
 namespace RayFourExpansion
 abbrev O := ActualEisensteinCubic.O
@@ -598,10 +524,6 @@ theorem pair_phase_expansion (f : RayRing → RayRing → ℂ) (a b : O) :
   rw [rayMask, rayMask, ← zeroExtendUnitPair_restrict]
   exact zeroExtendUnitPair_fourier _ _ _
 
-theorem pairCoeff_norm_le (f : RayRing → RayRing → ℂ) (B : ℝ)
-    (hf : ∀ u v : RayRingˣ, ‖f (u : RayRing) (v : RayRing)‖ ≤ B) (χ η : RayCharacter) :
-    ‖pairCoeff f χ η‖ ≤ B := unitTensorCoeff_norm_le _ B hf χ η
-
 theorem pairCoeff_sum_norm_le (f : RayRing → RayRing → ℂ) (B : ℝ)
     (hf : ∀ u v : RayRingˣ, ‖f (u : RayRing) (v : RayRing)‖ ≤ B) :
     (∑ χ : RayCharacter, ∑ η : RayCharacter, ‖pairCoeff f χ η‖) ≤ 256 * B := by
@@ -635,9 +557,6 @@ theorem fixedGQuotientValue_norm_le_two (r : RayRing) : ‖fixedGQuotientValue r
 
 def gCoeff : RayCharacter → ℂ := phaseCoeff fixedGQuotientValue
 
-theorem gCoeff_norm_le_two (χ : RayCharacter) : ‖gCoeff χ‖ ≤ 2 :=
-  phaseCoeff_norm_le _ 2 (fun u => fixedGQuotientValue_norm_le_two u) χ
-
 theorem gCoeff_sum_norm_le : (∑ χ : RayCharacter, ‖gCoeff χ‖) ≤ 32 := by
   exact (phaseCoeff_sum_norm_le _ 2 (fun u => fixedGQuotientValue_norm_le_two u)).trans_eq (by norm_num)
 
@@ -660,9 +579,6 @@ theorem crossQuotientPhase_norm_le_two (r s : RayRing) : ‖crossQuotientPhase r
     _ = 2 := by norm_num
 
 def crossCoeff : RayCharacter → RayCharacter → ℂ := pairCoeff crossQuotientPhase
-
-theorem crossCoeff_norm_le_two (χ η : RayCharacter) : ‖crossCoeff χ η‖ ≤ 2 :=
-  pairCoeff_norm_le _ 2 (fun u v => crossQuotientPhase_norm_le_two u v) χ η
 
 theorem crossCoeff_sum_norm_le :
     (∑ χ : RayCharacter, ∑ η : RayCharacter, ‖crossCoeff χ η‖) ≤ 512 := by

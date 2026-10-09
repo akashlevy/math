@@ -1,76 +1,23 @@
 import OAI.NumberTheory.DirichletL.GaussSum.BranchScaling
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 
@@ -201,9 +148,6 @@ open scoped BigOperators Classical Topology ContDiff ENNReal
 def kernelEuclideanProjection : EuclideanSpatial → KernelQuotient :=
   integralOrbitProjection globalKubotaKernel ∘ euclideanToHyperbolic
 
-lemma kernelEuclideanProjection_measurable : Measurable kernelEuclideanProjection :=
-  (measurable_integralOrbitProjection _).comp euclideanToHyperbolic_measurable
-
 lemma euclideanToHyperbolic_measurePreserving_on (S : Set EuclideanSpatial)
     (hS : MeasurableSet S) (_hpos : S⊆euclideanUpperHalf) :
     MeasurePreserving euclideanToHyperbolic (hyperbolicEuclideanVolume.restrict S)
@@ -268,14 +212,6 @@ lemma kernelEuclideanProjection_integral_le (S : Set EuclideanSpatial)
       ∫q,g q∂integralQuotientVolume globalKubotaKernel := by
   rw [kernelEuclideanProjection_integral S hS hpos hinj g hg.aestronglyMeasurable]
   exact setIntegral_le_integral hg (Eventually.of_forall hgn)
-
-lemma kernelLocalEnergy_le (S : Set EuclideanSpatial)
-    (hS : MeasurableSet S) (hpos : S⊆euclideanUpperHalf)
-    (hinj : Set.InjOn kernelEuclideanProjection S) (f : kernelSmoothTests) :
-    (∫p in S,kernelTestEnergyDensity f (euclideanToHyperbolic p)∂hyperbolicEuclideanVolume)≤
-      kernelDirichletEnergy f := by
-  exact kernelEuclideanProjection_integral_le S hS hpos hinj _
-    (kernelQuotientEnergyDensity_integrable f) (kernelQuotientEnergyDensity_nonneg f)
 
 lemma kernelSmoothTestsToL2_norm_sq (f : kernelSmoothTests) :
     ‖kernelSmoothTestsToL2 f‖^2=
@@ -342,7 +278,6 @@ lemma kernelEuclideanProjection_volume_integral_le (S : Set EuclideanSpatial)
 
 end CubicEisenstein
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace CompletedGauss
 
 section
@@ -368,55 +303,6 @@ theorem completedBranchScale_div {ι : Type*} [Fintype ι]
   unfold completedBranchScale
   simp only [div_eq_mul_inv,mul_inv_rev,inv_inv]
   ring
-
-theorem completed_reflected_fiber_fixed_scale
-    (W : ℝ→ℂ) (a b : ℝ) (ha : 0<a)
-    (hsupp : Function.support W⊆Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    (deltaLoss ρ q B : ℝ) (hδ : 0<deltaLoss) (hρ : 0<ρ) (hq : 1<q) (hB : 1≤B) :
-    ∃C : ℝ,0<C ∧ ∀K X c : ℝ,1≤K → 1≤X → 0<c → c≤B →
-    ∀I F Q : Ideal O,I≠0 → Q≠0 → (Ideal.absNorm I:ℝ)≤K →
-      1≤completedResidualScale K I Q →
-    ∀{ι : Type*} [Fintype ι] (P : ι→Ideal O) [∀i,(P i).IsMaximal]
-      (hg : ∀i,lambda∉P i),
-      Pairwise (fun i j => IsCoprime (P i) (P j)) →
-      (∀i,P i∣I*Q) → (∀i,¬P i∣rowResidualPart I Q) →
-    ∀e : ι→Fin 3,∀S T : (ℕ×ℕ×ℕ)→Finset (Ideal O),
-      (∀i,∀J∈S i,J≠0 ∧ (2:ℝ)^i.2.2/2≤(Ideal.absNorm J:ℝ) ∧ (Ideal.absNorm J:ℝ)≤(2:ℝ)^i.2.2) →
-      (∀i,∀J∈T i,J≠0 ∧ (2:ℝ)^i.2.1/2≤(Ideal.absNorm J:ℝ) ∧ (Ideal.absNorm J:ℝ)≤(2:ℝ)^i.2.1) →
-    ∀η : (ℕ×ℕ×ℕ)→Ideal O→Ideal O→ℂ,
-      (∀i,∀n∈S i,∀v∈T i,‖η i n v‖≤1) →
-    ∀σ : (ℕ×ℕ×ℕ)→idealRange (completedResidualScale K I Q)→ℂ,(∀i k,‖σ i k‖≤1) →
-      (∑k : idealRange (completedResidualScale K I Q),‖∑'i : ℕ×ℕ×ℕ,
-        reflectedBranchBlock P hg (fun i => completedLocalExponent I F (P i)) e W
-          (completedResidualScale K I Q) (completedBranchScale K (X/c) I F Q P e) ρ q S T η σ i k‖^2)
-        ≤C*(K*(Ideal.absNorm Q:ℝ))^(10*deltaLoss)*(K+K^2*(Ideal.absNorm Q:ℝ)/X)/
-          (Ideal.absNorm (rowPowerfulPart I):ℝ) := by
-  obtain ⟨C,hC,h⟩ := completed_reflected_branch_series W a b ha hsupp hW deltaLoss ρ q hδ hρ hq
-  refine ⟨C*B^(2*deltaLoss+1),by positivity,?_⟩
-  intro K X c hK hX hc hcB I F Q hI hQ hIK hk ι _ P _ hg hcop hpool hres e S T hS hT η hη σ hσ
-  have hn (J : Ideal O) (hJ : J≠0) : 0<(Ideal.absNorm J:ℝ) := by
-    exact_mod_cast Nat.pos_of_ne_zero (fun hz => hJ (Ideal.absNorm_eq_zero_iff.mp hz))
-  have hj (v : Fin 3) := hn _ (reflectionExtractedDivisor_ne_zero P (fun i => NeZero.ne (P i))
-    (fun i => completedLocalExponent I F (P i)) e v)
-  have hp := hn (∏i,P i) (Finset.prod_ne_zero_iff.mpr (fun i _ => NeZero.ne (P i)))
-  have hk0 : 0<completedResidualScale K I Q := by linarith
-  have hy : 0<completedBranchScale K X I F Q P e := by
-    unfold completedBranchScale
-    have hX0 : 0<X := by linarith
-    have hd := hj 1
-    have he := hj 2
-    positivity
-  rw [completedBranchScale_div]
-  have hb := (h (completedResidualScale K I Q) (c*completedBranchScale K X I F Q P e)
-    hk (mul_pos hc hy) P hg (fun i => completedLocalExponent I F (P i)) e S T hS hT η hη σ hσ).2
-  have hs := completed_scaled_shape (2*deltaLoss) (completedResidualScale K I Q)
-    (completedBranchScale K X I F Q P e) _ c B (by positivity) hk0 hy
-    (mul_pos (hj 0) (hj 2)) hc hcB hB
-  have hcst := completed_actual_fiber_cost deltaLoss K X hδ.le hK hX I F Q hI hQ hIK P hcop hpool hres e
-  have hh := hs.trans (mul_le_mul_of_nonneg_left hcst (by positivity : 0≤B^(2*deltaLoss+1)))
-  apply hb.trans
-  have hfinal := mul_le_mul_of_nonneg_left hh hC.le
-  convert hfinal using 1 <;> (try dsimp [completedResidualScale,completedBranchScale]) <;> ring
 
 end
 
@@ -451,24 +337,6 @@ def value {levelBound K : ℝ} {I F Q : Ideal O} (d : ReflectedBranchData levelB
     (fun p => completedLocalExponent I F p.val) d.label W
     (completedResidualScale K I Q) (completedBranchScale K (X/d.levelScale) I F Q (fun p : d.primes => p.val) d.label)
     ρ q d.nColumns d.bColumns d.amplitude d.rowPhase i k
-
-theorem energy_bound
-    (W : ℝ→ℂ) (a b : ℝ) (ha : 0<a)
-    (hsupp : Function.support W⊆Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    (deltaLoss ρ q levelBound : ℝ) (hδ : 0<deltaLoss) (hρ : 0<ρ) (hq : 1<q) (hlevel : 1≤levelBound) :
-    ∃C : ℝ,0<C ∧ ∀K X : ℝ,1≤K → 1≤X →
-    ∀I F Q : Ideal O,I≠0 → Q≠0 → (Ideal.absNorm I:ℝ)≤K →
-      1≤completedResidualScale K I Q → ∀d : ReflectedBranchData levelBound K I F Q,
-      (∑k,‖d.value W X ρ q k‖^2)≤
-        C*(K*(Ideal.absNorm Q:ℝ))^(10*deltaLoss)*(K+K^2*(Ideal.absNorm Q:ℝ)/X)/
-          (Ideal.absNorm (rowPowerfulPart I):ℝ) := by
-  obtain ⟨C,hC,h⟩ := completed_reflected_fiber_fixed_scale W a b ha hsupp hW deltaLoss ρ q levelBound hδ hρ hq hlevel
-  refine ⟨C,hC,?_⟩
-  intro K X hK hX I F Q hI hQ hIK hk d
-  let : ∀p : d.primes,p.val.IsMaximal := d.maximal
-  exact h K X d.levelScale hK hX d.levelScale_pos d.levelScale_le I F Q hI hQ hIK hk _ d.good d.coprime d.divides d.nonresidual
-    d.label d.nColumns d.bColumns d.nBounds d.bBounds d.amplitude d.amplitude_bound
-    d.rowPhase d.rowPhase_bound
 
 end ReflectedBranchData
 
@@ -510,54 +378,7 @@ theorem finite_energy_bound {κ τ : Type*} [Fintype κ] [Fintype τ]
       mul_le_mul_of_nonneg_left (Finset.sum_le_sum (fun t _ => hf t)) (Nat.cast_nonneg _)
     _ = _ := by simp only [Finset.sum_const,Finset.card_univ,nsmul_eq_mul]; ring
 
-theorem energy_bound
-    (W : ℝ→ℂ) (a b : ℝ) (ha : 0<a)
-    (hsupp : Function.support W⊆Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    (deltaLoss ε ρ q levelBound : ℝ) (hδ : 0<deltaLoss) (hε : 0<ε) (hρ : 0<ρ) (hq : 1<q) (hlevel : 1≤levelBound) :
-    ∃C : ℝ,0<C ∧ ∀(rays : ℕ) (K X : ℝ),1≤K → 1≤X →
-    ∀I F Q : Ideal O,I≠0 → Q≠0 → (Ideal.absNorm I:ℝ)≤K →
-      1≤completedResidualScale K I Q → ∀d : ReflectedFiberData rays levelBound K I F Q,
-      (∑k,‖d.value W X ρ q k‖^2)≤
-        C*(rays:ℝ)^2*(K*(Ideal.absNorm Q:ℝ))^(10*deltaLoss+ε)*(K+K^2*(Ideal.absNorm Q:ℝ)/X)/
-          (Ideal.absNorm (rowPowerfulPart I):ℝ) := by
-  obtain ⟨Cb,hCb,hb⟩ := ReflectedBranchData.energy_bound W a b ha hsupp hW deltaLoss ρ q levelBound hδ hρ hq hlevel
-  obtain ⟨Cp,hCp,hp⟩ := completed_branch_count_small_power ε hε
-  refine ⟨Cb*Cp,by positivity,?_⟩
-  intro rays K X hK hX I F Q hI hQ hIK hk d
-  let : ∀p : d.pool,p.val.IsMaximal := d.maximal
-  have hcount := hp (I*Q) (mul_ne_zero hI hQ) (fun p : d.pool => p.val)
-    Subtype.val_injective d.divides
-  have hnorm : (Ideal.absNorm (I*Q):ℝ)≤K*(Ideal.absNorm Q:ℝ) := by
-    simp only [map_mul,Nat.cast_mul]
-    exact mul_le_mul_of_nonneg_right hIK (Nat.cast_nonneg _)
-  have hcount' : (6:ℝ)^(2*d.pool.card)≤Cp*(K*(Ideal.absNorm Q:ℝ))^ε := by
-    have hc : (6:ℝ)^(2*d.pool.card)≤Cp*(Ideal.absNorm (I*Q):ℝ)^ε := by
-      simpa only [Fintype.card_coe] using hcount
-    exact hc.trans (mul_le_mul_of_nonneg_left (Real.rpow_le_rpow (Nat.cast_nonneg _) hnorm hε.le) hCp.le)
-  have he := finite_energy_bound
-    (fun b => (d.branch b).value W X ρ q) d.weight d.weight_bound _
-    (fun b => hb K X hK hX I F Q hI hQ hIK hk (d.branch b))
-  change (∑k,‖d.value W X ρ q k‖^2)≤_ at he
-  apply he.trans
-  have hc : (Fintype.card (Fin rays×(d.pool→Fin 6)):ℝ)^2=(rays:ℝ)^2*(6:ℝ)^(2*d.pool.card) := by
-    simp only [Fintype.card_prod,Fintype.card_fun,Fintype.card_fin,Fintype.card_coe,Nat.cast_mul,Nat.cast_pow]
-    rw [mul_pow,←pow_mul,Nat.mul_comm d.pool.card 2]
-    norm_num
-  rw [hc]
-  have hnQ : 0<(Ideal.absNorm Q:ℝ) := by
-    exact_mod_cast Nat.pos_of_ne_zero (fun hz => hQ (Ideal.absNorm_eq_zero_iff.mp hz))
-  have hKQ : 0<K*(Ideal.absNorm Q:ℝ) := mul_pos (by linarith) hnQ
-  calc
-    _ ≤ ((rays:ℝ)^2*(Cp*(K*(Ideal.absNorm Q:ℝ))^ε))*
-      (Cb*(K*(Ideal.absNorm Q:ℝ))^(10*deltaLoss)*(K+K^2*(Ideal.absNorm Q:ℝ)/X)/
-        (Ideal.absNorm (rowPowerfulPart I):ℝ)) := by
-      apply mul_le_mul_of_nonneg_right _ (by positivity)
-      exact mul_le_mul_of_nonneg_left hcount' (sq_nonneg _)
-    _ = _ := by rw [Real.rpow_add hKQ]; ring
-
 end ReflectedFiberData
-
-open ActualEisensteinCubic CanonicalQuadraticSieve
 
 theorem one_le_completedResidualScale (K : ℝ) (I Q : Ideal O)
     (hI : I≠0) (hIK : (Ideal.absNorm I:ℝ)≤K) : 1≤completedResidualScale K I Q := by
@@ -588,59 +409,6 @@ def HasExactCompletedModels (rays : ℕ) (rows : Finset (Ideal O))
     ∃I∈completedRowFiber rows Q A T,∃d : ReflectedFiberData rays levelBound K I F Q,
       ∀J∈completedRowFiber rows Q A T,
         completedT (Ψ J) W X=lengthScale*d.idealValue W X ρ q (rowResidualPart J Q)
-
-theorem completed_energy_of_exact_models
-    (W : ℝ→ℂ) (a b : ℝ) (ha : 0<a)
-    (hsupp : Function.support W⊆Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    (deltaLoss ε ρ q levelBound : ℝ) (hδ : 0<deltaLoss) (hε : 0<ε) (hρ : 0<ρ) (hq : 1<q) (hlevel : 1≤levelBound) :
-    ∃C : ℝ,0<C ∧ ∀(rays : ℕ) (K X : ℝ),1≤K → 1≤X →
-    ∀(rows : Finset (Ideal O)) (F Q : Ideal O),Q≠0 →
-      (∀P∈fixedBadPrimes,P∣Q) → (∀I∈rows,I≠0 ∧ (Ideal.absNorm I:ℝ)≤K) →
-    ∀(Ψ : Ideal O→O→*ℂ) (lengthScale : ℂ),HasExactCompletedModels rays rows K X ρ q levelBound F Q W Ψ lengthScale →
-      (∑I∈rows,‖completedT (Ψ I) W X‖^2)≤
-        C*(rays:ℝ)^2*‖lengthScale‖^2*(Ideal.absNorm Q:ℝ)^ε*
-          (K*(Ideal.absNorm Q:ℝ))^(10*deltaLoss+ε)*(K+K^2*(Ideal.absNorm Q:ℝ)/X) := by
-  obtain ⟨Cm,hCm,hm⟩ := ReflectedFiberData.energy_bound W a b ha hsupp hW deltaLoss ε ρ q levelBound hδ hε hρ hq hlevel
-  obtain ⟨Co,hCo,ho⟩ := completed_outer_row_small_power ε hε
-  refine ⟨Co*Cm,by positivity,?_⟩
-  intro rays K X hK hX rows F Q hQ hbad hrows Ψ lengthScale hexact
-  let B : ℝ := Cm*(rays:ℝ)^2*‖lengthScale‖^2*(K*(Ideal.absNorm Q:ℝ))^(10*deltaLoss+ε)*
-    (K+K^2*(Ideal.absNorm Q:ℝ)/X)
-  have hB : 0≤B := by dsimp [B]; positivity
-  have hblocks : ∀A∈rows.image rowPowerfulPart,∀T∈rows.image (fun I => rowMaskPart I Q),
-      (∑I∈completedRowFiber rows Q A T,‖completedT (Ψ I) W X‖^2)≤B/(Ideal.absNorm A:ℝ) := by
-    intro A hA T hT
-    by_cases hempty : (completedRowFiber rows Q A T).Nonempty
-    · obtain ⟨I,hIf,d,hd⟩ := hexact A hA T hT hempty
-      obtain ⟨hIr,hIA,hIT⟩ := Finset.mem_filter.mp hIf
-      have hI := (hrows I hIr).1
-      have hIK := (hrows I hIr).2
-      have hk := one_le_completedResidualScale K I Q hI hIK
-      have hdenergy := hm rays K X hK hX I F Q hI hQ hIK hk d
-      have hembed := completedRowFiber_energy_le rows Q A T hbad K hrows
-        (d.idealValue W X ρ q)
-      have hscale : K/((Ideal.absNorm A:ℝ)*(Ideal.absNorm T:ℝ))=completedResidualScale K I Q := by
-        simp only [completedResidualScale,hIA,hIT]
-      rw [hscale] at hembed
-      simp_rw [ReflectedFiberData.idealValue_at] at hembed
-      have hsource : (∑J∈completedRowFiber rows Q A T,‖completedT (Ψ J) W X‖^2)=
-          ‖lengthScale‖^2*∑J∈completedRowFiber rows Q A T,‖d.idealValue W X ρ q (rowResidualPart J Q)‖^2 := by
-        rw [Finset.mul_sum]
-        apply Finset.sum_congr rfl
-        intro J hJ
-        rw [hd J hJ,norm_mul,mul_pow]
-      rw [hsource]
-      apply (mul_le_mul_of_nonneg_left (hembed.trans hdenergy) (sq_nonneg _)).trans
-      apply le_of_eq
-      dsimp [B]
-      rw [hIA]
-      ring
-    · rw [Finset.not_nonempty_iff_eq_empty.mp hempty,Finset.sum_empty]
-      exact div_nonneg hB (Nat.cast_nonneg _)
-  have hh := ho rows Q hQ (fun I => ‖completedT (Ψ I) W X‖^2) B hB hblocks
-  apply hh.trans_eq
-  dsimp [B]
-  ring
 
 end CompletedGauss
 

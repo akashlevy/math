@@ -1,77 +1,23 @@
 import OAI.NumberTheory.DirichletL.GaussSum.FixedRayFibers
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 
@@ -166,29 +112,6 @@ lemma fixedCuspArrayWithPhase_eligible (j:Fin 3) (u:Eisˣ)
   by_contra he
   exact h (fixedCuspArrayWithPhase_zero j u φ m I J he)
 
-theorem fixedCuspArrayWithPhase_tsum_primary_pairs (j:Fin 3) (u:Eisˣ)
-    (φ:ℕ→Ideal Eis→Ideal Eis→ℂ) (m:ℕ) (w:CompletedMellinIndex→ℂ) :
-    (∑'t:CompletedMellinIndex,fixedCuspArrayWithPhase j u φ m t.1.val t.2.val*w t)=
-    ∑'t:ThetaPrimaryCubePair,fixedCuspArrayWithPhase j u φ m t.1.val t.2.val*
-      w (primaryCubePairToMellinIndex t) := by
-  apply tsum_eq_tsum_of_ne_zero_bij
-    (fun t=>primaryCubePairToMellinIndex t.val)
-  · exact primaryCubePairToMellinIndex_injective.comp Subtype.val_injective
-  · intro t ht
-    change fixedCuspArrayWithPhase j u φ m t.1.val t.2.val*w t≠0 at ht
-    have ha:fixedCuspArrayWithPhase j u φ m t.1.val t.2.val≠0:=by
-      intro hz
-      exact ht (by rw [hz,zero_mul])
-    obtain ⟨hs,hI,hJ⟩:=fixedCuspArrayWithPhase_eligible j u φ m t.1.val t.2.val ha
-    let v:ThetaPrimaryCubePair:=(⟨t.1.val,hs,hI⟩,⟨t.2.val,hJ⟩)
-    have hv:primaryCubePairToMellinIndex v=t:=Prod.ext (Subtype.ext rfl) (Subtype.ext rfl)
-    refine ⟨⟨v,?_⟩,hv⟩
-    change fixedCuspArrayWithPhase j u φ m (primaryCubePairToMellinIndex v).1.val
-      (primaryCubePairToMellinIndex v).2.val*w (primaryCubePairToMellinIndex v)≠0
-    rwa [hv]
-  · intro t
-    rfl
-
 theorem fixedCuspArrayWithPhase_tsum_full_index
     (j:Eisˣ→Fin 3) (φ:Eisˣ→ℕ→Ideal Eis→Ideal Eis→ℂ) (w:CuspIdealIndex→ℂ) :
     (∑'t:CuspIdealIndex,fixedCuspArrayWithPhase (j t.1) t.1 (φ t.1)
@@ -216,8 +139,6 @@ theorem fixedCuspArrayWithPhase_tsum_full_index
     rfl
 
 end CubicEisenstein
-
-open scoped Classical BigOperators
 
 namespace CompletedGauss
 variable {ι:Type*} [Fintype ι] [DecidableEq ι]
@@ -359,8 +280,6 @@ lemma residual_coprime_fixed_conductor (q:ℕ) (hq:q≠0) (m:Eis) (F I:Ideal Eis
 
 end CanonicalRowCompletion
 
-open scoped BigOperators Classical
-
 namespace CompletedGauss
 
 section
@@ -373,23 +292,12 @@ def representativeRowFiber (rows:Finset (Ideal Eis)) (I Q:Ideal Eis) : Finset (I
 def reconstructFiberRow (I Q k:Ideal Eis) : Ideal Eis :=
   rowPowerfulPart I*rowMaskPart I Q*k
 
-lemma reconstructFiberRow_ne_zero (I Q k:Ideal Eis) (hk:k≠0) : reconstructFiberRow I Q k≠0 :=
-  mul_ne_zero (mul_ne_zero (rowPowerfulPart_ne_zero I)
-    (squarefreeMaskPart_ne_zero (rowSimplePart I) Q)) hk
-
 lemma reconstructFiberRow_of_original (rows:Finset (Ideal Eis)) (I Q J:Ideal Eis)
     (hJ:J∈representativeRowFiber rows I Q) (hJ0:J≠0) :
     reconstructFiberRow I Q (rowResidualPart J Q)=J := by
   obtain ⟨_,hA,hT⟩:=Finset.mem_filter.mp hJ
   rw [reconstructFiberRow,←hA,←hT]
   exact row_powerful_mask_residual_product J Q hJ0
-
-lemma residual_reconstructFiberRow (rows:Finset (Ideal Eis)) (I Q k:Ideal Eis)
-    (hk:k≠0) (hmem:reconstructFiberRow I Q k∈representativeRowFiber rows I Q) :
-    rowResidualPart (reconstructFiberRow I Q k) Q=k := by
-  have he:=reconstructFiberRow_of_original rows I Q _ hmem (reconstructFiberRow_ne_zero I Q k hk)
-  exact mul_left_cancel₀ (mul_ne_zero (rowPowerfulPart_ne_zero I)
-    (squarefreeMaskPart_ne_zero (rowSimplePart I) Q)) he
 
 lemma representativeRowFiber_injective (rows:Finset (Ideal Eis)) (I Q:Ideal Eis)
     (hrows:∀J∈rows,J≠0) :
@@ -402,15 +310,6 @@ def fiberResidualIndex (rows:Finset (Ideal Eis)) (I Q:Ideal Eis) (K:ℝ)
     (J:representativeRowFiber rows I Q) : idealRange (completedResidualScale K I Q) :=
   ⟨rowResidualPart J.val Q,completedRowFiber_residual_range rows Q
     (rowPowerfulPart I) (rowMaskPart I Q) hbad K hrows J.val J.property⟩
-
-lemma fiberResidualIndex_injective (rows:Finset (Ideal Eis)) (I Q:Ideal Eis) (K:ℝ)
-    (hbad:∀P∈fixedBadPrimes,P∣Q)
-    (hrows:∀J∈rows,J≠0 ∧ (Ideal.absNorm J:ℝ)≤K) :
-    Function.Injective (fiberResidualIndex rows I Q K hbad hrows) := by
-  intro J lengthScale he
-  apply Subtype.ext
-  apply representativeRowFiber_injective rows I Q (fun J hJ=>(hrows J hJ).1) J.property lengthScale.property
-  exact congrArg Subtype.val he
 
 def extendFiberRowScalar {α:Type*} (rows:Finset (Ideal Eis)) (I Q:Ideal Eis) (K:ℝ)
     (scalar:α → representativeRowFiber rows I Q → ℂ) (a:α)
@@ -427,13 +326,6 @@ lemma extendFiberRowScalar_norm_le_one {α:Type*} (rows:Finset (Ideal Eis)) (I Q
   · exact hscalar _ _
   · simp
 
-lemma extendFiberRowScalar_zero {α:Type*} (rows:Finset (Ideal Eis)) (I Q:Ideal Eis) (K:ℝ)
-    (scalar:α → representativeRowFiber rows I Q → ℂ) (a:α)
-    (k:idealRange (completedResidualScale K I Q))
-    (hk:reconstructFiberRow I Q k.val∉representativeRowFiber rows I Q) :
-    extendFiberRowScalar rows I Q K scalar a k=0 := by
-  simp only [extendFiberRowScalar,dite_eq_right hk]
-
 lemma extendFiberRowScalar_at_original {α:Type*} (rows:Finset (Ideal Eis)) (I Q:Ideal Eis) (K:ℝ)
     (hbad:∀P∈fixedBadPrimes,P∣Q)
     (hrows:∀J∈rows,J≠0 ∧ (Ideal.absNorm J:ℝ)≤K)
@@ -444,109 +336,15 @@ lemma extendFiberRowScalar_at_original {α:Type*} (rows:Finset (Ideal Eis)) (I Q
   have he:=reconstructFiberRow_of_original rows I Q J.val J.property hJ0
   simp only [extendFiberRowScalar,fiberResidualIndex,he,dite_eq_left J.property]
 
-def extendSelectedFiberRowScalar {α τ:Type*} [DecidableEq τ]
-    (rows:Finset (Ideal Eis)) (I Q:Ideal Eis) (K:ℝ)
-    (selector:α → representativeRowFiber rows I Q → τ)
-    (scalar:α → representativeRowFiber rows I Q → ℂ) (t:τ) (a:α)
-    (k:idealRange (completedResidualScale K I Q)) : ℂ :=
-  extendFiberRowScalar rows I Q K (fun a J=>if selector a J=t then scalar a J else 0) a k
-
-lemma extendSelectedFiberRowScalar_norm_le_one {α τ:Type*} [DecidableEq τ]
-    (rows:Finset (Ideal Eis)) (I Q:Ideal Eis) (K:ℝ)
-    (selector:α → representativeRowFiber rows I Q → τ)
-    (scalar:α → representativeRowFiber rows I Q → ℂ) (hscalar:∀a J,‖scalar a J‖≤1)
-    (t:τ) (a:α) (k:idealRange (completedResidualScale K I Q)) :
-    ‖extendSelectedFiberRowScalar rows I Q K selector scalar t a k‖≤1 := by
-  apply extendFiberRowScalar_norm_le_one
-  intro a J
-  split_ifs
-  · exact hscalar a J
-  · simp
-
-lemma extendSelectedFiberRowScalar_at_original {α τ:Type*} [DecidableEq τ]
-    (rows:Finset (Ideal Eis)) (I Q:Ideal Eis) (K:ℝ)
-    (hbad:∀P∈fixedBadPrimes,P∣Q)
-    (hrows:∀J∈rows,J≠0 ∧ (Ideal.absNorm J:ℝ)≤K)
-    (selector:α → representativeRowFiber rows I Q → τ)
-    (scalar:α → representativeRowFiber rows I Q → ℂ) (t:τ) (a:α)
-    (J:representativeRowFiber rows I Q) :
-    extendSelectedFiberRowScalar rows I Q K selector scalar t a
-      (fiberResidualIndex rows I Q K hbad hrows J)=
-        if selector a J=t then scalar a J else 0 :=
-  extendFiberRowScalar_at_original rows I Q K hbad hrows _ a J
-
-lemma sum_extendSelectedFiberRowScalar {α τ:Type*} [Fintype τ] [DecidableEq τ]
-    (rows:Finset (Ideal Eis)) (I Q:Ideal Eis) (K:ℝ)
-    (selector:α → representativeRowFiber rows I Q → τ)
-    (scalar:α → representativeRowFiber rows I Q → ℂ) (a:α)
-    (k:idealRange (completedResidualScale K I Q)) :
-    (∑t:τ,extendSelectedFiberRowScalar rows I Q K selector scalar t a k)=
-      extendFiberRowScalar rows I Q K scalar a k := by
-  by_cases hk:reconstructFiberRow I Q k.val∈representativeRowFiber rows I Q
-  · simp [extendSelectedFiberRowScalar,extendFiberRowScalar,hk]
-  · simp only [extendSelectedFiberRowScalar,extendFiberRowScalar,dite_eq_right hk,Finset.sum_const_zero]
-
 end
 
 open ActualEisensteinCubic CanonicalQuadraticSieve
 local notation "Eis" => ActualEisensteinCubic.O
 
-theorem reconstructFiberRow_valid_iff (rows:Finset (Ideal Eis)) (I Q:Ideal Eis) (K:ℝ)
-    (hbad:∀P∈fixedBadPrimes,P∣Q)
-    (hrows:∀J∈rows,J≠0 ∧ (Ideal.absNorm J:ℝ)≤K)
-    (k:idealRange (completedResidualScale K I Q)) :
-    reconstructFiberRow I Q k.val∈representativeRowFiber rows I Q ↔
-      ∃J:representativeRowFiber rows I Q,fiberResidualIndex rows I Q K hbad hrows J=k := by
-  constructor
-  · intro hk
-    refine ⟨⟨reconstructFiberRow I Q k.val,hk⟩,?_⟩
-    apply Subtype.ext
-    exact residual_reconstructFiberRow rows I Q k.val (mem_idealRange.mp k.property).1.1 hk
-  · rintro ⟨J,rfl⟩
-    have hJ0:J.val≠0:=(hrows J.val (Finset.mem_filter.mp J.property).1).1
-    change reconstructFiberRow I Q (rowResidualPart J.val Q)∈representativeRowFiber rows I Q
-    rw [reconstructFiberRow_of_original rows I Q J.val J.property hJ0]
-    exact J.property
-
 lemma representativeFiber_parts (rows:Finset (Ideal Eis)) (I Q:Ideal Eis)
     (J:representativeRowFiber rows I Q) :
     rowPowerfulPart J.val=rowPowerfulPart I ∧ rowMaskPart J.val Q=rowMaskPart I Q :=
   (Finset.mem_filter.mp J.property).2
-
-lemma representativeFiber_pool (rows:Finset (Ideal Eis)) (I Q:Ideal Eis)
-    (hI:I≠0) (hQ:Q≠0) (hrows:∀J∈rows,J≠0)
-    (J:representativeRowFiber rows I Q) :
-    completedReflectionPool J.val Q=completedReflectionPool I Q := by
-  have hs:=representativeFiber_parts rows I Q J
-  exact completedReflectionPool_eq_on_fiber J.val I Q
-    (hrows J.val (Finset.mem_filter.mp J.property).1) hI hQ hs.1 hs.2
-
-lemma representativeFiber_filtered_pool (rows:Finset (Ideal Eis)) (I Q:Ideal Eis)
-    (hI:I≠0) (hQ:Q≠0) (hrows:∀J∈rows,J≠0)
-    (J:representativeRowFiber rows I Q) (free:Ideal Eis → Prop) [DecidablePred free] :
-    (completedReflectionPool J.val Q).filter free=(completedReflectionPool I Q).filter free := by
-  rw [representativeFiber_pool rows I Q hI hQ hrows J]
-
-lemma representativeFiber_exponent (rows:Finset (Ideal Eis)) (I F Q:Ideal Eis)
-    (hI:I≠0) (hQ:Q≠0) (hrows:∀J∈rows,J≠0)
-    (J:representativeRowFiber rows I Q) (P:completedReflectionPool I Q) :
-    completedLocalExponent J.val F P.val=completedLocalExponent I F P.val := by
-  have hs:=representativeFiber_parts rows I Q J
-  exact (completedReflectionPool_exponent_eq I J.val F Q hI
-    (hrows J.val (Finset.mem_filter.mp J.property).1) hQ hs.1.symm hs.2.symm P).symm
-
-lemma representativeFiber_extractedDivisor {ι:Type*} [Fintype ι]
-    (rows:Finset (Ideal Eis)) (I F Q:Ideal Eis)
-    (hI:I≠0) (hQ:Q≠0) (hrows:∀J∈rows,J≠0)
-    (J:representativeRowFiber rows I Q)
-    (P:ι → Ideal Eis) (hP:∀i,P i∈completedReflectionPool I Q) (e:ι → Fin 3) (v:Fin 3) :
-    reflectionExtractedDivisor P (fun i=>completedLocalExponent J.val F (P i)) e v=
-      reflectionExtractedDivisor P (fun i=>completedLocalExponent I F (P i)) e v := by
-  have he:(fun i=>completedLocalExponent J.val F (P i))=
-      (fun i=>completedLocalExponent I F (P i)):=by
-    funext i
-    exact representativeFiber_exponent rows I F Q hI hQ hrows J ⟨P i,hP i⟩
-  rw [he]
 
 lemma representativeFiber_residualScale (rows:Finset (Ideal Eis)) (I Q:Ideal Eis)
     (J:representativeRowFiber rows I Q) (K:ℝ) :
@@ -554,19 +352,7 @@ lemma representativeFiber_residualScale (rows:Finset (Ideal Eis)) (I Q:Ideal Eis
   have hs:=representativeFiber_parts rows I Q J
   exact completedResidualScale_eq_on_fiber K J.val I Q hs.1 hs.2
 
-lemma representativeFiber_branchScale {ι:Type*} [Fintype ι]
-    (rows:Finset (Ideal Eis)) (I F Q:Ideal Eis)
-    (hI:I≠0) (hQ:Q≠0) (hrows:∀J∈rows,J≠0)
-    (J:representativeRowFiber rows I Q)
-    (P:ι → Ideal Eis) (hP:∀i,P i∈completedReflectionPool I Q) (e:ι → Fin 3) (K X:ℝ) :
-    completedBranchScale K X J.val F Q P e=completedBranchScale K X I F Q P e := by
-  have hs:=representativeFiber_parts rows I Q J
-  exact (completedBranchScale_eq_on_fiber K X I J.val F Q hI
-    (hrows J.val (Finset.mem_filter.mp J.property).1) hQ hs.1.symm hs.2.symm P hP e).symm
-
 end CompletedGauss
-
-open scoped Classical BigOperators
 
 namespace CompletedGauss.FreeReflection
 open ActualEisensteinCubic CubicEisenstein CanonicalQuadraticSieve
@@ -580,33 +366,6 @@ def fixedRayFiberFromRows (c:Eis) (hc:c≠0) (rows:Finset (Ideal Eis))
   fixedRayFiber c hc I F Q Q0 hI hQ K (fun _=>1) (by intro x;simp)
     (fun x m=>extendFiberRowScalar rows I Q K scalar (x,m))
     (fun x m=>extendFiberRowScalar_norm_le_one rows I Q K scalar hscalar (x,m))
-
-lemma fixedRayFiberFromRows_rowPhase (c:Eis) (hc:c≠0) (rows:Finset (Ideal Eis))
-    (I F Q Q0:Ideal Eis) (hI:I≠0) (hQ:Q≠0) (K:ℝ)
-    (scalar:(FixedBranchIndex c hc I Q Q0×ℕ)→ representativeRowFiber rows I Q→ℂ)
-    (hscalar:∀a J,‖scalar a J‖≤1)
-    (hbad:∀P∈fixedBadPrimes,P∣Q)
-    (hrows:∀J∈rows,J≠0 ∧ (Ideal.absNorm J:ℝ)≤K)
-    (J:representativeRowFiber rows I Q) (r:FixedReflectionRay c hc)
-    (e:pool I Q Q0→Fin 6) (i:ℕ×ℕ×ℕ) :
-    ((fixedRayFiberFromRows c hc rows I F Q Q0 hI hQ K scalar hscalar).branch
-      (fixedReflectionRayEquiv c hc r,e)).rowPhase i
-        (fiberResidualIndex rows I Q K hbad hrows J)=scalar ((r,e),i.1) J := by
-  change extendFiberRowScalar rows I Q K scalar
-    ((((fixedReflectionRayEquiv c hc).symm (fixedReflectionRayEquiv c hc r)),e),i.1)
-    (fiberResidualIndex rows I Q K hbad hrows J)=_
-  rw [Equiv.symm_apply_apply]
-  exact extendFiberRowScalar_at_original rows I Q K hbad hrows scalar ((r,e),i.1) J
-
-lemma fixedRayFiberFromRows_weight (c:Eis) (hc:c≠0) (rows:Finset (Ideal Eis))
-    (I F Q Q0:Ideal Eis) (hI:I≠0) (hQ:Q≠0) (K:ℝ)
-    (scalar:(FixedBranchIndex c hc I Q Q0×ℕ)→ representativeRowFiber rows I Q→ℂ)
-    (hscalar:∀a J,‖scalar a J‖≤1)
-    (r:FixedReflectionRay c hc) (e:pool I Q Q0→Fin 6) :
-    (fixedRayFiberFromRows c hc rows I F Q Q0 hI hQ K scalar hscalar).weight
-      (fixedReflectionRayEquiv c hc r,e)=reflectionSixInactiveWeight I F Q Q0 e := by
-  change 1*reflectionSixInactiveWeight I F Q Q0 e=_
-  exact one_mul _
 
 end CompletedGauss.FreeReflection
 

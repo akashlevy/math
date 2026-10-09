@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.WidthRanges
 import OAI.NumberTheory.DirichletL.Energy.FirstLiveAdmission
-
 namespace OAI
 
 noncomputable section
@@ -24,12 +23,6 @@ lemma readyBudget_le_schedule (M B L ε A P:ℝ)(hM:0≤M)(hB:0≤B)
   have hr:=final_range_large M B L ε hM hB
   unfold readyBudget finalSourceCap sourceCap
   linarith
-lemma declared_capacity_le_schedule (M B L ε A:ℝ)(hM:0≤M)(hB:0≤B)
-    (hA:A≤2*range M B L (count M ε)):
-    max M A≤finalSourceCap M B L ε:=by
-  have hr:=final_range_large M B L ε hM hB
-  apply max_le
-  all_goals unfold finalSourceCap sourceCap;linarith
 
 end SevenEighths.CenteredMomentEnergySourceCapSchedule
 

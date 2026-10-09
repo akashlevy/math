@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.ChildRows
 import OAI.NumberTheory.DirichletL.Moments.PartitionNorm
-
 namespace OAI
 
 noncomputable section
@@ -104,16 +103,6 @@ theorem forcing_prime_mem (P : ι → Ideal O) (hp : ∀ i, Prime (P i))
   obtain ⟨i,hi,hPi⟩ := Multiset.mem_map.mp hQ
   exact ⟨i,hi,hPi.symm⟩
 
-omit [Fintype ι] [DecidableEq ι] in
-theorem forcing_norm_scale (P : ι → Ideal O) (hp : ∀ i, Prime (P i))
-    (c d : ι → ℕ) (V : Finset ι) (Z : ℝ) (hZ : 1 < Z) :
-    Z ^ ((2 * Real.logb Z (Ideal.absNorm (forcingIdeal P c d V))) / 2) =
-      (Ideal.absNorm (forcingIdeal P c d V) : ℝ) := by
-  rw [show (2 * Real.logb Z (Ideal.absNorm (forcingIdeal P c d V))) / 2 =
-    Real.logb Z (Ideal.absNorm (forcingIdeal P c d V)) by ring]
-  exact Real.rpow_logb (zero_lt_one.trans hZ) (ne_of_gt hZ)
-    (norm_pos (Finset.prod_ne_zero_iff.mpr (fun i _ => (hp i).ne_zero)))
-
 def movingElement (p : ι → O) (c d : ι → ℕ) (V : Finset ι) : O :=
   (∏ i, p i ^ min (c i) (d i)) * ∏ i ∈ V, p i
 
@@ -122,40 +111,6 @@ theorem movingElement_span (p : ι → O) (c d : ι → ℕ) (V : Finset ι) :
     Ideal.span {movingElement p c d V} = movingIdeal (fun i => Ideal.span {p i}) c d V := by
   simp only [movingElement,movingIdeal,Ideal.span_singleton_pow,
     Ideal.prod_span_singleton,Ideal.span_singleton_mul_span_singleton]
-
-theorem actual_forcing_exceptional_count (p : ι → O)
-    (hp : ∀ i, Prime (Ideal.span {p i})) (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (c d : ι → ℕ) (V : Finset ι)
-    (η : HeckeFamily.Character) (χ : RayFourExpansion.RayCharacter)
-    (Q : Ideal O) (hQ0 : Q ≠ 0) (hQ : Q ≠ ⊤) (hQ72 : Q ≤ Ideal.span {(72 : O)})
-    (m e : O) (hm : m ≠ 0) (hmLam : ConcretePrimeRowBridge.goodLambda ∣ m) (hm2 : (2 : O) ∣ m)
-    (he : HeckeFamily.elementCoeff η e ≠ 0) (T : Finset O) (hT : ∀ z ∈ T, z ≠ 0)
-    (hex : ∀ z ∈ T, CenteredExceptionalProfile.FixedInducingRow
-      (CenteredMomentChildRows.childCharacter η χ) Q m (movingElement p c d V) z)
-    (hgood : ∀ i ∈ forcingSet c d V,
-      ConcretePrimeRowBridge.goodLambda ∉ Ideal.span {p i} ∧ (2 : O) ∉ Ideal.span {p i} ∧
-      IsCoprime Q (Ideal.span {p i}) ∧ Ideal.span {p i} ∣ Ideal.span {e})
-    (Z C M : ℝ) (hZ : 1 < Z) (hC : 0 ≤ C)
-    (hN : ∀ z ∈ T, (Ideal.absNorm (Ideal.span {z}) : ℝ) ≤ C * Z ^ M) :
-    (T.card : ℝ) ≤ 768 * (6 : ℝ) ^ (normalizedFactors Q).toFinset.card *
-      C ^ (1 / 6 : ℝ) *
-        Z ^ ((M - 4 * Real.logb Z (Ideal.absNorm (forcingIdeal (fun i => Ideal.span {p i}) c d V))) / 6) := by
-  have hA : movingElement p c d V ≠ 0 := by
-    apply Ideal.span_singleton_eq_bot.not.mp
-    rw [movingElement_span]
-    exact movingIdeal_ne_zero _ hp c d V
-  have hb := CenteredMomentChildRows.separated_exceptional_count η χ Q hQ0 hQ hQ72
-    m (movingElement p c d V) e hm hA hmLam hm2 he T hT hex
-    (forcingIdeal (fun i => Ideal.span {p i}) c d V)
-    (forcingIdeal_squarefree _ hp hinj c d V) (by
-      intro P hP
-      obtain ⟨i,hi,rfl⟩ := forcing_prime_mem _ hp c d V P hP
-      obtain ⟨hg,h2,hQP,hPe⟩ := hgood i hi
-      refine ⟨hg,h2,hQP,hPe,?_⟩
-      rw [movingElement_span,forcing_valuation_two _ hp hinj c d V i hi])
-    Z C M (2 * Real.logb Z (Ideal.absNorm (forcingIdeal (fun i => Ideal.span {p i}) c d V)))
-    (zero_lt_one.trans hZ) hC (forcing_norm_scale _ hp c d V Z hZ).le hN
-  convert hb using 1 ; congr 1 ; ring_nf
 
 end SevenEighths.CenteredMomentForcing
 

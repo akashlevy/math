@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.ReferenceLowBands
 import OAI.NumberTheory.DirichletL.Energy.Reindex
-
 namespace OAI
 
 noncomputable section

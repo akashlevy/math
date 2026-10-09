@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorFiberSpikes
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationScaleSup
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRowwisePlain
-
 namespace OAI
 
 noncomputable section

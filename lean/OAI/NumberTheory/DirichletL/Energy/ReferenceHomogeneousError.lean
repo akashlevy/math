@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.ReferenceHomogeneous
 import OAI.NumberTheory.DirichletL.Moments.NaturalFixedRaySourceAllocatedErrorMass
-
 namespace OAI
 
 noncomputable section

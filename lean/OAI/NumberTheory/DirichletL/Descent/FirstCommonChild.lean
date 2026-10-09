@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstCommonColumns
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -88,35 +87,6 @@ theorem firstCommonColumn_original_labels
       (fun u => ω (Real.exp u)) (columnLog p (primeProductNorm p D*X)) t d,
     rayIdealRow_cube_labels p hp hinj hcop hg F D B v ε₁ ε₂ hv]
   rfl
-
-theorem firstCommonColumn_marked_priority {σ : Type*} [DecidableEq σ]
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hc : ∀ i, ringChar (Eis ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, ConcretePrimeRowBridge.goodLambda^2 ∣ p i-1)
-    (F D B A : Finset ι) (v : ι → ℕ) (ε₁ ε₂ : ι → Bool) (hv : ∀ j ∈ B,0 < v j)
-    (negative : Bool) (χ : RayCharacter) (Ψ : Eis →* ℂ) (m : Eis)
-    (slots : Finset σ) (lists : σ → Finset ι) (a : σ → ι → ℂ) (H : Finset ι → ℂ)
-    (ω : ℝ → ℂ) (X t : ℝ) (hX : 0 < X) (c d f h : Eis) :
-    firstCommonColumn p hg F D
-      (firstBareCubeCoefficient p hp hg hcop B v ε₁ ε₂ negative
-        (originalLabelColumn p hg B ε₁ ε₂ negative
-          (multiplicativeCoreColumn p Ψ m (fun U => primeMark slots lists a (A∪U)*H U)) c f) d)
-      negative χ ω X t h =
-    (if negative then star (supportRay p χ D) else supportRay p χ D) *
-      (beforeDilationLabel (fun i => Ideal.span {p i}) hg p B v ε₁ ε₂ negative c d f D *
-        ∑ r : FirstCoreIndex,firstCoreOuter p hg B v ε₁ ε₂ negative Ψ m D r *
-          ∑ J ∈ slots.powerset,primeMark J lists a (A∪D) *
-            firstCoreInputRow p hg F D B v ε₁ ε₂ negative χ Ψ m
-              (fun U => primeMark (slots\J) (fun i => lists i\(A∪D)) a U*H U)
-              (fun u => ω (Real.exp u)) (columnLog p (primeProductNorm p D*X)) c d r (-t)
-              (h*f^2*dilationLabel p B v ε₁ ε₂)) := by
-  rw [firstCommonColumn_original_labels p hp hg hcop hinj F D B v ε₁ ε₂ hv
-    negative χ (multiplicativeCoreColumn p Ψ m (fun U => primeMark slots lists a (A∪U)*H U))
-    ω X t hX c d f h]
-  rw [marked_dilatedCoreRow_eq_input_family p hp hcop hg hc hpr F D B A v ε₁ ε₂
-    negative χ Ψ m slots lists a H (fun u => ω (Real.exp u))
-    (columnLog p (primeProductNorm p D*X)) c d (-t)]
-  simp_rw [firstCoreInputRow_marked_priority]
 
 end
 end SevenEighths.InverseMoment

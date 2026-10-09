@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.OneReflectionEnergy
 import OAI.NumberTheory.DirichletL.Moments.DetectorDictionaryUniformTests
-
 namespace OAI
 
 noncomputable section
@@ -131,11 +130,6 @@ theorem actual_inverse_uniform (V : ℝ→ℂ) (M : ℝ) (hM : 0≤M)
       Complex.norm_conj,←norm_mul]
   simpa only [he] using henergy v
 
-lemma paperRadialFourier_real_smul (c : ℝ) (G : 𝓢(ℝ,ℂ)) (x : ℝ) :
-    paperRadialFourier (c • G : 𝓢(ℝ,ℂ)) x=(c:ℂ)*paperRadialFourier G x := by
-  rw [paperRadialFourier_eq_ray,paperRadialFourier_eq_ray]
-  simp only [map_smul,smul_apply,Complex.real_smul]
-
 lemma polynomial_const_mul (χ : Character) (W : ℝ→ℂ) (X σ omega : ℝ) (c : ℂ) :
     HeckeDyadic.polynomial χ false (fun x=>c*W x) X σ omega=
       c*HeckeDyadic.polynomial χ false W X σ omega := by
@@ -148,65 +142,6 @@ lemma polynomial_const_mul (χ : Character) (W : ℝ→ℂ) (X σ omega : ℝ) (
     ring
   rw [he,tsum_mul_left]
   ring
-
-lemma reflected_polynomial_real_smul (χ : Character) (V : ℝ→ℂ)
-    (G : 𝓢(ℝ,ℂ)) (s X c : ℝ) (A : ℕ) :
-    HeckeDyadic.polynomial χ false
-      (fun x=>logWindow V x*((1+s)^A:ℂ)*paperRadialFourier (c • G : 𝓢(ℝ,ℂ)) (s*x)) X 0 0=
-      (c:ℂ)*HeckeDyadic.polynomial χ false
-        (fun x=>logWindow V x*((1+s)^A:ℂ)*paperRadialFourier G (s*x)) X 0 0 := by
-  simp_rw [paperRadialFourier_real_smul]
-  have he : (fun x=>logWindow V x*((1+s)^A:ℂ)*((c:ℂ)*paperRadialFourier G (s*x)))=
-      (fun x=>(c:ℂ)*(logWindow V x*((1+s)^A:ℂ)*paperRadialFourier G (s*x))) := by
-    funext x
-    ring
-  rw [he,polynomial_const_mul]
-
-theorem detector_source_control (H : Finset (ℕ×ℕ)) :
-    ∃n : ℕ,∃D : ℝ,0<D ∧ ∀reverse : Bool,∀k : ℕ,k≤2→
-      ∀σ∈Set.Icc (0:ℝ) 1,∀t : ℝ,
-      H.sup (schwartzSeminormFamily ℝ ℝ ℂ)
-        (((1+‖t‖)^n)⁻¹ • CenteredMomentDetectorDictionary.detectorSchwartz reverse k σ t)≤D := by
-  obtain ⟨n,D,hD,hb⟩ := CenteredMomentDetectorDictionary.detectorSchwartz_uniform H
-  refine ⟨n,D,hD,?_⟩
-  intro reverse k hk σ hσ t
-  rw [map_smul_eq_mul,Real.norm_of_nonneg (by positivity : 0≤((1+‖t‖)^n)⁻¹)]
-  exact (inv_mul_le_iff₀ (by positivity : 0<(1+‖t‖)^n)).mpr
-    (by simpa only [mul_comm] using hb reverse k hk σ hσ t)
-
-theorem detector_inverse_uniform (V : ℝ→ℂ) (M : ℝ) (hM : 0≤M)
-    (hV : ∀y,V y≠0 → |y|≤M) (hreal : ∀y,conj (V y)=V y) (A J : ℕ) :
-    ∃n : ℕ,∃C : ℝ,0<C ∧ ∀{ι : Type} [Fintype ι],
-      ∀(reverse : ι→Bool)(k : ι→ℕ)(σ t : ι→ℝ),
-      (∀i,k i≤2) → (∀i,σ i∈Set.Icc (0:ℝ) 1) →
-      ∀(χ : ι→Character)(P : ι→ℂ)(s X : ι→ℝ),
-      (∀i,0<s i) → (∀i,0<X i) → ∀E : ℝ,0≤E →
-      (∀v,(∑i,‖HeckeDyadic.polynomial (χ i) false (logWindow V) (X i) 0 (-2*Real.pi*v)*
-        (((1+‖t i‖)^n:ℝ):ℂ)*P i‖^2)≤E*((1+‖v‖)^J)^2) →
-      (∑i,‖HeckeDyadic.polynomial (χ i).inverse false
-        (fun x=>logWindow V x*((1+s i)^A:ℂ)*paperRadialFourier
-          (CenteredMomentDetectorDictionary.detectorSchwartz (reverse i) (k i) (σ i) (t i)) (s i*x))
-        (X i) 0 0*P i‖^2)≤C*E := by
-  obtain ⟨H,C,hC,hb⟩ := actual_inverse_uniform V M hM hV hreal A J
-  obtain ⟨n,D,hD,hcontrol⟩ := detector_source_control H
-  refine ⟨n,C*D^2,by positivity,?_⟩
-  intro ι _ reverse k σ t hk hσ χ P s X hs hX E hE henergy
-  let G (i : ι) := CenteredMomentDetectorDictionary.detectorSchwartz (reverse i) (k i) (σ i) (t i)
-  let w (i : ι) : ℝ := (1+‖t i‖)^n
-  have hw (i : ι) : 0<w i := by dsimp [w];positivity
-  have hh := hb (fun i=>(w i)⁻¹ • G i) χ (fun i=>(w i:ℂ)*P i) s X hs hX D E hD hE
-    (fun i=>hcontrol (reverse i) (k i) (hk i) (σ i) (hσ i) (t i))
-    (by intro v;simpa only [w,mul_assoc] using henergy v)
-  have he (i : ι) : HeckeDyadic.polynomial (χ i).inverse false
-      (fun x=>logWindow V x*((1+s i)^A:ℂ)*paperRadialFourier ((w i)⁻¹ • G i : 𝓢(ℝ,ℂ)) (s i*x))
-      (X i) 0 0*((w i:ℂ)*P i)=
-      HeckeDyadic.polynomial (χ i).inverse false
-      (fun x=>logWindow V x*((1+s i)^A:ℂ)*paperRadialFourier (G i) (s i*x)) (X i) 0 0*P i := by
-    rw [reflected_polynomial_real_smul,Complex.ofReal_inv]
-    have hne : (w i:ℂ)≠0 := Complex.ofReal_ne_zero.mpr (hw i).ne'
-    rw [mul_mul_mul_comm,inv_mul_cancel₀ hne,one_mul]
-  simp_rw [he] at hh
-  simpa only [G] using hh
 
 end SevenEighths.CenteredMomentUniformReflectionProfile
 

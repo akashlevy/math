@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsSeries
 import OAI.NumberTheory.DirichletL.Detector.HighRowsDiagonal
-
 namespace OAI
 
 noncomputable section

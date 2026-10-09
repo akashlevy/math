@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.AmplifiedChildWidth
 import OAI.NumberTheory.DirichletL.Moments.FirstAmplifiedActiveCapacitySource
 import OAI.NumberTheory.DirichletL.Energy.AmplifiedRayDictionary
 import OAI.NumberTheory.DirichletL.Moments.FirstAmplifiedCapacityCommon
-
 namespace OAI
 
 noncomputable section
@@ -94,17 +93,6 @@ lemma error_nominal_cap (N:ℕ)(b:ℝ)(hb:1≤b)(s:Input ι)
     nlinarith [volume_pos (errorInput s C R B τ t Q k Bp υ v),
       mul_nonneg (pow_nonneg (zero_le_one.trans hb) N) hh]
   exact (div_le_div_of_nonneg_right hp hK.le).trans_eq (by unfold geometry;ring)
-
-lemma restored_nominal_eq (s:Input ι)(C R:Ideal O)(B:actualAllocations s.pools C)
-    (τ:Character)(t:ℝ)(Q:Ideal O)(hQ:Q≠0)(k:ℕ)
-    (hslot:∀i,∀I∈(activeInput (child s C R B τ t)).slots i,IsCoprime Q I)
-    (Bp:actualAllocations (activeInput (child s C R B τ t)).pools (Q^k))
-    (υ:Character)(v K:ℝ) :
-    nominal (restoredError s C R B τ t Q k Bp υ v) K=
-      nominal (errorInput s C R B τ t Q k Bp υ v) K := by
-  unfold nominal
-  rw [restoredError_volume s C R B τ t Q hQ k hslot Bp υ v,
-    active_error_volume s C R B τ t Q hQ k hslot Bp υ v]
 
 def mainRadius (C D:Ideal O)(E:Finset (CommonIndex C D))(K V Z σ δ reserve:ℝ):ℝ :=
   mainCommonRadius Z (Real.logb Z (D.absNorm:ℝ))

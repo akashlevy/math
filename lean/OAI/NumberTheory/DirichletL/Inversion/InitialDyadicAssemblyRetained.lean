@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialDyadicAssemblySourceCaps
 import OAI.NumberTheory.DirichletL.Inversion.InitialDyadicAssemblyWindows
-
 namespace OAI
 
 noncomputable section
@@ -51,18 +50,6 @@ theorem retained_exponents_eventually (b R Λ:ℝ)(hb:0<b)(hR:0≤R)(hΛ:0≤Λ)
     exact ⟨h2.1,by linarith [h2.2]⟩
   · change exponent Z (k 3).val∈Set.Icc 0 (3*R+Λ+1)
     exact ⟨h3,by linarith [h0.1,h1.2]⟩
-
-theorem window_quotient_eventually (b R:ℝ)(hb:0<b) :
-    ∀ᶠZ:ℝ in atTop,1<Z ∧ ∀D T η:ℝ,D≤R→0<T→η≤1→
-      ∀k:Windows (fun _=>1) (physicalCaps b Z D T),
-        exponent Z (k 0).val-exponent Z (k 1).val+2*η≤R+3 := by
-  filter_upwards [window_exponent_eventual_upper b 1 hb (by norm_num)] with Z hz
-  refine ⟨hz.1,?_⟩
-  intro D T η hD hT hη k
-  have hp:0<b*Z^D := mul_pos hb (Real.rpow_pos_of_pos (by linarith [hz.1]) D)
-  have h0:=hz.2 (b*Z^D) D hp le_rfl (k 0).val (k 0).property
-  have h1:=hz.2 (b*Z^D) D hp le_rfl (k 1).val (k 1).property
-  linarith [h0.2,h1.1]
 
 theorem retained_card_of_exponents (a b:Fin 4→ℝ)(Z D m L A:ℝ)(hZ:1<Z)
     (he:∀k∈retainedWindows a b Z D m L,∀i,exponent Z (k i).val∈Set.Icc 0 A) :

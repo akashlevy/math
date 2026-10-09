@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.ActualProfiles
 import Mathlib.MeasureTheory.Integral.Pi
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstDiscarded
-
 namespace OAI
 
 noncomputable section
@@ -174,45 +173,6 @@ theorem inactiveSubsets_card (I J : Ideal O) :
     _ ≤ (Finset.univ : Finset (CommonIndex I J)).card := Finset.card_le_card (Finset.subset_univ _)
     _ = (commonSupport I J).card := by simp [CommonIndex]
     _ ≤ _ := Finset.card_le_card Finset.inter_subset_left
-
-def canonicalDiscardedPair (I J : Ideal O)
-    (hI : CanonicalQuadraticSieve.Supported I) (hJ : CanonicalQuadraticSieve.Supported J)
-    (W : 𝓢(ℝ,ℂ)) (K Tsec Z ξ : ℝ) : ℂ :=
-  ∑ E∈inactiveSubsets I J,canonicalDiscardedTerm I J hI hJ E W K Tsec Z ξ
-
-theorem canonical_discarded_pair_bound (A : ℕ) (ε : ℝ) (hε : 0<ε) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ),0<C ∧
-      ∀ (W : 𝓢(ℝ,ℂ)) (I J : Ideal O)
-        (hI : CanonicalQuadraticSieve.Supported I) (hJ : CanonicalQuadraticSieve.Supported J)
-        (K X HN Tsec Z Csec ξ : ℝ),
-      0<K → 0<X → 1<Z → 1≤Csec →
-      (Ideal.absNorm I:ℝ)≤Real.exp HN*X → (Ideal.absNorm J:ℝ)≤Real.exp HN*X →
-      (∀ E∈inactiveSubsets I J,firstNominalScale I J (∏ P∈E,P.val) K X≤Tsec) →
-      (2*HN/Real.log Z+Real.log (4*Csec)/Real.log Z<ξ/4) →
-      ‖canonicalDiscardedPair I J hI hJ W K Tsec Z ξ‖ ≤
-      (Ideal.absNorm I:ℝ)^ε*K*(C*s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W)/
-        ((min 1 (kernelReference Tsec HN))^2*(1+Z^(ξ/4))^A) := by
-  obtain ⟨s,C,hC,ht⟩ := canonical_discarded_term_bound A
-  obtain ⟨D,hD,hsub⟩ := SquarefreeDivisorBound.prime_support_subsets_bound ε hε
-  refine ⟨s,D*C,mul_pos hD hC,?_⟩
-  intro W I J hI hJ K X HN Tsec Z Csec ξ hK hX hZ hCs hi hj hsec hthreshold
-  have hc : ((inactiveSubsets I J).card:ℝ)≤D*(Ideal.absNorm I:ℝ)^ε := by
-    apply le_trans _ (hsub I hI.1)
-    exact_mod_cast inactiveSubsets_card I J
-  calc
-    _ ≤ ∑ E∈inactiveSubsets I J,‖canonicalDiscardedTerm I J hI hJ E W K Tsec Z ξ‖ := norm_sum_le _ _
-    _ ≤ ∑ _E∈inactiveSubsets I J,
-        K*(C*s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W)/
-          ((min 1 (kernelReference Tsec HN))^2*(1+Z^(ξ/4))^A) :=
-      Finset.sum_le_sum (fun E hE => ht W I J hI hJ E K X HN Tsec Z Csec ξ hK hX hZ hCs hi hj (hsec E hE) hthreshold)
-    _ = ((inactiveSubsets I J).card:ℝ)*
-        (K*(C*s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W)/
-          ((min 1 (kernelReference Tsec HN))^2*(1+Z^(ξ/4))^A)) := by simp
-    _ ≤ (D*(Ideal.absNorm I:ℝ)^ε)*
-        (K*(C*s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W)/
-          ((min 1 (kernelReference Tsec HN))^2*(1+Z^(ξ/4))^A)) :=
-      mul_le_mul_of_nonneg_right hc (by positivity)
-    _ = _ := by ring
 
 end SevenEighths.CenteredMomentFirstDiscardedEnergy
 

@@ -1,5 +1,4 @@
-import OAI.NumberTheory.DirichletL.Moments.NaturalFixedRaySourceDegree
-
+import OAI.NumberTheory.DirichletL.Moments.HeckeSlots
 namespace OAI
 
 noncomputable section

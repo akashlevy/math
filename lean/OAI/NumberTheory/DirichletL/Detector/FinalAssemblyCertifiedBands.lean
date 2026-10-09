@@ -3,7 +3,6 @@ import OAI.NumberTheory.DirichletL.Detector.DetectorInverseFields
 import OAI.NumberTheory.DirichletL.Detector.DetectorPlainMarkedFineField
 import OAI.NumberTheory.DirichletL.Detector.DetectorPlainUnmarkedRestrictedField
 import OAI.NumberTheory.DirichletL.Energy.CappedWidthInduction
-
 namespace OAI
 
 noncomputable section
@@ -18,7 +17,6 @@ open CenteredMomentEnergyCappedWidthInduction CenteredMomentEnergyWidthRanges
 open CenteredMomentEnergyWidthSchedule CenteredMomentDetectorPlainMomentParameters
 open CenteredMomentDetectorEnergyInitialState CenteredMomentNaturalFixedRaySource
 open ProbeDetectorPlainMarkedFineField ProbeDetectorPlainUnmarkedField
-local notation "O"=>HeckeFamily.O
 
 def detectorMesh (Δ t:ℝ):ℝ:=fineMesh 2 0 1 (3/4+2*Δ) (t/4)
 

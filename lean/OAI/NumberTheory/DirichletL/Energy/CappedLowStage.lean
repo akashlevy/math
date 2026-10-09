@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.NaturalLowStage
 import OAI.NumberTheory.DirichletL.Energy.CappedRequests
-
 namespace OAI
 
 noncomputable section

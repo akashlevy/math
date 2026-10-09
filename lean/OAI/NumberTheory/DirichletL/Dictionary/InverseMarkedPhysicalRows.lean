@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseMarkedReferenceDeleted
 import OAI.NumberTheory.DirichletL.Dictionary.InverseMarkedUniform
 import OAI.NumberTheory.DirichletL.Dictionary.InverseMarkedReferenceShift
-
 namespace OAI
 
 noncomputable section
@@ -124,13 +123,6 @@ theorem physicalProduct_eq (F:Fiber M H Label Slot U a ε tstar T allowance i)
     exact hx (by simp only [childLogTest,hz,zero_mul])
   have hh:=fiber_rows_le_deleted_sources F selected (childLogTest W v) 0 0 bW lower hU hw hV hlarge
   simpa only [oriented_child,orientedFrequency,neg_zero,ite_self] using hh
-
-omit [NeZero M] in
-theorem actual_rows_norm (F:Fiber M H Label Slot U a ε tstar T allowance i)
-    (u:NonzeroElement)(hu:u∈F.rows.image actualRow):
-    ((Ideal.span {u.val}).absNorm:ℝ)≤U:=by
-  obtain ⟨v,hv,rfl⟩:=Finset.mem_image.mp hu
-  exact F.row_norm v hv
 
 end SevenEighths.DetectorDictionaryInverseMarkedPhysicalRows
 

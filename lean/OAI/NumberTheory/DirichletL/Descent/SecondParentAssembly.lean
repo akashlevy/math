@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondSourceAttachment
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -75,38 +74,6 @@ theorem attached_family_conditions {Jo : ℕ} (parents : Finset (SecondParentSou
   · intro x hx i; exact hold (secondParentOf x) (h x hx).1 i
   · intro x hx i; exact Fin.elim0 i
   · intro x hx; exact hq (secondParentOf x) (h x hx).1
-
-theorem secondExpansionSource_whole_parent_family
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hpr : ∀ i,ConcretePrimeRowBridge.goodLambda^2 ∣ p i-1)
-    {Jo : ℕ} (parents : Finset (SecondParentSource ι Jo))
-    (source : SecondParentSource ι Jo → Finset (SecondExpansionData ι))
-    (hE : ∀ parent∈parents,∀ x∈source parent,x.divisor ⊆ x.sourceCommon)
-    (w : SecondParentSource ι Jo → ℂ)
-    (pool : Finset ι) (Ψ : Eis →* ℂ) (m : Eis) (z : SecondRayIndex)
-    (slots₁ slots₂ : Finset σ) (lists₁ lists₂ : σ → Finset ι) (a₁ a₂ : σ → ι → ℂ)
-    (W₁ W₂ : ℝ → ℂ) (Φ : 𝓢(ℝ,ℂ)) (X Y : ℝ) :
-    (∑ parent∈parents,w parent*secondExpansionSource p hp hcop hg pool Ψ
-      (secondParentPuncture p m parent) (secondParentLabel p parent) (secondParentDivisor p parent)
-      z (source parent)
-      (fun U => primeMark slots₁ lists₁ a₁ U*W₁ (primeProductNorm p U/X))
-      (fun U => primeMark slots₂ lists₂ a₂ U*W₂ (primeProductNorm p U/X)) Φ Y) =
-    (Y : ℂ)*secondRayCoefficient z *
-      ∑ x∈attachedSecondFamily parents source,
-        (w (secondParentOf x)*actualSecondSignedWeight p hp hcop hg Ψ
-          (m*ConcretePrimeRowBridge.idealGenerator x.quotient) z x)*
-          actualSecondProfileRow p hp hcop hg pool (secondInheritedProfile p x Ψ m z)
-            slots₁ slots₂ lists₁ lists₂ a₁ a₂ W₁ W₂ Φ Y X := by
-  rw [sum_attachedSecondFamily]
-  simp only [Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro parent hparent
-  rw [secondExpansionSource_attached p hp hcop hg hinj hpr parent (source parent) (hE parent hparent)]
-  rw [Finset.sum_image (fun x hx y hy he => attachSecondExpansion_injective parent he)]
-  simp only [Finset.mul_sum,secondParentOf_attach]
-  apply Finset.sum_congr rfl
-  intro x hx
-  ring
 
 end
 end SevenEighths.InverseMoment

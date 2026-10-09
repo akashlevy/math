@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstCutoffScale
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

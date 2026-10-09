@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GramPrimeSeparation
-
 namespace OAI
 
 noncomputable section

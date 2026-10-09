@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.Family
 import OAI.NumberTheory.DirichletL.ResidueCharacter
-
 namespace OAI
 
 noncomputable section

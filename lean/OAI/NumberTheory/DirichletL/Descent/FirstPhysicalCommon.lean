@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstCommonProfile
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

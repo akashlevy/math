@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationEnergy
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRowwisePlain
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.Canonical
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -20,14 +19,6 @@ theorem secondChildColumn_label_transfer (Ψ : Eis →* ℂ) (m a f k : Eis)
   simp only [secondChildColumn, finiteSquarefreeRow, map_mul, map_pow,
     Finset.prod_mul_distrib, Finset.prod_pow, mul_pow]
   ring
-
-theorem secondChildColumn_puncture_unit (Ψ : Eis →* ℂ) (u : Eisˣ) (m f k : Eis)
-    (H : Finset ι → ℂ) (S : Finset ι) :
-    secondChildColumn p hp hcop hg Ψ ((u:Eis)*m) f k H S =
-      secondChildColumn p hp hcop hg Ψ m f k H S := by
-  have he : Ideal.span {((u:Eis)*m)} = Ideal.span {m} :=
-    Ideal.span_singleton_mul_left_unit u.isUnit m
-  simp only [secondChildColumn,rowCoprimeMask_congr_span p S he]
 
 theorem secondChildColumn_generator_unit (Ψ : Eis →* ℂ) (u : Eisˣ) (m f d k : Eis)
     (H : Finset ι → ℂ) (S : Finset ι) :
@@ -52,14 +43,6 @@ theorem generator_eq_unit_primary (I : Ideal Eis) (e : Eis)
     Ideal.span_singleton_eq_span_singleton.mp ((primaryGenerator_spec I hI).1.trans he.symm)
   obtain ⟨u,hu⟩ := ha
   exact ⟨u,by simpa only [mul_comm] using hu.symm⟩
-
-lemma normalized_generator_row_norm (u : Eisˣ) (d k : Eis) :
-    ‖ConcreteTraceCRT.eisEmbedding (d*((u:Eis)^5*k))‖ =
-      ‖ConcreteTraceCRT.eisEmbedding (d*k)‖ := by
-  have he : d*((u:Eis)^5*k) = ((u^5:Eisˣ):Eis)*(d*k) := by
-    change d*((u:Eis)^5*k) = (u:Eis)^5*(d*k)
-    ring
-  rw [he,GaussGeneratorTransport.norm_eisEmbedding_unit_mul]
 
 end
 end SevenEighths.InverseMoment

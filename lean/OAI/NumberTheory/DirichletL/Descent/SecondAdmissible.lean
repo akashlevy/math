@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondTripleBounds
 import OAI.NumberTheory.DirichletL.Descent.Basic
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -41,52 +40,6 @@ lemma radicalGenerator_ne_zero (a : Eis) (ha : a ≠ 0) :
 
 def actualSecondPunctureWidth (Z : ℝ) (m : Eis) (γ : OuterTriple) : ℝ :=
   Real.logb Z (‖eisEmbedding (actualSecondInheritedRadicalPuncture m γ)‖^2)
-
-include hp in
-theorem actual_second_puncture_width_bound
-    (hpr : ∀ i,ConcretePrimeRowBridge.goodLambda^2 ∣ p i-1)
-    {Jo Jn : ℕ} (x : MarkedSecondSource ι Jo Jn)
-    (hE : x.second.divisor ⊆ x.second.sourceCommon) (ht : x.quotient ≠ 0)
-    (u v : Eisˣ) (m : Eis) (hm : m ≠ 0)
-    (Z Q ell t g theta eta : ℝ) (hZ : 1 < Z)
-    (hQ : (Ideal.absNorm (Ideal.span {m} : Ideal Eis).radical : ℝ) ≤ Z^Q)
-    (hB : primeProductNorm p x.cube.support ≤ Z^(ell+eta))
-    (hT : (Ideal.absNorm x.quotient : ℝ) ≤ Z^(t+eta))
-    (hG : primeProductNorm p x.second.sourceCommon ≤ Z^(g+eta))
-    (hD : Z^(theta-eta) ≤ primeProductNorm p x.second.divisor) :
-    actualSecondPunctureWidth Z m (actualSecondChild p u v x).1 ≤ Q+ell+t+g-theta+4*eta := by
-  have hp0 := actual_second_inherited_puncture_ne_zero p hp hpr x ht u v m hm
-  have hr0 := radicalGenerator_ne_zero _ hp0
-  change actualSecondInheritedRadicalPuncture m (actualSecondChild p u v x).1 ≠ 0 at hr0
-  apply (Real.logb_le_iff_le_rpow hZ (sq_pos_of_pos
-    (norm_pos_iff.mpr (ConcreteTraceCRT.eisEmbedding_ne_zero hr0)))).mpr
-  exact actual_second_puncture_power_budget p hp hpr x hE ht u v m hm
-    Z Q ell t g theta eta (zero_lt_one.trans hZ) hQ hB hT hG hD
-
-include hp in
-
-theorem actual_second_child_margins
-    (hpr : ∀ i,ConcretePrimeRowBridge.goodLambda^2 ∣ p i-1)
-    {Jo Jn : ℕ} (x : MarkedSecondSource ι Jo Jn)
-    (hE : x.second.divisor ⊆ x.second.sourceCommon) (ht0 : x.quotient ≠ 0)
-    (u v : Eisˣ) (m : Eis) (hm : m ≠ 0)
-    (Z F M Q z c ell A t g theta V j delta eta : ℝ) (hZ : 1 < Z)
-    (hparent : CanonicalMargins F M Q z c)
-    (hA : 0 ≤ A) (ht : 0 ≤ t) (hV : 0 ≤ V) (hj : 0 ≤ j) (hdelta : 0 ≤ delta) (heta : 0 ≤ eta)
-    (hQ : (Ideal.absNorm (Ideal.span {m} : Ideal Eis).radical : ℝ) ≤ Z^Q)
-    (hB : primeProductNorm p x.cube.support ≤ Z^(ell+eta))
-    (hT : (Ideal.absNorm x.quotient : ℝ) ≤ Z^(t+eta))
-    (hG : primeProductNorm p x.second.sourceCommon ≤ Z^(g+eta))
-    (hD : Z^(theta-eta) ≤ primeProductNorm p x.second.divisor) :
-    CanonicalMargins (childF F ell A t g theta V j delta)
-      (childM M ell A t g theta V j eta)
-      (actualSecondPunctureWidth Z m (actualSecondChild p u v x).1) z (c-7*eta) := by
-  apply child_margins hparent hA ht hV hj
-    (actual_second_common_center p hp x hE Z g theta eta hZ hG hD) hdelta heta
-  have hwidth := actual_second_puncture_width_bound p hp hpr x hE ht0 u v m hm
-    Z Q ell t g theta eta hZ hQ hB hT hG hD
-  unfold decrease
-  linarith
 
 include hp in
 

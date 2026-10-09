@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondLiveBlock
 import OAI.NumberTheory.DirichletL.Moments.SecondActivePhysicalDictionary
 import OAI.NumberTheory.DirichletL.Moments.RestrictedEnergy
-
 namespace OAI
 
 noncomputable section

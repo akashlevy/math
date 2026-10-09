@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.LargeDyad
-
 namespace OAI
 
 noncomputable section

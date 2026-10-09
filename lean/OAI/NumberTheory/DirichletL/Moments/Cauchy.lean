@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.Smooth
-
 namespace OAI
 
 noncomputable section

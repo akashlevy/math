@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalRankCapChildren
 import OAI.NumberTheory.DirichletL.Descent.CanonicalLongGeometry
-
 namespace OAI
 
 noncomputable section

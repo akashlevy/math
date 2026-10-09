@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.ProductCRT
-
 namespace OAI
 
 noncomputable section

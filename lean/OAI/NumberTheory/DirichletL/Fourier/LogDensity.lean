@@ -1,79 +1,26 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.TruncatedSecondTransfer
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 section
 
-open MeasureTheory
-open scoped BigOperators Classical SchwartzMap FourierTransform
 namespace JointLogSeparation
 open FirstPassCubeLabels
 
@@ -237,7 +184,6 @@ theorem triple_density_polynomial_bound (G : Frequency → ℝ)
 end JointLogSeparation
 end
 
-open scoped BigOperators Classical
 namespace CanonicalQuadraticSieve
 
 section
@@ -293,12 +239,6 @@ def squarefreeGcdEquiv (G : Ideal O) (hG : Squarefree G) :
       have hD : p.1.val ≠ 0 := ne_zero_of_dvd_ne_zero hG.ne_zero
         ((mem_idealDivisors hG.ne_zero).mp p.1.property)
       exact mul_left_cancel₀ hD (idealQuotient_mul (dvd_mul_right p.1.val p.2.val))
-
-theorem squarefree_gcd_tsum (G : Ideal O) (hG : Squarefree G) (f : Ideal O → ℂ) :
-    (∑' B : {B : Ideal O // Squarefree B}, f B.val) =
-      ∑' p : (idealDivisors G) × {H : Ideal O // Squarefree H ∧ IsCoprime H G},
-        f (p.1.val * p.2.val) :=
-  ((squarefreeGcdEquiv G hG).symm.tsum_eq (fun B => f B.val)).symm
 
 def coprimeSquarefreeRange (G : Ideal O) (K : ℝ) : Finset (Ideal O) :=
   (squarefreeIdealRange K).filter (fun H => IsCoprime H G)
@@ -582,10 +522,6 @@ theorem coprimeSquarefreeRange_subset_idealRange (G : Ideal O)
   obtain ⟨hHs, hc⟩ := Finset.mem_filter.mp hH
   obtain ⟨hsf, hN⟩ := mem_squarefreeIdealRange.mp hHs
   exact mem_idealRange.mpr ⟨admissible_of_squarefree_coprime_bad H G hsf hc hbad, hN⟩
-
-theorem commonMask_coprimeSquarefreeRange_subset (D : Ideal O) (K : ℝ) :
-    coprimeSquarefreeRange (commonMaskIdeal D) K ⊆ idealRange K :=
-  coprimeSquarefreeRange_subset_idealRange _ (fun P hP => fixedBadPrimes_dvd_commonMaskIdeal D P hP) K
 
 theorem commonMaskIdeal_eq_fixed_mul (D : Ideal O) (hD : Admissible D) :
     commonMaskIdeal D = (∏ P ∈ fixedBadPrimes, P) * D := by

@@ -4,7 +4,6 @@ import OAI.NumberTheory.DirichletL.PrimeRows.DiskControl
 import OAI.NumberTheory.DirichletL.PrimeRows.BufferedBin
 import OAI.NumberTheory.DirichletL.PrimeRows.PrincipalMask
 import OAI.NumberTheory.DirichletL.PrimeRows.Valuation
-
 namespace OAI
 
 noncomputable section
@@ -114,14 +113,6 @@ lemma actual_multiplicity_divisor (u : FreeRow) (p : O) (hp : Prime p) :
   refine ⟨⟨Ideal.span {unitPart u p hp}, ?_⟩, multiplicity_lt_six u p hp⟩
   rw [Ideal.span_singleton_pow, Ideal.span_singleton_mul_span_singleton]
   exact congrArg (fun x : O => (Ideal.span {x} : Ideal O)) (unitPart_spec u p hp).1
-
-lemma actual_ideal_multiplicity (u : FreeRow) (P : Ideal O) (hP : Prime P) :
-    P ^ multiplicity P (Ideal.span {u.val} : Ideal O) ∣ Ideal.span {u.val} ∧
-      multiplicity P (Ideal.span {u.val} : Ideal O) < 6 := by
-  refine ⟨pow_multiplicity_dvd _ _, ?_⟩
-  rw [UniqueFactorizationMonoid.multiplicity_eq_count_normalizedFactors hP.irreducible
-    (Ideal.span_singleton_eq_bot.not.mpr u.property.1), normalize_eq]
-  exact u.property.2 P
 
 theorem buffered_reflected_right_bound (e ε : ℝ)
     (he : 0 < e) (he' : e < 1/1000) (hε : 0 < ε) :
@@ -304,45 +295,6 @@ theorem source_calibrated_reflected_allocation (e ε : ℝ)
             (a-1/2+6*e)) * ∏ j, ((P j).absNorm : ℝ) ^ (-(1/2 : ℝ))) :=
         mul_le_mul_of_nonneg_left hal (by positivity)
       _ = _ := by ring
-
-theorem source_actual_valuation_reflection (e ε : ℝ)
-    (he : 0 < e) (he' : e < 1/1000) (hε : 0 < ε) :
-    ∃ C : ℝ, 0 < C ∧ ∀ (S : Finset (Ideal O)) (hS : ∀ P ∈ S, Prime P)
-      (hmaxS : ∀ P ∈ S, P.IsMaximal)
-      (_hbad : CanonicalQuadraticSieve.fixedBadPrimes ⊆ S)
-      (u : FreeRow), u.val ≠ 1 →
-      ∃ ψ : Character, (rowCharacter S hS u).modulus ≤ ψ.modulus ∧
-        FiniteFourier.IsPrimitiveOnIdeals ψ.residue ∧
-        (∀ I : Ideal O, idealCoeff (rowCharacter S hS u) I =
-          if IsCoprime I (rowCharacter S hS u).modulus then idealCoeff ψ I else 0) ∧
-        (((ProbePhysical.calibrationForSet S hmaxS).residueMonoid u.val ≠ 0) →
-          (rowCharacter S hS u).residue ≠ 1 ∧ ψ.residue ≠ 1) ∧
-        ∀ {ι : Type*} [Fintype ι] (η : Character) (twists : ι → Character)
-          (B a : ℝ) (i : ℕ), 2 < B → 51/100 ≤ a → a ≤ 1 →
-          detectorMaximum (sourceDetectorFamily S hS η u twists) (3*(i+1 : ℕ)*B) < a+2*e →
-          ∀ (k : ℕ) (P : Fin k → Ideal O), (∀ j, Prime (P j)) → Function.Injective P →
-          (∀ j, 2 ≤ multiplicity (P j) (Ideal.span {u.val} : Ideal O)) →
-          (∀ j, multiplicity (P j) (Ideal.span {u.val} : Ideal O) < 6) ∧
-          ∀ w : ℂ, w.re = 1-a-6*e → |w.im| ≤ (3*i+2 : ℕ)*B →
-            ‖star ((ProbePhysical.calibrationForSet S hmaxS).residueMonoid u.val) *
-                HeckeOrigin.continued (rowCharacter S hS u) w‖ *
-                ∏ j, ((P j).absNorm : ℝ) ^ (-w.re) ≤
-              C * (((fixedConductorConstant S : ℝ) *
-                (Ideal.span {u.val} : Ideal O).absNorm) ^ (a-1/2+6*e) *
-                ∏ j, ((P j).absNorm : ℝ) ^ (-(1/2 : ℝ))) *
-                ((radical (rowCharacter S hS u).modulus).absNorm : ℝ) ^ (6*e+2*ε) *
-                (3+(3*i+2 : ℕ)*B)^2 *
-                (presentationComplexity (rowCharacter S hS u) ((3*i+2 : ℕ)*B)) ^ ε := by
-  obtain ⟨C, hC, hb⟩ := source_calibrated_reflected_allocation e ε he he' hε
-  refine ⟨C, hC, ?_⟩
-  intro S hS hmaxS hbad u hu
-  obtain ⟨ψ, hle, hp, hm, hactive, hbound⟩ := hb S hS hmaxS hbad u hu
-  refine ⟨ψ, hle, hp, hm, hactive, ?_⟩
-  intro ι _ η twists B a i hB ha ha1 hbin k P hP hdis hv
-  refine ⟨fun j => (actual_ideal_multiplicity u (P j) (hP j)).2, ?_⟩
-  exact hbound η twists B a i hB ha ha1 hbin k P hP hdis
-    (fun j => multiplicity (P j) (Ideal.span {u.val} : Ideal O)) hv
-    (fun j => (actual_ideal_multiplicity u (P j) (hP j)).1)
 
 end SevenEighths.ProbeRowReflectedAllocation
 

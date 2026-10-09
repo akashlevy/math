@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CubeFloorGlobal
 import OAI.NumberTheory.DirichletL.Detector.CentralExponent
-
 namespace OAI
 
 noncomputable section

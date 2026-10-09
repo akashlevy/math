@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialProfile
 import OAI.NumberTheory.DirichletL.Inversion.AmbientProfileTower
-
 namespace OAI
 
 noncomputable section
@@ -76,19 +75,6 @@ theorem density_norm (g : Fin 6 → 𝓢(ℝ, ℂ)) (g₁ g₂ b₃ : 𝓢(ℝ, 
     abs_of_pos (Real.exp_pos _), twistedFullDensity, fullProfileDensity,
     tripleCoefficient, coordinateDensity, fourier_twist]
   ring
-
-theorem density_joint_measurable (g : Fin 6 → 𝓢(ℝ, ℂ)) (g₁ g₂ b₃ : 𝓢(ℝ, ℂ)) :
-    StronglyMeasurable (fun z : ((Fin 6 → ℝ) × (ℝ × ℝ) × (ℝ × ℝ) × ℝ) × Ambient (Fin 6) =>
-      density g g₁ g₂ b₃ z.1.1 z.1.2.1.1 z.1.2.1.2 z.1.2.2.1.1 z.1.2.2.1.2 z.1.2.2.2 z.2) := by
-  simp_rw [density_formula]
-  apply Measurable.stronglyMeasurable
-  unfold normalization sourceDensity logPhase
-  have h1 := (𝓕 g₁ : 𝓢(ℝ, ℂ)).continuous.measurable
-  have h2 := (𝓕 g₂ : 𝓢(ℝ, ℂ)).continuous.measurable
-  have h3 := b₃.continuous.measurable
-  have hu (i : Fin 6) := (𝓕 (g i) : 𝓢(ℝ, ℂ)).continuous.measurable
-  have he := Complex.continuous_exp.measurable
-  fun_prop
 
 theorem normalization_bound (B : Fin 6 → ℝ) (b : ℝ)
     (ρ : Fin 6 → ℝ) (c₁ c₂ L : ℝ) (hρ : ∀ i, |ρ i| ≤ B i)
@@ -192,8 +178,6 @@ def profile (g : Fin 6 → 𝓢(ℝ, ℂ)) (g₁ g₂ Φ : 𝓢(ℝ, ℂ))
       clippedTwist g₁ c₁ θ₁ (∑ i, secondLeftSlope i*y i) *
       clippedTwist g₂ c₂ θ₂ (∑ i, secondRightSlope i*y i) *
       paperRadialFourier Φ (R*Real.exp (∑ i, secondKernelSlope i*y i)))
-
-def requiredOuterOrder (J : ℕ) : ℕ := J+2*InverseClippingProfiles.momentOrder J
 
 theorem common_measure (g : Fin 6 → 𝓢(ℝ, ℂ)) (g₁ g₂ Φ : 𝓢(ℝ, ℂ))
     (M B : Fin 6 → ℝ) (b : ℝ)
@@ -345,173 +329,6 @@ theorem second_profile_common_measure
   rw [← balanced_profile_identity U g₁ g₂ Φ M m₁ m₂ hU h₁ h₂]
   exact h.1 y
 
-def densityTower {ι : Type*} [Fintype ι] (i j : ι)
-    (outer : ι → 𝓢(ℝ, ℂ)) (b₁ b₂ b₃ : 𝓢(ℝ, ℂ))
-    (g : Fin 6 → 𝓢(ℝ, ℂ)) (g₁ g₂ c₃ : 𝓢(ℝ, ℂ))
-    (ρ : Fin 6 → ℝ) (c₁ c₂ L : ℝ) (z : Ambient ι × Ambient (Fin 6)) : ℂ :=
-  fullProfileDensity outer b₁ b₂ b₃ z.1 *
-    density g g₁ g₂ c₃ ρ c₁ c₂ (inheritedLeft i z.1) (inheritedRight j z.1) L z.2
-
-theorem densityTower_joint_measurable {ι : Type*} [Fintype ι] (i j : ι)
-    (outer : ι → 𝓢(ℝ, ℂ)) (b₁ b₂ b₃ : 𝓢(ℝ, ℂ))
-    (g : Fin 6 → 𝓢(ℝ, ℂ)) (g₁ g₂ c₃ : 𝓢(ℝ, ℂ))
-    (ρ : Fin 6 → ℝ) (c₁ c₂ L : ℝ) :
-    StronglyMeasurable (densityTower i j outer b₁ b₂ b₃ g g₁ g₂ c₃ ρ c₁ c₂ L) := by
-  unfold densityTower
-  apply StronglyMeasurable.mul
-  · exact ((InverseAmbientProfileTower.fullProfileDensity_continuous outer b₁ b₂ b₃).comp
-      continuous_fst).stronglyMeasurable
-  · have hm : Measurable (fun z : Ambient ι × Ambient (Fin 6) =>
-        ((ρ,(c₁,c₂),(inheritedLeft i z.1,inheritedRight j z.1),L),z.2)) := by
-      unfold inheritedLeft inheritedRight
-      fun_prop
-    exact (density_joint_measurable g g₁ g₂ c₃).comp_measurable hm
-
-theorem densityTower_norm {ι : Type*} [Fintype ι] (i j : ι)
-    (outer : ι → 𝓢(ℝ, ℂ)) (b₁ b₂ b₃ : 𝓢(ℝ, ℂ))
-    (g : Fin 6 → 𝓢(ℝ, ℂ)) (g₁ g₂ c₃ : 𝓢(ℝ, ℂ))
-    (ρ : Fin 6 → ℝ) (c₁ c₂ L : ℝ) (z : Ambient ι × Ambient (Fin 6)) :
-    ‖densityTower i j outer b₁ b₂ b₃ g g₁ g₂ c₃ ρ c₁ c₂ L z‖ =
-      normalization ρ c₁ c₂ L *
-        ‖InverseAmbientProfileTower.towerDensity i j outer b₁ b₂ b₃ g g₁ g₂ c₃ z‖ := by
-  simp only [densityTower, InverseAmbientProfileTower.towerDensity, norm_mul, density_norm]
-  ring
-
-theorem densityTower_weighted_integrable {ι : Type*} [Fintype ι] (i j : ι)
-    (outer : ι → 𝓢(ℝ, ℂ)) (b₁ b₂ b₃ : 𝓢(ℝ, ℂ))
-    (g : Fin 6 → 𝓢(ℝ, ℂ)) (g₁ g₂ c₃ : 𝓢(ℝ, ℂ))
-    (ρ : Fin 6 → ℝ) (c₁ c₂ L : ℝ) (J : ℕ) :
-    Integrable (fun z : Ambient ι × Ambient (Fin 6) =>
-      ambientWeight J z.1 * ambientWeight J z.2 *
-        ‖densityTower i j outer b₁ b₂ b₃ g g₁ g₂ c₃ ρ c₁ c₂ L z‖) := by
-  obtain ⟨C,hC,h⟩ := InverseAmbientProfileTower.towerDensity_weighted (ι := ι) J g g₁ g₂ c₃
-  convert (h i j outer b₁ b₂ b₃).1.const_mul (normalization ρ c₁ c₂ L) using 1
-  funext z
-  rw [densityTower_norm]
-  ring
-
-private theorem tower_bound_from_inner {ι : Type*} [Fintype ι] (i j : ι)
-    (outer : ι → 𝓢(ℝ, ℂ)) (b₁ b₂ b₃ : 𝓢(ℝ, ℂ))
-    (g : Fin 6 → 𝓢(ℝ, ℂ)) (g₁ g₂ c₃ : 𝓢(ℝ, ℂ))
-    (ρ : Fin 6 → ℝ) (c₁ c₂ L C R : ℝ) (hC : 0 ≤ C) (_hR : 0 < R) (A J : ℕ)
-    (hb : ∀ θ₁ θ₂ : ℝ, (1+R)^A * (∫ q : Ambient (Fin 6), ambientWeight J q *
-        ‖density g g₁ g₂ c₃ ρ c₁ c₂ θ₁ θ₂ L q‖) ≤
-      C*((1+‖θ₁‖)^(InverseClippingProfiles.momentOrder J) *
-        (1+‖θ₂‖)^(InverseClippingProfiles.momentOrder J))) :
-    (1+R)^A * (∫ z : Ambient ι × Ambient (Fin 6),
-      ambientWeight J z.1 * ambientWeight J z.2 *
-        ‖densityTower i j outer b₁ b₂ b₃ g g₁ g₂ c₃ ρ c₁ c₂ L z‖) ≤
-      C * (∫ p : Ambient ι, ambientWeight (requiredOuterOrder J) p *
-        ‖fullProfileDensity outer b₁ b₂ b₃ p‖) := by
-  let f := fun z : Ambient ι × Ambient (Fin 6) =>
-    ambientWeight J z.1 * ambientWeight J z.2 *
-      ‖densityTower i j outer b₁ b₂ b₃ g g₁ g₂ c₃ ρ c₁ c₂ L z‖
-  have hi : Integrable f := densityTower_weighted_integrable i j outer b₁ b₂ b₃ g g₁ g₂ c₃ ρ c₁ c₂ L J
-  have hi' : Integrable (fun z : Ambient ι × Ambient (Fin 6) => (1+R)^A*f z) := hi.const_mul _
-  have hout := (InverseAmbientProfileTower.fullProfileDensity_weighted_integrable
-    outer b₁ b₂ b₃ (requiredOuterOrder J)).const_mul C
-  change (1+R)^A*(∫ z, f z) ≤ _
-  rw [← integral_const_mul]
-  rw [show (∫ z : Ambient ι × Ambient (Fin 6), (1+R)^A*f z) =
-      ∫ p : Ambient ι, ∫ q : Ambient (Fin 6), (1+R)^A*f (p,q) by
-    simpa only [Measure.volume_eq_prod] using integral_prod _ hi']
-  rw [← integral_const_mul]
-  have hip : Integrable (fun z : Ambient ι × Ambient (Fin 6) => (1+R)^A*f z) (volume.prod volume) := by
-    simpa only [Measure.volume_eq_prod] using hi'
-  apply integral_mono hip.integral_prod_left hout
-  intro p
-  dsimp only
-  have he : (∫ q : Ambient (Fin 6), (1+R)^A*f (p,q)) =
-      ambientWeight J p * ‖fullProfileDensity outer b₁ b₂ b₃ p‖ *
-        ((1+R)^A * ∫ q : Ambient (Fin 6), ambientWeight J q *
-          ‖density g g₁ g₂ c₃ ρ c₁ c₂ (inheritedLeft i p) (inheritedRight j p) L q‖) := by
-    simp only [f, densityTower, norm_mul]
-    rw [← integral_const_mul, ← integral_const_mul]
-    apply integral_congr_ae
-    filter_upwards with q
-    ring
-  rw [he]
-  have hw := inherited_pair_weight_bound i j J (InverseClippingProfiles.momentOrder J) p
-  have hp : 0 ≤ ambientWeight J p := zero_le_one.trans (ambientWeight_one_le J p)
-  calc
-    _ ≤ (ambientWeight J p * ‖fullProfileDensity outer b₁ b₂ b₃ p‖) *
-        (C*((1+‖inheritedLeft i p‖)^(InverseClippingProfiles.momentOrder J) *
-          (1+‖inheritedRight j p‖)^(InverseClippingProfiles.momentOrder J))) :=
-      mul_le_mul_of_nonneg_left (hb _ _) (mul_nonneg hp (norm_nonneg _))
-    _ = (C*‖fullProfileDensity outer b₁ b₂ b₃ p‖) *
-        (ambientWeight J p * ((1+‖inheritedLeft i p‖)^(InverseClippingProfiles.momentOrder J) *
-          (1+‖inheritedRight j p‖)^(InverseClippingProfiles.momentOrder J))) := by ring
-    _ ≤ (C*‖fullProfileDensity outer b₁ b₂ b₃ p‖) * ambientWeight (requiredOuterOrder J) p :=
-      mul_le_mul_of_nonneg_left hw (mul_nonneg hC (norm_nonneg _))
-    _ = _ := by ring
-
-theorem second_profile_tower_uniform {ι : Type*} [Fintype ι]
-    (U : Fin 6 → 𝓢(ℝ, ℂ)) (g₁ g₂ Φ : 𝓢(ℝ, ℂ))
-    (M B : Fin 6 → ℝ) (m₁ m₂ b : ℝ)
-    (hM : ∀ i, 0 ≤ M i) (hB : ∀ i, 0 ≤ B i)
-    (hU : ∀ i, Function.support (U i) ⊆ Set.Icc (-M i) (M i))
-    (h₁ : Function.support g₁ ⊆ Set.Icc (-m₁) m₁)
-    (h₂ : Function.support g₂ ⊆ Set.Icc (-m₂) m₂) (A J : ℕ) :
-    let G := fun i => rooted (U i) (M i) (InverseClippingProfiles.secondBalancedSlope i) (hU i)
-    let f₁ := rooted g₁ m₁ (-(1/2:ℝ)) h₁
-    let f₂ := rooted g₂ m₂ (-(1/2:ℝ)) h₂
-    ∃ C : ℝ, 0 ≤ C ∧ ∀ R : ℝ, 0 < R → ∃ c₃ : 𝓢(ℝ, ℂ),
-      ∀ (ρ : Fin 6 → ℝ) (c₁ c₂ L : ℝ),
-      (∀ i, |ρ i| ≤ B i) → 1 ≤ c₁ → 1 ≤ c₂ → c₁ ≤ b → c₂ ≤ b → 0 ≤ L →
-      (∀ (θ₁ θ₂ : ℝ) (y : Fin 6 → ℝ),
-        (Real.exp (-6*L) : ℂ) * secondPoissonProfile
-          (positiveSource g₁ c₁ θ₁) (positiveSource g₂ c₂ θ₂)
-          Φ (fun i y => U i (y+ρ i)) R y =
-        ∫ p : Ambient (Fin 6), density G f₁ f₂ c₃ ρ c₁ c₂ θ₁ θ₂ L p *
-          pureProfileMode secondLeftSlope secondRightSlope secondKernelSlope y p.1 p.2) ∧
-      (∀ (i j : ι) (outer : ι → 𝓢(ℝ, ℂ)) (b₁ b₂ b₃ : 𝓢(ℝ, ℂ)),
-        Integrable (fun z : Ambient ι × Ambient (Fin 6) =>
-          ambientWeight J z.1 * ambientWeight J z.2 *
-            ‖densityTower i j outer b₁ b₂ b₃ G f₁ f₂ c₃ ρ c₁ c₂ L z‖) ∧
-        (1+R)^A * (∫ z : Ambient ι × Ambient (Fin 6),
-          ambientWeight J z.1 * ambientWeight J z.2 *
-            ‖densityTower i j outer b₁ b₂ b₃ G f₁ f₂ c₃ ρ c₁ c₂ L z‖) ≤
-          C * (∫ p : Ambient ι, ambientWeight (requiredOuterOrder J) p *
-            ‖fullProfileDensity outer b₁ b₂ b₃ p‖)) := by
-  dsimp only
-  obtain ⟨C,hC,hs⟩ := second_profile_common_measure U g₁ g₂ Φ M B m₁ m₂ b hM hB hU h₁ h₂ A J
-  refine ⟨C,hC,?_⟩
-  intro R hR
-  obtain ⟨c₃,hc₃⟩ := hs R hR
-  refine ⟨c₃,?_⟩
-  intro ρ c₁ c₂ L hρ hc₁ hc₂ hc₁b hc₂b hL
-  refine ⟨fun θ₁ θ₂ => (hc₃ ρ c₁ c₂ θ₁ θ₂ L hρ hc₁ hc₂ hc₁b hc₂b hL).1, ?_⟩
-  intro i j outer b₁ b₂ b₃
-  refine ⟨densityTower_weighted_integrable i j outer b₁ b₂ b₃ _ _ _ c₃ ρ c₁ c₂ L J, ?_⟩
-  exact tower_bound_from_inner i j outer b₁ b₂ b₃ _ _ _ c₃ ρ c₁ c₂ L C R hC hR A J
-    (fun θ₁ θ₂ => (hc₃ ρ c₁ c₂ θ₁ θ₂ L hρ hc₁ hc₂ hc₁b hc₂b hL).2.2)
-
-theorem densityTower_fubini {ι : Type*} [Fintype ι] (i j : ι)
-    (outer : ι → 𝓢(ℝ, ℂ)) (b₁ b₂ b₃ : 𝓢(ℝ, ℂ))
-    (g : Fin 6 → 𝓢(ℝ, ℂ)) (g₁ g₂ c₃ : 𝓢(ℝ, ℂ))
-    (ρ : Fin 6 → ℝ) (c₁ c₂ L : ℝ)
-    (F : Ambient ι × Ambient (Fin 6) → ℂ) (hF : StronglyMeasurable F) (J : ℕ)
-    (hbound : ∀ z, ‖F z‖ ≤ ambientWeight J z.1 * ambientWeight J z.2) :
-    (∫ z, densityTower i j outer b₁ b₂ b₃ g g₁ g₂ c₃ ρ c₁ c₂ L z * F z) =
-      ∫ p, ∫ q, densityTower i j outer b₁ b₂ b₃ g g₁ g₂ c₃ ρ c₁ c₂ L (p,q) * F (p,q) :=
-  density_test_fubini _ F
-    (densityTower_joint_measurable i j outer b₁ b₂ b₃ g g₁ g₂ c₃ ρ c₁ c₂ L) hF J
-    (densityTower_weighted_integrable i j outer b₁ b₂ b₃ g g₁ g₂ c₃ ρ c₁ c₂ L J) hbound
-
-theorem actual_child_height_weight_bound (J K : ℕ) (p : Ambient (Fin 6)) :
-    ambientWeight J p *
-      ((1+‖profileHeight secondLeftSlope secondRightSlope secondKernelSlope p.1 p.2 4‖)^K *
-       (1+‖profileHeight secondLeftSlope secondRightSlope secondKernelSlope p.1 p.2 5‖)^K) ≤
-      ambientWeight (J+2*K) p := by
-  simpa only [second_inherited_left_eq, second_inherited_right_eq, norm_neg] using
-    inherited_pair_weight_bound (4 : Fin 6) 5 J K p
-
-theorem normalization_eta_log (Z η : ℝ) (hZ : 0 < Z) :
-    Real.exp (-6*(η*Real.log Z)) = Z^(-6*η) := by
-  rw [Real.rpow_def_of_pos hZ]
-  congr 1
-  ring
-
 theorem fresh_physical_profile (W₁ W₂ : ℝ → ℂ) (Φ : 𝓢(ℝ, ℂ))
     (V : Fin 6 → ℝ → ℂ) (G₀ E₀ V₀ K₀ X₀ Y L : ℝ)
     (hG : 0 < G₀) (hE : 0 < E₀) (hV : 0 < V₀) (hK : 0 < K₀) (hX : 0 < X₀)
@@ -552,86 +369,6 @@ theorem fresh_physical_profile (W₁ W₂ : ℝ → ℂ) (Φ : 𝓢(ℝ, ℂ))
     (secondRelativeNorm_pos q hq G₀ E₀ V₀ K₀ X₀ hG hE hV hK hX) (hcut hw₁ hw₂)]
   ring_nf
   rfl
-
-theorem retained_clipping_parameter (w : ℝ → ℂ) (Z N q a b : ℝ)
-    (hZ : 1 < Z) (hq : 1 ≤ q) (ha : 0 < a) (hb : 1 ≤ b)
-    (hw : Function.support w ⊆ Set.Icc a b) (hret : w (q/Z^N) ≠ 0) :
-    let c := Z^(max 0 N-N)
-    1 ≤ c ∧ c ≤ b ∧ |Real.log c| ≤ Real.log b ∧
-      Function.support (fun x => w (c*x)) ⊆ Set.Icc (a/b) b := by
-  dsimp only
-  have hc := InverseClippingProfiles.retained_clipped_column w Z N q a b hZ hq ha hb hw hret
-  refine ⟨hc.1,hc.2.1,?_,hc.2.2.1⟩
-  rw [abs_of_nonneg (Real.log_nonneg hc.1)]
-  exact Real.log_le_log (zero_lt_one.trans_le hc.1) hc.2.1
-
-theorem first_second_tower_uniform
-    (W₁ W₂ : ℝ → ℂ) (a₀ b₀ : ℝ) (ha₀ : 0 < a₀)
-    (hsW₁ : Function.support W₁ ⊆ Set.Icc a₀ b₀)
-    (hsW₂ : Function.support W₂ ⊆ Set.Icc a₀ b₀)
-    (hW₁ : ContDiff ℝ ∞ W₁) (hW₂ : ContDiff ℝ ∞ W₂)
-    (Φ₁ : 𝓢(ℝ, ℂ)) (V : Fin 9 → ℝ → ℂ) (MV : Fin 9 → ℝ)
-    (hV : ∀ i, ContDiff ℝ ∞ (V i)) (hVS : ∀ i, HasCompactSupport (V i))
-    (hMV : ∀ i, 0 ≤ MV i) (hVbox : ∀ i y, V i y ≠ 0 → |y| ≤ MV i)
-    (U : Fin 6 → 𝓢(ℝ, ℂ)) (g₁ g₂ Φ₂ : 𝓢(ℝ, ℂ))
-    (M B : Fin 6 → ℝ) (m₁ m₂ b : ℝ)
-    (hM : ∀ i, 0 ≤ M i) (hB : ∀ i, 0 ≤ B i)
-    (hU : ∀ i, Function.support (U i) ⊆ Set.Icc (-M i) (M i))
-    (h₁ : Function.support g₁ ⊆ Set.Icc (-m₁) m₁)
-    (h₂ : Function.support g₂ ⊆ Set.Icc (-m₂) m₂) (A₁ A₂ J : ℕ) :
-    let G := fun i => rooted (U i) (M i) (InverseClippingProfiles.secondBalancedSlope i) (hU i)
-    let f₁ := rooted g₁ m₁ (-(1/2:ℝ)) h₁
-    let f₂ := rooted g₂ m₂ (-(1/2:ℝ)) h₂
-    let outer := firstRootSchwartz V hV hVS
-    ∃ (b₁ b₂ : 𝓢(ℝ, ℂ)) (C : ℝ), 0 ≤ C ∧
-      ∀ R₁ R₂ : ℝ, 0 < R₁ → 0 < R₂ → ∃ b₃ c₃ : 𝓢(ℝ, ℂ),
-      (∀ y : Fin 9 → ℝ, firstPoissonProfile W₁ W₂ Φ₁ V R₁ y =
-        ∫ t₁ : ℝ, ∫ t₂ : ℝ, ∫ t₃ : ℝ, ∫ u : Fin 9 → ℝ,
-          fullProfileDensity outer b₁ b₂ b₃ ((t₁,t₂,t₃),u) *
-            (∏ i, logPhase (profileHeight firstLeftSlope firstRightSlope firstKernelSlope
-              (t₁,t₂,t₃) u i) (y i))) ∧
-      ∀ (ρ : Fin 6 → ℝ) (c₁ c₂ L : ℝ),
-      (∀ i, |ρ i| ≤ B i) → 1 ≤ c₁ → 1 ≤ c₂ → c₁ ≤ b → c₂ ≤ b → 0 ≤ L →
-      (∀ (θ₁ θ₂ : ℝ) (y : Fin 6 → ℝ),
-        (Real.exp (-6*L) : ℂ) * secondPoissonProfile
-          (positiveSource g₁ c₁ θ₁) (positiveSource g₂ c₂ θ₂)
-          Φ₂ (fun i y => U i (y+ρ i)) R₂ y =
-        ∫ p : Ambient (Fin 6), density G f₁ f₂ c₃ ρ c₁ c₂ θ₁ θ₂ L p *
-          pureProfileMode secondLeftSlope secondRightSlope secondKernelSlope y p.1 p.2) ∧
-      Integrable (fun z : Ambient (Fin 9) × Ambient (Fin 6) =>
-        ambientWeight J z.1 * ambientWeight J z.2 *
-          ‖densityTower 7 8 outer b₁ b₂ b₃ G f₁ f₂ c₃ ρ c₁ c₂ L z‖) ∧
-      (1+R₁)^A₁ * (1+R₂)^A₂ * (∫ z : Ambient (Fin 9) × Ambient (Fin 6),
-        ambientWeight J z.1 * ambientWeight J z.2 *
-          ‖densityTower 7 8 outer b₁ b₂ b₃ G f₁ f₂ c₃ ρ c₁ c₂ L z‖) ≤ C := by
-  dsimp only
-  obtain ⟨C₂,hC₂,hsecond⟩ := second_profile_tower_uniform (ι := Fin 9)
-    U g₁ g₂ Φ₂ M B m₁ m₂ b hM hB hU h₁ h₂ A₂ J
-  obtain ⟨b₁,b₂,C₁,hC₁,hfirst⟩ := first_full_profile_common_measure
-    W₁ W₂ a₀ b₀ ha₀ hsW₁ hsW₂ hW₁ hW₂ Φ₁ V MV hV hVS hMV hVbox A₁ (requiredOuterOrder J)
-  refine ⟨b₁,b₂,C₂*C₁,mul_nonneg hC₂ hC₁,?_⟩
-  intro R₁ R₂ hR₁ hR₂
-  obtain ⟨b₃,he₁,_,hb₁⟩ := hfirst R₁ hR₁
-  obtain ⟨c₃,hc₃⟩ := hsecond R₂ hR₂
-  refine ⟨b₃,c₃,he₁,?_⟩
-  intro ρ c₁ c₂ L hρ hc₁ hc₂ hc₁b hc₂b hL
-  have h := hc₃ ρ c₁ c₂ L hρ hc₁ hc₂ hc₁b hc₂b hL
-  have ht := h.2 7 8 (firstRootSchwartz V hV hVS) b₁ b₂ b₃
-  refine ⟨h.1,ht.1,?_⟩
-  have hh := mul_le_mul_of_nonneg_left ht.2 (show 0 ≤ (1+R₁)^A₁ by positivity)
-  have hh' := mul_le_mul_of_nonneg_left hb₁ hC₂
-  calc
-    _ = (1+R₁)^A₁ * ((1+R₂)^A₂ * (∫ z : Ambient (Fin 9) × Ambient (Fin 6),
-        ambientWeight J z.1 * ambientWeight J z.2 *
-          ‖densityTower 7 8 (firstRootSchwartz V hV hVS) b₁ b₂ b₃
-            (fun i => rooted (U i) (M i) (InverseClippingProfiles.secondBalancedSlope i) (hU i))
-            (rooted g₁ m₁ (-(1/2:ℝ)) h₁) (rooted g₂ m₂ (-(1/2:ℝ)) h₂)
-            c₃ ρ c₁ c₂ L z‖)) := by ring
-    _ ≤ (1+R₁)^A₁ * (C₂ * (∫ p : Ambient (Fin 9), ambientWeight (requiredOuterOrder J) p *
-        ‖fullProfileDensity (firstRootSchwartz V hV hVS) b₁ b₂ b₃ p‖)) := hh
-    _ ≤ C₂*C₁ := by
-      simpa only [ambientWeight, tripleHeight, coordinateHeight, mul_assoc,
-        mul_left_comm, mul_comm] using hh'
 
 end SevenEighths.InverseSecondProfileUniform
 

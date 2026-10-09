@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.NaturalRowSourceFamily
 import OAI.NumberTheory.DirichletL.Moments.RetainedEnergy
-
 namespace OAI
 
 noncomputable section
@@ -38,17 +37,6 @@ theorem NaturalRow.masked_positive {ι : Type*} [Fintype ι] [DecidableEq ι]
           twistedIdealSum (excluded F.character R) W₂ t X₂)*
           ∏i,∑I∈S i,β i I*idealCoeff (excluded F.character R) I*(I.absNorm:ℂ)^(Complex.I*t)) := by
   simp only [positiveSlotRow,F.masked_plain R hR,F.masked_slot R hR]
-
-theorem NaturalRow.masked_retained {ι : Type*} [Fintype ι] [DecidableEq ι]
-    {η : Character} {z : O} (F : NaturalRow η z) (R : Ideal O) (hR : R≠0)
-    (W₁ W₂ : ℝ→ℂ) (S : ι→Finset (Ideal O)) (β : ι→Ideal O→ℂ)
-    (P : ι→ℝ) (t X₁ X₂ : ℝ) :
-    retainedPositiveRow η (fixedBadMask*idealGenerator R) 1 z W₁ W₂ S β P t X₁ X₂=
-      (Real.sqrt (clippedScale X₁*clippedScale X₂*∏i,P i):ℂ)⁻¹*
-        ((twistedIdealSum (excluded F.character R) (dilated W₁ (clipDilation X₁)) t (clippedScale X₁)*
-          twistedIdealSum (excluded F.character R) (dilated W₂ (clipDilation X₂)) t (clippedScale X₂))*
-          ∏i,∑I∈S i,β i I*idealCoeff (excluded F.character R) I*(I.absNorm:ℂ)^(Complex.I*t)) := by
-  exact F.masked_positive R hR _ _ S β P t _ _
 
 end SevenEighths.CenteredMomentNaturalRowSource
 

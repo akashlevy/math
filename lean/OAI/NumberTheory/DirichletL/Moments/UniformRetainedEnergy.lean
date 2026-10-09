@@ -1,7 +1,7 @@
 import OAI.NumberTheory.DirichletL.Moments.UniformReflectionChoices
-import OAI.NumberTheory.DirichletL.Moments.RetainedComparisonEnergy
+import OAI.NumberTheory.DirichletL.Moments.RetainedWeightedSource
+import OAI.NumberTheory.DirichletL.Moments.ReflectedChoiceEnergy
 import OAI.NumberTheory.DirichletL.Moments.UniformReflectionApproximation
-
 namespace OAI
 
 noncomputable section

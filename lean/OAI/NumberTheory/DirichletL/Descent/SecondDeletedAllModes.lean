@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondDeletedOriginalBound
 import OAI.NumberTheory.DirichletL.Descent.SecondSectorAssembly
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.GlobalPriorityTail
-
 namespace OAI
 
 noncomputable section

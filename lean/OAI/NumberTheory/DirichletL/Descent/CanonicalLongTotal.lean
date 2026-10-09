@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalLongFinite
-
 namespace OAI
 
 noncomputable section

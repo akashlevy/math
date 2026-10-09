@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Continuation
 import Mathlib.NumberTheory.LSeries.AbstractFuncEq
-
 namespace OAI
 
 noncomputable section

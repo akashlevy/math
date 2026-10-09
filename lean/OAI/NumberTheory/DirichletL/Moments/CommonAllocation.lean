@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.CommonSectors
 import OAI.NumberTheory.DirichletL.Moments.HeckeExpansion
-
 namespace OAI
 
 noncomputable section
@@ -40,49 +39,6 @@ theorem residual_factor_coprime (C I : Ideal O) (hC : C≠0) :
     IsCoprime C (supportResidual I (primeSupport C)) := by
   have hh := extracted_residual_coprime C I (primeSupport C)
   rwa [supportExtract_of_subset C hC _ (Finset.Subset.refl _)] at hh
-
-theorem slot_plain_products {ι : Type*} (T : Finset ι) (p : ι → Ideal O)
-    (hp : ∀ i∈T,Prime (p i)) (I J C a : Ideal O) (hI : I≠0) (hJ : J≠0)
-    (hC : C≠0) (ha : a≠0) (hCa : IsCoprime C a)
-    (hprod : (∏ i∈T,p i)*I*J=C*a) :
-    (∏ i∈T.filter (fun i => p i∈primeSupport C),p i)*
-        supportExtract I (primeSupport C)*supportExtract J (primeSupport C)=C ∧
-      (∏ i∈T.filter (fun i => p i∉primeSupport C),p i)*
-        supportResidual I (primeSupport C)*supportResidual J (primeSupport C)=a := by
-  have hp0 : (∏ i∈T,p i)≠0 := Finset.prod_ne_zero_iff.mpr (fun i hi => (hp i hi).ne_zero)
-  have hf := (prime_slot_allocation T p hp (primeSupport C)).1
-  have hl := (prime_slot_allocation T p hp (primeSupport C)).2
-  constructor
-  · have he := extract_coprime_product C a hC ha hCa
-    rw [← hprod,supportExtract_mul _ J (mul_ne_zero hp0 hI) hJ,
-      supportExtract_mul _ I hp0 hI,hf] at he
-    exact he
-  · have he := residual_coprime_product C a hC ha hCa
-    rw [← hprod,supportResidual_mul _ J (mul_ne_zero hp0 hI) hJ,
-      supportResidual_mul _ I hp0 hI,hl] at he
-    exact he
-
-theorem centered_source_allocation {ι : Type*} (T : Finset ι) (p : ι → Ideal O)
-    (ν : ι → ℂ) (η : Character) (m A z : O) (t : ℝ)
-    (I J C a : Ideal O) (hI : I≠0) (hJ : J≠0)
-    (hprod : (∏ i∈T,p i)*I*J=C*a)
-    (W₁ W₂ : ℝ → ℂ) (X₁ X₂ Y₁ Y₂ : ℝ) :
-    (∏ i∈T,ν i)*rowWeight η m A z t ((∏ i∈T,p i)*I*J)*
-      idealRectangle W₁ W₂ X₁ X₂ Y₁ Y₂ I J =
-      ((∏ i∈T.filter (fun i => p i∈primeSupport C),ν i)*rowWeight η m A z t C)*
-        ((∏ i∈T.filter (fun i => p i∉primeSupport C),ν i)*rowWeight η m A z t a*
-          idealRectangle W₁ W₂
-            (X₁/Ideal.absNorm (supportExtract I (primeSupport C)))
-            (X₂/Ideal.absNorm (supportExtract J (primeSupport C)))
-            (Y₁/Ideal.absNorm (supportExtract I (primeSupport C)))
-            (Y₂/Ideal.absNorm (supportExtract J (primeSupport C)))
-            (supportResidual I (primeSupport C)) (supportResidual J (primeSupport C))) := by
-  have hrect := idealRectangle_extract W₁ W₂ X₁ X₂ Y₁ Y₂
-    (supportExtract I (primeSupport C)) (supportExtract J (primeSupport C))
-    (supportResidual I (primeSupport C)) (supportResidual J (primeSupport C))
-  rw [support_reconstruct I hI,support_reconstruct J hJ] at hrect
-  rw [hprod,map_mul,hrect,← Finset.prod_filter_mul_prod_filter_not T (fun i => p i∈primeSupport C) ν]
-  ring
 
 end SevenEighths.CenteredMomentCommonAllocation
 

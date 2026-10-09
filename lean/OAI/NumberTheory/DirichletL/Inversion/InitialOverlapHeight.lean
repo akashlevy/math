@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialOverlapInputFourier
 import OAI.NumberTheory.DirichletL.Descent.CommonMeasure
 import OAI.NumberTheory.DirichletL.Descent.DescentHeight
-
 namespace OAI
 
 noncomputable section

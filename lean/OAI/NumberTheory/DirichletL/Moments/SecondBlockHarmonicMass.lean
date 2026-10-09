@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondBlockCount
 import OAI.NumberTheory.DirichletL.Moments.OriginalCommonHarmonic
-
 namespace OAI
 
 noncomputable section
@@ -139,25 +138,6 @@ theorem actual_block_harmonic_mass (B L Cr ε : ℝ) (hB : 0≤B) (hL : 0≤L)
       calc
         _ = (C₂*C₁)*(Z^(ε/2)*Z^(ε/2))/(seed.absNorm:ℝ) := by ring
         _ = _ := by rw [←Real.rpow_add (by linarith : 0<Z),add_halves]
-
-theorem actual_original_block_harmonic_mass (B L Cr ε : ℝ) (hB : 0≤B) (hL : 0≤L)
-    (hCr : 0<Cr) (hε : 0<ε) :
-    ∃C:ℝ,0<C ∧ ∀ᶠZ:ℝ in Filter.atTop,
-      ∀(ι:Type*) [Fintype ι] [DecidableEq ι] (s:CenteredMomentCommonRadialData.Input ι),
-      s.W₁ 0=0 → s.W₂ 0=0 → sourceRadius s≤Z^B →
-      ∀puncture seed:Ideal O,Squarefree seed → seed≠0 →
-      ∀K R H:ℝ,0<K → R≤Cr*Z^L → H≤Z^B →
-      (∑q : ActiveBlocks (finiteColumns (Fintype.piFinset s.pools))
-          (coefficient s puncture seed) K R H,pairWeight q.1.1.val.1 q.1.1.val.2)≤
-        C*Z^ε/(seed.absNorm:ℝ) := by
-  obtain ⟨C,hC,hb⟩:=actual_block_harmonic_mass B L Cr ε hB hL hCr hε
-  refine ⟨C,hC,?_⟩
-  filter_upwards [hb] with Z hZ
-  intro ι inst inst' s hz₁ hz₂ hcap puncture seed hs hs0 K R H hK hR hH
-  exact hZ seed hs hs0 _ _
-    (fun I _ hI=>original_column_mask s puncture seed I hI)
-    (fun I _ hI=>(original_column_norm s puncture seed I hz₁ hz₂ hI).2.trans hcap)
-    K R H hK hR hH
 
 end SevenEighths.CenteredMomentSecondBlockHarmonicMass
 

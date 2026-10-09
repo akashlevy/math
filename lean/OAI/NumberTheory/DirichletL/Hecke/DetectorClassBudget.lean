@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorBatch
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationBudget
-
 namespace OAI
 
 noncomputable section

@@ -2,7 +2,6 @@ import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -10,42 +9,6 @@ namespace SevenEighths.InverseMoment
 open scoped BigOperators
 
 noncomputable section
-
-def weightedEnergy {ι : Type*} (s : Finset ι) (w : ι → ℝ) (f : ι → ℂ) : ℝ :=
-  ∑ i ∈ s, w i * ‖f i‖ ^ 2
-
-theorem weightedEnergy_nonneg {ι : Type*} (s : Finset ι) (w : ι → ℝ)
-    (f : ι → ℂ) (hw : ∀ i ∈ s, 0 ≤ w i) : 0 ≤ weightedEnergy s w f := by
-  exact Finset.sum_nonneg fun i hi => mul_nonneg (hw i hi) (sq_nonneg _)
-
-theorem weighted_cauchy {ι : Type*} (s : Finset ι) (w : ι → ℝ)
-    (f g : ι → ℂ) (hw : ∀ i ∈ s, 0 ≤ w i) :
-    ‖∑ i ∈ s, (w i : ℂ) * f i * star (g i)‖ ≤
-      Real.sqrt (weightedEnergy s w f) * Real.sqrt (weightedEnergy s w g) := by
-  have hf : ∑ i ∈ s, (Real.sqrt (w i) * ‖f i‖) ^ 2 = weightedEnergy s w f := by
-    apply Finset.sum_congr rfl
-    intro i hi
-    rw [mul_pow, Real.sq_sqrt (hw i hi)]
-  have hg : ∑ i ∈ s, (Real.sqrt (w i) * ‖g i‖) ^ 2 = weightedEnergy s w g := by
-    apply Finset.sum_congr rfl
-    intro i hi
-    rw [mul_pow, Real.sq_sqrt (hw i hi)]
-  calc
-    ‖∑ i ∈ s, (w i : ℂ) * f i * star (g i)‖ ≤
-        ∑ i ∈ s, ‖(w i : ℂ) * f i * star (g i)‖ := norm_sum_le _ _
-    _ = ∑ i ∈ s, (Real.sqrt (w i) * ‖f i‖) * (Real.sqrt (w i) * ‖g i‖) := by
-      apply Finset.sum_congr rfl
-      intro i hi
-      simp only [norm_mul, norm_star, Complex.norm_real, Real.norm_eq_abs,
-        abs_of_nonneg (hw i hi)]
-      calc
-        w i * ‖f i‖ * ‖g i‖ =
-            (Real.sqrt (w i) * Real.sqrt (w i)) * ‖f i‖ * ‖g i‖ := by
-          rw [Real.mul_self_sqrt (hw i hi)]
-        _ = _ := by ring
-    _ ≤ Real.sqrt (weightedEnergy s w f) * Real.sqrt (weightedEnergy s w g) := by
-      simpa only [hf, hg] using Real.sum_mul_le_sqrt_mul_sqrt s
-        (fun i => Real.sqrt (w i) * ‖f i‖) (fun i => Real.sqrt (w i) * ‖g i‖)
 
 theorem fiber_energy_bound {ι κ : Type*} [DecidableEq κ]
     (s : Finset ι) (t : Finset κ) (p : ι → κ) (w : ι → ℝ)
@@ -66,27 +29,6 @@ theorem fiber_energy_bound {ι κ : Type*} [DecidableEq κ]
       rw [(Finset.mem_filter.mp hi).2]
     _ ≤ ∑ j ∈ t, D j * E j :=
       Finset.sum_le_sum fun j hj => mul_le_mul_of_nonneg_right (hD j hj) (hE j hj)
-
-theorem weightedEnergy_fiber_bound {ι κ : Type*} [DecidableEq κ]
-    (s : Finset ι) (t : Finset κ) (p : ι → κ) (w : ι → ℝ)
-    (D : κ → ℝ) (f : κ → ℂ) (hp : ∀ i ∈ s, p i ∈ t)
-    (hD : ∀ j ∈ t, ∑ i ∈ s with p i = j, w i ≤ D j) :
-    weightedEnergy s w (f ∘ p) ≤ weightedEnergy t D f := by
-  exact fiber_energy_bound s t p w D (fun j => ‖f j‖ ^ 2) hp
-    (fun j _ => sq_nonneg _) hD
-
-theorem weighted_cauchy_fiber {ι κ : Type*} [DecidableEq κ]
-    (s : Finset ι) (t : Finset κ) (p : ι → κ) (w : ι → ℝ)
-    (D : κ → ℝ) (f g : κ → ℂ) (hp : ∀ i ∈ s, p i ∈ t)
-    (hw : ∀ i ∈ s, 0 ≤ w i)
-    (hD : ∀ j ∈ t, ∑ i ∈ s with p i = j, w i ≤ D j) :
-    ‖∑ i ∈ s, (w i : ℂ) * f (p i) * star (g (p i))‖ ≤
-      Real.sqrt (weightedEnergy t D f) * Real.sqrt (weightedEnergy t D g) := by
-  apply (weighted_cauchy s w (f ∘ p) (g ∘ p) hw).trans
-  exact mul_le_mul
-    (Real.sqrt_le_sqrt (weightedEnergy_fiber_bound s t p w D f hp hD))
-    (Real.sqrt_le_sqrt (weightedEnergy_fiber_bound s t p w D g hp hD))
-    (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
 
 theorem finite_expansion_energy {κ ι : Type*} [DecidableEq ι]
     (rows : Finset κ) (terms : Finset ι) (active : κ → Finset ι)

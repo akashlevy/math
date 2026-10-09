@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.PrincipalMellinResidues
 import OAI.NumberTheory.DirichletL.ContinuationPolynomialContour
 import Mathlib.MeasureTheory.Group.Prod
-
 namespace OAI
 
 noncomputable section
@@ -333,12 +332,6 @@ lemma gaussianMoment_integrable (n : ℕ) : Integrable (gaussianMoment n) := by
     simpa [gaussianMoment,height,Continuation.polynomialGaussian,mul_assoc] using
       mul_le_mul_of_nonneg_right h (Real.exp_pos (-(u^2))).le
 
-lemma height_sub_le (t v : ℝ) : height t≤height (t+v)*height v := by
-  have ht : |t|≤|t+v|+|v| := by
-    simpa using (abs_sub_le (t+v) 0 v)
-  unfold height
-  nlinarith [mul_nonneg (abs_nonneg (t+v)) (abs_nonneg v), abs_nonneg (t+v),abs_nonneg v]
-
 lemma jointHeight_le_shear (t v w : ℝ) :
     jointHeight t v w≤2*height (t+v)*height v*height w := by
   have ht : |t|≤|t+v|+|v| := by simpa using (abs_sub_le (t+v) 0 v)
@@ -390,9 +383,6 @@ abbrev heightMeasure : Measure HeightSpace := (volume.prod volume).prod volume
 
 def jointEnvelope (J : ℕ) (p : HeightSpace) : ℝ :=
   gaussianMoment J (p.1.1+p.1.2)*cauchy p.1.2*cauchy p.2
-
-lemma jointEnvelope_nonneg (J : ℕ) (p : HeightSpace) : 0≤jointEnvelope J p := by
-  exact mul_nonneg (mul_nonneg (gaussianMoment_nonneg _ _) (cauchy_nonneg _)) (cauchy_nonneg _)
 
 lemma jointEnvelope_integrable (J : ℕ) : Integrable (jointEnvelope J) heightMeasure := by
   have hp : MeasurePreserving (fun p : ℝ×ℝ => (p.1+p.2,p.2))
@@ -608,10 +598,6 @@ def sliceEnvelope (axis : SliceAxis) (J : ℕ) (T : ℝ) (q : ℝ×ℝ) : ℝ :=
 
 def sliceMass (J : ℕ) : ℝ := (∫u : ℝ, gaussianMoment J u)*(∫v : ℝ, cauchy v)
 
-lemma sliceEnvelope_nonneg (axis : SliceAxis) (J : ℕ) (T : ℝ) (q : ℝ×ℝ) :
-    0≤sliceEnvelope axis J T q := by
-  cases axis <;> exact mul_nonneg (gaussianMoment_nonneg _ _) (cauchy_nonneg _)
-
 lemma jointEnvelope_slice_le (axis : SliceAxis) (J : ℕ) (T : ℝ) (q : ℝ×ℝ) :
     jointEnvelope J (sliceMap axis T q)≤sliceEnvelope axis J T q := by
   cases axis
@@ -798,25 +784,6 @@ theorem profile_arithmetic_slices (W0 W1 : SchwartzMap ℝ ℂ) (a0 b0 a1 b1 : �
       integral_const_mul _ _
     _ ≤ A*(K/height T^N) := mul_le_mul_of_nonneg_left hmb hA
     _ = _ := by ring
-
-theorem profile_arithmetic_fubini (W0 W1 : SchwartzMap ℝ ℂ) (a0 b0 a1 b1 : ℝ)
-    (ha0 : 0<a0) (ha1 : 0<a1) (hW0 : Function.support W0⊆Icc a0 b0)
-    (hW1 : Function.support W1⊆Icc a1 b1) (σ ξ υ : ℝ) (hξ : 0<ξ)
-    (G : HeightSpace → ℂ) (hG : AEStronglyMeasurable G heightMeasure) (A : ℝ) (J : ℕ)
-    (hbound : ∀p, ‖G p‖≤A*jointHeight p.1.1 p.1.2 p.2^J) :
-    ((∫p : HeightSpace, G p*onLines W0 W1 σ ξ υ p ∂heightMeasure) =
-      ∫τ : ℝ, ∫ν : ℝ, ∫ω : ℝ, G ((τ,ν),ω)*onLines W0 W1 σ ξ υ ((τ,ν),ω)) ∧
-    ((∫p : HeightSpace, G p*onLines W0 W1 σ ξ υ p ∂heightMeasure) =
-      ∫ω : ℝ, ∫ν : ℝ, ∫τ : ℝ, G ((τ,ν),ω)*onLines W0 W1 σ ξ υ ((τ,ν),ω)) := by
-  have hi := profile_arithmetic_integrable W0 W1 a0 b0 a1 b1 ha0 ha1 hW0 hW1
-    σ ξ υ hξ G hG A J hbound
-  constructor
-  · rw [integral_prod _ hi]
-    exact integral_prod _ hi.integral_prod_left
-  · rw [integral_prod_symm _ hi]
-    apply integral_congr_ae
-    filter_upwards [hi.prod_left_ae] with ω hω
-    exact integral_prod_symm _ hω
 
 end SevenEighths.ProbeMellinBoundary
 

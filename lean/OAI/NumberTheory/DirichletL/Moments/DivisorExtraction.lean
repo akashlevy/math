@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.DivisorAllocation
-
 namespace OAI
 
 noncomputable section
@@ -40,29 +39,6 @@ theorem selectedDivisor_dvd (D : Ideal O) (s : Finset ι) (v : ι → Ideal O)
     exact Ideal.isCoprime_of_isMaximal (fun he => hne (Subtype.ext he))
   · intro P hP
     exact selected_divides_factor D s v a hn P i (Finset.mem_filter.mp hP).2
-
-theorem exists_factor_quotients (D : Ideal O) (s : Finset ι) (v : ι → Ideal O)
-    (a : Allocation D s) (hn : allocationTerm D s v a ≠ 0) :
-    ∃ q : ι → Ideal O, ∀ i, v i=selectedDivisor D s a i*q i := by
-  choose q hq using (fun i => selectedDivisor_dvd D s v a hn i)
-  exact ⟨q,hq⟩
-
-theorem selected_prime_slot (D : Ideal O) (s : Finset ι) (v : ι → Ideal O)
-    (a : Allocation D s) (hn : allocationTerm D s v a ≠ 0)
-    (P : primeSupport D) (i : ι) (hi : i ∈ (a P).val) (hv : Prime (v i)) :
-    v i=(P:Ideal O) :=
-  ((prime_dvd_prime_iff_eq (support_prime P.property) hv).mp
-    (selected_divides_factor D s v a hn P i hi)).symm
-
-theorem double_selected_prime_slot_zero (D : Ideal O) (s : Finset ι) (v : ι → Ideal O)
-    (a : Allocation D s) (P Q : primeSupport D) (hPQ : P ≠ Q)
-    (i : ι) (hPi : i ∈ (a P).val) (hQi : i ∈ (a Q).val) (hv : Prime (v i)) :
-    allocationTerm D s v a=0 := by
-  by_contra hn
-  apply hPQ
-  apply Subtype.ext
-  exact (selected_prime_slot D s v a hn P i hPi hv).symm.trans
-    (selected_prime_slot D s v a hn Q i hQi hv)
 
 end SevenEighths.CenteredMomentDivisorExtraction
 

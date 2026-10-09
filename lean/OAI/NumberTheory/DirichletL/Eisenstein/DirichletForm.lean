@@ -1,77 +1,25 @@
 import OAI.NumberTheory.DirichletL.GaussSum.ReflectedBranches
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ContDiff Manifold ENNReal MatrixGroups
+open scoped Manifold ENNReal MatrixGroups
 
 namespace CubicEisenstein
 
@@ -83,14 +31,6 @@ lemma kernelTestPartial_add (f g : kernelSmoothTests) (w : HyperbolicSpace) (j :
   unfold kernelTestPartial
   have he : kernelTestField (f+g)=kernelTestField f+kernelTestField g := rfl
   rw [he,fderiv_add ((kernelTestField_contDiffAt f _ (hyperbolicHeight_pos w)).differentiableAt (by simp))
-    ((kernelTestField_contDiffAt g _ (hyperbolicHeight_pos w)).differentiableAt (by simp))]
-  rfl
-
-lemma kernelTestPartial_sub (f g : kernelSmoothTests) (w : HyperbolicSpace) (j : Fin 3) :
-    kernelTestPartial (f-g) w j=kernelTestPartial f w j-kernelTestPartial g w j := by
-  unfold kernelTestPartial
-  have he : kernelTestField (f-g)=kernelTestField f-kernelTestField g := rfl
-  rw [he,fderiv_sub ((kernelTestField_contDiffAt f _ (hyperbolicHeight_pos w)).differentiableAt (by simp))
     ((kernelTestField_contDiffAt g _ (hyperbolicHeight_pos w)).differentiableAt (by simp))]
   rfl
 
@@ -116,44 +56,6 @@ lemma kernelTestEnergyDensity_eq_partials (f : kernelSmoothTests) (w : Hyperboli
   intro j hj
   change (kernelTestPartial f w j).re^2+(kernelTestPartial f w j).im^2=‖kernelTestPartial f w j‖^2
   simpa only [Complex.normSq_apply,pow_two] using Complex.normSq_eq_norm_sq (kernelTestPartial f w j)
-
-lemma kernelTestEnergyDensity_smul (c : ℂ) (f : kernelSmoothTests) (w : HyperbolicSpace) :
-    kernelTestEnergyDensity (c•f) w=‖c‖^2*kernelTestEnergyDensity f w := by
-  simp only [kernelTestEnergyDensity_eq_partials,kernelTestPartial_smul,norm_mul,mul_pow,←Finset.mul_sum]
-  ring
-
-lemma kernelTestEnergyDensity_parallelogram (f g : kernelSmoothTests) (w : HyperbolicSpace) :
-    kernelTestEnergyDensity (f+g) w+kernelTestEnergyDensity (f-g) w=
-      2*(kernelTestEnergyDensity f w+kernelTestEnergyDensity g w) := by
-  simp only [kernelTestEnergyDensity_eq_partials,kernelTestPartial_add,kernelTestPartial_sub]
-  rw [←mul_add,←Finset.sum_add_distrib]
-  simp only [parallelogram_law_with_norm ℂ,←Finset.mul_sum,Finset.sum_add_distrib]
-  ring
-
-lemma kernelQuotientEnergyDensity_smul (c : ℂ) (f : kernelSmoothTests) (q : KernelQuotient) :
-    kernelQuotientEnergyDensity (c•f) q=‖c‖^2*kernelQuotientEnergyDensity f q := by
-  induction q using Quotient.inductionOn with
-  | _ w => exact kernelTestEnergyDensity_smul c f w
-
-lemma kernelQuotientEnergyDensity_parallelogram (f g : kernelSmoothTests) (q : KernelQuotient) :
-    kernelQuotientEnergyDensity (f+g) q+kernelQuotientEnergyDensity (f-g) q=
-      2*(kernelQuotientEnergyDensity f q+kernelQuotientEnergyDensity g q) := by
-  induction q using Quotient.inductionOn with
-  | _ w => exact kernelTestEnergyDensity_parallelogram f g w
-
-lemma kernelDirichletEnergy_smul (c : ℂ) (f : kernelSmoothTests) :
-    kernelDirichletEnergy (c•f)=‖c‖^2*kernelDirichletEnergy f := by
-  unfold kernelDirichletEnergy
-  simp_rw [kernelQuotientEnergyDensity_smul]
-  exact integral_const_mul _ _
-
-lemma kernelDirichletEnergy_parallelogram (f g : kernelSmoothTests) :
-    kernelDirichletEnergy (f+g)+kernelDirichletEnergy (f-g)=
-      2*(kernelDirichletEnergy f+kernelDirichletEnergy g) := by
-  unfold kernelDirichletEnergy
-  rw [←integral_add (kernelQuotientEnergyDensity_integrable _) (kernelQuotientEnergyDensity_integrable _)]
-  simp_rw [kernelQuotientEnergyDensity_parallelogram]
-  rw [integral_const_mul,integral_add (kernelQuotientEnergyDensity_integrable _) (kernelQuotientEnergyDensity_integrable _)]
 
 open Filter MeasureTheory
 open scoped BigOperators Classical Topology ContDiff Manifold ENNReal MatrixGroups InnerProductSpace
@@ -252,10 +154,6 @@ lemma kernelDirichletForm_self (f : kernelSmoothTests) :
   unfold kernelDirichletForm kernelDirichletEnergy
   simp_rw [kernelDirichletPairDensity_self]
   exact integral_complex_ofReal
-
-lemma kernelDirichletForm_self_nonneg (f : kernelSmoothTests) : 0≤(kernelDirichletForm f f).re := by
-  rw [kernelDirichletForm_self,Complex.ofReal_re]
-  exact kernelDirichletEnergy_nonneg f
 
 end CubicEisenstein
 
@@ -387,128 +285,7 @@ open scoped BigOperators Classical SchwartzMap ContDiff
 open MeasureTheory
 open ActualEisensteinCubic CanonicalQuadraticSieve
 
-theorem completed_kernel_three_window
-    (V₀ V₁ V₂ : ℝ→ℂ) (M₀ M₁ M₂ : ℝ)
-    (hM₀ : 0≤M₀) (hM₁ : 0≤M₁) (hM₂ : 0≤M₂)
-    (hV₀ : ∀y,V₀ y≠0 → |y|≤M₀) (hV₁ : ∀y,V₁ y≠0 → |y|≤M₁)
-    (hV₂ : ∀y,V₂ y≠0 → |y|≤M₂)
-    (W : ℝ→ℂ) (a b : ℝ) (ha : 0<a)
-    (hsupp : Function.support W⊆Set.Icc a b) (hW : ContDiff ℝ ∞ W) (A : ℕ) :
-    ∃C : ℝ,0≤C ∧ ∀R : ℝ,0<R → ∃B : 𝓢(ℝ,ℂ),
-      (∀r u v : ℝ,V₀ r*V₁ u*V₂ v*CubicReflectionKernel.paperKernel (Vstar W)
-        (R*Real.exp (-2*r+u+3*v))=
-        ∫t : ℝ,(V₀ r*FourierBridge.logPhase t (-2*r))*
-          (V₁ u*FourierBridge.logPhase t u)*(V₂ v*FourierBridge.logPhase t (3*v))*B t) ∧
-      (1+R)^A*(∫t : ℝ,‖B t‖)≤C := by
-  let V : Fin 3→ℝ→ℂ := ![V₀,V₁,V₂]
-  let slope : Fin 3→ℝ := ![-2,1,3]
-  let M : Fin 3→ℝ := ![M₀,M₁,M₂]
-  have hm : ∀i,0≤M i := by intro i; fin_cases i <;> assumption
-  have hv : ∀i y,V i y≠0 → |y|≤M i := by intro i; fin_cases i <;> assumption
-  obtain ⟨C,hC,h⟩ := completed_kernel_log_separation V slope M hm hv W a b ha hsupp hW A 0
-  refine ⟨C,hC,?_⟩
-  intro R hR
-  obtain ⟨B,hB,hi,hbound,hpoint⟩ := h R hR
-  refine ⟨B,?_,by simpa only [pow_zero,one_mul] using hbound⟩
-  intro r u v
-  simpa [V,slope,Fin.prod_univ_succ,Fin.sum_univ_succ,mul_assoc,add_assoc] using hB ![r,u,v]
-
-theorem completed_smooth_quadratic
-    (V₀ V₁ V₂ : ℝ→ℂ) (M₀ M₁ M₂ : ℝ)
-    (hM₀ : 0≤M₀) (hM₁ : 0≤M₁) (hM₂ : 0≤M₂)
-    (hV₀ : ∀y,V₀ y≠0 → |y|≤M₀) (hV₁ : ∀y,V₁ y≠0 → |y|≤M₁)
-    (hV₂ : ∀y,V₂ y≠0 → |y|≤M₂)
-    (hV₀n : ∀y,‖V₀ y‖≤1) (hV₁n : ∀y,‖V₁ y‖≤1) (hV₂n : ∀y,‖V₂ y‖≤1)
-    (W : ℝ→ℂ) (a b : ℝ) (ha : 0<a)
-    (hsupp : Function.support W⊆Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    (A : ℕ) (ε : ℝ) (hε : 0<ε) :
-    ∃C : ℝ,0<C ∧ ∀K U B lengthScale R : ℝ,1≤K → 1≤U → 1≤B → 0≤lengthScale → 0<R →
-    ∀S T : Finset (Ideal O),
-      (∀I∈S,I≠0 ∧ (Ideal.absNorm I:ℝ)≤U) →
-      (∀I∈T,I≠0 ∧ (Ideal.absNorm I:ℝ)≤B) →
-    ∀β : Ideal O→Ideal O→ℂ,(∀n∈S,∀v∈T,‖β n v‖≤lengthScale) →
-    ∀yr : idealRange K→ℝ,∀yn yb : Ideal O→ℝ,
-    (∑k : idealRange K,‖∑n∈S,∑v∈T,
-      quadraticRow k.val (primaryGenerator (n*v))*β n v*
-      (V₀ (yr k)*V₁ (yn n)*V₂ (yb v)*CubicReflectionKernel.paperKernel (Vstar W)
-        (R*Real.exp (-2*yr k+yn n+3*yb v)))‖^2)≤
-      C*(K*(U*B))^ε*(K+U*B)*(U*B)*lengthScale^2/(1+R)^(2*A) := by
-  obtain ⟨Cq,hCq,hq⟩ := integrated_product_quadratic ε hε
-  obtain ⟨Ck,hCk,hkernel⟩ := completed_kernel_three_window V₀ V₁ V₂ M₀ M₁ M₂
-    hM₀ hM₁ hM₂ hV₀ hV₁ hV₂ W a b ha hsupp hW A
-  refine ⟨Cq*(Ck^2+1),by positivity,?_⟩
-  intro K U B lengthScale R hK hU hB hL hR S T hS hT β hβ yr yn yb
-  obtain ⟨g,hsep,hg⟩ := hkernel R hR
-  let rowPhase : idealRange K→ℝ→ℂ := fun k t => V₀ (yr k)*FourierBridge.logPhase t (-2*yr k)
-  let βt : ℝ→Ideal O→Ideal O→ℂ := fun t n v =>
-    β n v*(V₁ (yn n)*FourierBridge.logPhase t (yn n))*(V₂ (yb v)*FourierBridge.logPhase t (3*yb v))
-  have hphase (t x : ℝ) : ‖FourierBridge.logPhase t x‖=1 := FourierBridge.logPhase_norm t x
-  have hrowPhase (k : idealRange K) (t : ℝ) : ‖rowPhase k t‖≤1 := by
-    simp only [rowPhase,norm_mul,hphase,mul_one]
-    exact hV₀n _
-  have hβt (t : ℝ) (n : Ideal O) (hn : n∈S) (v : Ideal O) (hv : v∈T) : ‖βt t n v‖≤lengthScale := by
-    simp only [βt,norm_mul,hphase,mul_one]
-    exact (mul_le_of_le_one_right (by positivity)
-      (hV₂n _)).trans ((mul_le_of_le_one_right (norm_nonneg _) (hV₁n _)).trans (hβ n hn v hv))
-  have hrowPhasec (k : idealRange K) : Continuous (rowPhase k) :=
-    continuous_const.mul (FourierBridge.logPhase_continuous_left _)
-  have hβtc (n v : Ideal O) : Continuous (fun t => βt t n v) :=
-    (continuous_const.mul (continuous_const.mul (FourierBridge.logPhase_continuous_left _))).mul
-      (continuous_const.mul (FourierBridge.logPhase_continuous_left _))
-  have hi := hq K U B lengthScale hK hU hB hL S T hS hT βt hβtc hβt rowPhase hrowPhasec hrowPhase g
-  have he (k : idealRange K) :
-      (∑n∈S,∑v∈T,quadraticRow k.val (primaryGenerator (n*v))*β n v*
-        (V₀ (yr k)*V₁ (yn n)*V₂ (yb v)*CubicReflectionKernel.paperKernel (Vstar W)
-          (R*Real.exp (-2*yr k+yn n+3*yb v)))) =
-      ∫t : ℝ,g t*(rowPhase k t*∑n∈S,∑v∈T,quadraticRow k.val (primaryGenerator (n*v))*βt t n v) := by
-    have hint (n v : Ideal O) : Integrable (fun t : ℝ =>
-        g t*(rowPhase k t*(quadraticRow k.val (primaryGenerator (n*v))*βt t n v))) := by
-      apply g.integrable.mul_bdd (c := ‖quadraticRow k.val (primaryGenerator (n*v))*β n v‖)
-      · exact ((hrowPhasec k).mul (continuous_const.mul (hβtc n v))).aestronglyMeasurable
-      · filter_upwards [] with t
-        simp only [rowPhase,βt,norm_mul,hphase,mul_one]
-        have hv01 : ‖V₀ (yr k)‖*‖V₁ (yn n)‖≤1 := by
-          simpa only [one_mul] using mul_le_mul (hV₀n (yr k)) (hV₁n (yn n)) (norm_nonneg _) zero_le_one
-        have hv012 : (‖V₀ (yr k)‖*‖V₁ (yn n)‖)*‖V₂ (yb v)‖≤1 := by
-          simpa only [one_mul] using mul_le_mul hv01 (hV₂n (yb v)) (norm_nonneg _) zero_le_one
-        calc
-          _ = (‖quadraticRow k.val (primaryGenerator (n*v))‖*‖β n v‖)*
-            ((‖V₀ (yr k)‖*‖V₁ (yn n)‖)*‖V₂ (yb v)‖) := by ring
-          _ ≤ (‖quadraticRow k.val (primaryGenerator (n*v))‖*‖β n v‖)*1 :=
-            mul_le_mul_of_nonneg_left hv012 (by positivity)
-          _ = _ := by ring
-    simp only [Finset.mul_sum]
-    rw [integral_finsetSum _ (fun n hn => integrable_finsetSum _ (fun v hv => hint n v))]
-    apply Finset.sum_congr rfl
-    intro n hn
-    rw [integral_finsetSum _ (fun v hv => hint n v)]
-    apply Finset.sum_congr rfl
-    intro v hv
-    rw [hsep (yr k) (yn n) (yb v),←integral_const_mul]
-    apply integral_congr_ae
-    filter_upwards [] with t
-    dsimp [rowPhase,βt]
-    ring
-  simp_rw [he]
-  apply hi.trans
-  have hpow : 0<(1+R)^A := by positivity
-  have hmass : (∫t : ℝ,‖g t‖)≤Ck/(1+R)^A := (le_div_iff₀ hpow).mpr (by simpa only [mul_comm] using hg)
-  have hmass2 := pow_le_pow_left₀ (integral_nonneg (fun t => norm_nonneg _)) hmass 2
-  have hbase : 0≤Cq*(K*(U*B))^ε*(K+U*B)*(U*B)*lengthScale^2 := by positivity
-  calc
-    _ ≤ (Cq*(K*(U*B))^ε*(K+U*B)*(U*B)*lengthScale^2)*(Ck/(1+R)^A)^2 :=
-      mul_le_mul_of_nonneg_left hmass2 hbase
-    _ ≤ (Cq*(K*(U*B))^ε*(K+U*B)*(U*B)*lengthScale^2)*((Ck^2+1)/(1+R)^(2*A)) := by
-      apply mul_le_mul_of_nonneg_left _ hbase
-      rw [div_pow,←pow_mul]
-      have hp : A*2=2*A := Nat.mul_comm _ _
-      rw [hp]
-      exact div_le_div_of_nonneg_right (by nlinarith : Ck^2≤Ck^2+1) (by positivity)
-    _ = _ := by ring
-
 end CompletedGauss
-
-open scoped BigOperators Classical SchwartzMap ContDiff
 
 namespace InitialMeanSquare
 open ActualEisensteinCubic

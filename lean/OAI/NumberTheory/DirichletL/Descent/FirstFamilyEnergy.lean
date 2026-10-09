@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstBlockEnergy
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -23,13 +22,6 @@ def firstFamilyEnergy (source : Finset κ) (F : Finset ι)
     (selector C : κ → Finset ι → ℂ) (w : κ → ℂ)
     (negative : Bool) (ω : ℝ → ℂ) (X t : ℝ) (h : κ → Eis) : ℝ :=
   ∑ x∈source,‖w x‖*firstBlockEnergy p hg F (selector x) (C x) negative ω X t (h x)
-
-theorem firstFamilyEnergy_nonneg (source : Finset κ) (F : Finset ι)
-    (selector C : κ → Finset ι → ℂ) (w : κ → ℂ)
-    (negative : Bool) (ω : ℝ → ℂ) (X t : ℝ) (h : κ → Eis) :
-    0 ≤ firstFamilyEnergy p hg source F selector C w negative ω X t h :=
-  Finset.sum_nonneg (fun x _ => mul_nonneg (norm_nonneg _)
-    (firstBlockEnergy_nonneg p hg F (selector x) (C x) negative ω X t (h x)))
 
 theorem first_family_cauchy (source : Finset κ) (F : Finset ι)
     (selector C₁ C₂ : κ → Finset ι → ℂ) (w : κ → ℂ)
@@ -79,39 +71,6 @@ theorem first_family_cauchy (source : Finset κ) (F : Finset ι)
     simp only [firstFamilyEnergy,firstBlockEnergy,Finset.mul_sum,mul_assoc,Bool.false_eq_true,ite_false]
   rw [hleft,hright] at hc
   exact hc.trans_eq (mul_comm _ _)
-
-theorem first_family_integral_of_energy (source : Finset κ) (F : Finset ι)
-    (selector C₁ C₂ : κ → Finset ι → ℂ) (w : κ → ℂ)
-    (ω₁ ω₂ : ℝ → ℂ) (A₁ A₂ C R : κ → ℝ) (d h : κ → Eis)
-    (s : Fin 9 → ℝ) (density : Frequency × (Fin 9 → ℝ) → ℂ)
-    (J : ℕ) (B : ℝ) (hB : 0 ≤ B)
-    (hDensity : Integrable (fun z : Frequency × (Fin 9 → ℝ) =>
-      tripleHeight J z.1*coordinateHeight J z.2*‖density z‖))
-    (hleft : ∀ z : Frequency × (Fin 9 → ℝ),
-      firstFamilyEnergy p hg source F selector C₁ w true ω₁ (s 7)
-        (profileHeight firstLeftSlope firstRightSlope firstKernelSlope z.1 z.2 7) h ≤
-        B*(tripleHeight J z.1*coordinateHeight J z.2))
-    (hright : ∀ z : Frequency × (Fin 9 → ℝ),
-      firstFamilyEnergy p hg source F selector C₂ w false ω₂ (s 8)
-        (profileHeight firstLeftSlope firstRightSlope firstKernelSlope z.1 z.2 8) h ≤
-        B*(tripleHeight J z.1*coordinateHeight J z.2)) :
-    ‖∫ z : Frequency × (Fin 9 → ℝ),density z *
-      firstFamilySeparatedRow p hg source F selector C₁ C₂ w ω₁ ω₂ A₁ A₂ C R d h s z‖ ≤
-    B*∫ z : Frequency × (Fin 9 → ℝ),tripleHeight J z.1*coordinateHeight J z.2*‖density z‖ := by
-  have hb (z : Frequency × (Fin 9 → ℝ)) :
-      ‖firstFamilySeparatedRow p hg source F selector C₁ C₂ w ω₁ ω₂ A₁ A₂ C R d h s z‖ ≤
-      B*(tripleHeight J z.1*coordinateHeight J z.2) := by
-    apply (first_family_cauchy p hg source F selector C₁ C₂ w ω₁ ω₂ A₁ A₂ C R d h s z).trans
-    have hh := mul_le_mul (Real.sqrt_le_sqrt (hleft z)) (Real.sqrt_le_sqrt (hright z))
-      (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
-    exact hh.trans_eq (by rw [←sq,Real.sq_sqrt]; unfold tripleHeight coordinateHeight; positivity)
-  calc
-    _ ≤ ∫ z : Frequency × (Fin 9 → ℝ),B*(tripleHeight J z.1*coordinateHeight J z.2*‖density z‖) := by
-      apply norm_integral_le_of_norm_le (hDensity.const_mul B)
-      filter_upwards with z
-      rw [norm_mul]
-      exact (mul_le_mul_of_nonneg_left (hb z) (norm_nonneg _)).trans_eq (by ring)
-    _ = _ := integral_const_mul _ _
 
 end
 end SevenEighths.InverseMoment

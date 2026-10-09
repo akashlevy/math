@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.CanonicalFirst
 import OAI.NumberTheory.DirichletL.Moments.SourceRow
-
 namespace OAI
 
 noncomputable section

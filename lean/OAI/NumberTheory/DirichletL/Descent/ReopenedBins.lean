@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.ReopenedBinEnergy
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

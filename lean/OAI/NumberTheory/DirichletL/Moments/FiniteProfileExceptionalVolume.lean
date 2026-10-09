@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalControl
 import OAI.NumberTheory.DirichletL.Moments.RetainedProfile
-
 namespace OAI
 
 noncomputable section
@@ -56,26 +55,6 @@ theorem volumeControl_source_control (a b ε B : ℝ)
       gcongr
       linarith
 
-theorem retained_volumeControl_source_control (a b ε B : ℝ)
-    (ha : 0 < a) (hε : 0 < ε) (hB : 0 ≤ B) :
-    ∃ n : ℕ, ∃ S : Finset (ℕ × ℕ), (0,0) ∈ S ∧
-      ∀ Q : Ideal O, ∃ C : ℝ, 0 < C ∧
-      ∀ W : 𝓢(ℝ,ℂ), ∀ hs : Function.support (W:ℝ→ℂ) ⊆ Set.Icc a b,
-      ∀ Z : ℝ, 1 ≤ Z → ∀ χ : Character,
-      (Ideal.absNorm χ.modulus : ℝ) ≤ Z^B →
-      ∀ X : ℝ, ∀ hX : 0<X, ∀ hret : 1≤X*b, ∀ t : ℝ,
-      volumeControl Q χ (CenteredMomentRetainedProfile.retainedProfile
-        W a b ha hs (W.smooth ⊤) X hX hret t) ≤
-        C*S.sup (schwartzSeminormFamily ℝ ℝ ℂ) W*Z^ε*(1+‖t‖)^n := by
-  obtain ⟨n,S,hS,hbound⟩ := volumeControl_source_control a b ε B ha hε hB
-  refine ⟨n,S,hS,?_⟩
-  intro Q
-  obtain ⟨C,hC,hCbound⟩ := hbound Q
-  refine ⟨(max 1 b)^(pvSeminorms.sup Prod.snd)*C,by positivity,?_⟩
-  intro W hs Z hZ χ hχ X hX hret t
-  exact (CenteredMomentRetainedProfile.retained_volumeControl_le
-    Q χ W a b ha hs (W.smooth ⊤) X hX hret t).trans
-    ((mul_le_mul_of_nonneg_left (hCbound W hs Z hZ χ hχ t) (by positivity)).trans_eq (by ring))
 end SevenEighths.CenteredMomentFiniteProfileExceptional
 
 end

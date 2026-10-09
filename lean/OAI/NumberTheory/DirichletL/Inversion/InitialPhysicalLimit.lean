@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialPhysicalReassembly
 import OAI.NumberTheory.DirichletL.Inversion.InitialHighFrequencyTailInfinite
 import OAI.NumberTheory.DirichletL.Inversion.InitialConjugateEnergy
-
 namespace OAI
 
 noncomputable section

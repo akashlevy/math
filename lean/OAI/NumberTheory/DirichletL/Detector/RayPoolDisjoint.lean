@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.RayNormalization
-
 namespace OAI
 
 noncomputable section

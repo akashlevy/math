@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.MobiusRegroup
 import OAI.NumberTheory.DirichletL.Moments.FixedRay
 import OAI.NumberTheory.DirichletL.Moments.RowNorm
-
 namespace OAI
 
 noncomputable section
@@ -92,23 +91,6 @@ theorem finite_correlation_children {α β : Type*} (S : Finset α) (T : Finset 
   simp_rw [divisor_pair_separation L a b c d D E h hD hE ha hb]
   simp_rw [← Finset.mul_sum (s := T), ← Finset.mul_sum (s := S)]
   rw [pair_ray_fubini]
-  ring
-
-theorem separated_pair_rowPolynomials {α β : Type*} (S : Finset α) (T : Finset β)
-    (L : Ideal O) (a : α → O) (b : β → O) (c : α → ℂ) (d : β → ℂ)
-    (χ ξ : RayCharacter) (f : α → ℂ) (g : β → ℂ) (h : O) :
-    (∑ i ∈ S, ∑ j ∈ T,
-      ((divisorCoefficient L a c χ i * idealRowHom h (Ideal.span {a i})) *
-        star (divisorCoefficient L b d (ξ⁻¹) j * idealRowHom (-h) (Ideal.span {b j}))) *
-        (f i * star (g j))) =
-      rowPolynomial S a (fun i => divisorCoefficient L a c χ i * f i) h *
-        star (rowPolynomial T b (fun j => divisorCoefficient L b d (ξ⁻¹) j * g j) (-h)) := by
-  simp only [rowPolynomial, star_sum, star_mul, Finset.sum_mul, Finset.mul_sum]
-  rw [Finset.sum_comm]
-  apply Finset.sum_congr rfl
-  intro i hi
-  apply Finset.sum_congr rfl
-  intro j hj
   ring
 
 end SevenEighths.CenteredMomentChildAssembly

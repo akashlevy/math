@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.MarkedLocal
 import OAI.NumberTheory.DirichletL.Detector.SourceExclusions
-
 namespace OAI
 
 noncomputable section
@@ -68,17 +67,6 @@ theorem markedIdealHighSeries_eq_product (S : Finset Id) (hS : SourceExclusions 
     funext P
     exact (heq P).symm
   exact (markedIdealHighSeries_hasProd S hS.prime T η x w z hx hw hz).unique he'
-
-theorem source_markedHigh_L_factorization (S : Finset Id) (hS : SourceExclusions S)
-    (T : Finset PrimeIdeal) (hT : ∀P∈T,P.val∉S) (η : HeckeFamily.Character) (x w z : ℂ)
-    (hx : 3/2<x.re) (hw : 2<w.re) (hz : 1/6<z.re) :
-    markedIdealHighSeries S (∏P∈T,P.val) η 1 x w z=
-      (HeckeFamily.LFunction (fixedSourcePrincipal S hS.prime) (6*z) *
-       HeckeFamily.LFunction (fixedSourcePrincipal S hS.prime) w /
-       HeckeFamily.LFunction (η.excludePrimes S hS.prime) x * globalClosedCorrection η S x w z) *
-        ∏P∈T,idealMarkedLocalFactor η P x w z/idealHighLocalFactor η P.val x w z := by
-  rw [markedIdealHighSeries_eq_product S hS T hT η x w z hx hw hz,
-    source_principalHigh_L_factorization S hS η x w z hx hw hz]
 
 end SevenEighths.ProbePhysical
 end

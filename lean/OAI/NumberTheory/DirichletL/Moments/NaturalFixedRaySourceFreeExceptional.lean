@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.NaturalFixedRaySourceFixedIdeal
 import OAI.NumberTheory.DirichletL.Hecke.ExceptionalRows
-
 namespace OAI
 
 noncomputable section
@@ -70,20 +69,6 @@ theorem eventually_source_no_exceptional (F : ProbeFinalAssembly.SourceData D) (
     change ((Ideal.span {u.val}).absNorm:ℝ)≤_
     exact_mod_cast source_exceptional_norm F _ u hex
   exact (not_lt_of_ge (hu.trans hb)) (hz label)
-
-theorem eventually_source_sector_gate (F : ProbeFinalAssembly.SourceData D) (η : Character) :
-    ∀ᶠZ : ℝ in atTop,∀label : Sum Bool (RayQuotient.Characters F.modulus ⊤),
-      ∀d : ℝ,∀u : FreeRow,Z^(1/100:ℝ)≤rowNorm u→ rowNorm u≤Z^(d-D.t) →
-      ∀θ : RayQuotient.Characters F.modulus ⊤,
-      let η₀:=sourceMomentBase F.modulus ⊤ le_top F.S F.exclusions.prime η label
-      let χ:=(CenteredMomentNaturalRowSource.naturalRow η₀ u.val u.property.1).character.product
-        (relativeCharacter F.modulus ⊤ le_top η₀ θ)
-      χ.residue≠1 ∧ (χ.modulus.absNorm:ℝ)≤Z^d := by
-  filter_upwards [eventually_source_no_exceptional F η,
-    eventually_source_sector_capacity F.modulus ⊤ le_top F.S F.exclusions.prime η D.t D.t_pos]
-    with Z hn hc
-  intro label d u hlo hhi θ
-  exact ⟨source_retained_sector_nonprincipal F _ u (hn label u hlo) θ,hc label d u hhi θ⟩
 
 end SevenEighths.CenteredMomentNaturalFixedRaySource
 

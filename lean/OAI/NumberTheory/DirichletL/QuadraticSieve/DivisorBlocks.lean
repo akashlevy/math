@@ -1,75 +1,24 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.IdealQuotients
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace CanonicalQuadraticSieve
 
 section
@@ -289,17 +238,6 @@ end CanonicalQuadraticSieve
 namespace FiniteSieveRestriction
 open FiniteSieveOperator
 
-theorem squared_norm_row_partition {m n : Type*} [Fintype m] [Fintype n]
-    [DecidableEq m] [DecidableEq n] (A : Matrix m n ℂ) (P : m → Prop) [DecidablePred P] :
-    ‖operator A‖ ^ 2 ≤
-      ‖operator (fun (i : {i : m // P i}) j => A i.val j)‖ ^ 2 +
-      ‖operator (fun (i : {i : m // ¬ P i}) j => A i.val j)‖ ^ 2 := by
-  apply squared_norm_le_of_energy _ _ (by positivity)
-  intro a
-  rw [← Fintype.sum_subtype_add_sum_subtype P (fun i => ‖∑ j, A i j * a j‖ ^ 2)]
-  have h₁ := energy_bound (fun (i : {i : m // P i}) j => A i.val j) a
-  have h₂ := energy_bound (fun (i : {i : m // ¬ P i}) j => A i.val j) a
-  exact (add_le_add h₁ h₂).trans_eq (by ring)
 end FiniteSieveRestriction
 
 namespace CanonicalQuadraticSieve
@@ -330,10 +268,6 @@ theorem mem_fullRange {M : ℝ} {I : Ideal O} :
 theorem admissible_supported {I : Ideal O} (hI : Admissible I) : Supported I :=
   ⟨hI.1, hI.2.2⟩
 
-theorem squarefreePart_eq_self {I : Ideal O} (hI : Squarefree I) : squarefreePart I = I := by
-  have h := (squarePart_mul_squarefree (show (1 : Ideal O) ≠ 0 from one_ne_zero) hI).2
-  simpa only [one_pow, one_mul] using h
-
 def highKernelRange (M K : ℝ) : Finset (Ideal O) :=
   (fullRange M).filter (fun I => K < (Ideal.absNorm (squarefreePart I) : ℝ))
 
@@ -349,43 +283,8 @@ def highKernelNorm (M N K : ℝ) : ℝ := ‖operator (highKernelMatrix M N K)�
 
 theorem highKernelNorm_nonneg (M N K : ℝ) : 0 ≤ highKernelNorm M N K := sq_nonneg _
 
-theorem sieveNorm_le_low_add_high (M N K : ℝ) :
-    sieveNorm M N ≤ sieveNorm K N + highKernelNorm M N K := by
-  let P : idealRange M → Prop := fun I => (Ideal.absNorm I.val : ℝ) ≤ K
-  let lo := {I : idealRange M // P I}
-  let hi := {I : idealRange M // ¬ P I}
-  have hlo : ‖operator (fun (I : lo) (J : idealRange N) => matrix M N I.val J)‖ ^ 2 ≤
-      sieveNorm K N := by
-    apply family_squared_norm_le (fun I : lo => I.val.val) (fun J : idealRange N => J.val)
-    · intro I J h
-      apply Subtype.ext
-      exact Subtype.ext h
-    · exact Subtype.val_injective
-    · intro I
-      exact ⟨(mem_idealRange.mp I.val.property).1, I.property⟩
-    · intro J
-      exact mem_idealRange.mp J.property
-  let toHigh : hi → highKernelRange M K := fun I => ⟨I.val.val, by
-    apply mem_highKernelRange.mpr
-    have hI := mem_idealRange.mp I.val.property
-    refine ⟨admissible_supported hI.1, hI.2, ?_⟩
-    rw [squarefreePart_eq_self hI.1.2.1]
-    exact lt_of_not_ge I.property⟩
-  have hhighinj : Function.Injective toHigh := by
-    intro I J h
-    apply Subtype.ext
-    apply Subtype.ext
-    exact congrArg (fun I : highKernelRange M K => I.val) h
-  have hhi := FiniteSieveRestriction.submatrix_norm_le toHigh hhighinj
-    (fun J : idealRange N => J) Function.injective_id (highKernelMatrix M N K)
-  have hhisq : ‖operator (fun (I : hi) (J : idealRange N) => matrix M N I.val J)‖ ^ 2 ≤
-      highKernelNorm M N K := pow_le_pow_left₀ (norm_nonneg _) hhi 2
-  exact (FiniteSieveRestriction.squared_norm_row_partition (matrix M N) P).trans (add_le_add hlo hhisq)
-
 end CanonicalQuadraticSieve
 
-open MeasureTheory
-open scoped BigOperators Classical SchwartzMap
 namespace QuadraticKernelTransfer
 open FourierBridge EisensteinSchwartzPoisson
 
@@ -502,109 +401,15 @@ section
 variable {m n p : Type*} [Fintype m] [Fintype n] [Fintype p]
   [DecidableEq m] [DecidableEq n] [DecidableEq p]
 
-def quotientTerm (rows : m → Ideal O) (left : n → Ideal O) (right : p → Ideal O)
-    (a : n → ℂ) (b : p → ℂ) (D E : Ideal O) (i : m) (j : n) (k : p) : ℂ :=
-  if IsCoprime (left j) (right k) then
-    star (quotientMatrix D rows left i j * (if D ∣ left j then a j else 0)) *
-      (quotientMatrix E rows right i k * (if E ∣ right k then b k else 0)) else 0
-
 def divisorBlockCost (ε : ℝ) (hε : 0 < ε) (D₁ D₂ M N : ℝ) (a : n → ℂ) (b : p → ℂ) : ℝ :=
   256 ^ 2 * D₁ * D₂ * sieveNorm M (N / D₁) * sieveNorm M (N / D₂) *
     (supportConstant ε hε * divisorConstant ε hε) ^ 2 * (N ^ ε) ^ 4 *
     (∑ j, ‖a j‖ ^ 2) * (∑ k, ‖b k‖ ^ 2)
 
-omit [Fintype m] [Fintype n] [Fintype p] [DecidableEq m] [DecidableEq n] [DecidableEq p] in
-theorem quotientTerm_phase (rows : m → Ideal O) (left : n → Ideal O) (right : p → Ideal O)
-    (a : n → ℂ) (b : p → ℂ) (D E : Ideal O) (i : m) (j : n) (k : p)
-    (y : n → ℝ) (z : p → ℝ) (t : ℝ) :
-    quotientTerm rows left right (fun j => a j * star (logPhase t (y j)))
-      (fun k => b k * logPhase t (z k)) D E i j k =
-    quotientTerm rows left right a b D E i j k * logPhase t (y j + z k) := by
-  unfold quotientTerm
-  rw [logPhase_add]
-  by_cases hc : IsCoprime (left j) (right k) <;>
-    by_cases hD : D ∣ left j <;> by_cases hE : E ∣ right k <;>
-      simp only [hc, hD, hE, ↓reduceIte, mul_zero, zero_mul, star_zero, star_mul, star_star] ; ring
-
-theorem canonical_divisor_block_phase_bound
-    (ε : ℝ) (hε : 0 < ε) (S T : Finset (Ideal O))
-    (D₁ D₂ M N : ℝ) (hD₁ : 1 ≤ D₁) (hD₂ : 1 ≤ D₂) (hN : 1 ≤ N)
-    (hS : ∀ D ∈ S, D₁ ≤ (Ideal.absNorm D : ℝ) ∧ (Ideal.absNorm D : ℝ) ≤ 2 * D₁)
-    (hT : ∀ E ∈ T, D₂ ≤ (Ideal.absNorm E : ℝ) ∧ (Ideal.absNorm E : ℝ) ≤ 2 * D₂)
-    (rows : m → Ideal O) (left : n → Ideal O) (right : p → Ideal O)
-    (hr : Function.Injective rows) (hl : Function.Injective left) (hri : Function.Injective right)
-    (hrows : ∀ i, Admissible (rows i) ∧ (Ideal.absNorm (rows i) : ℝ) ≤ M)
-    (hleft : ∀ j, Admissible (left j) ∧ (Ideal.absNorm (left j) : ℝ) ≤ N)
-    (hright : ∀ k, Admissible (right k) ∧ (Ideal.absNorm (right k) : ℝ) ≤ N)
-    (a : n → ℂ) (b : p → ℂ) (y : n → ℝ) (z : p → ℝ) (t : ℝ) :
-    (∑ D ∈ S, ∑ E ∈ T, ∑ i,
-      ‖∑ j, ∑ k, quotientTerm rows left right a b D E i j k * logPhase t (y j + z k)‖) ≤
-      Real.sqrt (divisorBlockCost ε hε D₁ D₂ M N a b) := by
-  have hb := canonical_divisor_block_bound ε hε S T D₁ D₂ M N hD₁ hD₂ hN hS hT
-    rows left right hr hl hri hrows hleft hright
-    (fun j => a j * star (logPhase t (y j))) (fun k => b k * logPhase t (z k))
-  simp only [norm_mul, norm_star, logPhase_norm, mul_one] at hb
-  change (∑ D ∈ S, ∑ E ∈ T, ∑ i, ‖∑ j, ∑ k,
-    quotientTerm rows left right (fun j => a j * star (logPhase t (y j)))
-      (fun k => b k * logPhase t (z k)) D E i j k‖) ^ 2 ≤
-    divisorBlockCost ε hε D₁ D₂ M N a b at hb
-  simp only [quotientTerm_phase] at hb
-  have hcost : 0 ≤ divisorBlockCost ε hε D₁ D₂ M N a b := (sq_nonneg _).trans hb
-  have hs := Real.sq_sqrt hcost
-  have hp := Real.sqrt_nonneg (divisorBlockCost ε hε D₁ D₂ M N a b)
-  have hsum : 0 ≤ ∑ D ∈ S, ∑ E ∈ T, ∑ i,
-      ‖∑ j, ∑ k, quotientTerm rows left right a b D E i j k * logPhase t (y j + z k)‖ := by positivity
-  nlinarith
 end
-
-theorem canonical_radial_divisor_block_bound
-    (W : 𝓢(ℝ, ℂ)) (L₁ L₂ L₃ : ℝ) (hL₁ : 0 ≤ L₁) (hL₂ : 0 ≤ L₂) (hL₃ : 0 ≤ L₃) (A : ℕ) :
-    ∃ C : ℝ, 0 ≤ C ∧ ∀ R : ℝ, 0 < R →
-      ∀ {m n p : Type*} [Fintype m] [Fintype n] [Fintype p]
-        [DecidableEq m] [DecidableEq n] [DecidableEq p]
-        (ε : ℝ) (hε : 0 < ε) (S T : Finset (Ideal O))
-        (D₁ D₂ M N : ℝ) (_hD₁ : 1 ≤ D₁) (_hD₂ : 1 ≤ D₂) (_hN : 1 ≤ N)
-        (_hS : ∀ D ∈ S, D₁ ≤ (Ideal.absNorm D : ℝ) ∧ (Ideal.absNorm D : ℝ) ≤ 2 * D₁)
-        (_hT : ∀ E ∈ T, D₂ ≤ (Ideal.absNorm E : ℝ) ∧ (Ideal.absNorm E : ℝ) ≤ 2 * D₂)
-        (rows : m → Ideal O) (left : n → Ideal O) (right : p → Ideal O)
-        (_hr : Function.Injective rows) (_hl : Function.Injective left) (_hri : Function.Injective right)
-        (_hrows : ∀ i, Admissible (rows i) ∧ (Ideal.absNorm (rows i) : ℝ) ≤ M)
-        (_hleft : ∀ j, Admissible (left j) ∧ (Ideal.absNorm (left j) : ℝ) ≤ N)
-        (_hright : ∀ k, Admissible (right k) ∧ (Ideal.absNorm (right k) : ℝ) ≤ N)
-        (a : n → ℂ) (b : p → ℂ) (x : S → T → m → ℝ) (y : n → ℝ) (z : p → ℝ),
-        (∀ D E i, |x D E i| ≤ L₁) → (∀ j, |y j| ≤ L₂) → (∀ k, |z k| ≤ L₃) →
-        (1 + R) ^ A * (∑ D : S, ∑ E : T, ∑ i, ‖∑ j, ∑ k,
-          quotientTerm rows left right a b D.val E.val i j k *
-            paperRadialFourier W (R * Real.exp (x D E i + (y j + z k)))‖) ≤
-          C * Real.sqrt (divisorBlockCost ε hε D₁ D₂ M N a b) := by
-  obtain ⟨C, hC, hker⟩ := radial_matrix_kernel_transfer W L₁ (L₂ + L₃) hL₁ (add_nonneg hL₂ hL₃) A
-  refine ⟨C, hC, ?_⟩
-  intro R hR m n p _ _ _ _ _ _ ε hε S T D₁ D₂ M N hD₁ hD₂ hN hS hT
-    rows left right hr hl hri hrows hleft hright a b x y z hx hy hz
-  let c : (S × T × m) → (n × p) → ℂ := fun i j =>
-    quotientTerm rows left right a b i.1.val i.2.1.val i.2.2 j.1 j.2
-  have hp (t : ℝ) : (∑ i : S × T × m, ‖∑ j : n × p, c i j * logPhase t (y j.1 + z j.2)‖) ≤
-      Real.sqrt (divisorBlockCost ε hε D₁ D₂ M N a b) := by
-    have hb := canonical_divisor_block_phase_bound ε hε S T D₁ D₂ M N hD₁ hD₂ hN hS hT
-      rows left right hr hl hri hrows hleft hright a b y z t
-    simp only [c, Fintype.sum_prod_type]
-    let v : Ideal O → Ideal O → ℝ := fun D E => ∑ i,
-      ‖∑ j, ∑ k, quotientTerm rows left right a b D E i j k * logPhase t (y j + z k)‖
-    change (∑ D : S, ∑ E : T, v D.val E.val) ≤ _
-    rw [Finset.sum_coe_sort S (fun D => ∑ E : T, v D E.val)]
-    have he (D : Ideal O) := Finset.sum_coe_sort T (v D)
-    simp_rw [he]
-    exact hb
-  have hb := hker R hR c (fun i => x i.1 i.2.1 i.2.2) (fun j => y j.1 + z j.2)
-    (Real.sqrt (divisorBlockCost ε hε D₁ D₂ M N a b)) (Real.sqrt_nonneg _)
-    (fun i => hx i.1 i.2.1 i.2.2)
-    (fun j => (abs_add_le _ _).trans (add_le_add (hy j.1) (hz j.2))) hp
-  simpa only [c, Fintype.sum_prod_type] using hb
 
 end CanonicalQuadraticSieve
 
-open MeasureTheory
-open scoped BigOperators Classical SchwartzMap
 namespace CanonicalQuadraticSieve
 open FourierBridge EisensteinSchwartzPoisson QuadraticKernelTransfer
 open IdealCoprimeSieveOperator DivisorBlockCauchy IdealDivisorBilinearBlocks

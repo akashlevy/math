@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.AbsoluteEnergy
 import OAI.NumberTheory.DirichletL.Moments.DivisorRetained
-
 namespace OAI
 
 noncomputable section

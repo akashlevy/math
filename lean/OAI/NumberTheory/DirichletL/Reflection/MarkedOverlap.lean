@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.MarkedRow
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

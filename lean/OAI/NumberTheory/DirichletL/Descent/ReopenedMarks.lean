@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.ReopenedSource
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -42,14 +41,6 @@ theorem reopened_whole_mark_divisibility (slots : Finset σ) (lists : σ→Finse
       (Ideal.span {∏k∈S,p k})*(Ideal.span {primeProduct p v.support v})^3 then a j i else 0 := by
   unfold primeMark primeSlot
   simp_rw [prime_dvd_reopened_index p hinj]
-
-theorem reopened_mark_priority (slots : Finset σ) (lists : σ→Finset ι)
-    (a : σ→ι→ℂ) (S : Finset ι) (v : ι→₀ℕ) :
-    primeMark slots lists a (S∪v.support) =
-      ∑J∈slots.powerset,primeMark J lists a v.support *
-        primeMark (slots\J) (fun j=>lists j\v.support) a S := by
-  rw [Finset.union_comm,primeMark_priority]
-  simp only [primeMark_residual_lists]
 
 end
 end SevenEighths.InverseMoment

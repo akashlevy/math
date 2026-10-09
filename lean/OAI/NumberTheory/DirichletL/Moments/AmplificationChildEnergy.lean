@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.AmplificationLiveEnergy
 import OAI.NumberTheory.DirichletL.Moments.AmplificationAllocationScale
 import OAI.NumberTheory.DirichletL.Moments.GaussNormalization
-
 namespace OAI
 
 noncomputable section

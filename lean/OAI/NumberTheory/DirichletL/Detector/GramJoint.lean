@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GramJointFixed
-
 namespace OAI
 
 noncomputable section

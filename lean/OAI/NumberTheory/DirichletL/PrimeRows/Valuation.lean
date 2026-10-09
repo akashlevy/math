@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsPrime
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationRows
-
 namespace OAI
 
 noncomputable section

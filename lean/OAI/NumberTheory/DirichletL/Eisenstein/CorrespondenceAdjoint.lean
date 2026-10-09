@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.RamifiedSixBranches
-
 namespace OAI
 
 noncomputable section
@@ -8,76 +7,22 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups InnerProductSpace
+open scoped MatrixGroups InnerProductSpace
 
 local notation "O" => ActualEisensteinCubic.O
 
@@ -124,24 +69,10 @@ theorem kernelCorrespondenceL2_pairing {H J : Subgroup (SL(2,ActualEisensteinCub
   exact (ContinuousLinearMap.adjoint_inner_left
     (integralCoverPullback hJK globalKubotaKernel_le_levelThree) G _).symm
 
-theorem kernelCorrespondenceL2_adjoint {H J : Subgroup (SL(2,ActualEisensteinCubic.O))}
-    (hHK : H≤globalKubotaKernel) (hJK : J≤globalKubotaKernel)
-    [H.IsFiniteRelIndex globalKubotaKernel] [J.IsFiniteRelIndex globalKubotaKernel]
-    (e : H≃*J) (g : SL(2,ℂ)) (he : IntegralCoverIntertwines e g) :
-    ContinuousLinearMap.adjoint (kernelCorrespondenceL2 hHK hJK e g he)=
-      kernelCorrespondenceL2 hJK hHK e.symm g⁻¹ (integralCoverIntertwines_inverse e g he) := by
-  apply ContinuousLinearMap.ext
-  intro F
-  apply ext_inner_right ℂ
-  intro G
-  rw [ContinuousLinearMap.adjoint_inner_left]
-  exact kernelCorrespondenceL2_pairing hHK hJK e g he F G
-
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
+open scoped MatrixGroups
 
 section
 
@@ -373,7 +304,6 @@ theorem continuous_periodic_eq_bessel (c:SubexponentialBesselCoefficients)
 end
 
 section
-open ConcreteTraceCRT
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma ninthCuspFrequency_three (h:Eis) :
@@ -414,7 +344,6 @@ lemma ramified_kernel_scaled_bessel (h:Eis) (hh:h≠0) (v:ℝ) (hv:0<v) :
 end
 
 section
-open ConcreteTraceCRT
 local notation "Eis" => ActualEisensteinCubic.O
 
 def ramifiedScaledRow (side:Bool) (v:ℝ) (z:ℂ) :ℂ:=
@@ -514,20 +443,6 @@ end
 
 local notation "Eis" => ActualEisensteinCubic.O
 
-def ramifiedCuspBesselTerm (side:Bool) (h:Eis) (v:ℝ) (z:ℂ) :ℂ:=
-  (if h=0 then 0 else ramifiedBesselValue side h*((v/3:ℝ):ℂ)*
-    schlafliBesselK (1/3) (4*Real.pi*‖cuspFrequency h‖*(v/3)))*
-      ShortDraftTrace.breveE (ninthCuspFrequency h*z)
-
-lemma ramifiedCuspBesselTerm_eq (side:Bool) (h:Eis) (v:ℝ) (hv:0<v) (z:ℂ) :
-    (ramifiedBesselCoefficients side).term h (v/3,z/3)=ramifiedCuspBesselTerm side h v z := by
-  rw [SubexponentialBesselCoefficients.term_eq_amplitude _ _ (by positivity)]
-  have he:cuspFrequency h*(z/3)=ninthCuspFrequency h*z:=by
-    rw [←ninthCuspFrequency_three]
-    ring
-  simp only [SubexponentialBesselCoefficients.amplitude,ramifiedBesselCoefficients,
-    ramifiedCuspBesselTerm,he]
-
 lemma ramifiedSource_eq_series (side:Bool) (v:ℝ) (hv:0<v) (z:ℂ) :
     ramifiedSourceFunction (ramifiedCuspRoot side:Eis) (upperPoint z v hv)=
       (ramifiedBesselCoefficients side).series (v/3,z/3) := by
@@ -539,39 +454,9 @@ lemma ramifiedSource_eq_series (side:Bool) (v:ℝ) (hv:0<v) (z:ℂ) :
     SubexponentialBesselCoefficients.function,hyperbolicHeight_upperPoint,
     hyperbolicHorizontal_upperPoint] using he
 
-theorem ramifiedSource_bessel (side:Bool) (v:ℝ) (hv:0<v) (z:ℂ) :
-    ramifiedSourceFunction (ramifiedCuspRoot side:Eis) (upperPoint z v hv)=
-      ∑'h:Eis,ramifiedCuspBesselTerm side h v z := by
-  rw [ramifiedSource_eq_series,SubexponentialBesselCoefficients.series]
-  exact tsum_congr (fun h=>ramifiedCuspBesselTerm_eq side h v hv z)
-
-theorem ramifiedSource_bessel_normal (side:Bool) (a b:ℝ) (ha:0<a) (hab:a≤b) :
-    ∃g:Eis→ℝ,Summable g∧∀h:Eis,∀v:ℝ,v∈Set.Icc a b→∀z:ℂ,
-      ‖ramifiedCuspBesselTerm side h v z‖≤g h := by
-  obtain ⟨C,hC,hbound⟩:=(ramifiedBesselCoefficients side).slab_bound (a/3) (b/3)
-    (by positivity) (by linarith)
-  refine ⟨fun h=>C*Real.exp (-(Real.pi*(a/3))*‖cuspFrequency h‖),
-    (summable_exp_neg_cuspFrequency_norm (Real.pi*(a/3)) (by positivity)).mul_left C,?_⟩
-  intro h v hv z
-  have hp:0<v:=ha.trans_le hv.1
-  rw [←ramifiedCuspBesselTerm_eq side h v hp z]
-  exact hbound h (v/3,z/3) ⟨by dsimp only;linarith [hv.1],by dsimp only;linarith [hv.2]⟩
-
-theorem ramifiedSource_exponential_decay (side:Bool) (a:ℝ) (ha:0<a) :
-    ∃C:ℝ,0≤C∧∀v:ℝ,∀hv:0<v,∀z:ℂ,a≤v→
-      ‖ramifiedSourceFunction (ramifiedCuspRoot side:Eis) (upperPoint z v hv)‖≤
-        C*Real.exp (-(residualCuspDecayRate/3)*v) := by
-  obtain ⟨C,hC,hbound⟩:=(ramifiedBesselCoefficients side).series_cusp_decay (a/3) (by positivity)
-  refine ⟨C,hC,?_⟩
-  intro v hv z hav
-  rw [ramifiedSource_eq_series]
-  convert hbound (v/3) (z/3) (by linarith) using 1 ;ring_nf
-
 end
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups Pointwise Manifold ContDiff ENNReal InnerProductSpace
-open Finset AddChar MulChar EisensteinEmbedding
+open scoped MatrixGroups Pointwise Manifold ENNReal InnerProductSpace
 
 lemma coverGradientAt_add (F G : EuclideanSpatial→ℂ) (p : EuclideanSpatial)
     (hF : DifferentiableAt ℝ F p) (hG : DifferentiableAt ℝ G p) :

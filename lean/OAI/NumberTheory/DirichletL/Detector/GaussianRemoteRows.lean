@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GaussianCrude
 import OAI.NumberTheory.DirichletL.Detector.GaussianTailBudget
-
 namespace OAI
 
 noncomputable section

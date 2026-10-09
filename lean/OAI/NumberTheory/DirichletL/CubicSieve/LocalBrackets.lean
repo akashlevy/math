@@ -1,75 +1,24 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.CrossFactorization
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace FirstPassCubeLabels
 open ActualEisensteinCubic
 open MixedCrossSeparation (columnPrimeCoprime quadraticCrossPhase)
@@ -251,171 +200,18 @@ theorem threeGaussRowFactor_eq_transformedPair {ι : Type*} [DecidableEq ι]
     finiteSquarefreeRow_mul, star_mul, star_star]
   ring
 
-theorem a_weighted_three_block_radial_poisson {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1)
-    (M N P B : Finset ι) (hNP : Disjoint N P) (hNB : Disjoint N B) (hPB : Disjoint P B)
-    (v : ι → ℕ) (ε₁ ε₂ : ι → Bool) (C₁ C₂ : Finset ι → ℂ)
-    (W : 𝓢(ℝ, ℂ)) (lengthScale : ℝ) (hL : 0 < lengthScale) :
-    let S := (N ∪ P) ∪ cubeActiveSupport B v ε₁ ε₂
-    let e := threeBlockExponent N P v ε₁ ε₂
-    star (MixedCrossSeparation.columnCoefficient p hp hcop hg N * C₁ N) *
-      (MixedCrossSeparation.columnCoefficient p hp hcop hg P * C₂ P) *
-      (∑' z : O, rowCoprimeMask (fun i => Ideal.span {p i}) M z * blockRow p hg S e z *
-        W (‖eisEmbedding z‖ ^ 2 / lengthScale)) =
-    ((lengthScale : ℂ) / (‖eisEmbedding (∏ i ∈ S, p i)‖ : ℂ)) *
-      ∑ E ∈ M.powerset,
-        let d := primeSubsetGenerator (fun i => Ideal.span {p i}) E
-        ((UniqueFactorizationMonoid.moebius (∏ i ∈ E, Ideal.span {p i}) : ℂ) /
-          (‖eisEmbedding d‖ ^ 2 : ℝ)) *
-          ∑' h : O, paperRadialFourier W
-            (lengthScale * ‖eisEmbedding h‖ ^ 2 / (‖eisEmbedding d‖ ^ 2 * ‖eisEmbedding (∏ i ∈ S, p i)‖ ^ 2)) *
-              cubeTransformedPair p hp hcop hg N P B v ε₁ ε₂ C₁ C₂ d h := by
-  dsimp only
-  have he : ∀ i ∈ (N ∪ P) ∪ cubeActiveSupport B v ε₁ ε₂,
-      threeBlockExponent N P v ε₁ ε₂ i ≠ 0 := by
-    intro i hi
-    by_cases hn : i ∈ N
-    · simp [threeBlockExponent, hn]
-    by_cases hp' : i ∈ P
-    · simp [threeBlockExponent, hn, hp']
-    · have hiC : i ∈ cubeActiveSupport B v ε₁ ε₂ := by simpa [hn, hp'] using hi
-      simp only [threeBlockExponent, ite_eq_right hn, ite_eq_right hp']
-      exact (ZMod.val_eq_zero _).not.mpr (Finset.mem_filter.mp hiC).2
-  have he6 : ∀ i ∈ (N ∪ P) ∪ cubeActiveSupport B v ε₁ ε₂,
-      threeBlockExponent N P v ε₁ ε₂ i < 6 := by
-    intro i hi
-    unfold threeBlockExponent
-    split_ifs <;> first | omega | exact ZMod.val_lt _
-  rw [masked_block_radial_poisson_product p hp hinj hcop hg hc M _ _ he he6 W lengthScale hL]
-  simp_rw [← threeGaussRowFactor_eq_transformedPair p hp hcop hg hc hpr N P B hNP hNB hPB]
-  simp only [Finset.mul_sum, ← tsum_mul_left]
-  apply Finset.sum_congr rfl
-  intro E hE
-  apply tsum_congr
-  intro h
-  unfold threeGaussRowFactor
-  dsimp only
-  ring
-
 end FirstPassCubeLabels
 
 section
-open MeasureTheory
-open scoped FourierTransform SchwartzMap ContDiff
 namespace LocalLogFourier
-
-theorem coupled_positive_log_separation_schwartz
-    {ι : Type*} [Fintype ι]
-    (W : ι → ℝ → ℂ) (F : ℝ → ℂ) (a M : ι → ℝ)
-    (hM : ∀ j, 0 ≤ M j)
-    (hWwindow : ∀ j z, W j z ≠ 0 → |z| ≤ M j)
-    (hFpos : ContDiffOn ℝ ∞ F (Set.Ioi 0))
-    (A J : ℕ) (CF : ℝ) (hCF : 0 ≤ CF)
-    (hEuler : ∀ i ≤ J + (volume : Measure ℝ).integrablePower,
-      ∀ x : ℝ, 0 < x →
-        (1 + x) ^ A * ‖eulerDeriv F i x‖ ≤ CF) :
-    ∃ C : ℝ, 0 ≤ C ∧ ∀ R : ℝ, 0 < R →
-      ∃ b : 𝓢(ℝ, ℂ),
-        (∀ y : ι → ℝ,
-          (∏ j : ι, W j (y j)) *
-            F (R * Real.exp (∑ j : ι, a j * y j)) =
-          ∫ t : ℝ,
-            (∏ j : ι, W j (y j) *
-              FourierBridge.logPhase t (a j * y j)) * b t) ∧
-        Integrable (fun t : ℝ => (1 + ‖t‖) ^ J * ‖b t‖) volume ∧
-        (1 + R) ^ A *
-          (∫ t : ℝ, (1 + ‖t‖) ^ J * ‖b t‖) ≤ C := by
-  classical
-  let T : ℝ := ∑ j : ι, |a j| * M j
-  have hT : 0 ≤ T := by
-    dsimp [T]
-    apply Finset.sum_nonneg
-    intro j hj
-    exact mul_nonneg (abs_nonneg _) (hM j)
-  let K : ℕ := J + (volume : Measure ℝ).integrablePower
-  let Lwin : ℝ := T + 1
-  let m : ℝ := Real.exp (-Lwin)
-  have hL : 0 ≤ Lwin := by dsimp [Lwin]; linarith
-  have hm : 0 < m := Real.exp_pos _
-  have hm1 : m ≤ 1 := by
-    dsimp [m]
-    simpa using (Real.exp_le_exp.mpr (show -Lwin ≤ 0 by linarith))
-  obtain ⟨V, CW, hVc, hVs, hVone, hCW, hVderiv, hwindow⟩ :=
-    FourierBridge.exists_complex_smooth_cutoff_with_derivative_bounds T K hT
-  let P : ℝ := momentConstant K Lwin CW CF
-  let B : ℝ := (2 : ℝ) ^ J *
-    (FourierBridge.coefficientMomentBound 0 P +
-      FourierBridge.coefficientMomentBound J P)
-  let C : ℝ := B / m ^ A
-  have hP : 0 ≤ P := momentConstant_nonneg K Lwin CW CF hL hCW hCF
-  have hB : 0 ≤ B := by
-    dsimp [B]
-    exact mul_nonneg (by positivity)
-      (add_nonneg
-        (FourierBridge.coefficientMomentBound_nonneg 0 P hP)
-        (FourierBridge.coefficientMomentBound_nonneg J P hP))
-  have hC : 0 ≤ C := by dsimp [C]; positivity
-  refine ⟨C, hC, ?_⟩
-  intro R hR
-  let b : 𝓢(ℝ, ℂ) := 𝓕 (positiveLogProfile V F R hVc hVs hFpos hR)
-  refine ⟨b, ?_, ?_, ?_⟩
-  · intro y
-    have hactive : (∏ j : ι, W j (y j)) ≠ 0 →
-        V (∑ j : ι, a j * y j) = 1 :=
-      FourierBridge.coupled_cutoff_active W V a y M hWwindow
-        (by simpa [T] using hVone)
-    simpa [b] using coupled_positive_log_separation W F V R a y
-      hVc hVs hFpos hR hactive
-  · exact AnalyticBridge.schwartz_fourier_one_plus_integrable
-      (positiveLogProfile V F R hVc hVs hFpos hR) J
-  · have hwindow' : ∀ s,
-        (∃ i ≤ K, ‖iteratedFDeriv ℝ i V s‖ ≠ 0) →
-          m ≤ Real.exp s ∧ |s| ≤ Lwin := by
-      intro s hs
-      exact ⟨(hwindow s hs).1, (hwindow s hs).2.2⟩
-    have hbound := positive_log_fourier_bound V F R m Lwin CW CF A J
-      hVc hVs hFpos hR hm hm1 hL hCW hCF
-      (by simpa [K] using hVderiv)
-      (by simpa only [K] using hwindow')
-      (by simpa [K] using hEuler)
-    simpa [C, B, P, b, K, Lwin, m] using hbound
 
 end LocalLogFourier
 
 namespace EisensteinSchwartzPoisson
 
-theorem paperRadialFourier_log_separation_schwartz
-    {ι : Type*} [Fintype ι]
-    (W : 𝓢(ℝ, ℂ)) (V : ι → ℝ → ℂ) (a M : ι → ℝ)
-    (hM : ∀ j, 0 ≤ M j)
-    (hVwindow : ∀ j z, V j z ≠ 0 → |z| ≤ M j)
-    (A J : ℕ) :
-    ∃ C : ℝ, 0 ≤ C ∧ ∀ R : ℝ, 0 < R →
-      ∃ b : 𝓢(ℝ, ℂ),
-        (∀ y : ι → ℝ,
-          (∏ j : ι, V j (y j)) *
-            paperRadialFourier W (R * Real.exp (∑ j : ι, a j * y j)) =
-          ∫ t : ℝ,
-            (∏ j : ι, V j (y j) *
-              FourierBridge.logPhase t (a j * y j)) * b t) ∧
-        Integrable (fun t : ℝ => (1 + ‖t‖) ^ J * ‖b t‖) volume ∧
-        (1 + R) ^ A *
-          (∫ t : ℝ, (1 + ‖t‖) ^ J * ‖b t‖) ≤ C := by
-  obtain ⟨CF, hCF, hEuler⟩ := paperRadialFourier_euler_bound W A
-    (J + (MeasureTheory.volume : MeasureTheory.Measure ℝ).integrablePower)
-  exact LocalLogFourier.coupled_positive_log_separation_schwartz V (paperRadialFourier W)
-    a M hM hVwindow (paperRadialFourier_contDiffOn W) A J CF hCF hEuler
-
 end EisensteinSchwartzPoisson
 end
 
-open scoped Classical BigOperators
-open AddChar MulChar
 namespace LocalReflectionBrackets
 
 section
@@ -463,9 +259,6 @@ theorem bracket_four_cube_split (χ : MulChar F ℂ) (n b : F) :
       (rootCard F : ℂ) * (if n ≠ 0 ∧ b = 0 then 1 else 0) := by
   rw [bracket_four_split]
   by_cases hn : n = 0 <;> by_cases hb : b = 0 <;> simp [hn, hb]
-
-theorem bracket_zero_mask (χ : MulChar F ℂ) (j : ℕ) (hj : j ≠ 4) :
-    bracket χ j 0 = 0 := by simp [bracket, hj]
 
 theorem norm_bracket_nonexceptional (χ : MulChar F ℂ) (j : ℕ)
     (hj4 : j ≠ 4) (hj0 : j ≠ 0) (x : F) :
@@ -558,8 +351,6 @@ theorem canonical_phase_norm (P : Ideal O) [P.IsMaximal]
 
 end LocalReflectionBrackets
 
-open scoped Classical BigOperators
-open AddChar MulChar
 namespace LocalReflectionBrackets
 
 variable {F : Type*} [Field F] [Fintype F]
@@ -617,16 +408,6 @@ theorem canonical_A5_normalized (P : Ideal O) [P.IsMaximal]
     simp only [phase, bracket, tau, ite_eq_right hj4, ite_eq_right hj0]
     rw [← hsq]
     field_simp
-
-theorem canonical_A5_norm_eq_bracket (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (hchar : ringChar (O ⧸ P) ≠ 2)
-    (ψ : AddChar (O ⧸ P) ℂ) (hψ : ψ.IsPrimitive)
-    (j : ℕ) (hj6 : j < 6) (σ ε : (O ⧸ P)ˣ) (x : O ⧸ P) :
-    ‖activeRow (canonicalSextic P hgood) ψ j σ ε x‖ =
-      ‖bracket (canonicalSextic P hgood) j x‖ := by
-  rw [canonical_A5_normalized P hgood hchar ψ hψ j hj6 σ ε x,
-    norm_mul, norm_mul, canonical_phase_norm P hgood hchar ψ hψ j hj6 ε,
-    FiniteRayExpansion.norm_char_unit, one_mul, one_mul]
 
 theorem canonical_bracket_four_cube_split (P : Ideal O) [P.IsMaximal]
     (hgood : lambda ∉ P) (n b : O) :

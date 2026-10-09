@@ -4,7 +4,6 @@ import OAI.NumberTheory.DirichletL.Energy.BandMonotonicity
 import OAI.NumberTheory.DirichletL.Energy.OriginalHighReflectionSymmetricBounded
 import OAI.NumberTheory.DirichletL.Energy.PositiveHighAssembly
 import OAI.NumberTheory.DirichletL.Energy.PositiveHighSourceBounded
-
 namespace OAI
 
 noncomputable section

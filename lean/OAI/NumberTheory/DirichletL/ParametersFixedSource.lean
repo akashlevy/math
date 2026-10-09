@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.ParametersHighData
 import OAI.NumberTheory.DirichletL.ParametersProbeWindows
 import OAI.NumberTheory.DirichletL.PrimeRows.FirstTail
-
 namespace OAI
 
 noncomputable section

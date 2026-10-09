@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.HighDeletion
-
 namespace OAI
 
 noncomputable section

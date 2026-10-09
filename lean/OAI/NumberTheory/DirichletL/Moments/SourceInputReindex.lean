@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.AmplificationChildInput
 import OAI.NumberTheory.DirichletL.Moments.OriginalCommonHarmonic
-
 namespace OAI
 
 noncomputable section
@@ -105,15 +104,6 @@ lemma profile_map (e : α≃β) (s : Input α) (R seed : Ideal O) (v : Tuple α)
   exact e.symm.prod_comp (fun i=>s.ν i (v (Sum.inl i))*
     s.W i ((Ideal.absNorm (v (Sum.inl i)):ℝ)/s.P i))
 
-lemma columns_map (e : α≃β) (s : Input α) (R seed : Ideal O) :
-    (original (reindex e s) R seed).columns=(original s R seed).columns := by
-  unfold OriginalData.columns
-  change finiteColumns (Fintype.piFinset (reindex e s).pools)=finiteColumns (Fintype.piFinset s.pools)
-  rw [←pools_map,finiteColumns,Finset.image_image]
-  congr 1
-  funext v
-  exact tupleMap_product e v
-
 lemma coefficient_map (e : α≃β) (s : Input α) (R seed : Ideal O) :
     (original (reindex e s) R seed).beta=(original s R seed).beta := by
   funext I
@@ -128,71 +118,10 @@ lemma coefficient_map (e : α≃β) (s : Input α) (R seed : Ideal O) :
 lemma volume_map (e : α≃β) (s : Input α) : volume (reindex e s)=volume s := by
   simp only [volume,reindex,e.symm.prod_comp]
 
-lemma controls_map (e : α≃β) (s : Input α) :
-    (∏i,(reindex e s).M i)=(∏i,s.M i) ∧
-    (∏i,(reindex e s).lo i)=(∏i,s.lo i) ∧
-    (∏i,(reindex e s).hi i)=(∏i,s.hi i) := by
-  simp only [reindex,e.symm.prod_comp,and_self]
-
 lemma sourceRadius_map (e : α≃β) (s : Input α) :
     CenteredMomentOriginalCommonHarmonic.sourceRadius (reindex e s)=
       CenteredMomentOriginalCommonHarmonic.sourceRadius s := by
   simp only [CenteredMomentOriginalCommonHarmonic.sourceRadius,reindex,e.symm.prod_comp]
-
-theorem normalizedGaussSource_map (e : α≃β) (s : Input α) (R seed : Ideal O)
-    (W : 𝓢(ℝ,ℂ)) (K : ℝ) :
-    normalizedGaussSource (reindex e s) R seed W K=normalizedGaussSource s R seed W K := by
-  unfold normalizedGaussSource
-  rw [columns_map,coefficient_map,volume_map]
-  rfl
-
-def imageInput (e : α↪β) (T : Finset α) (s : Input T) : Input (T.map e) :=
-  reindex (Finset.equivMap e T) s
-
-omit [Fintype α] [Fintype β] in
-lemma imageInput_lo (e : α↪β) (T : Finset α) (s : Input T) (i : T) :
-    (imageInput e T s).lo ((Finset.equivMap e T) i)=s.lo i := by
-  simp only [imageInput,reindex,Equiv.symm_apply_apply]
-
-omit [Fintype α] [Fintype β] in
-lemma imageInput_hi (e : α↪β) (T : Finset α) (s : Input T) (i : T) :
-    (imageInput e T s).hi ((Finset.equivMap e T) i)=s.hi i := by
-  simp only [imageInput,reindex,Equiv.symm_apply_apply]
-
-omit [Fintype α] [Fintype β] in
-lemma imageInput_normalized (e : α↪β) (T : Finset α) (s : Input T)
-    (R seed : Ideal O) (W : 𝓢(ℝ,ℂ)) (K : ℝ) :
-    normalizedGaussSource (imageInput e T s) R seed W K=normalizedGaussSource s R seed W K :=
-  normalizedGaussSource_map (Finset.equivMap e T) s R seed W K
-
-def allocatedImage (e : α↪β) (s : Input α) (C R : Ideal O)
-    (B : actualAllocations s.pools C) (τ : Character) (t : ℝ) :
-    Input ((liveIndices B.val).map e) :=
-  imageInput e (liveIndices B.val) (child s C R B τ t)
-
-omit [Fintype β] in
-lemma allocatedImage_ranges (e : α↪β) (s : Input α) (C R : Ideal O)
-    (B : actualAllocations s.pools C) (τ : Character) (t : ℝ)
-    (lo hi : β→ℝ) (hlo : ∀i,s.lo i=lo (e i)) (hhi : ∀i,s.hi i=hi (e i)) :
-    (∀j,(allocatedImage e s C R B τ t).lo j=lo j.val) ∧
-    (∀j,(allocatedImage e s C R B τ t).hi j=hi j.val) := by
-  constructor
-  · intro j
-    obtain ⟨i,rfl⟩:=(Finset.equivMap e (liveIndices B.val)).surjective j
-    rw [allocatedImage,imageInput_lo]
-    exact hlo i.val
-  · intro j
-    obtain ⟨i,rfl⟩:=(Finset.equivMap e (liveIndices B.val)).surjective j
-    rw [allocatedImage,imageInput_hi]
-    exact hhi i.val
-
-omit [Fintype β] in
-theorem allocatedImage_normalized (e : α↪β) (s : Input α) (C R seed : Ideal O)
-    (B : actualAllocations s.pools C) (τ : Character) (t : ℝ)
-    (W : 𝓢(ℝ,ℂ)) (K : ℝ) :
-    normalizedGaussSource (allocatedImage e s C R B τ t) (R*C) seed W K =
-      childNormalizedGaussSource s C R seed B τ t W K :=
-  imageInput_normalized e (liveIndices B.val) (child s C R B τ t) (R*C) seed W K
 
 end SevenEighths.CenteredMomentSourceInputReindex
 

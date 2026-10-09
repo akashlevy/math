@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalAnnularCommonBound
-
 namespace OAI
 
 noncomputable section
@@ -50,53 +49,9 @@ open ActualEisensteinCubic ConcreteTraceCRT ConcretePrimeRowBridge HeckeFamily C
 open CenteredMomentFirstPhysicalSource CenteredMomentFirstPhysicalDyadicRows
 open CenteredMomentSourceRow CenteredMomentSecondHeightFamily CenteredMomentFirstAmplificationChoice
 open CenteredMomentCanonicalFirst CenteredMomentCommonSupport CenteredMomentGaussEnergy
-open CenteredMomentLogDyadic CenteredMomentSecondWindowBudget RayFourExpansion CompletedGauss
+open CenteredMomentLogDyadic RayFourExpansion CompletedGauss
 open CenteredMomentChildAssembly CenteredMomentMobiusRegroup CenteredMomentSectorLocalization
-local notation "O" => HeckeFamily.O
 universe u
-
-theorem actual_annular_block_from_four_budgets (W : 𝓢(ℝ,ℂ)) (decay J₁ J₂ : ℕ) :
-    ∃ Cbound : ℝ, 0≤Cbound ∧ ∀ {ι : Type u} [Fintype ι],
-    ∀ (η : Character) (s : OriginalData ι) (t : ℝ)
-      (C D : Ideal O) (hC : Supported C) (hD : Supported D),
-    primeSupport C=primeSupport D → ∀ (E : Finset (CommonIndex C D))
-      (rows : Finset O) (K : ℝ), 0<K → ∀ n : Fin 4→ℤ,
-    ∀ E₁ E₂ : Ideal O→Fin 4→ℝ,
-    (∀ L∈divisorPool (Finset.univ : Finset (columns C D hD.1 s.columns))
-      (fun b=>Ideal.span {element C D hD.1 s.columns b}), ∀ i,0≤E₁ L i) →
-    (∀ L∈divisorPool (Finset.univ : Finset (columns C D hD.1 s.columns))
-      (fun b=>Ideal.span {element C D hD.1 s.columns b}), ∀ i,0≤E₂ L i) →
-    (∀ L∈divisorPool (Finset.univ : Finset (columns C D hD.1 s.columns))
-      (fun b=>Ideal.span {element C D hD.1 s.columns b}), ∀ χ : RayCharacter, ∀ v : ℝ,
-      (commonEnergy s C hC (fixedPair η C D hC E χ χ).left v L
-        CenteredMomentFirstAnnularMajorant.profile (dyadicScale (n 1))).re ≤ (∑i,E₁ L i)*(1+‖v‖)^(2*J₁)) →
-    (∀ L∈divisorPool (Finset.univ : Finset (columns C D hD.1 s.columns))
-      (fun b=>Ideal.span {element C D hD.1 s.columns b}), ∀ χ : RayCharacter, ∀ v : ℝ,
-      (commonEnergy s D hD (fixedPair η C D hC E χ χ).right v L
-        CenteredMomentFirstAnnularMajorant.profile (dyadicScale (n 1))).re ≤ (∑i,E₂ L i)*(1+‖v‖)^(2*J₂)) →
-    (1+dyadicScale (n 0)*dyadicScale (n 1)/(dyadicScale (n 2)*dyadicScale (n 3)))^decay *
-      ‖block η (fixedBadMask*idealGenerator s.R) 1 t s.columns s.beta C D hC hD E rows W
-        (fun _=>logAnnulus) K (dyadicScale (n 0)) (dyadicScale (n 1))
-          (dyadicScale (n 2)) (dyadicScale (n 3))‖ ≤
-      ‖scalar C D hC E K (dyadicScale (n 2)) (dyadicScale (n 3))‖*Cbound*
-        ∑ L∈divisorPool (Finset.univ : Finset (columns C D hD.1 s.columns))
-          (fun b=>Ideal.span {element C D hD.1 s.columns b}),
-          ‖(UniqueFactorizationMonoid.moebius L:ℂ)‖*
-            (∑i:Fin 4,∑j:Fin 4,windowBudget J₁ t (E₁ L i)*windowBudget J₂ t (E₂ L j)) := by
-  obtain ⟨Cb,hCb,hbound⟩:=CenteredMomentFirstPhysicalAnnularCommonBound.actual_annular_block_from_common_energy W decay J₁ J₂
-  refine ⟨Cb,hCb,?_⟩
-  intro ι inst η s t C D hC hD hCD E rows K hK n E₁ E₂ hE₁ hE₂ hleft hright
-  have hh:=hbound η s t C D hC hD hCD E rows K hK n
-    (fun L=>∑i,E₁ L i) (fun L=>∑i,E₂ L i)
-    (fun L hL=>Finset.sum_nonneg (fun i _=>hE₁ L hL i))
-    (fun L hL=>Finset.sum_nonneg (fun i _=>hE₂ L hL i)) hleft hright
-  apply hh.trans
-  apply mul_le_mul_of_nonneg_left _ (mul_nonneg (norm_nonneg _) hCb)
-  apply Finset.sum_le_sum
-  intro L hL
-  apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-  exact windowBudget_pair_sum Finset.univ Finset.univ (E₁ L) (E₂ L)
-    (fun i _=>hE₁ L hL i) (fun i _=>hE₂ L hL i) J₁ J₂ t
 
 end SevenEighths.CenteredMomentFirstWindowBudgets
 

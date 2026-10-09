@@ -4,7 +4,6 @@ import OAI.NumberTheory.DirichletL.Energy.OriginalHighReflectionSymmetric
 import OAI.NumberTheory.DirichletL.Energy.OriginalProfileControl
 import OAI.NumberTheory.DirichletL.Energy.BandMonotonicity
 import OAI.NumberTheory.DirichletL.Energy.ZeroGrowth
-
 namespace OAI
 
 noncomputable section

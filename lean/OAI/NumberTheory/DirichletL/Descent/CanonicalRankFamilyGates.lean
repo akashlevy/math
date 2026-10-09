@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalRankPuncture
 import OAI.NumberTheory.DirichletL.Descent.CanonicalRankMonotone
-
 namespace OAI
 
 noncomputable section

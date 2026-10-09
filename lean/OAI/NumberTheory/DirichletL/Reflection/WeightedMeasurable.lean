@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.WeightedSourceSum
 import OAI.NumberTheory.DirichletL.Descent.CommonMeasure
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

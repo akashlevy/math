@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.PrimeDyadicScaled
 import OAI.NumberTheory.DirichletL.PrimeLogProfile
 import OAI.NumberTheory.DirichletL.Hecke.DyadicTailBudget
-
 namespace OAI
 
 noncomputable section

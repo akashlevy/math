@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CentralSplit
 import OAI.NumberTheory.DirichletL.Detector.SelectedPrimeIndexed
-
 namespace OAI
 
 noncomputable section

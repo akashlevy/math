@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GramCommonSource
 import OAI.NumberTheory.DirichletL.Detector.GramSourceBlock
-
 namespace OAI
 
 noncomputable section

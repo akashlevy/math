@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstSecondInputGates
-
 namespace OAI
 
 noncomputable section

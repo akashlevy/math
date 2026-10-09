@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialExcludedPool
-
 namespace OAI
 
 noncomputable section
@@ -62,14 +61,6 @@ theorem residual_filtered (A E:Finset (Ideal O)){P j:Ideal O}
   · rw [ite_eq_left hout]
   · rw [ite_eq_right hout]
     simp only [overlapResidualCoefficient,hη c hout,mul_zero,zero_mul]
-
-theorem residual_deleted_filtered (χ:Character)(A E:Finset (Ideal O)){P j:Ideal O}
-    (hE:∀Q∈E,Prime Q)(hPs:Squarefree P)(hj:j∣P)(hP:outside E P)
-    (a:Ideal O→ℂ)(W:ℝ→ℂ)(Z r z G:ℝ)(u:O):
-    residualNormalizedPolynomial A P j (idealCoeff (χ.excludePrimes E hE)).toMonoidHom a W Z r z G u=
-    residualNormalizedPolynomial (originalOutside A E) P j
-      (idealCoeff (χ.excludePrimes E hE)).toMonoidHom a W Z r z G u :=
-  residual_filtered A E hE hPs hj hP _ (deleted_zero_outside χ E hE) a W Z r z G u
 
 end SevenEighths.InverseInitialExcludedOverlap
 

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalDyadicAssembly
-
 namespace OAI
 
 noncomputable section

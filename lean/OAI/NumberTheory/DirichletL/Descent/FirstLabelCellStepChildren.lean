@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstLabelCellStepSource
-
 namespace OAI
 
 noncomputable section

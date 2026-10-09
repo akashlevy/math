@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.Correlation
 import Mathlib.RingTheory.Ideal.Quotient.Operations
 import Mathlib.Algebra.Group.Pi.Units
-
 namespace OAI
 
 open scoped BigOperators Classical
@@ -21,36 +20,6 @@ theorem fullCorrelation_ringEquiv (e : A ≃+* B) (u v k : A) (f g : B → ℂ) 
   have heq : v * x - u * y = k ↔ e v * e x - e u * e y = e k := by
     rw [← map_mul, ← map_mul, ← map_sub, e.injective.eq_iff]
   simp only [RingEquiv.toEquiv_eq_coe, EquivLike.coe_coe, heq]
-
-theorem fullCorrelation_product (u v k : A × B) (f₁ g₁ : A → ℂ) (f₂ g₂ : B → ℂ) :
-    fullCorrelation (fun x => v * x) (fun y => u * y)
-        (fun x => f₁ x.1 * f₂ x.2) (fun y => g₁ y.1 * g₂ y.2) k =
-      fullCorrelation (fun x => v.1 * x) (fun y => u.1 * y) f₁ g₁ k.1 *
-        fullCorrelation (fun x => v.2 * x) (fun y => u.2 * y) f₂ g₂ k.2 := by
-  classical
-  simp only [fullCorrelation, Fintype.sum_prod_type]
-  have hterm (x₁ y₁ : A) (x₂ y₂ : B) :
-      (if v * (x₁, x₂) - u * (y₁, y₂) = k
-       then (f₁ x₁ * f₂ x₂) * star (g₁ y₁ * g₂ y₂) else 0) =
-      (if v.1 * x₁ - u.1 * y₁ = k.1 then f₁ x₁ * star (g₁ y₁) else 0) *
-      (if v.2 * x₂ - u.2 * y₂ = k.2 then f₂ x₂ * star (g₂ y₂) else 0) := by
-    have heq : v * (x₁, x₂) - u * (y₁, y₂) = k ↔
-        v.1 * x₁ - u.1 * y₁ = k.1 ∧ v.2 * x₂ - u.2 * y₂ = k.2 := by
-      exact Prod.ext_iff
-    by_cases h₁ : v.1 * x₁ - u.1 * y₁ = k.1 <;>
-      by_cases h₂ : v.2 * x₂ - u.2 * y₂ = k.2 <;>
-      simp [heq, h₁, h₂, star_mul] ; ring
-  simp_rw [hterm]
-  rw [Finset.sum_mul]
-  apply Finset.sum_congr rfl
-  intro x₁ _
-  rw [Finset.sum_comm, Finset.sum_mul]
-  apply Finset.sum_congr rfl
-  intro y₁ _
-  rw [Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro x₂ _
-  rw [Finset.mul_sum]
 
 theorem fullCorrelation_pi {ι : Type*} [Fintype ι] {R : ι → Type*}
     [∀ i, CommRing (R i)] [∀ i, Fintype (R i)]
@@ -82,20 +51,6 @@ theorem fullCorrelation_pi {ι : Type*} [Fintype ι] {R : ι → Type*}
         if v i * x i - u i * y = k i then f i (x i) * star (g i y) else (0 : ℂ))).symm
     _ = _ := (Fintype.prod_sum (fun i (x : R i) => ∑ y : R i,
       if v i * x - u i * y = k i then f i x * star (g i y) else (0 : ℂ))).symm
-
-theorem fullCorrelation_idealCRT {S ι : Type*} [CommRing S] [Fintype ι]
-    (I : ι → Ideal S) (hI : Pairwise (Function.onFun IsCoprime I))
-    [Fintype (S ⧸ ⨅ i, I i)] [∀ i, Fintype (S ⧸ I i)]
-    (u v k : S ⧸ ⨅ i, I i) (f g : ∀ i, S ⧸ I i → ℂ) :
-    let e := Ideal.quotientInfRingEquivPiQuotient I hI
-    fullCorrelation (fun x => v * x) (fun y => u * y)
-        (fun x => ∏ i, f i (e x i)) (fun y => ∏ i, g i (e y i)) k =
-      ∏ i, fullCorrelation (fun x => e v i * x) (fun y => e u i * y)
-        (f i) (g i) (e k i) := by
-  classical
-  dsimp only
-  rw [fullCorrelation_ringEquiv (Ideal.quotientInfRingEquivPiQuotient I hI) u v k
-    (fun x => ∏ i, f i (x i)) (fun y => ∏ i, g i (y i)), fullCorrelation_pi]
 
 def crtCharacter {S ι : Type*} [CommRing S] [Fintype ι] {R : ι → Type*}
     [∀ i, CommRing (R i)] (e : S ≃+* (∀ i, R i)) (χ : ∀ i, MulChar (R i) ℂ) :

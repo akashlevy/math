@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstGlobalSourceSupport
 import OAI.NumberTheory.DirichletL.Descent.FirstGlobalSourceIndex
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

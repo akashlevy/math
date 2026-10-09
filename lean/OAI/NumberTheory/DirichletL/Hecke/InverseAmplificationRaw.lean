@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationPowers
-
 namespace OAI
 
 noncomputable section

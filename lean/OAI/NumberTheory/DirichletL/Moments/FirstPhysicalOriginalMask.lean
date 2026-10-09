@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalSourceFixedFamily
 import OAI.NumberTheory.DirichletL.Moments.FirstSourceReduction
 import OAI.NumberTheory.DirichletL.Moments.AmplificationChildInput
-
 namespace OAI
 
 noncomputable section
@@ -58,15 +57,6 @@ theorem original_block (s : Input ι) (R seed : Ideal O) (t : ℝ)
   dsimp only
   rw [original_coefficient s R seed C a (column_supported C C hC.1 S a) t,
     original_coefficient s R seed D b (column_supported C D hD.1 S b) t]
-
-omit [DecidableEq ι] in
-lemma original_sector (s : Input ι) (R seed : Ideal O) (t : ℝ)
-    (S : Finset (Ideal O)) (C D : Ideal O) (hC : Supported C) (hD : Supported D)
-    (W : 𝓢(ℝ,ℂ)) (K X Z ξ : ℝ) :
-    sector s R seed (fixedBadMask*idealGenerator R) 1 t S C D hC hD W K X Z ξ =
-    sector s R seed fixedBadMask 1 t S C D hC hD W K X Z ξ := by
-  unfold sector
-  simp_rw [original_block]
 
 omit [DecidableEq ι] in
 lemma original_sectorMass (s : Input ι) (R seed : Ideal O) (t : ℝ)

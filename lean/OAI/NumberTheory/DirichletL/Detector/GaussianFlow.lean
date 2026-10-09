@@ -1,5 +1,4 @@
-import OAI.NumberTheory.DirichletL.Detector.GaussianSummation
-
+import OAI.NumberTheory.DirichletL.Detector.GaussianSeminorm
 namespace OAI
 
 noncomputable section

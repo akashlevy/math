@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.Moving
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

@@ -1,77 +1,23 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.RamifiedTransform
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 open scoped BigOperators Classical
@@ -144,23 +90,6 @@ theorem completedBesselProfile_mellin_entire_of_periodic
       (fun s=>thetaDerivativeScalar⁻¹*mellin (thetaTwistedCuspProfile Ψ c hc) s) from funext hm]
     exact hf.2.const_mul _
 
-theorem completedBesselProfile_mellin_entire
-    (Ψ : Eis→*ℂ) (Q : Ideal Eis) (hQ : Q≠⊥)
-    (hΨ : CanonicalCoefficientClass.FactorsModulo Q Ψ) :
-    (∀s:ℂ,MellinConvergent (completedBesselProfile Ψ (1/Real.sqrt 27)) s) ∧
-      Differentiable ℂ (mellin (completedBesselProfile Ψ (1/Real.sqrt 27))) := by
-  have h9 : (Ideal.span {(9:Eis)} : Ideal Eis)≠⊥ :=
-    Ideal.span_singleton_eq_bot.not.mpr (by norm_num)
-  have hN : Ideal.span {(9:Eis)}*Q≠⊥ := fun hz=>(Ideal.mul_eq_bot.mp hz).elim h9 hQ
-  let c := ConcretePrimeRowBridge.idealGenerator (Ideal.span {(9:Eis)}*Q)
-  have hc : c≠0 := ConcretePrimeRowBridge.idealGenerator_ne_zero _ hN
-  let : Finite (Eis⧸Ideal.span {c}) := finite_quotient_span hc
-  let : Fintype (Eis⧸Ideal.span {c}) := Fintype.ofFinite _
-  have hcQ : Ideal.span {c}≤Ideal.span {(9:Eis)}*Q := by
-    rw [ConcretePrimeRowBridge.span_idealGenerator]
-  simpa only [thetaBesselScale_eq] using
-    completedBesselProfile_mellin_entire_of_periodic Ψ Q hΨ c hc hcQ
-
 end CubicEisenstein
 
 namespace CompletedGauss
@@ -227,8 +156,7 @@ theorem besselSmoothingIntegrand_finite_integrable {ι : Type*} [Fintype ι]
 
 end CompletedGauss
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
+open scoped MatrixGroups
 
 namespace CubicEisenstein
 
@@ -506,9 +434,6 @@ theorem unramifiedResidualCoefficient_squarefree_cube_bound (I J:Ideal Eis)
     (norm_nonneg _)).trans_eq (by ring)
 
 end CubicEisenstein
-
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
 
 namespace CubicEisenstein
 open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal CompletedGauss

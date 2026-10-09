@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Reflection.RetainedWidth
 import OAI.NumberTheory.DirichletL.Reflection.ShellDomains
 import OAI.NumberTheory.DirichletL.Reflection.Surviving
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

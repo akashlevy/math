@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationRows
 import OAI.NumberTheory.DirichletL.CenteredExceptionalCount
 import OAI.NumberTheory.DirichletL.Detector.HighAbsolute
-
 namespace OAI
 
 noncomputable section
@@ -52,11 +51,6 @@ def sixthFrequencyEquiv : FreeRow×HeckeInverseAmplification.NonzeroIdeal ≃ No
 
 lemma sixthFrequencyEquiv_apply (p : FreeRow×HeckeInverseAmplification.NonzeroIdeal) :
     (sixthFrequencyEquiv p).val=p.1.val*(idealGenerator p.2.val)^6 := rfl
-
-theorem tsum_sixth_decomposition (f : NonzeroFrequency→ℂ) :
-    (∑'H : NonzeroFrequency,f H)=
-      ∑'p : FreeRow×HeckeInverseAmplification.NonzeroIdeal,f (sixthFrequencyEquiv p) :=
-  (sixthFrequencyEquiv.tsum_eq f).symm
 
 lemma idealGenerator_sixth_eq_primary (I : Id) (hI : CanonicalQuadraticSieve.Supported I) :
     (idealGenerator I)^6=(CompletedGauss.primaryGenerator I)^6 := by

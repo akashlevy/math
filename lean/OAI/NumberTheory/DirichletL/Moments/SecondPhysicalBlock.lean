@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondRadicalBlock
-
 namespace OAI
 
 noncomputable section

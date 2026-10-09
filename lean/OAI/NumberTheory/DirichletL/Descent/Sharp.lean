@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.HybridBound
 import OAI.NumberTheory.DirichletL.CubicSieve.Sharp
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -58,27 +57,6 @@ theorem hybrid_sharp_cubic_factor (ε : ℝ) (hε : 0 < ε) :
       rw [hdouble]
       ring
     _ ≤ _ := by gcongr
-
-theorem supportedHybridRow_energy (ε : ℝ) (hε : 0 < ε) :
-    ∃ C : ℝ, 0 < C ∧ ∀ K N B L : ℝ, 1 ≤ K → 1 ≤ N → 1 ≤ B → 1 ≤ L →
-    ∀ (rows : Finset (Ideal Eis)) (S : Finset (Ideal Eis × Ideal Eis))
-      (Pset : Finset (Ideal Eis)) (a : Ideal Eis → ℂ) (beta : Ideal Eis → Ideal Eis → ℂ),
-      (∀ k ∈ rows, Admissible k ∧ (Ideal.absNorm k : ℝ) ≤ K) →
-      (∀ p ∈ S, Squarefree p.1 ∧ primaryGenerator p.1 ≠ 0 ∧ primaryGenerator p.2 ≠ 0 ∧
-        (Ideal.absNorm p.1 : ℝ) ≤ N ∧ (Ideal.absNorm p.2 : ℝ) ≤ B) →
-      (∀ P ∈ Pset, CubicSieve.Admissible P ∧ L ≤ (Ideal.absNorm P : ℝ) ∧
-        (Ideal.absNorm P : ℝ) ≤ 2 * L) →
-      (∀ P ∈ Pset, ‖a P‖ ≤ 1) → (∀ p ∈ S, ‖beta p.1 p.2‖ ≤ 1) →
-      (∑ k ∈ rows, ‖supportedHybridRow S Pset a beta k‖ ^ 2) ≤
-      C * (K * N * B * L) ^ ε * (K + N * B) * B * (N + L + (N * L) ^ (2 / 3 : ℝ)) := by
-  obtain ⟨C0, hC0, he⟩ := supportedHybridRow_energy_sieve_norm (ε / 2) (by positivity)
-  obtain ⟨C1, hC1, hc⟩ := hybrid_sharp_cubic_factor ε hε
-  refine ⟨C0 * C1, mul_pos hC0 hC1, ?_⟩
-  intro K N B L hK hN hB hL rows S Pset a beta hrows hS hP ha hbeta
-  apply (he K N B L hK hN hB rows S Pset a beta hrows hS hP ha hbeta).trans
-  have hh := mul_le_mul_of_nonneg_left (hc K N B L hK hN hB hL)
-    (show 0 ≤ C0 * (K + N * B) * B by positivity)
-  convert hh using 1 <;> ring
 
 theorem hybridRow_energy (ε : ℝ) (hε : 0 < ε) :
     ∃ C : ℝ, 0 < C ∧ ∀ K N B L : ℝ, 1 ≤ K → 1 ≤ N → 1 ≤ B → 1 ≤ L →

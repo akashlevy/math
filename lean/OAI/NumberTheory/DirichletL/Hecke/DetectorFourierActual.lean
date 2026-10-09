@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorFourierSeparation
 import OAI.NumberTheory.DirichletL.Hecke.DetectorPartition
-
 namespace OAI
 
 namespace SevenEighths.HeckeDetectorFourier
@@ -53,30 +52,6 @@ theorem actual_pair_profile (χ : Character) (Ω V T W₁ W₂ : ℝ → ℂ)
   simp only [map_mul, Nat.cast_mul, expNeg]
   push_cast
   ring_nf
-
-theorem actual_finite_pair_separation (χ : Character) (Ω V T W₁ W₂ : ℝ → ℂ)
-    (hΩc : HasCompactSupport Ω) (hΩs : ContDiff ℝ ∞ Ω)
-    (hVs : ContDiff ℝ ∞ V) (hTs : ContDiff ℝ ∞ T)
-    (Dstar D N Y U : ℝ) (hD : 0 < D) (hN : 0 < N) (s : ℂ)
-    (S R : Finset (Ideal O)) (hS : ∀ I ∈ S, I ≠ 0) (hR : ∀ J ∈ R, J ≠ 0)
-    (hΩ : ∀ I ∈ S, ∀ J ∈ R,
-      W₁ ((Ideal.absNorm I : ℝ)/D) ≠ 0 → W₂ ((Ideal.absNorm J : ℝ)/N) ≠ 0 →
-      Ω (Real.log ((Ideal.absNorm I : ℝ)/D)+Real.log ((Ideal.absNorm J : ℝ)/N)) = 1) :
-    (∑ I ∈ S, ∑ J ∈ R, HeckeDetectorPartition.pairCoefficient χ V T Dstar Y U s (I,J)*
-      W₁ ((Ideal.absNorm I : ℝ)/D)*W₂ ((Ideal.absNorm J : ℝ)/N)) =
-      ∫ t : ℝ,
-        (𝓕 (logSource Ω V T hΩc hΩs hVs hTs (2*D*N/Dstar) (D*N/Y) (D*N/U))) t*
-        phasePolynomial S (inverseCoefficient χ V W₁ Dstar D s)
-          (fun I => Real.log ((Ideal.absNorm I : ℝ)/D)) t*
-        phasePolynomial R (plainCoefficient χ W₂ N s)
-          (fun J => Real.log ((Ideal.absNorm J : ℝ)/N)) t := by
-  rw [← finite_pair_separation]
-  apply Finset.sum_congr rfl
-  intro I hI
-  apply Finset.sum_congr rfl
-  intro J hJ
-  exact actual_pair_profile χ Ω V T W₁ W₂ Dstar D N Y U hD hN s I J
-    (hS I hI) (hR J hJ) (hΩ I hI J hJ)
 
 end
 end SevenEighths.HeckeDetectorFourier

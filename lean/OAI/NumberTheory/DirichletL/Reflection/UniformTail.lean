@@ -1,5 +1,5 @@
-import OAI.NumberTheory.DirichletL.Reflection.HeightTail
-
+import OAI.NumberTheory.DirichletL.Reflection.DyadicTail
+import OAI.NumberTheory.DirichletL.Inversion.KernelSourceUniform
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Energy.FixedRadialReduction
 import OAI.NumberTheory.DirichletL.Energy.ZeroComparison
 import OAI.NumberTheory.DirichletL.Energy.PhysicalEntry
-
 namespace OAI
 
 noncomputable section
@@ -62,48 +61,6 @@ theorem original_low_reduction (bΦ:ℝ)(hbΦ:0<bΦ)
     r.keep r.profile r.scale at hh
   rw [comparison_energy_zero s hz₁ hz₂ R r,mul_zero,add_zero,zeroInput_volume,zero_control] at hh
   exact hh
-
-omit [DecidableEq ι] in
-theorem zero_comparison_product_cap (b B ε:ℝ)(_hB:0≤B)(hε:0<ε):
-    ∀ᶠ Z:ℝ in atTop,1<Z ∧∀s:Input ι,∀hz₁:s.W₁ 0=0,∀hz₂:s.W₂ 0=0,
-      s.b₁≤b →s.X₁*s.X₂≤Z^B →
-      (zeroInput s hz₁ hz₂).Y₁≤1 ∧
-      (zeroInput s hz₁ hz₂).Y₂≤Z^(B+ε):=by
-  filter_upwards [(Filter.tendsto_atTop.1 (tendsto_rpow_atTop hε)) (2*max 1 b),
-    eventually_gt_atTop (1:ℝ)] with Z hc hZ
-  refine ⟨hZ,?_⟩
-  intro s hz₁ hz₂ hb hprod
-  refine ⟨smallScale_le_one _,?_⟩
-  change s.X₁*s.X₂/smallScale s.b₁≤_
-  have hconst:2*max 1 s.b₁≤Z^ε:=
-    (mul_le_mul_of_nonneg_left (max_le_max_left 1 hb) (by norm_num)).trans hc
-  unfold smallScale
-  rw [div_div_eq_mul_div,div_one]
-  calc
-    _≤Z^B*Z^ε:=mul_le_mul hprod hconst (by positivity)
-      (Real.rpow_pos_of_pos (zero_lt_one.trans hZ) _).le
-    _=Z^(B+ε):=(Real.rpow_add (zero_lt_one.trans hZ) _ _).symm
-
-omit [DecidableEq ι] in
-theorem zero_comparison_first_log (b ε:ℝ)(hε:0<ε):
-    ∀ᶠ Z:ℝ in atTop,1<Z ∧∀s:Input ι,∀hz₁:s.W₁ 0=0,∀hz₂:s.W₂ 0=0,
-      s.b₁≤b → -ε≤Real.logb Z (zeroInput s hz₁ hz₂).Y₁ ∧
-        Real.logb Z (zeroInput s hz₁ hz₂).Y₁≤0:=by
-  filter_upwards [(Filter.tendsto_atTop.1 (tendsto_rpow_atTop hε)) (2*max 1 b),
-    eventually_gt_atTop (1:ℝ)] with Z hc hZ
-  refine ⟨hZ,?_⟩
-  intro s hz₁ hz₂ hb
-  change -ε≤Real.logb Z (smallScale s.b₁) ∧ Real.logb Z (smallScale s.b₁)≤0
-  have hconst:2*max 1 s.b₁≤Z^ε:=
-    (mul_le_mul_of_nonneg_left (max_le_max_left 1 hb) (by norm_num)).trans hc
-  have hlower:Z^(-ε)≤smallScale s.b₁:=by
-    rw [Real.rpow_neg (zero_lt_one.trans hZ).le]
-    simpa only [smallScale,one_div] using one_div_le_one_div_of_le (by positivity) hconst
-  refine ⟨?_,?_⟩
-  · have hh:=Real.logb_le_logb_of_le hZ (Real.rpow_pos_of_pos (zero_lt_one.trans hZ) _) hlower
-    simpa only [Real.logb_rpow (zero_lt_one.trans hZ) hZ.ne'] using hh
-  · have hh:=Real.logb_le_logb_of_le hZ (smallScale_pos s.b₁) (smallScale_le_one s.b₁)
-    simpa only [Real.logb_one] using hh
 
 end SevenEighths.CenteredMomentEnergyLowFixedRadialEntry
 

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.Row
 import OAI.NumberTheory.DirichletL.Detector.PhysicalCoefficient
-
 namespace OAI
 
 noncomputable section
@@ -38,16 +37,6 @@ theorem spectralSummand_row_separation (S : Finset (Ideal O)) (D I J : Ideal O)
     exact mul_comm _ _
   rw [hr, spectralSummand_mul_fixed_twist]
   rfl
-
-theorem calibrated_spectralSummand_separation (S : Finset (Ideal O)) (D I J : Ideal O)
-    (η : HeckeFamily.Character) (C : ProbePhysical.CalibrationData) (s : O)
-    (hs : Supported (Ideal.span {s})) (m : O) (t : ℂ) :
-    C.residueMonoid m * spectralSummand S D (rowCoefficient η C.Xi s hs m) t I J =
-      ProbePhysical.calibratedNumerator C (completedIndex I J) m *
-        spectralSummand S D (baseRowCoefficient η C.Xi s hs) t I J := by
-  rw [spectralSummand_row_separation]
-  unfold ProbePhysical.calibratedNumerator
-  ring
 
 theorem spectralSummand_zero_completedIndex (S : Finset (Ideal O)) (D I J : Ideal O)
     (Ψ : O →* ℂ) (t : ℂ) (hz : completedIndex I J=0) :

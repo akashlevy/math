@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.StageReserve
 import OAI.NumberTheory.DirichletL.Energy.WidthSchedule
-
 namespace OAI
 
 noncomputable section

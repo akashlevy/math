@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationPrimePool
-
 namespace OAI
 
 noncomputable section

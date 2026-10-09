@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstAnnularEnergy
 import OAI.NumberTheory.DirichletL.Moments.AmplifiedRetainedRadius
-
 namespace OAI
 
 noncomputable section

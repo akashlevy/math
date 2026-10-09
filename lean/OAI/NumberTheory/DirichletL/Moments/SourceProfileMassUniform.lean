@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SourceProfileMass
-
 namespace OAI
 
 noncomputable section
@@ -55,49 +54,6 @@ theorem profile_mass_explicit {ι : Type*} [Fintype ι]
   simp_rw [profileCoefficient_eq_original]
   simpa only [sourceMassConstant,e.symm.prod_comp D,e.symm.prod_comp b,e.symm.prod_comp P] using hm
 
-theorem profile_mass_uniform {ι : Type*} [Fintype ι]
-    (Wslot : ι → ℝ → ℂ) (a b : ι → ℝ) (a₁ b₁ a₂ b₂ : ℝ)
-    (ha : ∀ j,0<a j) (hb : ∀ j,0≤b j)
-    (ha₁ : 0<a₁) (hb₁ : 0≤b₁) (ha₂ : 0<a₂) (hb₂ : 0≤b₂)
-    (hsSlot : ∀ j,Function.support (Wslot j)⊆Set.Icc (a j) (b j))
-    (hWslot : ∀ j,ContDiff ℝ ∞ (Wslot j)) :
-    ∃ C : ℝ,0<C ∧ ∀ W₁ W₂ : 𝓢(ℝ,ℂ),
-      Function.support (W₁ : ℝ→ℂ)⊆Set.Icc a₁ b₁ →
-      Function.support (W₂ : ℝ→ℂ)⊆Set.Icc a₂ b₂ →
-      ∀ (R : Ideal O) (ν : ι→Ideal O→ℂ),(∀ j I,‖ν j I‖≤1)→
-      ∀ (P : ι→ℝ) (X₁ X₂ Y₁ Y₂ T : ℝ) (B₁ B₂ s : Ideal O),
-      (∀ j,0<P j)→0<X₁→0<X₂→0<Y₁→0<Y₂→B₁≠0→B₂≠0→
-      X₁*X₂=T→Y₁*Y₂=T→∀ S : Finset (Tuple ι),
-      (∑v∈S,‖profileCoefficient R ν Wslot P W₁ W₂ X₁ X₂ Y₁ Y₂ B₁ B₂ s v‖)≤
-        (C*SchwartzMap.seminorm ℝ 0 0 W₁*SchwartzMap.seminorm ℝ 0 0 W₂)*
-          (T/((Ideal.absNorm B₁:ℝ)*Ideal.absNorm B₂))*(∏j,P j) := by
-  choose D hD hbound hz hs using fun j =>
-    smooth_annular_bound (Wslot j) (a j) (b j) (ha j) (hsSlot j) (hWslot j)
-  let C₀ := 2*128^(Fintype.card ι+2)*(∏j,D j)*(∏j,b j)*b₁*b₂
-  have hprodD : 0≤∏j,D j := Finset.prod_nonneg (fun j _ => hD j)
-  have hprodb : 0≤∏j,b j := Finset.prod_nonneg (fun j _ => hb j)
-  have hC₀ : 0≤C₀ := by dsimp [C₀]; positivity
-  refine ⟨1+C₀,by positivity,?_⟩
-  intro W₁ W₂ hs₁ hs₂ R ν hν P X₁ X₂ Y₁ Y₂ T B₁ B₂ s hP hX₁ hX₂ hY₁ hY₂ hB₁ hB₂ hX hY S
-  have hzW (W : 𝓢(ℝ,ℂ)) (a b : ℝ) (ha : 0<a)
-      (hs : Function.support (W : ℝ→ℂ)⊆Set.Icc a b) : W 0=0 := by
-    by_contra hn
-    exact (not_le_of_gt ha) (hs hn).1
-  have hm := profile_mass_explicit Wslot W₁ W₂ b D b₁ b₂
-    (SchwartzMap.seminorm ℝ 0 0 W₁) (SchwartzMap.seminorm ℝ 0 0 W₂)
-    hb hb₁ hb₂ hD (apply_nonneg _ _) (apply_nonneg _ _) hz
-    (hzW W₁ a₁ b₁ ha₁ hs₁) (hzW W₂ a₂ b₂ ha₂ hs₂) hs
-    (fun x hx => (hs₁ hx).2) (fun x hx => (hs₂ hx).2) hbound
-    (SchwartzMap.norm_le_seminorm ℝ W₁) (SchwartzMap.norm_le_seminorm ℝ W₂)
-    R ν hν P X₁ X₂ Y₁ Y₂ T B₁ B₂ s hP hX₁ hX₂ hY₁ hY₂ hB₁ hB₂ hX hY S
-  have hT : 0<T := hX ▸ mul_pos hX₁ hX₂
-  have hprodP : 0≤∏j,P j := Finset.prod_nonneg (fun j _ => (hP j).le)
-  have hpos : 0≤SchwartzMap.seminorm ℝ 0 0 W₁*SchwartzMap.seminorm ℝ 0 0 W₂*
-      (T/((Ideal.absNorm B₁:ℝ)*Ideal.absNorm B₂))*(∏j,P j) := by positivity
-  apply hm.trans
-  have hh := mul_le_mul_of_nonneg_right (show C₀≤1+C₀ by linarith) hpos
-  dsimp only [C₀] at hh
-  nlinarith only [hh]
 end SevenEighths.CenteredMomentSourceProfileMassUniform
 
 end

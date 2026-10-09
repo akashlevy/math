@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalSourcePresentation
 import OAI.NumberTheory.DirichletL.Moments.FirstMaskedFamily
 import OAI.NumberTheory.DirichletL.Moments.SupportedZeroEnergy
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorFrequency
-
 namespace OAI
 
 noncomputable section

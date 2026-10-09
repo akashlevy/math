@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.Shape
 import OAI.NumberTheory.DirichletL.CubicSieve.Ideal
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

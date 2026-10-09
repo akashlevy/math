@@ -1,9 +1,7 @@
-import OAI.NumberTheory.DirichletL.Descent.PriorityMovingRadiusWindowOrder
-import OAI.NumberTheory.DirichletL.Descent.PriorityCellEnergyWindowOrderUniform
-import OAI.NumberTheory.DirichletL.Descent.PriorityCellEnergyWindowOrder
-import OAI.NumberTheory.DirichletL.Descent.PriorityCellEnergy
+import OAI.NumberTheory.DirichletL.Inversion.SecondChildWindows
+import OAI.NumberTheory.DirichletL.Descent.SecondCellPhysical
 import OAI.NumberTheory.DirichletL.Descent.SecondCellParameters
-
+import OAI.NumberTheory.DirichletL.Descent.PriorityCellEnergyWindowOrderUniform
 namespace OAI
 
 noncomputable section

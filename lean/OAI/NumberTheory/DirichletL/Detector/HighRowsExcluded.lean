@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsEuler
 import OAI.NumberTheory.DirichletL.Detector.HighExcludedLocal
-
 namespace OAI
 
 noncomputable section

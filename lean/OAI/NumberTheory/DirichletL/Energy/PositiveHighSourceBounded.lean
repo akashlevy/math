@@ -4,7 +4,6 @@ import OAI.NumberTheory.DirichletL.Energy.OriginalHighReflectionSymmetric
 import OAI.NumberTheory.DirichletL.Energy.ReferenceLiveBounded
 import OAI.NumberTheory.DirichletL.Energy.FixedRadialReduction
 import OAI.NumberTheory.DirichletL.Energy.PhysicalEntry
-
 namespace OAI
 
 noncomputable section

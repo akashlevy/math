@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerSource
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerAssignedCanonical
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerWeights
-
 namespace OAI
 
 noncomputable section

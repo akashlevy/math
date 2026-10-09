@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstCanonicalChildren
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.UniformPhysical
 import OAI.NumberTheory.DirichletL.Inversion.ReflectedArithmeticHeight
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

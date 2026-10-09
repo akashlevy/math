@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.PunctureAbsorption
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -22,15 +21,6 @@ lemma markedCompletedT_zero_punctured (Ψ : Eis→*ℂ) (m f z : Eis)
     · rw [hd _ hdiv,mul_zero]
   simp only [markedCompletedT,hz,tsum_zero]
 
-lemma markedCompletedT_zero_punctured_slot {σ : Type*} [Fintype σ]
-    (S : PrimeFamily σ) (i : σ) (Ψ : Eis→*ℂ) (m f z : Eis) (hm : m∈S.ideal i)
-    (W : ℝ→ℂ) (X : ℝ) :
-    markedCompletedT (rowTwist Ψ m f z) W X
-      (fun A => ∏ j,if S.ideal j∣A then (1:ℂ) else 0)=0 := by
-  apply markedCompletedT_zero_punctured Ψ m f z (S.ideal i)
-    (Ideal.prime_of_isPrime (NeZero.ne (S.ideal i)) inferInstance) hm W X
-  intro A hA
-  exact Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right hA)
 end
 end SevenEighths.InverseReflectedPhase
 

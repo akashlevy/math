@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalSlots
 import OAI.NumberTheory.DirichletL.Moments.AllocatedCenteredCapped
-
 namespace OAI
 noncomputable section
 open scoped Classical BigOperators SchwartzMap ContDiff

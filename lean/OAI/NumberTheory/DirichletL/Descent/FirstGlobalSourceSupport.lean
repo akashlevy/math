@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstPhysicalFamily
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.ParametersHighData
-
 namespace OAI
 
 noncomputable section

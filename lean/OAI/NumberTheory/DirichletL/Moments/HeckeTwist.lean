@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.HeckeCancellation
 import OAI.NumberTheory.DirichletL.Moments.Height
-
 namespace OAI
 
 noncomputable section

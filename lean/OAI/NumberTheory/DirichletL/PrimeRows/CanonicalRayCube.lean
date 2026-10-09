@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CanonicalCubeChoice
 import OAI.NumberTheory.DirichletL.Detector.RayCharacterFamily
-
 namespace OAI
 
 noncomputable section

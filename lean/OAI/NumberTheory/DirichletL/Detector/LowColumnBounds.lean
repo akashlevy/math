@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowGaussEnergy
-
 namespace OAI
 
 noncomputable section

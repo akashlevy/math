@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CoarsePhysical
 import OAI.NumberTheory.DirichletL.PrimeRows.BufferedIntegral
-
 namespace OAI
 
 noncomputable section

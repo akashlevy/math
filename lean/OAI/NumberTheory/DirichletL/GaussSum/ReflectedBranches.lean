@@ -1,76 +1,24 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.NormalizedMass
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace CompletedGauss
 
 section
@@ -280,82 +228,10 @@ def vstarSchwartz (W : ℝ→ℂ) (a b : ℝ) (ha : 0<a)
     (hsupp : Function.support W⊆Set.Icc a b) (hW : ContDiff ℝ ∞ W) (x : ℝ) :
     vstarSchwartz W a b ha hsupp hW x=Vstar W x := rfl
 
-theorem completed_kernel_log_separation
-    {ι : Type*} [Fintype ι] (V : ι→ℝ→ℂ) (slope M : ι→ℝ)
-    (hM : ∀i,0≤M i) (hV : ∀i y,V i y≠0 → |y|≤M i)
-    (W : ℝ→ℂ) (a b : ℝ) (ha : 0<a)
-    (hsupp : Function.support W⊆Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    (A J : ℕ) :
-    ∃C : ℝ,0≤C ∧ ∀R : ℝ,0<R → ∃B : 𝓢(ℝ,ℂ),
-      (∀y : ι→ℝ,(∏i,V i (y i))*CubicReflectionKernel.paperKernel (Vstar W)
-          (R*Real.exp (∑i,slope i*y i))=
-        ∫t : ℝ,(∏i,V i (y i)*FourierBridge.logPhase t (slope i*y i))*B t) ∧
-      Integrable (fun t : ℝ => (1+‖t‖)^J*‖B t‖) volume ∧
-      (1+R)^A*(∫t : ℝ,(1+‖t‖)^J*‖B t‖)≤C ∧
-      (∀t : ℝ,(1+R)^A*(1+‖t‖)^J*‖B t‖≤C) := by
-  let S := vstarSchwartz W a b ha hsupp hW
-  obtain ⟨s,D,hD,hbound⟩ := CubicReflectionKernel.paperKernel_euler_source_uniform_weighted_bound
-    a b ha A (J+(volume : Measure ℝ).integrablePower)
-  have hF := CubicReflectionKernel.paperKernel_compact_source_smooth (Vstar W) a b ha
-    (Vstar_support W a b hsupp) (Vstar_contDiff W a b ha hsupp hW)
-  apply LocalLogFourier.coupled_positive_log_separation_envelope V (CubicReflectionKernel.paperKernel (Vstar W))
-    slope M hM hV hF A J (D*s.sup (schwartzSeminormFamily ℝ ℝ ℂ) S) (by positivity)
-  intro i hi x hx
-  have he : (S : ℝ→ℂ)=Vstar W := rfl
-  have hb := hbound S (Vstar_support W a b hsupp) i hi x hx
-  rw [he] at hb
-  exact hb
-
 end CompletedGauss
 
 namespace InitialMeanSquare
 open SecondPassArithmetic
-
-theorem initial_bin_invariant (Z H B R : ℝ) (j : SecondLogIndex)
-    (hZ : Z≠0) (hH : H≠0) (hB : B≠0) :
-    (secondLogK j*Real.exp 2)*R/(initialLogColumn Z B j*initialLogLabel j)=
-      (R/B)*(Z/H)*(H*secondLogK j*B^2/Z^2) := by
-  rw [initial_log_mass Z B hB j]
-  have hexp : Real.exp 2≠0 := (Real.exp_pos _).ne'
-  field_simp
-
-theorem initial_bin_invariant_le (Z H B R c : ℝ) (j : SecondLogIndex)
-    (hZ : 0<Z) (hH : 0<H) (hB : 0<B) (hR : R≤c*B) :
-    (secondLogK j*Real.exp 2)*R/(initialLogColumn Z B j*initialLogLabel j)≤
-      c*(Z/H)*(H*secondLogK j*B^2/Z^2) := by
-  rw [initial_bin_invariant Z H B R j hZ.ne' hH.ne' hB.ne']
-  have hr : R/B≤c := (div_le_iff₀ hB).mpr hR
-  have hk : 0<secondLogK j := normLogScale_pos _
-  exact mul_le_mul_of_nonneg_right
-    (mul_le_mul_of_nonneg_right hr (div_nonneg hZ.le hH.le)) (by positivity)
-
-theorem initial_small_radial_admissible (Z B R c σ θ deltaLoss : ℝ) (j : SecondLogIndex)
-    (hZ : 1≤Z) (hB : 0<B) (hR : R≤c*B) (hc : 0≤c) (hcZ : c≤Z^deltaLoss)
-    (hmargin : deltaLoss+θ≤σ-(1:ℝ)/40)
-    (hrad : Z^(1+σ)*secondLogK j*B^2/Z^2≤Z^θ) :
-    (secondLogK j*Real.exp 2)*R≤
-      initialLogColumn Z B j*initialLogLabel j*Z^(-(1:ℝ)/40) := by
-  have hZ0 : 0<Z := by linarith
-  have hH : 0<Z^(1+σ) := Real.rpow_pos_of_pos hZ0 _
-  have hm : 0 < initialLogColumn Z B j*initialLogLabel j := by
-    rw [initial_log_mass Z B hB.ne' j]
-    positivity
-  have he : Z/Z^(1+σ)=Z^(-σ) := by
-    calc
-      _ = Z^((1:ℝ)-(1+σ)) := by rw [Real.rpow_sub hZ0,Real.rpow_one]
-      _ = _ := by congr 1; ring
-  have hb := initial_bin_invariant_le Z (Z^(1+σ)) B R c j hZ0 hH hB hR
-  rw [he] at hb
-  rw [mul_comm (initialLogColumn Z B j*initialLogLabel j)]
-  apply (div_le_iff₀ hm).mp
-  apply hb.trans
-  calc
-    c*Z^(-σ)*(Z^(1+σ)*secondLogK j*B^2/Z^2) ≤ c*Z^(-σ)*Z^θ :=
-      mul_le_mul_of_nonneg_left hrad (mul_nonneg hc (Real.rpow_nonneg hZ0.le _))
-    _ ≤ Z^deltaLoss*Z^(-σ)*Z^θ := mul_le_mul_of_nonneg_right
-      (mul_le_mul_of_nonneg_right hcZ (Real.rpow_nonneg hZ0.le _)) (Real.rpow_nonneg hZ0.le _)
-    _ = Z^(deltaLoss-σ+θ) := by rw [←Real.rpow_add hZ0,←Real.rpow_add hZ0]; simp only [sub_eq_add_neg]
-    _ ≤ Z^(-(1:ℝ)/40) := Real.rpow_le_rpow_of_exponent_le hZ (by linarith)
 
 end InitialMeanSquare
 
@@ -545,8 +421,7 @@ theorem hyperbolicDifferentialIsometry (g : SL(2,ℂ)) : HyperbolicDifferentialI
 
 end CubicEisenstein
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ContDiff Manifold ENNReal MatrixGroups
+open scoped Manifold ENNReal MatrixGroups
 
 namespace CubicEisenstein
 
@@ -595,9 +470,6 @@ lemma euclideanScalarDirichletDensity_invariant (g : SL(2,ℂ)) (F : EuclideanSp
   exact h.symm
 
 end CubicEisenstein
-
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ContDiff Manifold ENNReal MatrixGroups
 
 namespace CubicEisenstein
 

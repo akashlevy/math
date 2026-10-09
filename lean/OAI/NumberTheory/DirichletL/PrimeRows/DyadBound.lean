@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.RowCount
-
 namespace OAI
 
 noncomputable section

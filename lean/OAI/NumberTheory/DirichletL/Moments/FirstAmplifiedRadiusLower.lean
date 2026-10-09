@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.AmplifiedRetainedRadius
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalDyadicRows
-
 namespace OAI
 
 noncomputable section

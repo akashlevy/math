@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DyadicEstimates
-
 namespace OAI
 
 noncomputable section

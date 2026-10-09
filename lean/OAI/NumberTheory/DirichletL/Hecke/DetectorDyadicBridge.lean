@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorFourierActual
 import OAI.NumberTheory.DirichletL.Hecke.DyadicSource
-
 namespace OAI
 
 noncomputable section

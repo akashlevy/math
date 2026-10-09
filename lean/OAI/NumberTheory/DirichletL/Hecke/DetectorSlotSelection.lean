@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRowCountCrossing
-
 namespace OAI
 
 noncomputable section
@@ -131,25 +130,6 @@ theorem selected_product_spike {α : Type*} (s : Finset α) (w g : α→ℝ)
     _ ≤ ∏ i∈T, ‖Q i‖^2 := Finset.prod_le_prod₀ (fun i hi => Real.rpow_nonneg hUp.le _)
       (fun i hi => hQ i (hTs hi) (hTpos i hi))
     _ = _ := by rw [norm_prod,Finset.prod_pow]
-
-theorem selected_product_with_decrement {α : Type*} (s : Finset α) (w g : α→ℝ)
-    (U δ mesh q z ν : ℝ) (hU : 1≤U) (hδ : 0≤δ) (hmesh : 0≤mesh)
-    (hw : ∀ i∈s, 0≤w i) (hwm : ∀ i∈s, w i≤mesh)
-    (hg : ∀ i∈s, g i≤δ/2) (hq : 0≤q) (hqδ : q≤δ/2) (hz : 0≤z) (hν : 0≤ν)
-    (hzs : z≤∑ i∈s, w i) (hmean : q*(∑ i∈s, w i)≤∑ i∈s, w i*max (g i) 0) :
-    ∃ T : Finset α, T⊆s ∧ (∀ i∈T, 0<g i) ∧
-      (∑ i∈T, w i)≤max 0 (z-ν) ∧
-      ∀ Q : α→ℂ, (∀ i∈s, 0<g i → U^(2*w i*g i)≤‖Q i‖^2) →
-        U^(2*q*z-2*q*ν-δ*mesh)≤‖∏ i∈T, Q i‖^2 := by
-  have hcap : max 0 (z-ν)≤z := max_le hz (by linarith)
-  obtain ⟨T,hTs,hTp,hTw,hTb⟩ := selected_product_spike s w g U δ mesh q (max 0 (z-ν))
-    hU hδ hmesh hw hwm hg hq hqδ (le_max_left _ _) (hcap.trans hzs) hmean
-  refine ⟨T,hTs,hTp,hTw,?_⟩
-  intro Q hQ
-  apply le_trans _ (hTb Q hQ)
-  apply Real.rpow_le_rpow_of_exponent_le hU
-  have hh := mul_le_mul_of_nonneg_left (le_max_right 0 (z-ν)) (show 0≤2*q by positivity)
-  nlinarith
 
 end SevenEighths.HeckeDetectorSlotSelection
 

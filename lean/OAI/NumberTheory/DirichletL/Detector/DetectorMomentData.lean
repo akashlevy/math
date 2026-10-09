@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.Moments
 import OAI.NumberTheory.DirichletL.PrimeRows.CanonicalRayCube
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.DescentHeight
 import OAI.NumberTheory.DirichletL.Descent.CanonicalLongSource
-
 namespace OAI
 
 noncomputable section

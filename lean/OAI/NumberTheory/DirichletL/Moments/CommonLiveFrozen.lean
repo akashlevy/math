@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.CommonHeightEnvelope
 import OAI.NumberTheory.DirichletL.Moments.CommonRadialSource
 import OAI.NumberTheory.DirichletL.Moments.CommonRadialCost
 import OAI.NumberTheory.DirichletL.Moments.RadialPointwiseUniform
-
 namespace OAI
 
 noncomputable section

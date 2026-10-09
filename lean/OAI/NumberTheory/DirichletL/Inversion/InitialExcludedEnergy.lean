@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialExcludedPolynomial
-
 namespace OAI
 
 noncomputable section

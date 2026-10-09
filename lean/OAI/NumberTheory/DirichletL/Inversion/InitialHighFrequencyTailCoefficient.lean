@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialHighFrequencyTailSource
-import OAI.NumberTheory.DirichletL.Inversion.InitialHighFrequencyTailGeometry
+import OAI.NumberTheory.DirichletL.Inversion.InitialHighFrequencyTailKernel
 import OAI.NumberTheory.DirichletL.Descent.FirstWholeMarkedColumns
-
 namespace OAI
 
 noncomputable section

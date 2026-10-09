@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GramInfiniteEstimate
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,7 @@
 import OAI.NumberTheory.DirichletL.Descent.WholeRetainedSource
-import OAI.NumberTheory.DirichletL.Descent.SecondDeletedMovingMass
-
+import OAI.NumberTheory.DirichletL.Descent.SecondDeletedPhysicalRecursive
+import OAI.NumberTheory.DirichletL.Descent.SecondBalancedSource
+import OAI.NumberTheory.DirichletL.Descent.SecondOriginalMass
 namespace OAI
 
 noncomputable section
@@ -18,14 +19,6 @@ def outerNorms (p : ι → O) {Jo Jn : ℕ} (x : MarkedSecondSource ι Jo Jn) : 
   ![primeProductNorm p x.second.sourceCommon, primeProductNorm p x.second.divisor,
     primeProductNorm p x.second.overlap, ‖eisEmbedding x.second.frequency‖^2]
 
-theorem outerNorms_eq_actual (p : ι → O) [∀ i,(Ideal.span {p i}).IsMaximal]
-    {Jo Jn : ℕ} (x : MarkedSecondSource ι Jo Jn) (Ψ : O →* ℂ) (m : O)
-    (ray : SecondRayIndex) (N M : Finset ι) (i : Fin 4) :
-    outerNorms p x i = secondActualNorms p (secondInheritedProfile p x Ψ m ray) N M
-      (Fin.castLE (by decide : 4 ≤ 6) i) := by
-  fin_cases i <;> simp [outerNorms,secondActualNorms,secondInheritedProfile,
-    actualMarkedSecondProfileData,expansionProfileData,primeSubsetGenerator_norm_eq_productNorm]
-
 omit [DecidableEq ι] in
 theorem outerNorms_ge_one (p : ι → O) (hp : ∀ i,p i ≠ 0)
     [∀ i,(Ideal.span {p i}).IsMaximal]
@@ -41,14 +34,6 @@ theorem outerNorms_ge_one (p : ι → O) (hp : ∀ i,p i ≠ 0)
 theorem frequency_ne_zero_of_gate (a : O) (R : ℝ) {k : O}
     (hk : k ∈ nonzeroChildFrequencyBall a R) : k ≠ 0 :=
   (Finset.mem_erase.mp hk).1
-
-theorem retained_frequency_ne_zero (p : ι → O) [∀ i,(Ideal.span {p i}).IsMaximal]
-    {Jo : ℕ} (pool : Finset ι) (parents : Finset (SecondParentSource ι Jo))
-    (R : SecondParentSource ι Jo → Finset ι → Finset ι → ℝ)
-    (label : SecondParentSource ι Jo → Finset ι → SecondExpansionData ι → κ)
-    (residual : Finset ι) (j : κ) (x : MarkedSecondSource ι Jo 0)
-    (hx : x ∈ retainedPool p pool parents R label residual j) : x.second.frequency ≠ 0 :=
-  frequency_ne_zero_of_gate _ _ (retainedPool_original_support p pool parents R label residual j x hx).2.2.2
 
 def dyadIndex (r : ℝ) : ℕ := ⌊Real.logb 2 r⌋₊
 def dyadScale (n : ℕ) : ℝ := 2^n
@@ -87,11 +72,6 @@ omit [DecidableEq ι] in
 theorem cell_subset (p : ι → O) {Jo Jn : ℕ} (source : Finset (MarkedSecondSource ι Jo Jn))
     (d : BlockIndex) : cell p source d ⊆ source := Finset.filter_subset _ _
 
-omit [DecidableEq ι] in
-theorem cell_inherits (p : ι → O) {Jo Jn : ℕ} (source : Finset (MarkedSecondSource ι Jo Jn))
-    (d : BlockIndex) (P : MarkedSecondSource ι Jo Jn → Prop) (hP : ∀ x∈source,P x) :
-    ∀ x∈cell p source d,P x := fun x hx => hP x (cell_subset p source d hx)
-
 theorem cell_conditions (p : ι → O) [∀ i,(Ideal.span {p i}).IsMaximal] {Jo Jn : ℕ} (source : Finset (MarkedSecondSource ι Jo Jn))
     (hs : ActualSecondSourceConditions p source) (d : BlockIndex) :
     ActualSecondSourceConditions p (cell p source d) := ActualSecondSourceConditions.mono p hs (cell_subset p source d)
@@ -106,13 +86,6 @@ theorem mem_keys_iff (p : ι → O) {Jo Jn : ℕ} (source : Finset (MarkedSecond
   · intro h
     obtain ⟨x,hx⟩ := Finset.nonempty_iff_ne_empty.mpr h
     exact ⟨x,(mem_cell p source d x).mp hx⟩
-
-omit [DecidableEq ι] in
-theorem cells_disjoint (p : ι → O) {Jo Jn : ℕ} (source : Finset (MarkedSecondSource ι Jo Jn))
-    {d e : BlockIndex} (h : d ≠ e) : Disjoint (cell p source d) (cell p source e) := by
-  apply Finset.disjoint_left.mpr
-  intro x hx hy
-  exact h (((mem_cell p source d x).mp hx).2.symm.trans ((mem_cell p source e x).mp hy).2)
 
 omit [DecidableEq ι] in
 theorem cell_ratios (p : ι → O) (hp : ∀ i,p i ≠ 0)
@@ -134,18 +107,6 @@ theorem sum_cells (p : ι → O) {Jo Jn : ℕ} (source : Finset (MarkedSecondSou
   exact (Finset.sum_fiberwise_of_maps_to (fun x hx => Finset.mem_image_of_mem (index p) hx) f).symm
 
 def scales (d : BlockIndex) : Fin 4 → ℝ := fun i => dyadScale (d i)
-
-theorem actual_cell_ratios (p : ι → O) (hp : ∀ i,p i ≠ 0)
-    [∀ i,(Ideal.span {p i}).IsMaximal] {Jo Jn : ℕ}
-    (source : Finset (MarkedSecondSource ι Jo Jn)) (hk : ∀ x∈source,x.second.frequency ≠ 0)
-    (d : BlockIndex) (x : MarkedSecondSource ι Jo Jn) (hx : x∈cell p source d)
-    (Ψ : O →* ℂ) (m : O) (ray : SecondRayIndex) (N M : Finset ι) (i : Fin 4) :
-    1 ≤ secondActualNorms p (secondInheritedProfile p x Ψ m ray) N M
-      (Fin.castLE (by decide : 4 ≤ 6) i) / scales d i ∧
-    secondActualNorms p (secondInheritedProfile p x Ψ m ray) N M
-      (Fin.castLE (by decide : 4 ≤ 6) i) / scales d i < 2 := by
-  rw [←outerNorms_eq_actual p x Ψ m ray N M i]
-  exact cell_ratios p hp source hk d x hx i
 
 theorem physical_source_partition
     (p : ι → O) (hp : ∀ i,p i ≠ 0) [∀ i,(Ideal.span {p i}).IsMaximal]
@@ -222,67 +183,12 @@ theorem cap_bin_bound (A : Fin 4 → ℝ) (hA : ∀ i,0 ≤ A i) (Z : ℝ) (hZ :
     _ ≤ _ := by linarith
 
 omit [DecidableEq ι] in
-theorem keys_card_polynomial (A : Fin 4 → ℝ) (hA : ∀ i,0 ≤ A i) :
-    ∃ C : ℝ,0 ≤ C ∧ ∀ (p : ι → O) (_hp : ∀ i,p i ≠ 0)
-      [∀ i,(Ideal.span {p i}).IsMaximal] {Jo Jn : ℕ}
-      (source : Finset (MarkedSecondSource ι Jo Jn)) (Z : ℝ), 2 ≤ Z →
-      (∀ x∈source,x.second.frequency ≠ 0) →
-      (∀ x∈source,∀ i,outerNorms p x i ≤ Z^(A i)) →
-      ((keys p source).card : ℝ) ≤ (1+C*Real.log Z)^4 := by
-  refine ⟨capConstant A,capConstant_nonneg A hA,?_⟩
-  intro p hp _ Jo Jn source Z hZ hk hcaps
-  have h := keys_card_le_product p hp source hk A Z hcaps
-  have hr : ((keys p source).card:ℝ) ≤ ∏ i : Fin 4,((dyadIndex (Z^(A i)):ℝ)+1) := by
-    exact_mod_cast h
-  apply hr.trans
-  calc
-    _ ≤ ∏ _i : Fin 4,(1+capConstant A*Real.log Z) :=
-      Finset.prod_le_prod₀ (fun _ _ => by positivity) (fun i _ => cap_bin_bound A hA Z hZ i)
-    _ = (1+capConstant A*Real.log Z)^4 := by simp
-
-omit [DecidableEq ι] in
 @[simp] theorem keys_empty (p : ι → O) (Jo Jn : ℕ) :
     keys p (∅ : Finset (MarkedSecondSource ι Jo Jn)) = ∅ := by simp [keys]
 
 omit [DecidableEq ι] in
 @[simp] theorem cell_empty (p : ι → O) (Jo Jn : ℕ) (d : BlockIndex) :
     cell p (∅ : Finset (MarkedSecondSource ι Jo Jn)) d = ∅ := by simp [cell]
-
-omit [DecidableEq ι] in
-theorem cell_empty_of_not_mem (p : ι → O) {Jo Jn : ℕ}
-    (source : Finset (MarkedSecondSource ι Jo Jn)) (d : BlockIndex) (hd : d ∉ keys p source) :
-    cell p source d = ∅ := by
-  exact Finset.not_nonempty_iff_eq_empty.mp (fun h => hd ((mem_keys_iff p source d).mpr h))
-
-theorem retained_cell_ratios (p : ι → O) (hp : ∀ i,p i ≠ 0)
-    [∀ i,(Ideal.span {p i}).IsMaximal] {Jo : ℕ}
-    (pool : Finset ι) (parents : Finset (SecondParentSource ι Jo))
-    (R : SecondParentSource ι Jo → Finset ι → Finset ι → ℝ)
-    (label : SecondParentSource ι Jo → Finset ι → SecondExpansionData ι → κ)
-    (residual : Finset ι) (j : κ) (d : BlockIndex) (x : MarkedSecondSource ι Jo 0)
-    (hx : x∈cell p (retainedPool p pool parents R label residual j) d)
-    (Ψ : O →* ℂ) (m : O) (ray : SecondRayIndex) (N M : Finset ι) (i : Fin 4) :
-    1 ≤ secondActualNorms p (secondInheritedProfile p x Ψ m ray) N M
-      (Fin.castLE (by decide : 4 ≤ 6) i)/scales d i ∧
-    secondActualNorms p (secondInheritedProfile p x Ψ m ray) N M
-      (Fin.castLE (by decide : 4 ≤ 6) i)/scales d i < 2 :=
-  actual_cell_ratios p hp _ (retained_frequency_ne_zero p pool parents R label residual j)
-    d x hx Ψ m ray N M i
-
-theorem retained_keys_card_polynomial (A : Fin 4 → ℝ) (hA : ∀ i,0 ≤ A i) :
-    ∃ C : ℝ,0 ≤ C ∧ ∀ (p : ι → O) (_hp : ∀ i,p i ≠ 0)
-      [∀ i,(Ideal.span {p i}).IsMaximal] {Jo : ℕ}
-      (pool : Finset ι) (parents : Finset (SecondParentSource ι Jo))
-      (R : SecondParentSource ι Jo → Finset ι → Finset ι → ℝ)
-      (label : SecondParentSource ι Jo → Finset ι → SecondExpansionData ι → κ)
-      (residual : Finset ι) (j : κ) (Z : ℝ), 2 ≤ Z →
-      (∀ x∈retainedPool p pool parents R label residual j,∀ i,outerNorms p x i ≤ Z^(A i)) →
-      ((keys p (retainedPool p pool parents R label residual j)).card:ℝ) ≤
-        (1+C*Real.log Z)^4 := by
-  obtain ⟨C,hC,h⟩ := keys_card_polynomial (ι:=ι) A hA
-  refine ⟨C,hC,?_⟩
-  intro p hp _ Jo pool parents R label residual j Z hZ hcaps
-  exact h p hp _ Z hZ (retained_frequency_ne_zero p pool parents R label residual j) hcaps
 
 end SevenEighths.InverseSecondSourceBlocks
 

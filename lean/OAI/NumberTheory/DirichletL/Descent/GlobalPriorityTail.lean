@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.GlobalPriorityTailMass
 import OAI.NumberTheory.DirichletL.Descent.GlobalPriorityTailCollapse
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondCanonicalChild
 import OAI.NumberTheory.DirichletL.Descent.SecondSourceProfile
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

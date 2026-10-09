@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstFamily
 import OAI.NumberTheory.DirichletL.Moments.CanonicalFirst
 import OAI.NumberTheory.DirichletL.Moments.Primitive
-
 namespace OAI
 
 noncomputable section

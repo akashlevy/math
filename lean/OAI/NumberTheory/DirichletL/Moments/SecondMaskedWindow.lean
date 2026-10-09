@@ -1,5 +1,5 @@
-import OAI.NumberTheory.DirichletL.Moments.SecondReducedEnergy
-
+import OAI.NumberTheory.DirichletL.Moments.SecondSixthSource
+import OAI.NumberTheory.DirichletL.Moments.SecondWindowSource
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.SlotChoices
 import OAI.NumberTheory.DirichletL.Reflection.OriginalMask
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -39,28 +38,6 @@ lemma slot_choice_mask_split (L : σ→Finset (Ideal Eis)) (T : Finset σ)
   rw [slot_choice_coprime_split,slot_choice_fixed_split]
   tauto
 
-def fixedTupleWeight (F : φ→Ideal Eis) (a : σ→Ideal Eis) (w : ℂ) : ℂ :=
-  if ∀ j i,a i≠F j then w else 0
-
-omit [Fintype σ] [DecidableEq σ] in
-lemma fixedTupleWeight_norm (F : φ→Ideal Eis) (a : σ→Ideal Eis) (w : ℂ) :
-    ‖fixedTupleWeight F a w‖≤‖w‖ := by
-  unfold fixedTupleWeight
-  split
-  · exact le_rfl
-  · simp
-
-lemma split_masked_column (L : σ→Finset (Ideal Eis)) (T : Finset σ)
-    (a : ∀ i : T,L i.val) (b : ∀ i : {i // i∉T},L i.val)
-    (F : φ→Ideal Eis) (K : Ideal Eis) (w v : ℂ) :
-    (if IsCoprime K (∏ i,((slotChoiceSplit L T).symm (a,b) i).val) ∧
-      ∀ j i,((slotChoiceSplit L T).symm (a,b) i).val≠F j then w*v else 0)=
-    if IsCoprime K (∏ i : {i // i∉T},(b i).val) ∧ ∀ j,∀ i : {i // i∉T},(b i).val≠F j then
-      (if IsCoprime K (∏ i : T,(a i).val) then fixedTupleWeight F (fun i : T => (a i).val) w*v else 0)
-    else 0 := by
-  simp only [slot_choice_mask_split]
-  simp only [fixedTupleWeight]
-  split_ifs <;> simp_all
 end
 end SevenEighths.InverseReflectedPhase
 

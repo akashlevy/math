@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.DetectorDictionaryFiber
 import OAI.NumberTheory.DirichletL.Moments.DetectorDictionarySupport
 import OAI.NumberTheory.DirichletL.Moments.DetectorDictionaryProfiles
-
 namespace OAI
 
 noncomputable section

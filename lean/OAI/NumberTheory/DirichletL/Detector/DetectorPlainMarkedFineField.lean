@@ -3,7 +3,6 @@ import OAI.NumberTheory.DirichletL.Moments.DetectorPlainMomentParameters
 import OAI.NumberTheory.DirichletL.Moments.DetectorPlainRelativeClass
 import OAI.NumberTheory.DirichletL.Moments.DetectorPlainProfileControl
 import OAI.NumberTheory.DirichletL.Hecke.DetectorDyadicGeometry
-
 namespace OAI
 
 noncomputable section
@@ -18,7 +17,6 @@ open CenteredMomentEnergyBands CenteredMomentEnergyState CenteredMomentInduction
 open CenteredMomentDetectorEnergyInitialState CenteredMomentDetectorPlainMarkedState
 open CenteredMomentDetectorPlainMomentParameters CenteredMomentNaturalFixedRaySource
 open CenteredMomentFiniteProfileExceptional CenteredMomentDetectorPlainFiberSource
-local notation "O"=>HeckeFamily.O
 
 def PositiveFineSourceInput {Δ:ℝ}{D:Parameters.HighData Δ}(S:SourceData D)(mesh:ℝ):Prop:=
   ∀bΦ:ℝ,0<bΦ→∃degree:ℕ,∃seminorms:Finset (ℕ×ℕ),

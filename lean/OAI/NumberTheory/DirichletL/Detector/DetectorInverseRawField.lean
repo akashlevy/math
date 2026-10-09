@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Dictionary.InverseRawReference
 import OAI.NumberTheory.DirichletL.Dictionary.InverseRawUniform
 import OAI.NumberTheory.DirichletL.Detector.FinalAssemblyCountParameters
 import OAI.NumberTheory.DirichletL.Detector.DetectorMomentData
-
 namespace OAI
 
 noncomputable section

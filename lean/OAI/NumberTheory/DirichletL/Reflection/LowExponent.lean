@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Reflection.LowWidth
 import OAI.NumberTheory.DirichletL.Reflection.SurvivingGate
 import OAI.NumberTheory.DirichletL.Reflection.RetainedCaps
 import OAI.NumberTheory.DirichletL.Detector.LowReflectedLength
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

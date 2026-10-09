@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.ReopenedZeroEnergy
 import OAI.NumberTheory.DirichletL.Descent.PhysicalExponents
-
 namespace OAI
 
 noncomputable section

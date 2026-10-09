@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.ClippedEnergy
-
 namespace OAI
 
 noncomputable section

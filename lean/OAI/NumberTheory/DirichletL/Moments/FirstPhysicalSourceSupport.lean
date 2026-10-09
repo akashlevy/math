@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalSourceNormalization
 import OAI.NumberTheory.DirichletL.Moments.OriginalCommonHarmonic
 import OAI.NumberTheory.DirichletL.Moments.SourceLowerSupport
 import OAI.NumberTheory.DirichletL.Moments.ExceptionalAmplitudePair
-
 namespace OAI
 
 noncomputable section
@@ -104,63 +103,6 @@ lemma reference_sqrt_lower (NC ND A₀ B₀ a T M:ℝ)
     Real.sqrt_mul (mul_nonneg hNC hND),Real.sqrt_sq (Real.exp_pos M).le,
     Real.sqrt_mul hA] at hsqrt
   nlinarith [hsqrt]
-
-theorem scalar_volume_bound (C D:Ideal O)(hC:Supported C)(E:Finset (CommonIndex C D))
-    (K A₀ B₀ a T M:ℝ)(hK:0<K)(hA:0<A₀)(hB:0<B₀)(ha:0≤a)(hT:0≤T)
-    (hl:a*T≤(C.absNorm:ℝ)*Real.exp M*A₀)
-    (hr:a*T≤(D.absNorm:ℝ)*Real.exp M*B₀):
-    ‖scalar C D hC E K A₀ B₀‖*(a*T)≤
-      Real.exp M*K*Real.sqrt ((C.absNorm:ℝ)*D.absNorm)/
-        (‖eisEmbedding (primeSubsetGenerator (fun P:CommonIndex C D=>P.val) E)‖^2*
-          ‖eisEmbedding (activeConductor C D)‖) := by
-  have hs:=reference_sqrt_lower (C.absNorm:ℝ) (D.absNorm:ℝ) A₀ B₀ a T M
-    (Nat.cast_nonneg _) (Nat.cast_nonneg _) hA.le hB.le ha hT hl hr
-  have hden:0<Real.sqrt A₀*Real.sqrt B₀:=mul_pos (Real.sqrt_pos.2 hA) (Real.sqrt_pos.2 hB)
-  have hratio:(a*T)/(Real.sqrt A₀*Real.sqrt B₀)≤Real.exp M*Real.sqrt ((C.absNorm:ℝ)*D.absNorm):=
-    (div_le_iff₀ hden).mpr hs
-  have hmu:‖inactiveWeight C D E‖≤1:=QuadraticInitialBound.norm_ideal_moebius_le_one _
-  rw [scalar_norm C D hC E K A₀ B₀ hK hA hB]
-  calc
-    _=(‖inactiveWeight C D E‖*K/
-        (‖eisEmbedding (primeSubsetGenerator (fun P:CommonIndex C D=>P.val) E)‖^2*
-          ‖eisEmbedding (activeConductor C D)‖))*((a*T)/(Real.sqrt A₀*Real.sqrt B₀)):=by ring
-    _≤(‖inactiveWeight C D E‖*K/
-        (‖eisEmbedding (primeSubsetGenerator (fun P:CommonIndex C D=>P.val) E)‖^2*
-          ‖eisEmbedding (activeConductor C D)‖))*(Real.exp M*Real.sqrt ((C.absNorm:ℝ)*D.absNorm)):=
-      mul_le_mul_of_nonneg_left hratio (by positivity)
-    _≤_:=by
-      have hh:=mul_le_mul_of_nonneg_right hmu (show 0≤K/(‖eisEmbedding
-        (primeSubsetGenerator (fun P:CommonIndex C D=>P.val) E)‖^2*
-          ‖eisEmbedding (activeConductor C D)‖)*(Real.exp M*Real.sqrt ((C.absNorm:ℝ)*D.absNorm)) by positivity)
-      convert hh using 1 <;> ring
-
-theorem original_scalar_volume {ι:Type*}[Fintype ι][DecidableEq ι]
-    (s:Input ι)(R seed:Ideal O)(a₁ a₂:ℝ)(ha₁:0<a₁)(ha₂:0<a₂)
-    (hs₁:∀x,s.W₁ x≠0→a₁≤x)(hs₂:∀x,s.W₂ x≠0→a₂≤x)
-    (m A:O)(t:ℝ)(S:Finset (Ideal O))
-    (C D:Ideal O)(hC:Supported C)(hD:Supported D)(E:Finset (CommonIndex C D))
-    (rows:Finset O)(W:𝓢(ℝ,ℂ))(V:Fin 4→ℝ→ℂ)(K K₀ H₀ A₀ B₀ M:ℝ)
-    (hK:0<K)(hA:0<A₀)(hB:0<B₀)(hwin:∀i y,V i y≠0→|y|≤M)
-    (hn:block s.η m A t S (CenteredMomentOriginalCommonHarmonic.coefficient s R seed)
-      C D hC hD E rows W V K K₀ H₀ A₀ B₀≠0):
-    ‖scalar C D hC E K A₀ B₀‖*volume s.toData≤
-      (Real.exp M/((∏i,s.lo i)*a₁*a₂))*K*Real.sqrt ((C.absNorm:ℝ)*D.absNorm)/
-        (‖eisEmbedding (primeSubsetGenerator (fun P:CommonIndex C D=>P.val) E)‖^2*
-          ‖eisEmbedding (activeConductor C D)‖) := by
-  let a:ℝ:=(∏i,s.lo i)*a₁*a₂
-  have ha:0<a:=mul_pos (mul_pos (Finset.prod_pos (fun i _=>s.lo_pos i)) ha₁) ha₂
-  have hV:0<volume s.toData:=volume_pos s.toData
-  obtain ⟨hl,hr⟩:=block_reference_lower s.η m A t S
-    (CenteredMomentOriginalCommonHarmonic.coefficient s R seed) C D hC hD E rows W V
-    K K₀ H₀ A₀ B₀ a (volume s.toData) M hA hB
-    (fun I hi=>original_column_lower s R seed I a₁ a₂ ha₁.le ha₂.le hs₁ hs₂ hi) hwin hn
-  have hh:=scalar_volume_bound C D hC E K A₀ B₀ a (volume s.toData) M hK hA hB ha.le hV.le hl hr
-  calc
-    _=(‖scalar C D hC E K A₀ B₀‖*(a*volume s.toData))/a:=by field_simp
-    _≤(Real.exp M*K*Real.sqrt ((C.absNorm:ℝ)*D.absNorm)/
-        (‖eisEmbedding (primeSubsetGenerator (fun P:CommonIndex C D=>P.val) E)‖^2*
-          ‖eisEmbedding (activeConductor C D)‖))/a:=div_le_div_of_nonneg_right hh ha.le
-    _=_:=by dsimp only [a];ring
 
 end SevenEighths.CenteredMomentFirstPhysicalSourceSupport
 

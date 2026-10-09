@@ -4,7 +4,6 @@ import OAI.NumberTheory.DirichletL.Reflection.CompletedCanonicalEnergy
 import OAI.NumberTheory.DirichletL.Reflection.SourceScaleCaps
 import OAI.NumberTheory.DirichletL.Reflection.ActualSizeCaps
 import OAI.NumberTheory.DirichletL.Reflection.OriginalCellBounds
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

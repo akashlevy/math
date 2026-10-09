@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.DetectorDictionary
 import OAI.NumberTheory.DirichletL.Detector.RayPoolGood
-
 namespace OAI
 
 noncomputable section

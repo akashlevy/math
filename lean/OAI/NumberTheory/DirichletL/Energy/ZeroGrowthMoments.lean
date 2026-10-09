@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Energy.ZeroGrowthChild
 import OAI.NumberTheory.DirichletL.Energy.ZeroReflectionSupport
 import OAI.NumberTheory.DirichletL.Energy.ReferenceLowControl
-
 namespace OAI
 
 noncomputable section

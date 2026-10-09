@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.GeometricTail
-
 namespace OAI
 
 noncomputable section

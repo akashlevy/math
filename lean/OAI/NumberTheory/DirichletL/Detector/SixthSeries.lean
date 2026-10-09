@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.SixthArray
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.Elements
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

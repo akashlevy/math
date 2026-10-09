@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.DivisorRectangle
-
 namespace OAI
 
 noncomputable section

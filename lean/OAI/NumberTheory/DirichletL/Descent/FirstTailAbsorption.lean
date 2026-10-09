@@ -1,5 +1,4 @@
-import OAI.NumberTheory.DirichletL.Descent.FirstCanonicalTail
-
+import OAI.NumberTheory.DirichletL.Descent.FirstMarkedColumns
 namespace OAI
 
 namespace SevenEighths.InverseMoment

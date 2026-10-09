@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstAmplifiedPaidAdmission
-
 namespace OAI
 
 noncomputable section

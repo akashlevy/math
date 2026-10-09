@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.AmplificationChildSourceCaps
 import OAI.NumberTheory.DirichletL.Moments.CommonRadialPointwise
 import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalPhysicalBudget
-
 namespace OAI
 
 noncomputable section
@@ -94,25 +93,6 @@ lemma exceptional_slot_bound (s : Input ι) (N : ℕ) (b A : ℝ)
       (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ (mass_nonneg s) hm 4) (by positivity))
       (sq_nonneg _)
 
-omit [DecidableEq ι] in
-theorem twice_controls (N : ℕ) (b : ℝ) (hb : 1≤b)
-    (s : Input ι) (hu : s.upper≤b) (hc : Fintype.card ι≤N)
-    (C R : Ideal O) (B : actualAllocations s.pools C) (τ : Character) (t : ℝ)
-    (Q : Ideal O) (k : ℕ)
-    (Bp : actualAllocations (child s C R B τ t).pools (Q^k)) (υ : Character) (v : ℝ) :
-    let d:=twiceChild s C R B τ t Q k Bp υ v;
-    profileCost d≤(2*(max 1 s.b₁*max 1 s.b₂)*b^N*mass s^2)*mass d^2 ∧
-    slotControl d.toData^2*frozenProfile d^2≤
-      ((128*b)^N)^2*(b^N)^2*mass s^4*mass d^2 := by
-  let d:=twiceChild s C R B τ t Q k Bp υ v
-  have hm : mass d≤mass s :=
-    (child_mass (child s C R B τ t) (Q^k) (R*C) Bp υ v).trans
-      (child_mass s C R B τ t)
-  have hn : Fintype.card (liveIndices Bp.val)≤N :=
-    (child_card Bp.val).trans ((child_card B.val).trans hc)
-  exact ⟨profile_cost_bound d N b (mass s) hb hu hn hm,
-    exceptional_slot_bound d N b (mass s) hb hu hn hm⟩
-
 def exceptionalConstant (N : ℕ) (b : ℝ) (J : ℕ) (Q : Ideal O) (K : ℝ) : ℝ :=
   K*(768*(6:ℝ)^(UniqueFactorizationMonoid.normalizedFactors Q).toFinset.card)*
     (1+2*Real.pi)^(4*J)*
@@ -137,25 +117,6 @@ lemma exceptional_factor_bound {wlo whi : ℝ}
   have hF : 0≤F := by dsimp [F]; positivity
   have hh:=mul_le_mul_of_nonneg_left h hF
   convert hh using 1 <;> simp only [profileFactor,exceptionalConstant,F] <;> ring
-
-omit [DecidableEq ι] in
-theorem twice_exceptional_factor {wlo whi : ℝ}
-    (S : Finset (ℕ×ℕ)) (p : Profiles wlo whi) (J : ℕ) (Qfix : Ideal O) (K : ℝ)
-    (hK : 0≤K) (N : ℕ) (b : ℝ) (hb : 1≤b)
-    (s : Input ι) (hu : s.upper≤b) (hc : Fintype.card ι≤N)
-    (C R : Ideal O) (B : actualAllocations s.pools C) (τ : Character) (t : ℝ)
-    (Q : Ideal O) (k : ℕ)
-    (Bp : actualAllocations (child s C R B τ t).pools (Q^k)) (υ : Character) (v : ℝ) :
-    let d:=twiceChild s C R B τ t Q k Bp υ v;
-    profileFactor S d p J Qfix K≤exceptionalConstant N b J Qfix K*
-      p.control S^2*(1+‖v‖)^(2*J)*mass s^4*mass d^2 := by
-  let d:=twiceChild s C R B τ t Q k Bp υ v
-  have hm : mass d≤mass s :=
-    (child_mass (child s C R B τ t) (Q^k) (R*C) Bp υ v).trans
-      (child_mass s C R B τ t)
-  have hn : Fintype.card (liveIndices Bp.val)≤N :=
-    (child_card Bp.val).trans ((child_card B.val).trans hc)
-  exact exceptional_factor_bound S p J Qfix K hK d N b (mass s) hb hu hn hm
 
 end SevenEighths.CenteredMomentFirstChildProfileControl
 

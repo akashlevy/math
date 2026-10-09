@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.SourceTriple
-
 namespace OAI
 
 noncomputable section

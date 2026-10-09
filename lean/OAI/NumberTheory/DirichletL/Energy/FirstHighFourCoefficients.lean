@@ -2,10 +2,9 @@ import OAI.NumberTheory.DirichletL.Energy.FirstHighExceptionalPowers
 import OAI.NumberTheory.DirichletL.Moments.FirstAmplifiedFourCoefficients
 import OAI.NumberTheory.DirichletL.Moments.FirstAmplifiedPowerBudget
 import OAI.NumberTheory.DirichletL.Moments.FirstCommonReferencePower
-import OAI.NumberTheory.DirichletL.Moments.FirstMixedExceptionalDeclared
+import OAI.NumberTheory.DirichletL.Moments.FirstMixedExceptionalLow
 import OAI.NumberTheory.DirichletL.Moments.FirstMixedDiagonal
 import OAI.NumberTheory.DirichletL.Moments.SuccessorPaidParameters
-
 namespace OAI
 
 noncomputable section

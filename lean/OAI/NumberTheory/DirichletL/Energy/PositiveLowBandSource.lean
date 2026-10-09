@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Energy.NaturalLowSourceBound
 import OAI.NumberTheory.DirichletL.Energy.ReferenceLowBands
 import OAI.NumberTheory.DirichletL.Energy.LowBandEmpty
-
 namespace OAI
 
 noncomputable section

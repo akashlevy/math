@@ -1,79 +1,24 @@
 import OAI.NumberTheory.DirichletL.Hecke.MobiusEulerCorrection
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical ContDiff Topology
 namespace CanonicalRowCompletion
 open ActualEisensteinCubic
 open ConcretePrimeRowBridge hiding O
@@ -102,59 +47,8 @@ theorem corrected_weighted_mellin_identity {q : ℕ} [NeZero q]
         LSeries (weightedCoeff χ S) s))*mellin W s := by ring
     _=mellin W s := by rw [he,one_mul]
 
-theorem dirichlet_open_strip_of_theta_models {q₀ : ℕ} [NeZero q₀]
-    (χ : DirichletCharacter ℂ q₀)
-    (S : Finset (Ideal ActualEisensteinCubic.O))
-    (hbad : fixedBadPrimes⊆S) (hSp : ∀P∈S,Prime P)
-    (ρ q levelBound : ℝ) (hρ : 0<ρ) (hq : 1<q) (hlevel : 1≤levelBound)
-    (hmodels : HasCanonicalThetaModels S (conjugateMonoid (normCharacter χ)) ρ q levelBound)
-    (z : ℂ) (hz : (23:ℝ)/24<z.re) (hz1 : z.re<1) : χ.LFunction z≠0 := by
-  let W : ℝ→ℂ:=ConcreteCompactWeight.weight z
-  have hW : ContDiff ℝ ∞ W:=ConcreteCompactWeight.weight_smooth z
-  have hWs : ∀x,x≤1 ∨ 2≤x→W x=0:=ConcreteCompactWeight.weight_support z
-  have hM:=weightedCompactMellin_analytic χ S hbad hSp ρ q levelBound hρ hq hlevel hmodels W hW hWs
-  have hE:=finiteEulerFactor_analytic χ S hSp ((23:ℝ)/24)
-  have hH : AnalyticOnNhd ℂ (SmoothMobiusCorrection.eulerCorrection χ S)
-      {s : ℂ | (23:ℝ)/24<s.re} :=
-    (SmoothMobiusCorrection.eulerCorrection_analytic χ S).mono (by intro s hs;change 0<s.re;change (23:ℝ)/24<s.re at hs;linarith)
-  have hWanalytic:=compact_weight_mellin_analytic W hW hWs ((23:ℝ)/24)
-  have hnotboth : χ≠1 ∨ baseChangeChar χ≠1 := by
-    by_cases hc : χ=1
-    · exact Or.inr (baseChangeChar_ne_one_of_one χ hc)
-    · exact Or.inl hc
-  have hzneq : z≠1 := by intro he;subst z;norm_num at hz1
-  exact (pair_zero_free_of_identity_gt_two χ (baseChangeChar χ) hnotboth
-    ((23:ℝ)/24) (by norm_num)
-    (fun s=>(finiteEulerFactor χ S s*SmoothMobiusCorrection.eulerCorrection χ S s)*
-      mellin (fun Z : ℝ=>weightedCompactSum χ S W Z⁻¹) (-s))
-    (mellin W) ((hE.mul hH).mul hM) hWanalytic
-    (corrected_weighted_mellin_identity χ S hSp W hW hWs)
-    z hz hzneq (ConcreteCompactWeight.weight_mellin_ne_zero z)).1
-
-theorem dirichlet_nonvanishing_of_theta_models {q₀ : ℕ} [NeZero q₀]
-    (χ : DirichletCharacter ℂ q₀)
-    (S : Finset (Ideal ActualEisensteinCubic.O))
-    (hbad : fixedBadPrimes⊆S) (hSp : ∀P∈S,Prime P)
-    (ρ q levelBound : ℝ) (hρ : 0<ρ) (hq : 1<q) (hlevel : 1≤levelBound)
-    (hmodels : HasCanonicalThetaModels S (conjugateMonoid (normCharacter χ)) ρ q levelBound)
-    (z : ℂ) (hz : (23:ℝ)/24<z.re) (hpole : ¬(χ=1 ∧ z=1)) : χ.LFunction z≠0 := by
-  by_cases hz1 : z.re<1
-  · exact dirichlet_open_strip_of_theta_models χ S hbad hSp ρ q levelBound hρ hq hlevel hmodels z hz hz1
-  · exact ShortDraft.dirichlet_target_of_one_le_re q₀ χ z (le_of_not_gt hz1) hpole
-
-theorem dirichletTarget_of_theta_models
-    (hmodels : ∀(q₀ : ℕ) [NeZero q₀] (χ : DirichletCharacter ℂ q₀),
-      ∃S : Finset (Ideal ActualEisensteinCubic.O),fixedBadPrimes⊆S ∧ (∀P∈S,Prime P) ∧
-      ∃ρ q levelBound : ℝ,0<ρ ∧ 1<q ∧ 1≤levelBound ∧
-        HasCanonicalThetaModels S (conjugateMonoid (normCharacter χ)) ρ q levelBound) :
-    ShortDraft.DirichletTarget := by
-  intro q₀ _ χ z hz hpole
-  obtain ⟨S,hbad,hSp,ρ,q,level,hρ,hq,hl,hm⟩:=hmodels q₀ χ
-  exact dirichlet_nonvanishing_of_theta_models χ S hbad hSp ρ q level hρ hq hl hm z hz hpole
-
 end CanonicalRowCompletion
 
-open scoped BigOperators Classical
 namespace QuadraticAllOddCRT
 
 section
@@ -286,7 +180,6 @@ lemma lambdaQuadraticCharacter_periodic (x y : ActualEisensteinCubic.O) (h : (4:
 
 end QuadraticAllOddCRT
 
-open scoped BigOperators Classical
 namespace CanonicalRowCompletion
 open ActualEisensteinCubic
 open CompletedGauss hiding O
@@ -574,8 +467,7 @@ theorem eisensteinRemainder_axis_termwise (a b : ℝ) (ha : 1<a) (hab : a<b)
 
 end CubicEisenstein
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ContDiff Manifold
+open scoped Manifold
 
 namespace CubicEisenstein
 

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseMarkedReferenceDeletedEnergy
 import OAI.NumberTheory.DirichletL.Dictionary.InverseMarkedPhysicalRows
-
 namespace OAI
 
 noncomputable section

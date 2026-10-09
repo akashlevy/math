@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.PhysicalCRT
 import OAI.NumberTheory.DirichletL.CubicSieve.Gauss
 import OAI.NumberTheory.DirichletL.Detector.PairPhase
-
 namespace OAI
 
 noncomputable section

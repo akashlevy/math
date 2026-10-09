@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalSourceWindowEnergy
-
 namespace OAI
 
 noncomputable section

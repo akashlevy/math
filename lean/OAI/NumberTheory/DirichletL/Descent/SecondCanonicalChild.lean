@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.ActualSecondEnergy
 import OAI.NumberTheory.DirichletL.Descent.SecondFixedFamily
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

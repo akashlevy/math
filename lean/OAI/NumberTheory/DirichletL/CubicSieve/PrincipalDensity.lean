@@ -1,74 +1,23 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.RetainedDualBounds
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 namespace SecondPassIntegration
 
@@ -133,7 +82,6 @@ theorem childDensity_elementary_supported {ι : Type*} [DecidableEq ι]
 
 end SecondPassIntegration
 
-open scoped BigOperators Classical SchwartzMap
 namespace CanonicalQuadraticSieve
 
 section
@@ -276,8 +224,7 @@ theorem maskedSource_error_uniform (l : ℕ) :
   exact actual_pair_error_ideal_bound rows cols hr hc B N hB hN hrows hcols a E hE error herr
 
 section
-open ActualEisensteinCubic ConcreteTraceCRT ConcretePrimeRowBridge EisensteinSchwartzPoisson
-open TruncatedPrincipalPoisson IdealCoprimeSieveOperator IdealMobiusDivisorSum
+open IdealMobiusDivisorSum
 
 def sourcePrincipalMajorant {n : Type} [Fintype n]
     (s : Finset (ℕ×ℕ)) (C : ℝ) (l : ℕ)
@@ -374,9 +321,6 @@ lemma sourcePrincipalMajorant_mono {n : Type} [Fintype n]
   gcongr
 
 end
-
-open ActualEisensteinCubic ConcreteTraceCRT ConcretePrimeRowBridge EisensteinSchwartzPoisson
-open TruncatedPrincipalPoisson IdealCoprimeSieveOperator
 
 lemma maskedPrincipalSourceDifference_dyadic {n : Type} [Fintype n] [DecidableEq n]
     (G : Ideal O) (W : 𝓢(ℝ,ℂ)) (S : Finset (Ideal O)) (K : ℝ)
@@ -556,14 +500,7 @@ theorem actualPrincipalDifference_densityColumn {n : Type*} [Fintype n]
     ring
   · simp only [hjk,ite_false,mul_zero,sub_self]
 
-theorem primePoolDensity_common_conductor (I J G : Ideal O)
-    (hI : I ≠ 0) (hJ : J ≠ 0) (hG : G ≠ 0)
-    (hIJ : IsCoprime I J) (hGI : IsCoprime G I) (hGJ : IsCoprime G J) :
-    primePoolDensity (G*(I*J)) = primePoolDensity G*(primePoolDensity I*primePoolDensity J) := by
-  rw [primePoolDensity_mul G (I*J) hG (mul_ne_zero hI hJ) (hGI.mul_right hGJ),
-    primePoolDensity_mul I J hI hJ hIJ]
-
-open ActualEisensteinCubic ConcretePrimeRowBridge CompletedGauss IdealMobiusDivisorSum
+open ConcretePrimeRowBridge CompletedGauss IdealMobiusDivisorSum
 
 def densityPairSum {n : Type} [Fintype n] (cols : n → Ideal O) (a : n → ℂ)
     (P : Ideal O → Ideal O → ℂ) : ℂ :=

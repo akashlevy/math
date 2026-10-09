@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.GlobalPriorityFullBranches
-
 namespace OAI
 
 noncomputable section

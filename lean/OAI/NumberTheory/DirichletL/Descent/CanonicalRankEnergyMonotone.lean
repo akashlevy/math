@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalRankExistenceData
-
 namespace OAI
 
 noncomputable section

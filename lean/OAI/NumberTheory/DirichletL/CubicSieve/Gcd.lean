@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.Dyadic
 import OAI.NumberTheory.DirichletL.Descent.IdealMasks
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

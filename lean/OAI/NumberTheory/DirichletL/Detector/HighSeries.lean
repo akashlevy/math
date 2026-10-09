@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.SourceBounds
-
 namespace OAI
 
 noncomputable section
@@ -105,9 +104,6 @@ theorem bareIdealHighSummand_summable (η : HeckeFamily.Character) (u : O) (x w 
   apply Summable.of_nonneg_of_le (fun _=>norm_nonneg _) _ hall
   intro p
   simpa only [mul_assoc] using bareIdealHighSummand_norm_le η u x w z p.1.1 p.1.2 p.2.1 p.2.2
-
-def bareIdealHighSeries (η : HeckeFamily.Character) (u : O) (x w z : ℂ) : ℂ :=
-  ∑' p : (Id×Id)×(Id×Id), bareIdealHighSummand η u x w z p.1.1 p.1.2 p.2.1 p.2.2
 
 end SevenEighths.ProbePhysical
 end

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialCommonProfile
 import OAI.NumberTheory.DirichletL.Inversion.InitialOverlapSource
-
 namespace OAI
 
 noncomputable section

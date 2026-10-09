@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GaussianCoupled
-
 namespace OAI
 
 noncomputable section
@@ -30,16 +29,6 @@ lemma logPhase_neg_argument (t y : ℝ) : logPhase t (-y)=logPhase (-t) y := by
   congr 1
   push_cast
   ring
-
-lemma gaussianSlot_product {ι : Type*} [Fintype ι] (W : ι→ℝ→ℂ)
-    (x : ℝ) (hx : 0<x) (q : ι→ℝ) (hq : ∀i,0<q i) (t : ℝ) :
-    (∏i : Option ι,gaussianSlotWindow W i (gaussianSlotPoint x q i)*
-      logPhase t (gaussianSlotSlope i*gaussianSlotPoint x q i))=
-      gaussianAnnulus x*logPhase t (Real.log x)*
-        ∏i,W i (q i)*logPhase (-t) (Real.log (q i)) := by
-  simp only [Fintype.prod_option,gaussianSlotWindow,gaussianSlotPoint,gaussianSlotSlope,
-    one_mul,neg_one_mul,Real.exp_log hx,logPhase_neg_argument]
-  simp_rw [Real.exp_log (hq _)]
 
 lemma gaussianFixedWindow_Vstar_twist (t x : ℝ) (hx : 0<x) :
     Vstar (CompletedHeight.normTwistedSource gaussianFixedWindow t) x=

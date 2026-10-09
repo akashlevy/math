@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CubeSlotExponent
 import OAI.NumberTheory.DirichletL.Detector.CentralCubeNorm
-
 namespace OAI
 
 noncomputable section

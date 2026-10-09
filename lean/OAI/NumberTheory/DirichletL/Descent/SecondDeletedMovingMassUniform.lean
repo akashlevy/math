@@ -1,9 +1,7 @@
-import OAI.NumberTheory.DirichletL.Descent.SecondDeletedMovingMass
-import OAI.NumberTheory.DirichletL.Descent.SecondDeletedMovingEnergyUniform
-import OAI.NumberTheory.DirichletL.Descent.SecondDeletedMovingEnergy
-import OAI.NumberTheory.DirichletL.Descent.SecondOriginalMass
+import OAI.NumberTheory.DirichletL.Descent.SecondDeletedPhysicalRecursive
 import OAI.NumberTheory.DirichletL.Descent.SecondBalancedSource
-
+import OAI.NumberTheory.DirichletL.Descent.SecondOriginalMass
+import OAI.NumberTheory.DirichletL.Descent.SecondDeletedMovingEnergyUniform
 namespace OAI
 
 namespace SevenEighths.InverseMoment

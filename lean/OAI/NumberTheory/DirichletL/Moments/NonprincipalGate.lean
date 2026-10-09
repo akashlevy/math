@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondReducedPredicate
-
 namespace OAI
 
 noncomputable section
@@ -50,12 +49,6 @@ theorem actual_row_nonprincipal (η χ:Character) (Q:Ideal O) (m A z:O)
     (hrow:∀n:O,elementCoeff χ n=rowTwist (elementHom η) m 1 (A*z) n)
     (hex:¬FixedInducingRow η Q m A z) : χ.residue≠1 :=
   fun h=>hex (principal_row_fixed η χ Q m A z hrow h)
-
-theorem nonexceptional_row_nonprincipal (η χ:Character) (ξ:RayCharacter)
-    (Q:Ideal O) (m A z:O)
-    (hrow:∀n:O,elementCoeff χ n=rowTwist (elementHom (childCharacter η ξ)) m 1 (A*z) n)
-    (hex:nonexceptional η ξ Q m A z) : χ.residue≠1 :=
-  actual_row_nonprincipal (childCharacter η ξ) χ Q m A z hrow hex.2
 
 end SevenEighths.CenteredMomentNonprincipalGate
 

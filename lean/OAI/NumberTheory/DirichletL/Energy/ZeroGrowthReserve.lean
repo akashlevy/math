@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.ReferenceScalarBounds
-
 namespace OAI
 
 noncomputable section
@@ -60,34 +59,6 @@ theorem ledger_bound (Mcap Bmask bΦ L d loss defect xi saving ε:ℝ)
     _≤A^d*B*Z^(s.width+ε)+A^(2*d)*Z^(s.width+ε):=by
       simpa only [mul_add] using add_le_add hreflect herr
     _=_:=by ring
-
-theorem exists_growth_reserve (ε Mcap Bmask bΦ Loriginal:ℝ)
-    (hε:0<ε)(hM:0≤Mcap)(hB:0≤Bmask):
-    ∃d L saving C:ℝ,0<d ∧ 0<L ∧ 0<saving ∧ 0<C ∧
-      Loriginal≤L ∧ Mcap+Bmask+d+d≤L ∧
-      ∀Z:ℝ,1≤Z→∀s:NaturalState Z Bmask bΦ,s.width≤Mcap→
-      (s.puncture.radical.absNorm:ℝ)^d*
-        ((max 1 ((fixedConductorFactor:ℝ)*bΦ*Z^s.width))^d*
-          (1+2*(L*Real.log Z))*Z^(s.width+d+d+d)+
-         (max 1 ((fixedConductorFactor:ℝ)*bΦ*Z^s.width))^(2*d)*
-          Z^(-2*saving)*max 1 s.radial.scale*Z^L)≤C*Z^(s.width+ε):=by
-  let d:=ε/(8*(Bmask+Mcap+4))
-  let L:=max Loriginal (Mcap+Bmask+d+d)+1
-  let saving:=L+Bmask*d+2*Mcap*d+1
-  have hd:0<d:=by dsimp [d];positivity
-  have hL:0<L:=by dsimp only [L];linarith [le_max_right Loriginal (Mcap+Bmask+d+d)]
-  have hsave:0<saving:=by dsimp only [saving];positivity
-  have hmain:d*(Bmask+Mcap+1)+d+d+d≤ε:=by
-    have heq:d*(Bmask+Mcap+4)=ε/8:=by
-      dsimp only [d]
-      field_simp
-    nlinarith
-  have herr:Bmask*d+Mcap*(2*d)-2*saving+L≤ε:=by
-    dsimp only [saving]
-    nlinarith [mul_nonneg hB hd.le,mul_nonneg hM hd.le]
-  obtain ⟨C,hC,hbound⟩:=ledger_bound Mcap Bmask bΦ L d d d d saving ε hM hB hL.le hd hmain herr
-  exact ⟨d,L,saving,C,hd,hL,hsave,hC,by dsimp only [L];linarith [le_max_left Loriginal (Mcap+Bmask+d+d)],
-    by dsimp only [L];linarith [le_max_right Loriginal (Mcap+Bmask+d+d)],hbound⟩
 
 end SevenEighths.CenteredMomentEnergyZeroGrowthReserve
 

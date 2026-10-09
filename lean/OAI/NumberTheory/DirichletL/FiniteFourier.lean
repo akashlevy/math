@@ -4,7 +4,6 @@ import Mathlib.RingTheory.Ideal.Span
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.LinearCombination
 import Mathlib.Tactic.ByContra
-
 namespace OAI
 
 open scoped BigOperators
@@ -26,13 +25,6 @@ theorem IsPrimitiveOnIdeals.inv {χ : MulChar R ℂ} (hχ : IsPrimitiveOnIdeals 
   intro hinv
   apply hχu
   simpa only [← MulChar.star_apply', star_star, star_one] using congrArg star hinv
-
-theorem primitiveOnIdeals_of_field {F : Type*} [Field F]
-    (χ : MulChar F ℂ) (hχ : χ ≠ 1) : IsPrimitiveOnIdeals χ := by
-  intro I hI
-  have htop : I = ⊤ := (Ideal.eq_bot_or_top I).resolve_left hI
-  obtain ⟨u, hu⟩ := MulChar.ne_one_iff.mp hχ
-  exact ⟨u, by rw [htop]; trivial, hu⟩
 
 def transform (ψ : AddChar R ℂ) (f : R → ℂ) (a : R) : ℂ :=
   ∑ x : R, f x * ψ (a * x)
@@ -134,26 +126,6 @@ theorem primitive_gaussSum_norm_sq (χ : MulChar R ℂ)
   rw [Complex.sq_norm, Complex.normSq_eq_conj_mul_self]
   simpa only [starRingEnd_apply, mul_comm, Complex.ofReal_natCast] using
     primitive_gaussSum_mul_conjugate χ hχ ψ hψ
-
-theorem primitive_gaussSum_norm (χ : MulChar R ℂ)
-    (hχ : IsPrimitiveOnIdeals χ) (ψ : AddChar R ℂ) (hψ : ψ.IsPrimitive) :
-    ‖gaussSum χ ψ‖ = Real.sqrt (Fintype.card R : ℝ) := by
-  rw [← primitive_gaussSum_norm_sq χ hχ ψ hψ, Real.sqrt_sq (norm_nonneg _)]
-
-theorem primitive_gaussSum_ne_zero (χ : MulChar R ℂ)
-    (hχ : IsPrimitiveOnIdeals χ) (ψ : AddChar R ℂ) (hψ : ψ.IsPrimitive) :
-    gaussSum χ ψ ≠ 0 := by
-  intro hzero
-  have h := primitive_gaussSum_mul_conjugate χ hχ ψ hψ
-  rw [hzero, zero_mul] at h
-  exact (Nat.cast_ne_zero.mpr Fintype.card_ne_zero) h.symm
-
-theorem primitive_character_expansion (χ : MulChar R ℂ)
-    (hχ : IsPrimitiveOnIdeals χ) (ψ : AddChar R ℂ) (hψ : ψ.IsPrimitive) (a : R) :
-    χ a = (∑ x : R, χ⁻¹ x * ψ (a * x)) / gaussSum χ⁻¹ ψ := by
-  apply (eq_div_iff (primitive_gaussSum_ne_zero χ⁻¹ hχ.inv ψ hψ)).mpr
-  simpa only [inv_inv, transform] using
-    (transform_primitive_character χ⁻¹ hχ.inv ψ a).symm
 
 end
 

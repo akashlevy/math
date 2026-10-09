@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstFrequency
 import OAI.NumberTheory.DirichletL.Moments.Scale
-
 namespace OAI
 
 noncomputable section

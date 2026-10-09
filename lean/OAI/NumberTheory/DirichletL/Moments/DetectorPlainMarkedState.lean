@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.DetectorPlainStateDictionary
 import OAI.NumberTheory.DirichletL.Moments.DetectorPlainCapacity
 import OAI.NumberTheory.DirichletL.Energy.Bands
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRawBranches
-
 namespace OAI
 
 noncomputable section
@@ -85,36 +84,6 @@ theorem marked_capacity [NeZero M]
     length U (U^F.m)+length U (U^F.m)+6*κ*(∑s:selected,F.widths s.val)≤1+δ := by
   rw [plain_length_eq F hU,Finset.sum_coe_sort]
   linarith
-
-theorem selected_widths (F:Fiber M H Label Slot U a ε tstar T allowance i)
-    (selected:Finset Slot)(hselected:selected⊆F.slots):
-    (∀s:selected,0<F.widths s.val) ∧ (∀s:selected,F.widths s.val≤F.mesh) :=
-  ⟨fun s=>F.widths_pos s.val (hselected s.property),
-    fun s=>F.widths_mesh s.val (hselected s.property)⟩
-
-theorem source_profile_uniform (S:ProbeFinalAssembly.SourceData D)(Hsemin:Finset (ℕ×ℕ)):
-    ∃J:ℕ,∃C:ℝ,0<C ∧ ∀{ι:Type*}(ζ:ι→ℂ)(height:ℝ),0≤height→
-      (∀s,(ζ s).re=17/50)→(∀s,|(ζ s).im|≤height)→∀s,
-      Hsemin.sup (schwartzSeminormFamily ℝ ℝ ℂ) (slotSchwartz S (ζ s))≤
-        C*(1+height)^J :=
-  slotSchwartz_height_uniform S Hsemin
-
-theorem source_relative_fixed_gates (S:ProbeFinalAssembly.SourceData D)(η:Character):
-    internalQ (sourceFixedIdeal S) η≠0 ∧
-    internalQ (sourceFixedIdeal S) η≤S.modulus ∧
-    internalQ (sourceFixedIdeal S) η≤η.inverse.modulus ∧
-    internalQ (sourceFixedIdeal S) η≤Ideal.span {(72:O)} :=
-  source_fixed_gates S η
-
-theorem fixed_window_data (S:ProbeFinalAssembly.SourceData D):
-    Function.support (fun x=>conj (S.W x))⊆Set.Icc (1:ℝ) 2 ∧
-    ContDiff ℝ ∞ (fun x=>conj (S.W x)) ∧ ∀x,‖conj (S.W x)‖≤1 := by
-  refine ⟨conjugate_source_support S,
-    Complex.conjCLE.contDiff.comp (S.W.smooth ⊤),?_⟩
-  intro x
-  rw [RCLike.norm_conj,S.complex_eq,Complex.norm_real,Real.norm_eq_abs,
-    abs_of_nonneg (S.bounded x).1]
-  exact (S.bounded x).2
 
 theorem source_batch_marked_initial (S:ProbeFinalAssembly.SourceData D):
     ∃bΦ:ℝ,0<bΦ ∧ ∀η:Character,∀δ:ℝ,0<δ→

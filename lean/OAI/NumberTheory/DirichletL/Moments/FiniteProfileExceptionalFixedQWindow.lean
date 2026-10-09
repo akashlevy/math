@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.CommonWindowColumn
 import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalCommonHeight
 import OAI.NumberTheory.DirichletL.Moments.LogDyadic
 import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalFixedQCanonical
-
 namespace OAI
 
 noncomputable section
@@ -14,7 +13,7 @@ open HeckeFamily CanonicalQuadraticSieve ConcretePrimeRowBridge UniqueFactorizat
 open CenteredMomentCommonRadialData CenteredMomentCommonHeightEnvelope
 open CenteredMomentCommonExceptionalCost
 open CenteredMomentCommonPairedSource CenteredMomentExceptionalAmplitudePair
-open CenteredMomentExceptionalSourceShell CenteredMomentCommonWindowColumn
+open CenteredMomentCommonWindowColumn
 open CenteredMomentHeckeColumnWindow CenteredMomentSmooth
 open CenteredMomentSecondHeightFamily CenteredMomentLogDyadic
 open CenteredMomentSecondCanonical

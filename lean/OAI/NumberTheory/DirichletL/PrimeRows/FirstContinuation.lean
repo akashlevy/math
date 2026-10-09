@@ -1,7 +1,7 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.Continuation
-import OAI.NumberTheory.DirichletL.PrimeRows.FirstAnalytic
+import OAI.NumberTheory.DirichletL.PrimeRows.FirstProduct
+import OAI.NumberTheory.DirichletL.Detector.HighRowsFirstHolomorphic
 import OAI.NumberTheory.DirichletL.Detector.HighRowsFirstRamified
-
 namespace OAI
 
 noncomputable section
@@ -107,53 +107,6 @@ theorem continuedCorrection_first_subpower (ε : ℝ) (hε : 0<ε) :
   rw [continuedCorrection,norm_mul]
   apply (mul_le_mul hR hnorm (norm_nonneg _) (by positivity)).trans
   exact le_of_eq (by ring)
-
-theorem continuedCorrection_first_analytic_x (eps : ℝ) (S : Finset (Ideal O))
-    (hS : SourceExclusions S) (hfirst : FirstTail eps S)
-    (η : Character) (u : FreeRow) (w z : ℂ)
-    (hw : -(1/100:ℝ)≤w.re) (hz : (17/50:ℝ)≤z.re) :
-    AnalyticOnNhd ℂ (fun x=>continuedCorrection S hS η u x w z)
-      {x : ℂ | max (51/100:ℝ) (1+eps-w.re)<x.re} := by
-  apply AnalyticOnNhd.mul _ (unramifiedProduct_first_analytic_x eps S hfirst η u w z hw hz)
-  apply Finset.analyticOnNhd_fun_prod
-  intro P hP
-  apply (ramifiedCorrection_first_analytic_x η u P.val _
-    (by exact_mod_cast hS.tail.norm_four P.val (Finset.mem_filter.mp P.property).2)
-    w z (by linarith)).mono
-  intro x hx
-  change max (51/100:ℝ) (1+eps-w.re)<x.re at hx
-  have hh := (lt_of_le_of_lt (le_max_left (51/100:ℝ) (1+eps-w.re)) hx)
-  change (1/2:ℝ)<x.re
-  linarith
-
-theorem continuedCorrection_first_analytic_w (eps : ℝ) (S : Finset (Ideal O))
-    (hS : SourceExclusions S) (hfirst : FirstTail eps S)
-    (η : Character) (u : FreeRow) (x z : ℂ)
-    (hx : (51/100:ℝ)≤x.re) (hz : (17/50:ℝ)≤z.re) :
-    AnalyticOnNhd ℂ (fun w=>continuedCorrection S hS η u x w z)
-      {w : ℂ | max (-(1/100:ℝ)) (1+eps-x.re)<w.re} := by
-  apply AnalyticOnNhd.mul _ (unramifiedProduct_first_analytic_w eps S hfirst η u x z hx hz)
-  apply Finset.analyticOnNhd_fun_prod
-  intro P hP
-  exact (ramifiedCorrection_first_analytic_w η u P.val _
-    (by exact_mod_cast hS.tail.norm_four P.val (Finset.mem_filter.mp P.property).2)
-    x z (by linarith) (by linarith)).differentiableOn.analyticOnNhd (Complex.isOpen_re_gt _)
-
-theorem continuedCorrection_first_analytic_z (eps : ℝ) (S : Finset (Ideal O))
-    (hS : SourceExclusions S) (hfirst : FirstTail eps S)
-    (η : Character) (u : FreeRow) (x w : ℂ)
-    (hx : (51/100:ℝ)≤x.re) (hw : -(1/100:ℝ)≤w.re) (hxw : 1+eps≤x.re+w.re) :
-    AnalyticOnNhd ℂ (fun z=>continuedCorrection S hS η u x w z) {z : ℂ | (17/50:ℝ)<z.re} := by
-  apply AnalyticOnNhd.mul _ (unramifiedProduct_first_analytic_z eps S hfirst η u x w hx hw hxw)
-  apply Finset.analyticOnNhd_fun_prod
-  intro P hP
-  apply (ramifiedCorrection_first_analytic_z η u P.val _
-    (by exact_mod_cast hS.tail.norm_four P.val (Finset.mem_filter.mp P.property).2)
-    x w (by linarith)).mono
-  intro z hz
-  change (17/50:ℝ)<z.re at hz
-  change (1/3:ℝ)<z.re
-  linarith
 
 end SevenEighths.ProbeHighRowFamily
 

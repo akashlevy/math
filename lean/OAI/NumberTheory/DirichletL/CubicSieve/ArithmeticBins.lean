@@ -1,74 +1,23 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.PoissonComparison
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
 namespace SecondPassArithmetic
 
@@ -151,92 +100,6 @@ theorem globalBinRadial_pos (ell Y : ℝ) (hell : 0 < ell) (hY : 0 < Y) (j : Glo
   unfold globalBinRadial
   positivity
 
-def globalArithmeticBinSource (s : Finset (GlobalSecondData ι)) (side : Bool)
-    (q : Ideal O × Ideal O × Ideal O) (j : GlobalLogIndex)
-    (F : Finset ι) (Ψ : O →* ℂ) (m : O) (ray : SecondRayIndex)
-    (A₁ A₂ W : 𝓢(ℝ,ℂ)) (V : Fin 7 → ℝ → ℂ) (ell Y : ℝ) : ℂ :=
-  globalSecondRawSource p hp hcop hg (globalArithmeticBin p s side q j)
-    (globalSecondOuterWeight p hp hcop hg Ψ m ray ell Y side)
-    F (secondRayMinus Ψ ray) (secondRayPlus Ψ ray) m A₁ A₂ W V
-    (globalBinZ p ell side j) (globalBinUd p j) (globalBinUe p j) (globalBinUv p j) (globalBinKap p j)
-    (globalPooledColumnScale ell j) (globalPooledColumnScale ell j) (globalBinRadial ell Y j)
-
-theorem globalArithmeticBinSource_squarefree (s : Finset (GlobalSecondData ι)) (side : Bool)
-    (q : Ideal O × Ideal O × Ideal O) (j : GlobalLogIndex)
-    (hs : ∀ x∈s,GlobalSecondAdmissible x)
-    (F : Finset ι) (Ψ : O →* ℂ) (m : O) (ray : SecondRayIndex)
-    (A₁ A₂ W : 𝓢(ℝ,ℂ)) (V : Fin 7 → ℝ → ℂ) (ell Y : ℝ) :
-    globalArithmeticBinSource p hp hcop hg s side q j F Ψ m ray A₁ A₂ W V ell Y =
-    globalSecondRawSource p hp hcop hg (globalSquarefreeBin p s side q j)
-      (globalSecondOuterWeight p hp hcop hg Ψ m ray ell Y side)
-      F (secondRayMinus Ψ ray) (secondRayPlus Ψ ray) m A₁ A₂ W V
-      (globalBinZ p ell side j) (globalBinUd p j) (globalBinUe p j) (globalBinUv p j) (globalBinKap p j)
-      (globalPooledColumnScale ell j) (globalPooledColumnScale ell j) (globalBinRadial ell Y j) := by
-  unfold globalArithmeticBinSource globalSecondRawSource globalSquarefreeBin
-  rw [Finset.sum_filter]
-  apply Finset.sum_congr rfl
-  intro x hx
-  by_cases hsf : Squarefree (newLabel (globalSecondTuple p x))
-  · rw [ite_eq_left hsf]
-  · rw [ite_eq_right hsf]
-    have hz : globalSecondOuterWeight p hp hcop hg Ψ m ray ell Y side x=0 := by
-      by_contra hn
-      exact hsf (globalSecondOuterWeight_squarefree p hp hcop hg Ψ m ray ell Y side x
-        (hs x (Finset.mem_filter.mp hx).1) hn)
-    rw [hz,zero_mul]
-
-theorem globalArithmeticBin_transfer
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hc : ∀ i,ringChar (O ⧸ Ideal.span {p i}) ≠ 2) (ε : ℝ) (hε : 0 < ε)
-    (A₁ A₂ W : 𝓢(ℝ,ℂ)) (V : Fin 7 → ℝ → ℂ) (M : Fin 7 → ℝ)
-    (hM : ∀ i,0 ≤ M i) (hV : ∀ i x,V i x ≠ 0 → |x| ≤ M i)
-    (hVc : ∀ i,HasCompactSupport (V i)) (hVs : ∀ i,Continuous (V i)) (A J : ℕ) :
-    ∃ C : ℝ,0 ≤ C ∧ ∀ (s : Finset (GlobalSecondData ι)) (side : Bool)
-      (q : Ideal O × Ideal O × Ideal O) (j : GlobalLogIndex)
-      (F : Finset ι) (Ψ : O →* ℂ) (m : O) (ray : SecondRayIndex) (ell Y : ℝ),
-      0 < ell → 0 < Y → q.1 ≠ ⊥ → (∀ a,‖Ψ a‖ ≤ 1) →
-      (∀ x∈s,GlobalSecondAdmissible x) → (∀ x∈s,x.source.frequency ≠ 0) →
-      ‖globalArithmeticBinSource p hp hcop hg s side q j F Ψ m ray A₁ A₂ W V ell Y‖ ≤
-      C*globalPooledOuterBound ray ell Y j*
-        (globalPooledLabelScale j*Ideal.absNorm q.1)^ε/(1+globalBinRadial ell Y j)^A *
-      densityChildEnergy p hp hcop hg F (secondRayMinus Ψ ray) (secondRayPlus Ψ ray)
-        (fixedTripleMask m q) (globalArithmeticTargets p s side q j) (V 5) (V 6)
-        (globalPooledColumnScale ell j) (globalPooledColumnScale ell j) J := by
-  obtain ⟨Cₐ,hCₐ,Cₛ,hCₛ,htrans⟩ := globalSecondRawSource_uniform_transfer p hp hcop hg hinj ε hε A₁ A₂ W V M hM hV A J
-  obtain ⟨Cw,hCw,hwglobal⟩ := outerWindow_global_bound V hVc hVs
-  refine ⟨Cₐ*Cₛ*Cw,by positivity,?_⟩
-  intro s side q j F Ψ m ray ell Y hell hY hq hΨ hs hk
-  rw [globalArithmeticBinSource_squarefree p hp hcop hg s side q j hs]
-  let t := globalSquarefreeBin p s side q j
-  let T := globalArithmeticTargets p s side q j
-  have ht (x : GlobalSecondData ι) (hx : x∈t) : x∈s ∧ globalSecondFixedTriple p x=q ∧ globalScaleIndex p side x=j :=
-    Finset.mem_filter.mp (Finset.mem_filter.mp hx).1
-  have hbound := globalArithmeticTargets_bounds p hp s side q j hk
-  have hB : 0 ≤ globalPooledOuterBound ray ell Y j := by
-    have h0 := (globalLogRep_pos j 0).le
-    have h1 := (globalLogRep_pos j 1).le
-    have h2 := (globalLogRep_pos j 2).le
-    have h3 := (globalLogRep_pos j 3).le
-    unfold globalPooledOuterBound
-    positivity
-  have hw : ∀ x∈t,‖globalSecondOuterWeight p hp hcop hg Ψ m ray ell Y side x‖*
-      ‖JointLogSeparation.outerWindow V (globalBinZ p ell side j x) (globalBinUd p j x)
-        (globalBinUe p j x) (globalBinUv p j x) (globalBinKap p j x)‖ ≤ globalPooledOuterBound ray ell Y j*Cw := by
-    intro x hx
-    have hh := globalSecondOuterWeight_bin_bound p hp hcop hg hinj hc Ψ hΨ m ray ell Y hell hY.le side x (hk x (ht x hx).1)
-    rw [(ht x hx).2.2] at hh
-    exact mul_le_mul hh (hwglobal _ _ _ _ _) (norm_nonneg _) hB
-  have hh := htrans (globalBinRadial ell Y j) (globalBinRadial_pos ell Y hell hY j) t T q
-    (globalSecondOuterWeight p hp hcop hg Ψ m ray ell Y side) (globalPooledOuterBound ray ell Y j*Cw)
-    (globalPooledLabelScale j) F (secondRayMinus Ψ ray) (secondRayPlus Ψ ray) m
-    (globalBinZ p ell side j) (globalBinUd p j) (globalBinUe p j) (globalBinUv p j) (globalBinKap p j)
-    (globalPooledColumnScale ell j) (globalPooledColumnScale ell j) hq (mul_nonneg hB hCw)
-    (zero_le_one.trans (globalPooledLabelScale_ge_one j))
-    (fun x hx => hs x (ht x hx).1) (fun x hx => (ht x hx).2.1)
-    (fun x hx => Finset.mem_image.mpr ⟨x,hx,rfl⟩)
-    (fun a ha => (hbound a ha).1) (fun a ha => (hbound a ha).2.1) hw
-  convert hh using 1 ; ring
-
 end
 
 open ActualEisensteinCubic
@@ -273,26 +136,6 @@ theorem fixedDepthRank_step (Z K K' : ℝ) (hZ : 1 < Z) (hK : 0 < K)
   have hn := Nat.ceil_mono hb
   rw [Nat.ceil_add_one ha] at hn
   exact hn
-
-theorem fixedDepthRank_path (Z : ℝ) (hZ : 1 < Z) (K : ℕ → ℝ) (n : ℕ)
-    (hK : ∀ i,i ≤ n → 1 ≤ K i) (hstart : K 0 ≤ Z^3)
-    (hstep : ∀ i,i < n → K (i+1) ≤ K i/Z^((1:ℝ)/1000)) : n+1 ≤ 3001 := by
-  have hiter : ∀ i,i ≤ n → fixedDepthRank Z (K i)+i ≤ fixedDepthRank Z (K 0) := by
-    intro i
-    induction i with
-    | zero => simp
-    | succ i hi =>
-      intro hin
-      have hip : i ≤ n := by omega
-      have hil : i < n := by omega
-      have hprev := hi hip
-      have hs := fixedDepthRank_step Z (K i) (K (i+1)) hZ
-        (lt_of_lt_of_le zero_lt_one (hK i hip)) (hK (i+1) hin) (hstep i hil)
-      omega
-  have ht := hiter n le_rfl
-  have hb := fixedDepthRank_initial Z (K 0) hZ
-    (lt_of_lt_of_le zero_lt_one (hK 0 (Nat.zero_le _))) hstart
-  omega
 
 theorem globalPooledDelta_pos (B F : ℝ) (hB : 0 < B) (hF : 0 < F)
     (j : GlobalLogIndex) : 0 < globalPooledDelta B F j := by
@@ -356,35 +199,8 @@ theorem globalPooled_J_bound (B : ℝ) (hB : 0 < B) (side : Bool) (x : GlobalSec
     x.cube.leftBit x.cube.rightBit x.cube.support_pos B hB.le hb₁ hb₂).1
   exact (globalScaleIndex_bounds p hp side x hk 4).1.trans hJ
 
-include hp in
-
-theorem globalActualBin_fixed_depth (Z K ell B F : ℝ) (hZ : 1 < Z)
-    (hK : 0 < K) (hell : 0 < ell) (hB : 0 < B) (hF : 0 < F)
-    (hprogress : Z^((1:ℝ)/1000) ≤ B*F)
-    (hstart : K ≤ Z^3) (side : Bool) (x : GlobalSecondData ι)
-    (hk : x.source.frequency ≠ 0)
-    (hb₁ : ‖eisEmbedding (primeProduct p x.cube.support x.cube.leftExponent)‖^2 ≤ B)
-    (hb₂ : ‖eisEmbedding (primeProduct p x.cube.support x.cube.rightExponent)‖^2 ≤ B)
-    (hretained : globalBinRadial ell (globalPooledRowScale K ell B F (globalScaleIndex p side x))
-      (globalScaleIndex p side x) ≤ globalPooledDelta B F (globalScaleIndex p side x)) :
-    let K' := globalLogRep (globalScaleIndex p side x) 8*Real.exp 1
-    K' ≤ K/Z^((1:ℝ)/1000) ∧ fixedDepthRank Z K'+1 ≤ fixedDepthRank Z K ∧
-      fixedDepthRank Z K ≤ 3000 := by
-  dsimp only
-  have hrow := globalPooledRow_contraction K ell B F hK hell hB hF (globalScaleIndex p side x)
-    (globalPooled_J_bound p hp B hB side x hk hb₁ hb₂) hretained
-  have hD := hprogress.trans (globalPooledDelta_ge B F hB.le hF.le (globalScaleIndex p side x))
-  have hz0 : 0 < Z := lt_trans zero_lt_one hZ
-  have hsmall : globalLogRep (globalScaleIndex p side x) 8*Real.exp 1 ≤ K/Z^((1:ℝ)/1000) :=
-    hrow.trans (div_le_div_of_nonneg_left hK.le (Real.rpow_pos_of_pos hz0 _) hD)
-  have hchild : 1 ≤ globalLogRep (globalScaleIndex p side x) 8*Real.exp 1 :=
-    one_le_mul_of_one_le_of_one_le (globalLogRep_ge_one _ _) (Real.one_le_exp (by norm_num))
-  exact ⟨hsmall,fixedDepthRank_step Z K _ hZ hK hchild hsmall,
-    fixedDepthRank_initial Z K hZ hK hstart⟩
-
 end SecondPassArithmetic
 
-open scoped BigOperators Classical SchwartzMap
 namespace CanonicalQuadraticSieve
 
 section
@@ -561,8 +377,8 @@ theorem selectedPoisson_middle_bound (C M X η α : ℝ)
 
 end CanonicalQuadraticSieve
 
-open Filter MeasureTheory EuclideanGeometry
-open scoped BigOperators Classical Topology InnerProductSpace ENNReal
+open EuclideanGeometry
+open scoped InnerProductSpace ENNReal
 
 namespace CubicEisenstein
 

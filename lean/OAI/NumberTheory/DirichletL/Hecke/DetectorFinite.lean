@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorTail
 import OAI.NumberTheory.DirichletL.Hecke.DetectorPartition
-
 namespace OAI
 
 noncomputable section

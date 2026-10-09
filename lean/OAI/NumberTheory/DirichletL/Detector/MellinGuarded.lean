@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.SpectralSupport
 import OAI.NumberTheory.DirichletL.Detector.HighAbsolute
 import OAI.NumberTheory.DirichletL.Detector.IdealUnit
-
 namespace OAI
 
 noncomputable section

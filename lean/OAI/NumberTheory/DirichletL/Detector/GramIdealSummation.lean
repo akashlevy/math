@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Foundation
-
 namespace OAI
 
 noncomputable section
@@ -15,10 +14,6 @@ def gramIdealNorm (I : SupportedIdeal) : ℝ := Ideal.absNorm I.val
 lemma gramIdealNorm_pos (I : SupportedIdeal) : 0 < gramIdealNorm I := by
   unfold gramIdealNorm
   exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr I.property.1)
-
-lemma gramIdealNorm_one_le (I : SupportedIdeal) : 1 ≤ gramIdealNorm I := by
-  unfold gramIdealNorm
-  exact_mod_cast Nat.one_le_iff_ne_zero.mpr (Ideal.absNorm_eq_zero_iff.not.mpr I.property.1)
 
 theorem supportedIdeal_rpow_summable (r : ℝ) (hr : r < -1) :
     Summable (fun I : SupportedIdeal => gramIdealNorm I ^ r) := by

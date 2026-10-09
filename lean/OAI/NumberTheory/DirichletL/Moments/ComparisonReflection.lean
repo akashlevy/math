@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.Primitive
 import OAI.NumberTheory.DirichletL.Hecke.Dyadic
 import OAI.NumberTheory.DirichletL.Detector.RadialMellin
-
 namespace OAI
 
 noncomputable section
@@ -135,25 +134,6 @@ theorem primitive_normalized_reflection (c : O) [NeZero c]
     rw [hsq]
   rw [←mul_assoc,hfac,mul_assoc]
 
-theorem reflected_profile_height_control (a b : ℝ) (ha : 0<a) (A K : ℕ) :
-    ∃ n : ℕ,∀ (W : ℝ→ℂ),∀_hs : Function.support W⊆Set.Icc a b,
-      ∀_hW : ContDiff ℝ ∞ W,∃C : ℝ,0<C ∧ ∀t : ℝ,∀j : ℕ,j≤K → ∀x : ℝ,0≤x →
-      (1+x)^A*‖LocalLogFourier.eulerDeriv
-        (paperRadialFourier (CompletedHeight.normTwistedSource W t)) j x‖≤C*(1+‖t‖)^n := by
-  obtain ⟨s,C,hC,hbound⟩ := paperRadialFourier_euler_source_weighted_bound A K
-  obtain ⟨n,hn⟩ := CompletedHeight.normTwistedSource_uniform_degree a b ha s
-  refine ⟨n,?_⟩
-  intro W hs hW
-  obtain ⟨D,hD,hDbd⟩ := hn W hs hW
-  refine ⟨C*D,mul_pos hC hD,?_⟩
-  intro t j hj x hx
-  have hsame : (CompletedHeight.uniformTwistedSchwartz W a b ha hs hW t : ℝ→ℂ)=
-      CompletedHeight.normTwistedSource W t := by
-    funext y
-    exact CompletedHeight.uniformTwistedSchwartz_apply W a b ha hs hW t y
-  have hb := hbound (CompletedHeight.uniformTwistedSchwartz W a b ha hs hW t) j hj x hx
-  rw [hsame] at hb
-  exact hb.trans ((mul_le_mul_of_nonneg_left (hDbd t) hC.le).trans_eq (by ring))
 end SevenEighths.CenteredMomentComparisonReflection
 
 end

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.TupleScaling
 import OAI.NumberTheory.DirichletL.Detector.SourceIntegrable
-
 namespace OAI
 
 noncomputable section

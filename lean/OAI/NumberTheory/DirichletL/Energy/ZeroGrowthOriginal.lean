@@ -3,7 +3,6 @@ import OAI.NumberTheory.DirichletL.Energy.ZeroRetainedError
 import OAI.NumberTheory.DirichletL.Energy.ReferenceDeletionEnergy
 import OAI.NumberTheory.DirichletL.Energy.ReferenceProfileBudget
 import OAI.NumberTheory.DirichletL.Energy.LiveClippingDefect
-
 namespace OAI
 
 noncomputable section

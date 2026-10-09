@@ -1,6 +1,6 @@
 import OAI.NumberTheory.DirichletL.Energy.LiveClippingDefect
-import OAI.NumberTheory.DirichletL.Energy.ReferenceLowDeletedGeometry
-
+import OAI.NumberTheory.DirichletL.Energy.ReferenceLowWindow
+import OAI.NumberTheory.DirichletL.Energy.ReferenceDivisors
 namespace OAI
 
 noncomputable section

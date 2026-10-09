@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLiveEnergy
-
 namespace OAI
 
 noncomputable section

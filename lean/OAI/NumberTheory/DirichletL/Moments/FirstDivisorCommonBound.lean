@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.FirstDivisorSupport
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalAnnularCommonBound
 import OAI.NumberTheory.DirichletL.Moments.SecondHarmonicBudget
 import OAI.NumberTheory.DirichletL.Moments.SourceSecondZeroEnergy
-
 namespace OAI
 
 noncomputable section

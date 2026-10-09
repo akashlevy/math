@@ -1,7 +1,11 @@
-import OAI.NumberTheory.DirichletL.Parameters
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Algebra.Order.Archimedean.Basic
+import Mathlib.Analysis.Complex.Norm
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.FieldSimp
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.BigOperators.Field
-
 namespace OAI
 
 noncomputable section

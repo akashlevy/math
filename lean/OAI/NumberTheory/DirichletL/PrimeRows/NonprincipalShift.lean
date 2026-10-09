@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.NonprincipalBoundary
 import OAI.NumberTheory.DirichletL.PrimeRows.WGrowth
-
 namespace OAI
 
 noncomputable section

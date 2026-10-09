@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.Bands
-
 namespace OAI
 
 noncomputable section

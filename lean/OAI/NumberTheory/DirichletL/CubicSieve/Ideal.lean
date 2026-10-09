@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Foundation
 import OAI.NumberTheory.DirichletL.CubicSieve.Algebra
 import OAI.NumberTheory.DirichletL.CubicSieve.Factorization
 import OAI.NumberTheory.DirichletL.CubicSieve.Blocks
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve
@@ -119,15 +118,6 @@ def idealNumeratorHom (I : Ideal Eis) (hI : primaryGenerator I ≠ 0) : Ideal Ei
     simp only [idealKernel, primaryGenerator_mul,
       CubicJacobiGlobal.idealSymbol_map_mul I hI, map_mul]
 
-theorem idealKernel_row_decomposition (I A B C : Ideal Eis)
-    (hI : primaryGenerator I ≠ 0) :
-    idealKernel I (A * B ^ 2 * C ^ 3) =
-      idealKernel I A * star (idealKernel I B) * idealKernel I C ^ 3 := by
-  change idealNumeratorHom I hI (A * B ^ 2 * C ^ 3) = _
-  rw [map_mul, map_mul, map_pow, map_pow]
-  change idealKernel I A * idealKernel I B ^ 2 * idealKernel I C ^ 3 = _
-  rw [idealKernel_square_eq_star]
-
 def idealRange (X : ℝ) : Finset (Ideal Eis) :=
   (idealsUpTo ⌊X⌋₊).filter Admissible
 
@@ -158,12 +148,6 @@ theorem sieveNorm_reciprocity (M N : ℝ) : sieveNorm M N = sieveNorm N M := by
   exact idealKernel_reciprocity J.val I.val
     (mem_idealRange.mp J.property).1.2 (mem_idealRange.mp I.property).1.2
 
-theorem ideal_energy_bound (M N : ℝ) (coef : idealRange N → ℂ) :
-    (∑ I : idealRange M, ‖∑ J : idealRange N,
-      idealKernel J.val I.val * coef J‖ ^ 2) ≤
-        sieveNorm M N * ∑ J, ‖coef J‖ ^ 2 :=
-  energy_le_squaredNorm (idealMatrix M N) coef
-
 theorem family_squared_norm_le {m n : Type*} [Fintype m] [Fintype n]
     [DecidableEq m] [DecidableEq n]
     (rows : m → Ideal Eis) (cols : n → Ideal Eis)
@@ -177,37 +161,6 @@ theorem family_squared_norm_le {m n : Type*} [Fintype m] [Fintype n]
   have hci : Function.Injective c := fun i j h => hc (congrArg Subtype.val h)
   have h := FiniteSieveRestriction.submatrix_norm_le r hri c hci (idealMatrix M N)
   exact pow_le_pow_left₀ (norm_nonneg _) h 2
-
-theorem ideal_cube_block_energy_le {a b c n : Type*}
-    [Fintype a] [Fintype b] [Fintype c] [Fintype n]
-    [DecidableEq a] [DecidableEq b] [DecidableEq n]
-    (A : a → Ideal Eis) (B : b → Ideal Eis) (C : c → Ideal Eis)
-    (cols : n → Ideal Eis) (hc : ∀ j, primaryGenerator (cols j) ≠ 0)
-    (coef : n → ℂ) :
-    (∑ l, ∑ k, ∑ i, ‖∑ j, coef j *
-      idealKernel (cols j) (A i * B k ^ 2 * C l ^ 3)‖ ^ 2) ≤
-      (Fintype.card c : ℝ) *
-        min ((Fintype.card b : ℝ) * squaredNorm (fun i j => idealKernel (cols j) (A i)))
-          ((Fintype.card a : ℝ) * squaredNorm (fun k j => idealKernel (cols j) (B k))) *
-        ∑ j, ‖coef j‖ ^ 2 := by
-  have he (i : a) (k : b) (l : c) :
-      (∑ j, coef j * idealKernel (cols j) (A i * B k ^ 2 * C l ^ 3)) =
-        ∑ j, idealKernel (cols j) (A i) * star (idealKernel (cols j) (B k)) *
-          coef j * idealKernel (cols j) (C l) ^ 3 := by
-    apply Finset.sum_congr rfl
-    intro j _
-    rw [idealKernel_row_decomposition _ _ _ _ (hc j)]
-    ring
-  simp_rw [he]
-  apply cube_family_block_energy_le
-  · exact fun i j => idealKernel_norm_le_one _ _
-  · exact fun k j => idealKernel_norm_le_one _ _
-  · intro l j
-    rw [norm_pow]
-    exact (pow_le_pow_left₀ (norm_nonneg _) (idealKernel_norm_le_one _ _) 3).trans_eq (by norm_num)
-
-theorem ideal_cubic_factorization (I : Ideal Eis) (hI : I ≠ 0) :
-    I = firstPart I * secondPart I ^ 2 * cubePart I ^ 3 := cubic_factorization I hI
 
 end
 end SevenEighths.CubicSieve

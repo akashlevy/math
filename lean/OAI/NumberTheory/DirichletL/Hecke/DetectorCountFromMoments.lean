@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRawBranches
-
 namespace OAI
 
 noncomputable section

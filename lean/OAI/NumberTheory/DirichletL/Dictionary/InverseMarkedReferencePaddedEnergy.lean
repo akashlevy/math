@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseMarkedReferenceSourceEnergy
-
 namespace OAI
 
 noncomputable section

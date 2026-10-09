@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowCompensation
-
 namespace OAI
 
 noncomputable section

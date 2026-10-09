@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialExcludedOverlap
-
 namespace OAI
 
 noncomputable section
@@ -9,7 +8,7 @@ open ActualEisensteinCubic CompletedGauss CanonicalQuadraticSieve ConcretePrimeR
 open FirstCauchyArithmetic SecondPassArithmetic UniqueFactorizationMonoid
 namespace SevenEighths.InverseInitialExcludedForcing
 open InverseInitialOverlap InverseInitialPoissonBridge InverseInitialKernelBridge
-open InverseInitialRayAttachment InverseInitialArithmetic InverseInitialCommonPool
+open InverseInitialRayAttachment InverseInitialArithmetic
 open InverseInitialEnergyCallerWindow InverseInitialCommonForcing InverseInitialLargePool
 open InverseInitialExcludedPool InverseInitialExcludedOverlap
 open InverseInitialCommonTuples InverseInitialCommonTransform

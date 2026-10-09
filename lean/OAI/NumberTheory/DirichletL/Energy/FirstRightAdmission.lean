@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.FirstLiveAdmission
 import OAI.NumberTheory.DirichletL.Moments.FirstMixedRightTransport
-
 namespace OAI
 
 noncomputable section
@@ -36,13 +35,6 @@ lemma main_radius_right (C D : Ideal O) (E : Finset (CommonIndex C D))
       mainRadius D C (swapSubset C D E) K V Z σ δ reserve := by
   simp only [columnMainRadius, columnIdeal, oppositeIdeal, ite_true,
     mainRadius, swapSubset_generator, nominal_swap]
-
-lemma error_radius_right (C D : Ideal O) (E : Finset (CommonIndex C D))
-    (K V Z σ δ reserve : ℝ) (p : O) (k : ℕ) :
-    columnErrorRadius C D E K V Z σ δ reserve true p k =
-      errorRadius D C (swapSubset C D E) K V Z σ δ reserve p k := by
-  simp only [columnErrorRadius, columnIdeal, oppositeIdeal, ite_true,
-    errorRadius, swapSubset_generator, nominal_swap]
 
 theorem eventually_right_main_packet (N : ℕ) (b b₁ b₂ l a A P : ℝ)
     (hb : 1 ≤ b) (hb₁ : 1 ≤ b₁) (hb₂ : 1 ≤ b₂)

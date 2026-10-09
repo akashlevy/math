@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.AmplificationSourceError
 import OAI.NumberTheory.DirichletL.Moments.AmplificationErrorPool
-
 namespace OAI
 
 noncomputable section

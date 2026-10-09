@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GramSourceDivisors
-
 namespace OAI
 
 noncomputable section

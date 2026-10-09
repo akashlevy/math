@@ -1,36 +1,20 @@
 import OAI.NumberTheory.DirichletL.Hecke.NormFiberCharacters
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
 
 namespace ShortDraftHeckeBridge
 
@@ -54,16 +38,6 @@ theorem chiMinusThree_mod_two (n : ℕ) (h : n % 3 = 2) :
   rw [hc]
   change chiMinusThree (2 : ℕ) = -1
   exact chiMinusThree_two
-
-theorem chiMinusThree_mod_zero (n : ℕ) (h : n % 3 = 0) :
-    chiMinusThree n = 0 := by
-  have hc : (n : ZMod 3) = 0 := by
-    calc
-      (n : ZMod 3) = ((n % 3 : ℕ) : ZMod 3) := by simp
-      _ = 0 := by rw [h]; simp
-  change ((quadraticChar (ZMod 3) (n : ZMod 3) : ℤ) : ℂ) = 0
-  rw [hc]
-  simp
 
 private theorem invCharAF_prime_pow_ge_two {q : ℕ}
     (χ : DirichletCharacter ℂ q) {p j : ℕ} (hp : p.Prime) (hj : 2 ≤ j) :
@@ -497,258 +471,9 @@ theorem normFiberCoeff_baseChange_eq_pairInverseCoeff
     (fun p hp => normFiberCoeff_eq_pairAF_prime χ hp)
     (fun p hp => normFiberCoeff_eq_pairAF_prime_sq χ hp) n hn
 
-theorem dirichletTarget_of_normFiber_exp_bound
-    (hbound : ∀ (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q)
-      (ρ : ℂ), (23 / 24 : ℝ) < ρ.re → ρ.re < 1 →
-        ∃ σ : ℝ, 0 < σ ∧ σ < ρ.re ∧
-          (fun D : ℝ => normFiberExpSum (baseChangeWeight χ) D⁻¹) =O[atTop]
-            (fun D : ℝ => D ^ σ)) :
-    ShortDraft.DirichletTarget := by
-  apply dirichletTarget_of_ideal_base_change ?_ hbound
-  intro q _ χ n hn
-  exact normFiberCoeff_baseChange_eq_pairInverseCoeff χ n hn
-
 end ShortDraftHeckeBridge
-open Filter Asymptotics
 
 namespace ShortDraftHeckeBridge
-
-private theorem rpow_le_one_add_of_exponent_Icc (x σ : ℝ)
-    (hx : 0 ≤ x) (hσ0 : 0 ≤ σ) (hσ1 : σ ≤ 1) : x ^ σ ≤ 1 + x := by
-  by_cases hx1 : x ≤ 1
-  · have h := Real.rpow_le_one hx hx1 hσ0
-    linarith
-  · have h := Real.rpow_le_self_of_one_le (le_of_not_ge hx1) hσ1
-    linarith
-
-private theorem tsum_add_one_mul_geometric {r : ℝ} (hr0 : 0 ≤ r) (hr1 : r < 1) :
-    (∑' n : ℕ, ((n : ℝ) + 1) * r ^ n) = 1 / (1 - r) ^ 2 := by
-  have hr : ‖r‖ < 1 := by simpa [Real.norm_eq_abs, abs_of_nonneg hr0] using hr1
-  simpa only [Nat.choose_one_right, Nat.cast_add, Nat.cast_one] using
-    (tsum_choose_mul_geometric_of_norm_lt_one (𝕜 := ℝ) 1 hr)
-
-private theorem summable_add_one_mul_geometric {r : ℝ} (hr0 : 0 ≤ r) (hr1 : r < 1) :
-    Summable (fun n : ℕ => ((n : ℝ) + 1) * r ^ n) := by
-  have hr : ‖r‖ < 1 := by simpa [Real.norm_eq_abs, abs_of_nonneg hr0] using hr1
-  simpa only [Nat.choose_one_right, Nat.cast_add, Nat.cast_one] using
-    (summable_choose_mul_geometric_of_norm_lt_one (R := ℝ) 1 hr)
-
-theorem geometric_rpow_moment_bound
-    (σ D r : ℝ) (hσ0 : 0 ≤ σ) (hσ1 : σ ≤ 1)
-    (hD : 1 ≤ D) (hr0 : 0 ≤ r) (hr1 : r < 1)
-    (hscale : 1 / (D * (1 - r)) ≤ 2) :
-    (1 - r) * (∑' n : ℕ, (((n : ℝ) + 1) ^ σ) * r ^ n) ≤
-      3 * D ^ σ := by
-  have hDpos : 0 < D := lt_of_lt_of_le zero_lt_one hD
-  have hDpow : 0 ≤ D ^ σ := (Real.rpow_pos_of_pos hDpos σ).le
-  have hrpow : ∀ n : ℕ,
-      (((n : ℝ) + 1) ^ σ) * r ^ n ≤
-      D ^ σ * (r ^ n + D⁻¹ * (((n : ℝ) + 1) * r ^ n)) := by
-    intro n
-    have hn : 0 ≤ ((n : ℝ) + 1) / D := by positivity
-    have heq : D * (((n : ℝ) + 1) / D) = (n : ℝ) + 1 := by field_simp
-    have hbase : ((n : ℝ) + 1) ^ σ ≤
-        D ^ σ * (1 + ((n : ℝ) + 1) / D) := by
-      calc
-        ((n : ℝ) + 1) ^ σ =
-            (D * (((n : ℝ) + 1) / D)) ^ σ := by rw [heq]
-        _ = D ^ σ * (((n : ℝ) + 1) / D) ^ σ :=
-          Real.mul_rpow hDpos.le hn
-        _ ≤ D ^ σ * (1 + ((n : ℝ) + 1) / D) :=
-          mul_le_mul_of_nonneg_left
-            (rpow_le_one_add_of_exponent_Icc _ _ hn hσ0 hσ1) hDpow
-    have hrn : 0 ≤ r ^ n := pow_nonneg hr0 _
-    calc
-      (((n : ℝ) + 1) ^ σ) * r ^ n ≤
-          (D ^ σ * (1 + ((n : ℝ) + 1) / D)) * r ^ n :=
-        mul_le_mul_of_nonneg_right hbase hrn
-      _ = D ^ σ * (r ^ n + D⁻¹ * (((n : ℝ) + 1) * r ^ n)) := by ring
-  have hrnorm : ‖r‖ < 1 := by simpa [Real.norm_eq_abs, abs_of_nonneg hr0] using hr1
-  have hs0 : Summable (fun n : ℕ => r ^ n) := summable_geometric_of_norm_lt_one hrnorm
-  have hs1 : Summable (fun n : ℕ => ((n : ℝ) + 1) * r ^ n) :=
-    summable_add_one_mul_geometric hr0 hr1
-  have hsdom : Summable (fun n : ℕ =>
-      D ^ σ * (r ^ n + D⁻¹ * (((n : ℝ) + 1) * r ^ n))) :=
-    ((hs0.add (hs1.mul_left D⁻¹)).mul_left (D ^ σ))
-  have hslow : Summable (fun n : ℕ => (((n : ℝ) + 1) ^ σ) * r ^ n) :=
-    Summable.of_nonneg_of_le (fun n => mul_nonneg
-      (Real.rpow_nonneg (by positivity) σ) (pow_nonneg hr0 _)) hrpow hsdom
-  have hsum := Summable.tsum_le_tsum hrpow hslow hsdom
-  have hgap : 0 ≤ 1 - r := sub_nonneg.mpr hr1.le
-  have hgeom : (∑' n : ℕ, r ^ n) = (1 - r)⁻¹ :=
-    tsum_geometric_of_norm_lt_one hrnorm
-  have hlin := tsum_add_one_mul_geometric hr0 hr1
-  have hgap_ne : 1 - r ≠ 0 := ne_of_gt (sub_pos.mpr hr1)
-  calc
-    (1 - r) * (∑' n : ℕ, (((n : ℝ) + 1) ^ σ) * r ^ n) ≤
-        (1 - r) * (∑' n : ℕ,
-          D ^ σ * (r ^ n + D⁻¹ * (((n : ℝ) + 1) * r ^ n))) :=
-      mul_le_mul_of_nonneg_left hsum hgap
-    _ = D ^ σ * (1 + 1 / (D * (1 - r))) := by
-      rw [tsum_mul_left, Summable.tsum_add hs0 (hs1.mul_left D⁻¹),
-        tsum_mul_left, hgeom, hlin]
-      field_simp
-    _ ≤ 3 * D ^ σ := by
-      nlinarith [mul_nonneg hDpow (sub_nonneg.mpr hscale)]
-
-noncomputable def prefixCoeff (a : ℕ → ℂ) (n : ℕ) : ℂ :=
-  ∑ k ∈ Finset.range (n + 1), a k
-
-theorem tsum_eq_one_sub_mul_tsum_prefix
-    (a : ℕ → ℂ) (r : ℝ) (hr0 : 0 ≤ r) (hr1 : r < 1)
-    (hf : Summable (fun n : ℕ => a n * (r : ℂ) ^ n)) :
-    (∑' n : ℕ, a n * (r : ℂ) ^ n) =
-      (1 - (r : ℂ)) * (∑' n : ℕ, prefixCoeff a n * (r : ℂ) ^ n) := by
-  have hrC : ‖(r : ℂ)‖ < 1 := by
-    simpa only [Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hr0] using hr1
-  have hg : Summable (fun n : ℕ => (r : ℂ) ^ n) :=
-    summable_geometric_of_norm_lt_one hrC
-  have hconv := hasSum_sum_range_mul_of_summable_norm hf.norm hg.norm
-  have hcoeff (n : ℕ) :
-      (∑ k ∈ Finset.range (n + 1),
-        (a k * (r : ℂ) ^ k) * (r : ℂ) ^ (n - k)) =
-      prefixCoeff a n * (r : ℂ) ^ n := by
-    calc
-      (∑ k ∈ Finset.range (n + 1),
-        (a k * (r : ℂ) ^ k) * (r : ℂ) ^ (n - k)) =
-          ∑ k ∈ Finset.range (n + 1), a k * (r : ℂ) ^ n := by
-        apply Finset.sum_congr rfl
-        intro k hk
-        have hkn : k ≤ n := Nat.le_of_lt_succ (Finset.mem_range.mp hk)
-        rw [mul_assoc, ← pow_add, Nat.add_sub_of_le hkn]
-      _ = prefixCoeff a n * (r : ℂ) ^ n := by
-        rw [prefixCoeff, Finset.sum_mul]
-  have hconvEq := hconv.tsum_eq
-  simp_rw [hcoeff] at hconvEq
-  rw [tsum_geometric_of_norm_lt_one hrC] at hconvEq
-  have hne : (1 - (r : ℂ)) ≠ 0 := by
-    exact sub_ne_zero.mpr (by norm_cast; exact (ne_of_lt hr1).symm)
-  calc
-    (∑' n : ℕ, a n * (r : ℂ) ^ n) =
-      (1 - (r : ℂ)) *
-        ((∑' n : ℕ, a n * (r : ℂ) ^ n) * (1 - (r : ℂ))⁻¹) := by
-          field_simp
-    _ = (1 - (r : ℂ)) * (∑' n : ℕ, prefixCoeff a n * (r : ℂ) ^ n) := by
-      rw [hconvEq]
-
-theorem exp_inv_geometric_gap (D : ℝ) (hD : 1 ≤ D) :
-    1 / (D * (1 - Real.exp (-D⁻¹))) ≤ 2 := by
-  have hDpos : 0 < D := lt_of_lt_of_le zero_lt_one hD
-  have hDne : D ≠ 0 := ne_of_gt hDpos
-  have hden : 0 < D + 1 := by linarith
-  have hx : 0 < D⁻¹ := inv_pos.mpr hDpos
-  have hbase : 0 < 1 + D⁻¹ := by positivity
-  have hexp : 1 + D⁻¹ ≤ Real.exp D⁻¹ := by
-    linarith [Real.add_one_le_exp D⁻¹]
-  have he : Real.exp (-D⁻¹) ≤ (1 + D⁻¹)⁻¹ := by
-    rw [Real.exp_neg]
-    simpa only [one_div] using one_div_le_one_div_of_le hbase hexp
-  have hrew : (1 + D⁻¹)⁻¹ = D / (D + 1) := by
-    field_simp
-  rw [hrew] at he
-  have hhalf : (1 / 2 : ℝ) ≤ D * (1 - Real.exp (-D⁻¹)) := by
-    calc
-      (1 / 2 : ℝ) ≤ D / (D + 1) := by
-        apply (le_div_iff₀ hden).2
-        nlinarith
-      _ = D * (1 - D / (D + 1)) := by
-        field_simp
-        ring
-      _ ≤ D * (1 - Real.exp (-D⁻¹)) :=
-        mul_le_mul_of_nonneg_left (sub_le_sub_left he 1) hDpos.le
-  have h := one_div_le_one_div_of_le (by norm_num : (0 : ℝ) < 1 / 2) hhalf
-  norm_num at h ⊢
-  exact h
-
-theorem normFiberExpSum_le_of_prefix_power
-    {q r₀ : ℕ} [NeZero q] [NeZero r₀]
-    (χ : DirichletCharacter ℂ q) (ψ : DirichletCharacter ℂ r₀)
-    (weight : Ideal O → ℂ)
-    (hcoeff : ∀ n : ℕ, n ≠ 0 → normFiberCoeff weight n = pairInverseCoeff χ ψ n)
-    (ha0 : normFiberCoeff weight 0 = 0)
-    (σ C : ℝ) (hσ0 : 0 ≤ σ) (hσ1 : σ ≤ 1) (hC : 0 ≤ C)
-    (hprefix : ∀ n : ℕ,
-      ‖prefixCoeff (normFiberCoeff weight) n‖ ≤ C * (((n : ℝ) + 1) ^ σ))
-    (D : ℝ) (hD : 1 ≤ D) :
-    ‖normFiberExpSum weight D⁻¹‖ ≤ 3 * C * D ^ σ := by
-  let a : ℕ → ℂ := normFiberCoeff weight
-  let r : ℝ := Real.exp (-D⁻¹)
-  have hDpos : 0 < D := lt_of_lt_of_le zero_lt_one hD
-  have ht : 0 < D⁻¹ := inv_pos.mpr hDpos
-  have hr0 : 0 ≤ r := (Real.exp_pos _).le
-  have hr1 : r < 1 := Real.exp_lt_one_iff.mpr (neg_lt_zero.mpr ht)
-  have hpow (n : ℕ) : Real.exp (-(n : ℝ) * D⁻¹) = r ^ n := by
-    dsimp [r]
-    convert Real.exp_nat_mul (-D⁻¹) n using 1 ; ring_nf
-  have hf : Summable (fun n : ℕ => a n * (r : ℂ) ^ n) := by
-    have h := normFiberExpSum_summable χ ψ weight hcoeff ha0 D⁻¹ ht
-    simpa only [a, hpow, Complex.ofReal_pow] using h
-  have hS : normFiberExpSum weight D⁻¹ =
-      ∑' n : ℕ, a n * (r : ℂ) ^ n := by
-    unfold normFiberExpSum
-    apply tsum_congr
-    intro n
-    simp only [a, hpow, Complex.ofReal_pow]
-  have habel := tsum_eq_one_sub_mul_tsum_prefix a r hr0 hr1 hf
-  have hlin : Summable (fun n : ℕ => ((n : ℝ) + 1) * r ^ n) :=
-    summable_add_one_mul_geometric hr0 hr1
-  have hmoment : Summable (fun n : ℕ => (((n : ℝ) + 1) ^ σ) * r ^ n) := by
-    apply Summable.of_nonneg_of_le
-      (fun n => mul_nonneg (Real.rpow_nonneg (by positivity) σ) (pow_nonneg hr0 _))
-      (fun n => ?_) hlin
-    exact mul_le_mul_of_nonneg_right
-      (Real.rpow_le_self_of_one_le (by
-        have hn : 0 ≤ (n : ℝ) := Nat.cast_nonneg n
-        linarith) hσ1) (pow_nonneg hr0 _)
-  have hdom : Summable (fun n : ℕ => C * ((((n : ℝ) + 1) ^ σ) * r ^ n)) :=
-    hmoment.mul_left C
-  have hpoint (n : ℕ) :
-      ‖prefixCoeff a n * (r : ℂ) ^ n‖ ≤
-        C * ((((n : ℝ) + 1) ^ σ) * r ^ n) := by
-    rw [norm_mul, norm_pow, Complex.norm_real, Real.norm_eq_abs,
-      abs_of_nonneg hr0]
-    have h := mul_le_mul_of_nonneg_right (hprefix n) (pow_nonneg hr0 n)
-    convert h using 1 ; ring
-  have hnorm : Summable (fun n : ℕ => ‖prefixCoeff a n * (r : ℂ) ^ n‖) :=
-    Summable.of_nonneg_of_le (fun _ => norm_nonneg _) hpoint hdom
-  have hgap : 0 ≤ 1 - r := sub_nonneg.mpr hr1.le
-  have hmomentBound := geometric_rpow_moment_bound σ D r hσ0 hσ1 hD hr0 hr1
-    (exp_inv_geometric_gap D hD)
-  calc
-    ‖normFiberExpSum weight D⁻¹‖ =
-        ‖(1 - (r : ℂ)) * (∑' n : ℕ, prefixCoeff a n * (r : ℂ) ^ n)‖ := by
-          rw [hS, habel]
-    _ = (1 - r) * ‖∑' n : ℕ, prefixCoeff a n * (r : ℂ) ^ n‖ := by
-      have hreal : (1 - (r : ℂ)) = ((1 - r : ℝ) : ℂ) := by push_cast; ring
-      rw [norm_mul, hreal, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hgap]
-    _ ≤ (1 - r) * (∑' n : ℕ, ‖prefixCoeff a n * (r : ℂ) ^ n‖) :=
-      mul_le_mul_of_nonneg_left (norm_tsum_le_tsum_norm hnorm) hgap
-    _ ≤ (1 - r) * (∑' n : ℕ,
-          C * ((((n : ℝ) + 1) ^ σ) * r ^ n)) :=
-      mul_le_mul_of_nonneg_left (Summable.tsum_le_tsum hpoint hnorm hdom) hgap
-    _ = C * ((1 - r) * (∑' n : ℕ, (((n : ℝ) + 1) ^ σ) * r ^ n)) := by
-      rw [tsum_mul_left]
-      ring
-    _ ≤ C * (3 * D ^ σ) := mul_le_mul_of_nonneg_left hmomentBound hC
-    _ = 3 * C * D ^ σ := by ring
-
-theorem normFiberExpSum_isBigO_of_prefix_power
-    {q r₀ : ℕ} [NeZero q] [NeZero r₀]
-    (χ : DirichletCharacter ℂ q) (ψ : DirichletCharacter ℂ r₀)
-    (weight : Ideal O → ℂ)
-    (hcoeff : ∀ n : ℕ, n ≠ 0 → normFiberCoeff weight n = pairInverseCoeff χ ψ n)
-    (ha0 : normFiberCoeff weight 0 = 0)
-    (σ C : ℝ) (hσ0 : 0 ≤ σ) (hσ1 : σ ≤ 1) (hC : 0 ≤ C)
-    (hprefix : ∀ n : ℕ,
-      ‖prefixCoeff (normFiberCoeff weight) n‖ ≤ C * (((n : ℝ) + 1) ^ σ)) :
-    (fun D : ℝ => normFiberExpSum weight D⁻¹) =O[atTop]
-      (fun D : ℝ => D ^ σ) := by
-  apply IsBigO.of_bound (3 * C)
-  filter_upwards [eventually_ge_atTop (1 : ℝ)] with D hD
-  have h := normFiberExpSum_le_of_prefix_power χ ψ weight hcoeff ha0
-    σ C hσ0 hσ1 hC hprefix D hD
-  have hDnonneg : 0 ≤ D := (zero_le_one.trans hD)
-  simpa only [Real.norm_eq_abs, abs_of_nonneg (Real.rpow_nonneg hDnonneg σ)] using h
 
 end ShortDraftHeckeBridge
 

@@ -1,6 +1,5 @@
 import Mathlib.Analysis.CStarAlgebra.Matrix
 import Mathlib.Tactic.Ring
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

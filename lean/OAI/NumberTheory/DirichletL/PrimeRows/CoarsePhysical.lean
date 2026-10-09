@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CoarseUniform
 import OAI.NumberTheory.DirichletL.PrimeRows.BufferedHeightGrowth
-
 namespace OAI
 
 noncomputable section

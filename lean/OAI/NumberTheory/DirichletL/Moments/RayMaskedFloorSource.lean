@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.RayMaskedFloorShared
 import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalControl
 import OAI.NumberTheory.DirichletL.Moments.InductionEnergy
-
 namespace OAI
 
 noncomputable section

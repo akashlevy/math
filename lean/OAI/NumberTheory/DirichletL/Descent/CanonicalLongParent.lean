@@ -6,7 +6,6 @@ import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLiveParents
 import OAI.NumberTheory.DirichletL.Descent.FirstLiveCountBudget
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLiveAggregate
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLiveEnergy
-
 namespace OAI
 
 noncomputable section

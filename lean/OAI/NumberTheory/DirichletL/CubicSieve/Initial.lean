@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.Poisson
 import OAI.NumberTheory.DirichletL.CubicSieve.Algebra
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

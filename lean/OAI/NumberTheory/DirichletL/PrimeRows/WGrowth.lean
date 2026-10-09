@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.TupleGrowth
 import OAI.NumberTheory.DirichletL.PrimeRows.SelectedBounds
-
 namespace OAI
 
 noncomputable section

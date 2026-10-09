@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.SelectedAgreement
 import OAI.NumberTheory.DirichletL.PrimeRows.MarkedExclusions
-
 namespace OAI
 
 noncomputable section

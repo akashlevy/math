@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LocalWeights
-
 namespace OAI
 
 noncomputable section

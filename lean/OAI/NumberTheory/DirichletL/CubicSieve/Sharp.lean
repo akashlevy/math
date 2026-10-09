@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.ExponentImprovement
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

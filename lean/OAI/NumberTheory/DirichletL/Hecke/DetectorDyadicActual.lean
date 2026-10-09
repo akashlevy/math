@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorDyadicCutoff
-
 namespace OAI
 
 noncomputable section

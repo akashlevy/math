@@ -1,78 +1,24 @@
 import OAI.NumberTheory.DirichletL.RowCompletion.CubicReopening
 import OAI.NumberTheory.DirichletL.Eisenstein.MeromorphicResolvent
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 
@@ -202,13 +148,6 @@ def kernelLocalCorrectedSeed (S : Set KernelQuotient) (hS : IsCompact S)
     (a b : ℝ) (ha : 0<a) (hab : a<b) (s : ℂ) : KernelQuotientL2 :=
   kernelLocalSeedL2 S hS a b ha s +
     kernelMassRestrictionCLM S hS.measurableSet (kernelEisensteinL2Correction a b ha hab s)
-
-lemma kernelLocalCorrectedSeed_meromorphicAt (S : Set KernelQuotient) (hS : IsCompact S)
-    (a b : ℝ) (ha : 0<a) (hab : a<b) :
-    MeromorphicAt (kernelLocalCorrectedSeed S hS a b ha hab) (4/3:ℂ) := by
-  exact ((kernelLocalSeedL2_entire S hS a b ha).analyticAt (4/3)).meromorphicAt.add
-    (meromorphicAt_clm (kernelMassRestrictionCLM S hS.measurableSet)
-      (kernelEisensteinL2Correction_meromorphicAt a b ha hab))
 
 lemma kernelLocalCorrectedSeed_analyticAt_nonreal (S : Set KernelQuotient) (hS : IsCompact S)
     (a b : ℝ) (ha : 0<a) (hab : a<b) (s : ℂ) (hs : s.re≠1) (hi : s.im≠0) :
@@ -426,14 +365,6 @@ lemma heightDenominator_normalized (z : ℂ) (v : ℝ) (u : Fin 2→ℂ) :
   rw [normalizedComplexRow,heightDenominator_real_smul,inv_pow,Real.sq_sqrt (rowEnergy_nonneg u)]
   ring
 
-lemma regularRowKernel_eq (s : ℂ) (deltaLoss : ℝ) (hδ : 0<deltaLoss) (u : Fin 2→ℂ)
-    (p : SpatialCoordinates) (hp : deltaLoss≤p 2) :
-    regularRowKernel s deltaLoss u p=rowSmoothPower s u p := by
-  rw [regularRowKernel,regularSpatialHeight_eq deltaLoss hδ p hp]
-  unfold rowSmoothPower spatialHeightPower
-  rw [←heightDenominator_eq_quadratic]
-  rfl
-
 lemma normalized_row_summand (s : ℂ) (deltaLoss : ℝ) (hδ : 0<deltaLoss)
     (r : CuspCosets) (p : SpatialCoordinates) (hp : deltaLoss≤p 2) :
     summand 1 s r*regularRowKernel s deltaLoss (normalizedComplexRow (embeddedRow r)) p=
@@ -555,31 +486,8 @@ lemma kernelQuotientSeed_contMDiff (a b : ℝ) (s : ℂ) (ha : 1<a) (hab : a<b) 
   kernel_contMDiff_of_spatial _ _ (actual_smoothCuspSeed_contDiffAt a b s ha hab)
     (kernelQuotientSeed_coordinate a b s)
 
-def kernelCutoffRemainderTest (n : ℕ) (a b : ℝ) (ha : 1<a) (hab : a<b)
-    (s : ℂ) (hs : 2<s.re) : kernelSmoothTests := by
-  let f : KernelQuotient→ℂ:=fun q => (kernelExhaustionCutoff n q:ℂ)*
-    (kernelQuotientEisenstein s hs q-kernelQuotientSeed a b s q)
-  refine ⟨f,?_,?_⟩
-  · have hm : ContDiff ℝ ∞ (fun z : ℂ × ℂ => z.1*z.2) := contDiff_fst.mul contDiff_snd
-    exact hm.contMDiff.comp
-      ((Complex.ofRealCLM.contDiff.contMDiff.comp (kernelExhaustionCutoff_smooth n)).prodMk_space
-        ((kernelQuotientEisenstein_contMDiff s hs).sub (kernelQuotientSeed_contMDiff a b s ha hab)))
-  · apply HasCompactSupport.of_support_subset_isCompact (kernelExhaustionCutoff_hasCompactSupport n)
-    intro q hq
-    by_contra hn
-    have hz : kernelExhaustionCutoff n q=0 := by
-      by_contra hne
-      exact hn (subset_closure hne)
-    exact hq (by simp [f,hz])
-
-lemma kernelCutoffRemainderTest_apply (n : ℕ) (a b : ℝ) (ha : 1<a) (hab : a<b)
-    (s : ℂ) (hs : 2<s.re) (q : KernelQuotient) :
-    (kernelCutoffRemainderTest n a b ha hab s hs).1 q=(kernelExhaustionCutoff n q:ℂ)*
-      (kernelQuotientEisenstein s hs q-kernelQuotientSeed a b s q) := rfl
-
 end CubicEisenstein
 
-open scoped BigOperators Classical ContDiff
 namespace InitialMeanSquare
 open ActualEisensteinCubic ConcretePrimeRowBridge CanonicalQuadraticSieve
 open SecondPassArithmetic SecondPassIntegration JointLogSeparation

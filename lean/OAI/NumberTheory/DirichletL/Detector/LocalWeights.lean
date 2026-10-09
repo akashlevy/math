@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.PrimeConstants
 import OAI.NumberTheory.DirichletL.Detector.PhasePowers
-
 namespace OAI
 
 noncomputable section

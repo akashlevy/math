@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.NonfloorCount
-
 namespace OAI
 
 noncomputable section

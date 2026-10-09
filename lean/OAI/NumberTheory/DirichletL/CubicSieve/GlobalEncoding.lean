@@ -1,76 +1,24 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.SeedDefects
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
 
@@ -126,7 +74,6 @@ theorem primeProduct_span_exponents_eq {ι : Type*} [DecidableEq ι]
 
 end SecondPassArithmetic
 
-open scoped BigOperators Classical SchwartzMap
 namespace CanonicalQuadraticSieve
 
 section
@@ -419,7 +366,6 @@ theorem HasSieveExponent.principal_divisor_correction {α : ℝ} (hexp : HasSiev
 
 end CanonicalQuadraticSieve
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 
 section
@@ -645,28 +591,6 @@ theorem globalSecondEncoding_injective {x y : GlobalSecondData ι}
       _ = y.source.divisor ∪ (y.source.sourceCommon\y.source.divisor) := by rw [hR',hE']
       _ = _ := Finset.union_sdiff_of_subset hy.2.1
   exact GlobalSecondData.ext hc hA' hC' hD' (SecondExpansionData.ext hG hE' hV' hk)
-
-theorem globalSecond_fiber_card (ε : ℝ) (hε : 0 < ε) :
-    ∃ C : ℝ, 0 < C ∧ ∀ (s : Finset (GlobalSecondData ι))
-      (q : Ideal O × Ideal O × Ideal O) (f : Ideal O) (y : O),
-      (∀ x∈s,GlobalSecondAdmissible x) → f ≠ ⊥ → q.1 ≠ ⊥ →
-      (∀ x∈s,globalSecondFixedTriple p x=q) →
-      (∀ x∈s,SecondPassFiber.newLabel (globalSecondTuple p x)=f) →
-      (∀ x∈s,SecondPassFiber.newRow (globalSecondTuple p x)=y) →
-      (s.card : ℝ) ≤ C*((Ideal.absNorm f : ℝ)*Ideal.absNorm q.1)^ε := by
-  obtain ⟨C,hC,hbound⟩ := SecondPassFiber.valid_tuple_small_power ε hε
-  refine ⟨C,hC,?_⟩
-  intro s q f y hs hf hq htr hlabel hrow
-  have hi : Set.InjOn (globalSecondTuple p) s := by
-    intro x hx z hz he
-    exact globalSecondEncoding_injective p hinj (hs x hx) (hs z hz)
-      ((htr x hx).trans (htr z hz).symm) he
-  rw [← Finset.card_image_of_injOn hi]
-  apply hbound _ f q.1 y hf hq
-  intro t ht
-  obtain ⟨x,hx,rfl⟩ := Finset.mem_image.mp ht
-  have hv := globalSecondTuple_valid p x (hs x hx)
-  simpa only [htr x hx,hlabel x hx,hrow x hx] using hv
 
 end SecondPassArithmetic
 

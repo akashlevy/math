@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialExcludedPool
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerWindow
-
 namespace OAI
 
 noncomputable section

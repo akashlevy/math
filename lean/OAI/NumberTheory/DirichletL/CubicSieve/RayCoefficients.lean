@@ -1,75 +1,24 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.FirstPassage
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace SecondPassArithmetic
 
 section
@@ -198,117 +147,11 @@ variable {ι : Type*} [DecidableEq ι]
   (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
   (hg : ∀ i, lambda ∉ Ideal.span {p i})
 
-def secondActualPair (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (F : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m r c d e k : O)
-    (H₁ H₂ : Finset ι → ℂ) : ℂ :=
-  ∑ S ∈ F.powerset, ∑ T ∈ F.powerset, if Disjoint S T then
-    star (supportMobius (fun i => Ideal.span {p i}) S *
-      secondInputCoefficient p hg Ψ₁ (m * (e * r)) c d H₁ S) *
-    (supportMobius (fun i => Ideal.span {p i}) T *
-      secondInputCoefficient p hg Ψ₂ (m * (e * r)) c d H₂ T) *
-      activeGaussRowFactor p hp hinj hg T S e k else 0
-
-theorem secondActualPair_eq_separated
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1)
-    (F : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m r c d e k : O)
-    (H₁ H₂ : Finset ι → ℂ) :
-    secondActualPair p hp hg hinj F Ψ₁ Ψ₂ m r c d e k H₁ H₂ =
-      ∑ z : SecondRayIndex, secondRayCoefficient z *
-        secondSeparatedPair p hp hcop hg F (secondRayMinus Ψ₁ z) (secondRayPlus Ψ₂ z)
-          m r c d e k (-k) H₁ H₂ := by
-  have hh (S T : Finset ι) :
-      (if Disjoint S T then
-        star (supportMobius (fun i => Ideal.span {p i}) S *
-          secondInputCoefficient p hg Ψ₁ (m * (e * r)) c d H₁ S) *
-        (supportMobius (fun i => Ideal.span {p i}) T *
-          secondInputCoefficient p hg Ψ₂ (m * (e * r)) c d H₂ T) *
-          activeGaussRowFactor p hp hinj hg T S e k else 0) =
-        ∑ z : SecondRayIndex, secondRayCoefficient z *
-          (if Disjoint S T then
-            star (secondPreColumn p hp hcop hg (secondRayMinus Ψ₁ z)
-              (m * (e * r)) c d e k H₁ S) *
-            secondPreColumn p hp hcop hg (secondRayPlus Ψ₂ z)
-              (m * (e * r)) c d e (-k) H₂ T else 0) := by
-    by_cases hd : Disjoint S T
-    · simp only [ite_eq_left hd]
-      simpa only [Fintype.sum_prod_type, secondRayCoefficient, secondRayMinus,
-        secondRayPlus, mul_assoc] using
-        second_gauss_ray_expansion p hp hcop hg hinj hc hpr Ψ₁ Ψ₂
-          (m * (e * r)) c d e k H₁ H₂ S T hd
-    · simp [hd]
-  unfold secondActualPair
-  simp_rw [hh]
-  calc
-    _ = ∑ S ∈ F.powerset, ∑ z : SecondRayIndex, ∑ T ∈ F.powerset,
-        secondRayCoefficient z *
-          (if Disjoint S T then
-            star (secondPreColumn p hp hcop hg (secondRayMinus Ψ₁ z)
-              (m * (e * r)) c d e k H₁ S) *
-            secondPreColumn p hp hcop hg (secondRayPlus Ψ₂ z)
-              (m * (e * r)) c d e (-k) H₂ T else 0) := by
-      apply Finset.sum_congr rfl
-      intro S hS
-      exact Finset.sum_comm
-    _ = _ := by
-      rw [Finset.sum_comm]
-      simp only [secondSeparatedPair, Finset.mul_sum]
-
 def secondTotalWeight (Ψ₁ Ψ₂ : O →* ℂ) (m r c d e k : O)
     (z : SecondRayIndex × Finset ι) : ℂ :=
   secondRayCoefficient z.1 *
     secondCommonWeight p hp hcop hg (secondRayMinus Ψ₁ z.1) (secondRayPlus Ψ₂ z.1)
       m r c d e k (-k) z.2
-
-def secondTotalEnergy (F : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m r c d e k : O)
-    (H : Finset ι → ℂ) (negative : Bool) : ℝ :=
-  ∑ z : SecondRayIndex, ∑ V ∈ F.powerset,
-    ‖secondTotalWeight p hp hcop hg Ψ₁ Ψ₂ m r c d e k (z,V)‖ *
-      ‖secondChildSum p hp hcop hg F V
-        (if negative then secondRayMinus Ψ₁ z else secondRayPlus Ψ₂ z)
-        m r c d e (if negative then k else -k) H‖ ^ 2
-
-theorem secondActualPair_eq_children
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1)
-    (F : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m r c d e k : O)
-    (H₁ H₂ : Finset ι → ℂ) :
-    secondActualPair p hp hg hinj F Ψ₁ Ψ₂ m r c d e k H₁ H₂ =
-      ∑ z : SecondRayIndex, ∑ V ∈ F.powerset,
-        secondTotalWeight p hp hcop hg Ψ₁ Ψ₂ m r c d e k (z,V) *
-          star (secondChildSum p hp hcop hg F V (secondRayMinus Ψ₁ z) m r c d e k H₁) *
-          secondChildSum p hp hcop hg F V (secondRayPlus Ψ₂ z) m r c d e (-k) H₂ := by
-  rw [secondActualPair_eq_separated p hp hcop hg hinj hc hpr]
-  simp only [secondSeparatedPair_eq_children p hp hcop hg hinj hpr,
-    Finset.mul_sum, secondTotalWeight, mul_assoc]
-
-private theorem weighted_star_cauchy {α : Type*} (s : Finset α)
-    (w U V : α → ℂ) :
-    ‖∑ i ∈ s, w i * star (U i) * V i‖ ≤
-      Real.sqrt (∑ i ∈ s, ‖w i‖ * ‖U i‖ ^ 2) *
-      Real.sqrt (∑ i ∈ s, ‖w i‖ * ‖V i‖ ^ 2) := by
-  simpa only [mul_comm, mul_left_comm, mul_assoc] using
-    DescentWeightedCauchy.weighted_cauchy s w V U
-
-theorem secondActualPair_norm_le
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1)
-    (F : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m r c d e k : O)
-    (H₁ H₂ : Finset ι → ℂ) :
-    ‖secondActualPair p hp hg hinj F Ψ₁ Ψ₂ m r c d e k H₁ H₂‖ ≤
-      Real.sqrt (secondTotalEnergy p hp hcop hg F Ψ₁ Ψ₂ m r c d e k H₁ true) *
-      Real.sqrt (secondTotalEnergy p hp hcop hg F Ψ₁ Ψ₂ m r c d e k H₂ false) := by
-  rw [secondActualPair_eq_children p hp hcop hg hinj hc hpr]
-  have h := weighted_star_cauchy
-    ((Finset.univ : Finset SecondRayIndex) ×ˢ F.powerset)
-    (secondTotalWeight p hp hcop hg Ψ₁ Ψ₂ m r c d e k)
-    (fun z => secondChildSum p hp hcop hg F z.2 (secondRayMinus Ψ₁ z.1) m r c d e k H₁)
-    (fun z => secondChildSum p hp hcop hg F z.2 (secondRayPlus Ψ₂ z.1) m r c d e (-k) H₂)
-  simpa only [Finset.sum_product, secondTotalEnergy, ite_true,
-    Bool.false_eq_true, ite_false] using h
 
 end
 
@@ -333,24 +176,6 @@ theorem secondChildColumn_zero_of_overlap
   have hzero := FirstPassCubeLabels.row_zero_of_mask_zero
     (fun i => Ideal.span {p i}) hg N _ hmask
   simp only [secondChildColumn, hzero, zero_pow (by decide : (4 : ℕ) ≠ 0), mul_zero, zero_mul]
-
-theorem secondChildSum_fixed_pool
-    (F V : Finset ι) (Ψ : O →* ℂ) (m r c d e k : O) (H : Finset ι → ℂ) :
-    secondChildSum p hp hcop hg F V Ψ m r c d e k H =
-      ∑ N ∈ F.powerset,
-        secondChildColumn p hp hcop hg Ψ (m * r) (c * e * ∏ i ∈ V, p i) (d * e * k)
-          (fun U => H (V ∪ U)) N := by
-  unfold secondChildSum
-  apply Finset.sum_subset
-  · exact Finset.powerset_mono.mpr Finset.sdiff_subset
-  · intro N hNF hNV
-    apply secondChildColumn_zero_of_overlap
-    intro hd
-    apply hNV
-    apply Finset.mem_powerset.mpr
-    intro i hi
-    exact Finset.mem_sdiff.mpr ⟨(Finset.mem_powerset.mp hNF) hi,
-      fun hiv => Finset.disjoint_left.mp hd hiv hi⟩
 
 end SecondPassArithmetic
 
@@ -530,7 +355,7 @@ theorem kubota_mul (a b c d e f g h : O)
 
 end CubicJacobiGlobal
 
-open scoped BigOperators Classical MatrixGroups
+open scoped MatrixGroups
 
 namespace CubicJacobiGlobal
 open ActualEisensteinCubic CubicRamified
@@ -615,9 +440,6 @@ def character : levelThree →* O where
   toFun := value
   map_one' := value_one
   map_mul' := value_mul
-
-theorem value_isUnit (M : levelThree) : IsUnit (value M) :=
-  (Group.isUnit M).map character
 
 theorem value_zero_lower_left (M : levelThree) (hc : (M : SL(2,O)) 1 0 = 0) :
     value M = 1 := by

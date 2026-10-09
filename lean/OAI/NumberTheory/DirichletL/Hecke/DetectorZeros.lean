@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.BoundaryIntegration
 import OAI.NumberTheory.DirichletL.Detector
 import Mathlib.Analysis.Analytic.Order
-
 namespace OAI
 
 noncomputable section
@@ -69,17 +68,6 @@ def zeroMaximum (χ : ι → Character) (hχ : ∀ i, (χ i).residue ≠ 1) (T :
 theorem zeroMaximum_mem (χ : ι → Character) (hχ : ∀ i, (χ i).residue ≠ 1) (T : ℝ) :
     zeroMaximum χ hχ T ∈ realParts χ hχ T := Finset.max'_mem _ _
 
-theorem zeroMaximum_bounds (χ : ι → Character) (hχ : ∀ i, (χ i).residue ≠ 1) (T : ℝ) :
-    (51/100 : ℝ) ≤ zeroMaximum χ hχ T ∧ zeroMaximum χ hχ T ≤ 1 := by
-  constructor
-  · exact Finset.le_max' _ _ (Finset.mem_insert_self _ _)
-  · apply Finset.max'_le
-    intro x hx
-    rcases Finset.mem_insert.mp hx with rfl | hx
-    · norm_num
-    · obtain ⟨⟨i,s⟩, hs, rfl⟩ := Finset.mem_image.mp hx
-      exact (mem_familyZeros χ hχ T i s |>.mp hs).2.1
-
 theorem zero_re_le_maximum (χ : ι → Character) (hχ : ∀ i, (χ i).residue ≠ 1)
     (T : ℝ) (i : ι) {s : ℂ} (hs : (51/100 : ℝ) ≤ s.re)
     (ht : |s.im| ≤ T) (hz : LFunction (χ i) s = 0) : s.re ≤ zeroMaximum χ hχ T := by
@@ -99,16 +87,6 @@ theorem maximum_attained (χ : ι → Character) (hχ : ∀ i, (χ i).residue �
   · obtain ⟨⟨i,s⟩, hs, heq⟩ := Finset.mem_image.mp hm
     have hz := (mem_familyZeros χ hχ T i s).mp hs
     exact ⟨i,s,hz.2.2.2,hz.2.2.1,heq⟩
-
-theorem zeroMaximum_mono (χ : ι → Character) (hχ : ∀ i, (χ i).residue ≠ 1)
-    {T T' : ℝ} (hT : T ≤ T') : zeroMaximum χ hχ T ≤ zeroMaximum χ hχ T' := by
-  rcases lt_or_ge (51/100 : ℝ) (zeroMaximum χ hχ T) with hm | hm
-  · obtain ⟨i,s,hz,ht,heq⟩ := maximum_attained χ hχ T hm
-    rw [← heq]
-    apply zero_re_le_maximum χ hχ T' i _ (ht.trans hT) hz
-    rw [heq]
-    exact hm.le
-  · exact hm.trans (zeroMaximum_bounds χ hχ T').1
 
 theorem nonzero_on_buffered_disk (χ : ι → Character) (hχ : ∀ j, (χ j).residue ≠ 1)
     (T a e : ℝ) (i : ℕ) (hT : 2 < T) (ha : (51/100 : ℝ) ≤ a) (he : 0 < e)
@@ -130,30 +108,6 @@ theorem nonzero_on_buffered_disk (χ : ι → Character) (hχ : ∀ j, (χ j).re
   intro hz
   have hle := zero_re_le_maximum χ hχ (3*(i+1 : ℕ)*T) j (by linarith) him hz
   linarith
-
-theorem exists_actual_buffered_bin (χ : ι → Character)
-    (hχ : ∀ j, (χ j).residue ≠ 1) (T e : ℝ) (hT : 2 < T) (he : 0 < e)
-    (n : ℕ) (hn : 0 < n) (hwidth : (49/100 : ℝ) ≤ n*e) :
-    ∃ i k : ℕ, 1 ≤ i ∧ i ≤ n ∧
-      let a : ℝ := 51/100+e*k
-      a ≤ 1 ∧ a ≤ zeroMaximum χ hχ (3*i*T) ∧
-      zeroMaximum χ hχ (3*i*T) < a+e ∧
-      zeroMaximum χ hχ (3*(i+1 : ℕ)*T) < a+2*e ∧
-      (51/100 < a → ∃ j s, LFunction (χ j) s = 0 ∧ a ≤ s.re ∧
-        s.re < a+e ∧ |s.im| ≤ 3*i*T) ∧
-      (∀ j t, |t| ≤ (3*i+2 : ℕ)*T → ∀ s ∈
-        Metric.closedBall ((2 : ℂ)+t*Complex.I) (2-a-2*e), LFunction (χ j) s ≠ 0) := by
-  let M : ℕ → ℝ := fun j => zeroMaximum χ hχ (3*(j+1 : ℕ)*T)
-  obtain ⟨i,hk,k,hone,hlo,hhi,hnext⟩ := Detector.exists_buffered_bin M hn he
-    (fun j _ => zeroMaximum_bounds χ hχ _) hwidth
-  refine ⟨i+1,k,by omega,by omega,hone,hlo,hhi,?_,?_,?_⟩
-  · exact hnext
-  · intro ha
-    obtain ⟨j,s,hz,ht,hs⟩ := maximum_attained χ hχ (3*(i+1 : ℕ)*T) (lt_of_lt_of_le ha hlo)
-    exact ⟨j,s,hz,by rw [hs]; exact hlo,by rw [hs]; exact hhi,ht⟩
-  · intro j t ht s hs
-    apply nonzero_on_buffered_disk χ hχ T (51/100+e*k) e (i+1) hT
-      (by nlinarith [Nat.cast_nonneg (α := ℝ) k]) he hnext j t ht hs
 
 end SevenEighths.HeckeDetectorZeros
 

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.PlainGlobalEnergy
-
 namespace OAI
 
 noncomputable section

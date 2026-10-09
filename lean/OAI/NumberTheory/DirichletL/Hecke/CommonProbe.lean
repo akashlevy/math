@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.SignalIdentity
 import OAI.NumberTheory.DirichletL.Hecke.PrimitiveSupremum
 import OAI.NumberTheory.DirichletL.Hecke.Dirichlet
-
 namespace OAI
 
 noncomputable section

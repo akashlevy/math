@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.DescentProfiles
 import OAI.NumberTheory.DirichletL.Descent.Marks
-
 namespace OAI
 
 noncomputable section
@@ -15,15 +14,6 @@ def density (g : 𝓢(ℝ,ℂ)) (xj t : ℝ) : ℂ := (𝓕 g) t*logPhase t xj
 
 theorem density_norm (g : 𝓢(ℝ,ℂ)) (xj t : ℝ) : ‖density g xj t‖=‖(𝓕 g) t‖ := by
   simp only [density,norm_mul,logPhase_norm,mul_one]
-
-theorem density_moment (g : 𝓢(ℝ,ℂ)) (J : ℕ) :
-    ∃C:ℝ,0≤C ∧ ∀xj,
-      Integrable (fun t:ℝ=>(1+‖t‖)^J*‖density g xj t‖) ∧
-      (∫t:ℝ,(1+‖t‖)^J*‖density g xj t‖)≤C := by
-  refine ⟨∫t:ℝ,(1+‖t‖)^J*‖(𝓕 g) t‖,integral_nonneg (fun t=>by positivity),?_⟩
-  intro xj
-  simp only [density_norm]
-  exact ⟨AnalyticBridge.schwartz_fourier_one_plus_integrable g J,le_rfl⟩
 
 lemma phase_neg (t x : ℝ) : logPhase (-t) x=logPhase t (-x) := by
   unfold logPhase

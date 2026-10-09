@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialConjugateEnergy
 import OAI.NumberTheory.DirichletL.Inversion.InitialClippedColumns
-
 namespace OAI
 
 noncomputable section
@@ -325,28 +324,6 @@ theorem original_ray_common_insertion
   simp only [physicalTerm,divisor,supportMobius]
   ring
 
-theorem physicalBlock_zero (source : Finset (Point ι)) (w : Point ι→ℂ)
-    (Ψ : O →* ℂ) (j : O) (σ : Finset ι→ℂ)
-    (W₁ W₂ : ℝ→ℂ) (Φ : 𝓢(ℝ,ℂ)) (Z D m : ℝ)
-    (hw : ∀ x∈source,w x=0) : physicalBlock p hp hcop hg source w Ψ j σ W₁ W₂ Φ Z D m=0 := by
-  unfold physicalBlock
-  apply Finset.sum_eq_zero
-  intro x hx
-  simp only [hw x hx,zero_mul,Finset.sum_const_zero]
-
-include hp in
-omit [DecidableEq ι] [∀ i,(Ideal.span {p i}).IsMaximal] in
-theorem child_test_clipping (w₀ : ℝ→ℂ) {Z : ℝ} (hZ : 0<Z)
-    (N t : ℝ) (A : Finset ι) :
-    childLogTest w₀ t ((Ideal.absNorm (sourceIdeal p A):ℝ)/Z^N) =
-      logPhase t ((max 0 N-N)*Real.log Z) *
-        clippedTest w₀ (Z^(max 0 N-N)) t
-          ((Ideal.absNorm (sourceIdeal p A):ℝ)/Z^(max 0 N)) := by
-  rw [clippedTest_eq_source]
-  simpa only [childLogTest,Real.log_rpow hZ,mul_comm] using
-    clipped_column_source_identity w₀ hZ
-      (QuadraticMainBoundary.norm_pos (sourceIdeal_ne_zero p hp A)) N t
-
 def BlockSupport (source : Finset (Point ι)) (W₁ W₂ ω₁ ω₂ : ℝ→ℂ)
     (V : Fin 6→ℝ→ℂ) (Z D B v θ H c₁ c₂ θ₁ θ₂ : ℝ) : Prop :=
   (∀ x∈source,clippedSource W₁ c₁ θ₁
@@ -358,122 +335,7 @@ def BlockSupport (source : Finset (Point ι)) (W₁ W₂ ω₁ ω₂ : ℝ→ℂ
   (∀ x∈source,star (ω₁ (columnRatio p x.left Z D B v))≠0 →
     ω₂ (columnRatio p x.right Z D B v)≠0 → ∀ i,V i (relativeLog (coordinates p x) Z D B v θ H i)=1)
 
-theorem actual_initial_block_common_measure
-    (W₁ W₂ : ℝ→ℂ) (a b : ℝ) (ha : 0<a)
-    (hs₁ : Function.support W₁⊆Set.Icc a b) (hs₂ : Function.support W₂⊆Set.Icc a b)
-    (hW₁ : ContDiff ℝ ∞ W₁) (hW₂ : ContDiff ℝ ∞ W₂)
-    (Φ : 𝓢(ℝ,ℂ)) (V : Fin 6→ℝ→ℂ) (M : Fin 6→ℝ)
-    (hV : ∀ i,ContDiff ℝ ∞ (V i)) (hS : ∀ i,HasCompactSupport (V i))
-    (hM : ∀ i,0≤M i) (hbox : ∀ i y,V i y≠0 → |y|≤M i) (A J : ℕ) :
-    let g := secondRootSchwartz V hV hS
-    let g₁ := CubicReflectionKernel.logSchwartz W₁ a b ha hs₁ hW₁
-    let g₂ := CubicReflectionKernel.logSchwartz W₂ a b ha hs₂ hW₂
-    ∃ C : ℝ,0≤C ∧ ∀ Z D B v m θ H η : ℝ,0<Z → 0≤η*Real.log Z →
-      ∃ b₃ : 𝓢(ℝ,ℂ),∀ c₁ c₂ θ₁ θ₂ : ℝ,0<c₁ → 0<c₂ →
-      (∀ {κ : Type*} [DecidableEq κ] (p : κ→O) (hp : ∀ i,p i≠0)
-        [∀ i,(Ideal.span {p i}).IsMaximal]
-        (hcop : Pairwise (Function.onFun IsCoprime (fun i=>Ideal.span {p i})))
-        (hg : ∀ i,goodLambda∉Ideal.span {p i}) (hpr : ∀ i,goodLambda^2∣p i-1)
-        (source : Finset (Point κ)) (_hs : ∀ x∈source,Valid x)
-        (w : Point κ→ℂ) (Ψ : O →* ℂ) (j : O) (σ : Finset κ→ℂ) (ω₁ ω₂ : ℝ→ℂ),
-        BlockSupport p source W₁ W₂ ω₁ ω₂ V Z D B v θ H c₁ c₂ θ₁ θ₂ →
-        physicalBlock p hp hcop hg source w Ψ j σ
-          (clippedSource W₁ c₁ θ₁) (clippedSource W₂ c₂ θ₂) Φ Z D m =
-          (Z^(prefactorCenter m D B θ+3*η):ℝ)*
-            ∫ z : Frequency × (Fin 6→ℝ),familyDensity g g₁ g₂ b₃ c₁ c₂ θ₁ θ₂ (η*Real.log Z) z *
-              canonicalBlock p hp hcop hg hpr source w Ψ j σ ω₁ ω₂ Z D B v θ H z) ∧
-      Integrable (fun z : Frequency × (Fin 6→ℝ)=>tripleHeight J z.1*coordinateHeight J z.2*
-        ‖familyDensity g g₁ g₂ b₃ c₁ c₂ θ₁ θ₂ (η*Real.log Z) z‖) ∧
-      (1+Z^(radialCenter m H θ D B))^A *
-        (∫ z : Frequency × (Fin 6→ℝ),tripleHeight J z.1*coordinateHeight J z.2*
-          ‖familyDensity g g₁ g₂ b₃ c₁ c₂ θ₁ θ₂ (η*Real.log Z) z‖) ≤
-        C*((1+‖θ₁‖)^InverseClippingProfiles.momentOrder J*(1+‖θ₂‖)^InverseClippingProfiles.momentOrder J) := by
-  dsimp only
-  obtain ⟨C,hC,hfamily⟩ := initial_physical_family_common_measure
-    W₁ W₂ a b ha hs₁ hs₂ hW₁ hW₂ Φ V M hV hS hM hbox A J
-  refine ⟨C,hC,?_⟩
-  intro Z D B v m θ H η hZ hL
-  obtain ⟨b₃,hb₃⟩ := hfamily Z D B v m θ H η hZ hL
-  refine ⟨b₃,?_⟩
-  intro c₁ c₂ θ₁ θ₂ hc₁ hc₂
-  obtain ⟨hid,hi,hb⟩ := hb₃ c₁ c₂ θ₁ θ₂ hc₁ hc₂
-  refine ⟨?_,hi,hb⟩
-  intro κ _ p hp _ hcop hg hpr source hs w Ψ j σ ω₁ ω₂ hsupport
-  exact physicalBlock_integral p hp hcop hg hpr W₁ W₂ Φ V _ _ _ b₃
-    Z D B v m θ H η c₁ c₂ θ₁ θ₂ hid source hs w Ψ j σ ω₁ ω₂
-    hsupport.1 hsupport.2.1 hsupport.2.2
-
 open InverseInitialOverlap InverseInitialPoissonBridge CanonicalQuadraticSieve
-
-def overlapDilation (P j : Ideal O) (Z z G : ℝ) : ℝ :=
-  ((Ideal.absNorm j:ℝ)/Z^G)/((Ideal.absNorm (residual P j):ℝ)/Z^(z-G))
-
-theorem residualWindow_eq_clipped (P j : Ideal O) (W : ℝ→ℂ) (Z z G : ℝ) :
-    residualOverlapWindow P j W Z z G=clippedSource W (overlapDilation P j Z z G) 0 := by
-  funext x
-  simp only [residualOverlapWindow,clippedSource,logPhase,mul_zero,Complex.ofReal_zero,zero_mul,Complex.exp_zero,one_mul,overlapDilation]
-  congr 1
-  ring
-
-theorem overlapDilation_pos {P j : Ideal O} (hP : Admissible P) (hj : j∣P)
-    {Z : ℝ} (hZ : 0<Z) (z G : ℝ) : 0<overlapDilation P j Z z G := by
-  exact div_pos (div_pos (QuadraticMainBoundary.norm_pos (admissible_of_dvd hP hj).2.1.ne_zero)
-      (Real.rpow_pos_of_pos hZ _))
-    (div_pos (QuadraticMainBoundary.norm_pos (residual_squarefree hP.2.1 hj).ne_zero)
-      (Real.rpow_pos_of_pos hZ _))
-
-theorem clippedSource_zero_star (W : ℝ→ℂ) (c : ℝ) :
-    (fun x=>star (clippedSource W c 0 x))=clippedSource (fun x=>star (W x)) c 0 := by
-  funext x
-  simp [clippedSource,logPhase]
-
-def originalBlock (S : Finset (Ideal O)) {P j : Ideal O}
-    (hP : Admissible P) (hj : j∣P) (hS : ∀ n∈S,Squarefree n → Supported n)
-    (η : Ideal O →* ℂ) (a : Ideal O→ℂ) (W : ℝ→ℂ) (Φ : 𝓢(ℝ,ℂ))
-    (Z r z G m : ℝ) (source : Finset (Point (primePool (columns S P j))))
-    (w : Point (primePool (columns S P j))→ℂ) : ℂ :=
-  let F := columns S P j
-  let hF : ∀ I∈F,Admissible I := fun I hI=>columns_admissible S hP hj hS hI
-  letI : ∀ i : primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-    fun i=>by rw [poolPrimary_span F hF i];infer_instance
-  physicalBlock (poolPrimary F) (poolPrimary_ne_zero F hF) (poolPrimary_coprime F hF)
-    (poolPrimary_good F hF) source w (elementCharacter η) (primaryGenerator j)
-    (reconstructedSelector S P j a) (fun x=>star (residualOverlapWindow P j W Z z G x))
-    (residualOverlapWindow P j W Z z G) Φ Z (r+z-2*G) m
-
-theorem originalBlock_integral
-    (S : Finset (Ideal O)) {P j : Ideal O}
-    (hP : Admissible P) (hj : j∣P) (hS : ∀ n∈S,Squarefree n → Supported n)
-    (η : Ideal O →* ℂ) (a : Ideal O→ℂ) (W : ℝ→ℂ) (Φ : 𝓢(ℝ,ℂ))
-    (V : Fin 6→ℝ→ℂ) (g : Fin 6→𝓢(ℝ,ℂ)) (g₁ g₂ b₃ : 𝓢(ℝ,ℂ))
-    (Z r z G B v m θ H ε : ℝ)
-    (hid : PhysicalIdentityAt (fun x=>star (W x)) W Φ V g g₁ g₂ b₃
-      Z (r+z-2*G) B v m θ H ε (overlapDilation P j Z z G) (overlapDilation P j Z z G) 0 0)
-    (source : Finset (Point (primePool (columns S P j)))) (hs : ∀ x∈source,Valid x)
-    (w : Point (primePool (columns S P j))→ℂ) (ω₁ ω₂ : ℝ→ℂ)
-    (hcut : BlockSupport (poolPrimary (columns S P j)) source (fun x=>star (W x)) W ω₁ ω₂ V
-      Z (r+z-2*G) B v θ H (overlapDilation P j Z z G) (overlapDilation P j Z z G) 0 0) :
-    let F := columns S P j
-    let hF : ∀ I∈F,Admissible I := fun I hI=>columns_admissible S hP hj hS hI
-    letI : ∀ i : primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-      fun i=>by rw [poolPrimary_span F hF i];infer_instance
-    originalBlock S hP hj hS η a W Φ Z r z G m source w =
-      (Z^(prefactorCenter m (r+z-2*G) B θ+3*ε):ℝ)*
-        ∫ q : Frequency × (Fin 6→ℝ),
-          familyDensity g g₁ g₂ b₃ (overlapDilation P j Z z G) (overlapDilation P j Z z G)
-            0 0 (ε*Real.log Z) q *
-          canonicalBlock (poolPrimary F) (poolPrimary_ne_zero F hF) (poolPrimary_coprime F hF)
-            (poolPrimary_good F hF) (poolPrimary_primary F hF) source w (elementCharacter η)
-            (primaryGenerator j) (reconstructedSelector S P j a) ω₁ ω₂ Z (r+z-2*G) B v θ H q := by
-  intro F hF
-  let : ∀ i : primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-    fun i=>by rw [poolPrimary_span F hF i];infer_instance
-  unfold originalBlock
-  rw [residualWindow_eq_clipped,clippedSource_zero_star]
-  exact physicalBlock_integral (poolPrimary F) (poolPrimary_ne_zero F hF) (poolPrimary_coprime F hF)
-    (poolPrimary_good F hF) (poolPrimary_primary F hF) _ _ Φ V g g₁ g₂ b₃
-    Z (r+z-2*G) B v m θ H ε _ _ 0 0 hid source hs w (elementCharacter η)
-    (primaryGenerator j) (reconstructedSelector S P j a) ω₁ ω₂ hcut.1 hcut.2.1 hcut.2.2
 
 end SevenEighths.InverseInitialPhysicalMeasure
 

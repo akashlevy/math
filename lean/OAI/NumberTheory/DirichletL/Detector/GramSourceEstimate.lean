@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GramTruncation
-
 namespace OAI
 
 noncomputable section

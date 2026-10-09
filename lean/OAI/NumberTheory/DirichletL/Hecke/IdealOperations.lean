@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.Operations
 import OAI.NumberTheory.DirichletL.Hecke.IdealBridge
-
 namespace OAI
 
 noncomputable section

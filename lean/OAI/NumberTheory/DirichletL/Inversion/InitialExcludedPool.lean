@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialCompletePool
 import OAI.NumberTheory.DirichletL.Inversion.InitialExcludedPolynomial
-
 namespace OAI
 
 noncomputable section

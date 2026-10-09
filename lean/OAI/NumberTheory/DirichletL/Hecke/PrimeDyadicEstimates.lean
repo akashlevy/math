@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.PrimeDyadicContour
 import OAI.NumberTheory.DirichletL.Hecke.DyadicJoins
 import OAI.NumberTheory.DirichletL.Hecke.DyadicPointwise
-
 namespace OAI
 
 noncomputable section

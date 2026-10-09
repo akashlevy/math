@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.MeanSquare.DiagonalDensity
-
 namespace OAI
 
 noncomputable section
@@ -8,77 +7,23 @@ namespace InitialMeanSquare
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
 
-open scoped BigOperators Classical
-open ActualEisensteinCubic SecondPassArithmetic SecondPassIntegration
+open SecondPassArithmetic SecondPassIntegration
 open CanonicalQuadraticSieve (Admissible)
 
 theorem initial_squarefree_target_geometry {ι : Type*} [DecidableEq ι]
@@ -107,9 +52,7 @@ end
 
 section
 
-open MeasureTheory
-open scoped BigOperators Classical
-open ActualEisensteinCubic SecondPassArithmetic SecondPassIntegration JointLogSeparation
+open SecondPassArithmetic SecondPassIntegration JointLogSeparation
 open FirstPassCubeLabels
 
 theorem initialSquarefreeBinCost_of_density_bound {ι : Type*} [DecidableEq ι]
@@ -169,10 +112,8 @@ end
 
 section
 
-open scoped BigOperators Classical
-
 section
-open ActualEisensteinCubic SecondPassArithmetic SecondPassIntegration JointLogSeparation
+open SecondPassArithmetic SecondPassIntegration JointLogSeparation
 open FirstPassCubeLabels
 
 lemma initial_bin_row_scale_le (U K : ℝ) (hK : 1 ≤ K) (j : SecondLogIndex)
@@ -233,7 +174,7 @@ theorem initial_bin_cost_uniform {ι : Type*} [DecidableEq ι]
 
 end
 
-open ActualEisensteinCubic ConcretePrimeRowBridge
+open ConcretePrimeRowBridge
 
 theorem outside_prime_divisor_mem_pool (S : Finset (Ideal O)) (D : ℕ)
     {I Q : Ideal O} (hI : I ∈ outsideIdealsUpTo S D) (hQ : Prime Q)
@@ -260,24 +201,12 @@ theorem outside_factors_mem_pool (S : Finset (Ideal O)) (D : ℕ)
       (outsideIdealsUpTo_ne_bot S D I hI)).mp hQ
   exact outside_prime_divisor_mem_pool S D hI hprime hdiv
 
-theorem outside_prime_mem_pool (S : Finset (Ideal O)) (D : ℕ)
-    {Q : Ideal O} (hQ : Prime Q) (hQD : Ideal.absNorm Q ≤ D)
-    (hQS : ∀ P ∈ S, ¬ P ∣ Q) :
-    Q ∈ primePool (outsideSquarefreeIdeals S D) := by
-  apply outside_prime_divisor_mem_pool S D (I := Q) _ hQ dvd_rfl
-  exact mem_outsideIdealsUpTo.mpr
-    ⟨Nat.one_le_iff_ne_zero.mpr
-      (fun hz => hQ.ne_zero (Ideal.absNorm_eq_zero_iff.mp hz)),hQD,hQS⟩
-
 end
 
 section
 
-open MeasureTheory
-open scoped BigOperators Classical
-
 section
-open ActualEisensteinCubic SecondPassArithmetic SecondPassIntegration JointLogSeparation
+open SecondPassArithmetic SecondPassIntegration JointLogSeparation
 open FirstPassCubeLabels (primeProductNorm firstLogDensity)
 
 def initialElementaryConstant (A V : ℝ) : ℝ := 6*128^4*(Real.exp A*V)^2
@@ -408,7 +337,7 @@ theorem initial_subbin_geometric_elementary (F R : Finset ι) (Ψ : O →* ℂ)
 
 end
 
-open ActualEisensteinCubic SecondPassArithmetic SecondPassIntegration JointLogSeparation
+open SecondPassArithmetic SecondPassIntegration JointLogSeparation
 open FirstPassCubeLabels (primeProductNorm firstLogDensity)
 
 def initialRestrictedBinCost {ι : Type*} [DecidableEq ι]
@@ -424,17 +353,6 @@ def initialRestrictedBinCost {ι : Type*} [DecidableEq ι]
     (∫ t₁ : ℝ,∫ t₂ : ℝ,∫ t₃ : ℝ,B (t₁,t₂,t₃)*
       sourceGeometricMean p hp hcop hg F (secondRayMinus Ψ ray) (secondRayPlus Ψ ray)
         (m*r) (s.image (sourceObservation p)) V₁ V₂ X X (t₁,t₂,t₃))
-
-lemma initialRestrictedBinCost_full {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i,p i ≠ 0) [∀ i,(Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i,lambda ∉ Ideal.span {p i})
-    (F R : Finset ι) (Ψ : O →* ℂ) (m : O) (ray : SecondRayIndex)
-    (K : Finset ι → Finset ι → Finset O) (Z H M ε : ℝ) (j : SecondLogIndex)
-    (windows : Fin 7 → ℝ → ℂ) (B : Frequency → ℝ) :
-    initialRestrictedBinCost p hp hcop hg F R Ψ m ray
-      (secondLogSector p ∅ F K R Z M j) Z H ε j (windows 5) (windows 6) B =
-    initialBinCost p hp hcop hg F R Ψ m ray K Z H M ε j windows B := rfl
 
 variable {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i,p i ≠ 0)
   [∀ i,(Ideal.span {p i}).IsMaximal]
@@ -525,9 +443,7 @@ theorem initial_subbin_cost_elementary (F R : Finset ι) (Ψ : O →* ℂ)
 
 end
 
-open MeasureTheory
-open scoped BigOperators Classical
-open ActualEisensteinCubic SecondPassArithmetic SecondPassIntegration JointLogSeparation
+open SecondPassArithmetic SecondPassIntegration JointLogSeparation
 open FirstPassCubeLabels (primeProductNorm firstLogDensity)
 
 def initialRadial (Z H R : ℝ) (j : SecondLogIndex) : ℝ :=

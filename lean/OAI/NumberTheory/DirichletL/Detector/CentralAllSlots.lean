@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.CentralBranchProduct
 import OAI.NumberTheory.DirichletL.Detector.CentralRepeatedSubset
 import OAI.NumberTheory.DirichletL.PrimeRows.CentralSlotSum
-
 namespace OAI
 
 noncomputable section

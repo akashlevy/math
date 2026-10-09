@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstLabelCellStepPhysicalGates
 import OAI.NumberTheory.DirichletL.Descent.GlobalPriorityFixedChildStepUniform
-
 namespace OAI
 
 noncomputable section

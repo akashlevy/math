@@ -1,77 +1,23 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.FullFrequencyExpansion
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 
@@ -159,31 +105,6 @@ lemma SourceCuspDatum.smoothedKernel_full_index_norm_summable
       X/(27*(sourceCuspScale d.index)^2*d.heightScale^2)*sourceCuspRadialLength (thetaFullFrequency p)=
         X*sourceCuspRadialLength (thetaFullFrequency p)/(27*(sourceCuspScale d.index)^2*d.heightScale^2))
 
-theorem completedT_finite_smoothed_full_index
-    (Ψ:Eis→*ℂ) (hΨ:∀x,‖Ψ x‖≤1)
-    (Q:Ideal Eis) (hperiod:CanonicalCoefficientClass.FactorsModulo Q Ψ)
-    (c:Eis) (hc:c≠0) [Fintype (Eis⧸Ideal.span {c})]
-    (hcQ:Ideal.span {c}≤Ideal.span {(9:Eis)}*Q)
-    (d:(Eis⧸Ideal.span {c})→SourceCuspDatum)
-    (hd:∀h,(d h).point=thetaFourierTranslation c h)
-    (W:ℝ→ℂ) (v0 v1:ℝ) (hv0:0<v0)
-    (hWs:Function.support W⊆Set.Icc v0 v1) (hW:ContDiff ℝ ∞ W)
-    (X:ℝ) (hX:0<X) :
-    completedT Ψ W X=thetaDerivativeScalar⁻¹*
-      ∑h:Eis⧸Ideal.span {c},
-        finiteAdditiveFourierCoeff (quotientTrace c hc) (fixedThetaQuotient Ψ c) h*
-          ((d h).multiplier*((d h).heightScale:ℂ)*(sourceCuspScale (d h).index:ℂ)^2)*
-        ∑'p:ThetaFullIndex,sourceCuspRadialCoefficient (d h).index (d h).dualPoint (thetaFullFrequency p)*
-          CubicReflectionKernel.paperKernel (Vstar W)
-            (X*sourceCuspRadialLength (thetaFullFrequency p)/
-              (27*(sourceCuspScale (d h).index)^2*(d h).heightScale^2)) := by
-  rw [completedT_finite_smoothed_reflection Ψ hΨ Q hperiod c hc hcQ d hd W v0 v1 hv0 hWs hW X hX]
-  congr 1
-  apply Finset.sum_congr rfl
-  intro h hh
-  rw [(d h).smoothedKernel_full_index]
-  ring
-
 end
 
 open Filter MeasureTheory
@@ -206,11 +127,6 @@ def fixedCuspArrayEligible (I J:Ideal Eis) : Prop :=
 
 def fixedCuspArrayWeight (m:ℕ) (J:Ideal Eis) : ℝ :=
   (3:ℝ)^((m:ℝ)/6)*Real.sqrt (Ideal.absNorm J:ℝ)
-
-lemma fixedCuspArrayWeight_nonneg (m:ℕ) (J:Ideal Eis) :
-    0≤fixedCuspArrayWeight m J := by
-  unfold fixedCuspArrayWeight
-  positivity
 
 lemma fixedCuspArrayWeight_pos (m:ℕ) (J:Ideal Eis) (hJ:primaryGenerator J≠0) :
     0<fixedCuspArrayWeight m J := by
@@ -270,59 +186,12 @@ lemma fixedConjugateCuspArray_reconstruct (j:Fin 3) (u:Eisˣ) (m:ℕ) (I J:Ideal
   simp only [fixedConjugateCuspArray,Complex.star_def,Complex.conj_ofReal]
   ring
 
-lemma fixedConjugateCuspArray_reconstruct_explicit (j:Fin 3) (u:Eisˣ) (m:ℕ)
-    (I J:Ideal Eis) (hsq:Squarefree I) (hI:primaryGenerator I≠0) (hJ:primaryGenerator J≠0) :
-    star ((sourceCuspCoefficients j).value
-      ((u.val*lambda^m)*primaryGenerator I*(primaryGenerator J)^3))=
-      ((fixedCuspCoefficientBound*(3:ℝ)^((m:ℝ)/6)*Real.sqrt (Ideal.absNorm J:ℝ):ℝ):ℂ)*
-        fixedConjugateCuspArray j u m I J := by
-  simpa only [fixedCuspArrayIndex,fixedCuspArrayWeight,mul_assoc] using
-    fixedConjugateCuspArray_reconstruct j u m I J ⟨hsq,hI,hJ⟩
-
 end CubicEisenstein
 
 section
-open scoped BigOperators Classical
-open Finset AddChar MulChar EisensteinEmbedding
 
 namespace IdealGaussCRT
 open CubicEisenstein
-
-theorem finiteAdditiveFourierCoeff_crt {ι T : Type*} [Fintype ι]
-    (R : ι→Type*) [CommRing T] [∀i,CommRing (R i)]
-    [Fintype T] [∀i,Fintype (R i)] (e : T≃+*∀i,R i)
-    (ψ : AddChar T ℂ) (φ : ∀i,R i→ℂ) (h : T) :
-    finiteAdditiveFourierCoeff ψ (fun x=>∏i,φ i (e x i)) h=
-      ∏i,finiteAdditiveFourierCoeff (coordinateAddChar R e ψ i) (φ i) (e h i) := by
-  have hsum : (∑x:T,(∏i,φ i (e x i))*ψ (-h*x))=
-      ∏i,∑x:R i,φ i x*coordinateAddChar R e ψ i (-(e h i)*x) := by
-    calc
-      _ = ∑x:T,∏i,φ i (e x i)*coordinateAddChar R e ψ i (-(e h i)*e x i) := by
-        apply Finset.sum_congr rfl
-        intro x hx
-        rw [addChar_finite_crt_factor R e ψ (-h*x)]
-        simp only [map_mul,map_neg,Pi.mul_apply,Pi.neg_apply,Finset.prod_mul_distrib]
-      _ = ∑x:(∀i,R i),∏i,φ i (x i)*coordinateAddChar R e ψ i (-(e h i)*x i) :=
-        Equiv.sum_comp e.toEquiv (fun x:∀i,R i=>∏i,φ i (x i)*coordinateAddChar R e ψ i (-(e h i)*x i))
-      _ = _ := (Fintype.prod_sum (fun i (x:R i)=>φ i x*coordinateAddChar R e ψ i (-(e h i)*x))).symm
-  have hcard : (Fintype.card T:ℂ)=∏i,(Fintype.card (R i):ℂ) := by
-    rw [Fintype.card_congr e.toEquiv,Fintype.card_pi,Nat.cast_prod]
-  simp only [finiteAdditiveFourierCoeff,hsum,hcard,Finset.prod_div_distrib]
-
-theorem finite_fourier_weighted_crt {ι T : Type*} [Fintype ι]
-    (R : ι→Type*) [CommRing T] [∀i,CommRing (R i)]
-    [Fintype T] [∀i,Fintype (R i)] (e : T≃+*∀i,R i)
-    (ψ : AddChar T ℂ) (φ κ : ∀i,R i→ℂ) :
-    (∑h:T,finiteAdditiveFourierCoeff ψ (fun x=>∏i,φ i (e x i)) h *
-      ∏i,κ i (e h i))=
-      ∏i,∑h:R i,finiteAdditiveFourierCoeff (coordinateAddChar R e ψ i) (φ i) h*κ i h := by
-  simp only [finiteAdditiveFourierCoeff_crt,←Finset.prod_mul_distrib]
-  calc
-    _ = ∑h:∀i,R i,∏i,finiteAdditiveFourierCoeff (coordinateAddChar R e ψ i) (φ i) (h i)*κ i (h i) :=
-      Equiv.sum_comp e.toEquiv
-        (fun h:∀i,R i=>∏i,finiteAdditiveFourierCoeff (coordinateAddChar R e ψ i) (φ i) (h i)*κ i (h i))
-    _ = _ := (Fintype.prod_sum (fun i (h:R i)=>
-      finiteAdditiveFourierCoeff (coordinateAddChar R e ψ i) (φ i) h*κ i h)).symm
 
 end IdealGaussCRT
 
@@ -340,14 +209,6 @@ def frequencyRow (χ : MulChar F ℂ) (ψ : AddChar F ℂ)
     (j : ℕ) (σ ε : Fˣ) (x h : F) : ℂ :=
   finiteAdditiveFourierCoeff ψ (fun t=>(χ^j) t) h*frequencyMultiplier χ ψ σ ε x h
 
-lemma frequencyRow_zero (χ : MulChar F ℂ) (ψ : AddChar F ℂ)
-    (j : ℕ) (σ ε : Fˣ) (x : F) :
-    frequencyRow χ ψ j σ ε x 0=zeroFourierCoefficient χ j := by
-  simp only [frequencyRow,frequencyMultiplier,finiteAdditiveFourierCoeff,
-    zeroFourierCoefficient,ite_true,neg_zero,zero_mul,AddChar.map_zero_eq_one,
-    mul_one,div_eq_mul_inv]
-  ring
-
 lemma frequencyRow_units (χ : MulChar F ℂ) (ψ : AddChar F ℂ)
     (j : ℕ) (σ ε : Fˣ) (x : F) :
     (∑h:Fˣ,frequencyRow χ ψ j σ ε x h)=activeRow χ ψ j σ ε x := by
@@ -362,14 +223,6 @@ noncomputable local instance quotientFieldFrequency (P : Ideal ActualEisensteinC
     Field (ActualEisensteinCubic.O⧸P) := Ideal.Quotient.field P
 noncomputable local instance quotientFintypeFrequency (P : Ideal ActualEisensteinCubic.O) [P.IsMaximal] :
     Fintype (ActualEisensteinCubic.O⧸P) := Fintype.ofFinite _
-
-theorem canonical_frequencyRow_zero (P : Ideal ActualEisensteinCubic.O) [P.IsMaximal]
-    (hgood : lambda∉P) (hchar : ringChar (ActualEisensteinCubic.O⧸P)≠2) (ψ : AddChar (ActualEisensteinCubic.O⧸P) ℂ)
-    (j : ℕ) (hj : j<6) (σ ε : (ActualEisensteinCubic.O⧸P)ˣ) (x : ActualEisensteinCubic.O⧸P) :
-    frequencyRow (actualSextic P hgood) ψ j σ ε x 0=
-      if j=0 then 1-(Fintype.card (ActualEisensteinCubic.O⧸P):ℂ)⁻¹ else 0 := by
-  rw [frequencyRow_zero]
-  simpa only [actualSextic] using canonical_zeroFourierCoefficient P hgood hchar j hj
 
 theorem canonical_frequencyRow_units (P : Ideal ActualEisensteinCubic.O) [P.IsMaximal]
     (hgood : lambda∉P) (hchar : ringChar (ActualEisensteinCubic.O⧸P)≠2) (ψ : AddChar (ActualEisensteinCubic.O⧸P) ℂ)
@@ -386,67 +239,6 @@ open ActualEisensteinCubic CubicEisenstein IdealGaussCRT CompletedGauss
 local notation "Eis" => ActualEisensteinCubic.O
 noncomputable local instance quotientFintypeCrt (P : Ideal Eis) [P.IsMaximal] :
     Fintype (Eis⧸P) := Fintype.ofFinite _
-
-theorem canonical_finite_reflection_crt {ι T : Type*} [Fintype ι]
-    [CommRing T] [Fintype T]
-    (P : ι→Ideal Eis) [∀i,(P i).IsMaximal]
-    (e : T≃+*∀i,Eis⧸P i) (ψ : AddChar T ℂ) (hψ : ψ.IsPrimitive)
-    (hg : ∀i,lambda∉P i) (hchar : ∀i,ringChar (Eis⧸P i)≠2)
-    (j : ι→ℕ) (hj : ∀i,j i<6) (σ ε : ∀i,(Eis⧸P i)ˣ) (x : ∀i,Eis⧸P i) :
-    let χ := fun i=>actualSextic (P i) (hg i)
-    let ψi := coordinateAddChar (fun i=>Eis⧸P i) e ψ
-    (∑h:T,finiteAdditiveFourierCoeff ψ (fun t=>∏i,(χ i^j i) (e t i)) h*
-      ∏i,frequencyMultiplier (χ i) (ψi i) (σ i) (ε i) (x i) (e h i))=
-      ∑A∈(Finset.univ:Finset ι).powerset,
-        (∏i∈A,(((χ i)⁻¹)^2) (σ i)*phase (χ i) (ψi i) (j i) (ε i)*bracket (χ i) (j i) (x i))*
-        (∏i∈(Finset.univ:Finset ι)\A,if j i=0 then 1-(Fintype.card (Eis⧸P i):ℂ)⁻¹ else 0) := by
-  let (i : ι) : Field (Eis⧸P i) := Ideal.Quotient.field (P i)
-  let χ := fun i=>actualSextic (P i) (hg i)
-  let ψi := coordinateAddChar (fun i=>Eis⧸P i) e ψ
-  let f := fun i=>frequencyRow (χ i) (ψi i) (j i) (σ i) (ε i) (x i)
-  have hsum : (∑h:T,finiteAdditiveFourierCoeff ψ (fun t=>∏i,(χ i^j i) (e t i)) h*
-      ∏i,frequencyMultiplier (χ i) (ψi i) (σ i) (ε i) (x i) (e h i))=
-      ∑h:∀i,Eis⧸P i,∏i,f i (h i) := by
-    simp only [finiteAdditiveFourierCoeff_crt,←Finset.prod_mul_distrib]
-    exact Equiv.sum_comp e.toEquiv (fun h:∀i,Eis⧸P i=>∏i,f i (h i))
-  have hactive (i : ι) : (∑h:(Eis⧸P i)ˣ,f i h)=
-      (((χ i)⁻¹)^2) (σ i)*phase (χ i) (ψi i) (j i) (ε i)*bracket (χ i) (j i) (x i) := by
-    exact canonical_frequencyRow_units (P i) (hg i) (hchar i) (ψi i)
-      (coordinateAddChar_isPrimitive (fun i=>Eis⧸P i) e ψ hψ i) (j i) (hj i) (σ i) (ε i) (x i)
-  have hzero (i : ι) : f i 0=if j i=0 then 1-(Fintype.card (Eis⧸P i):ℂ)⁻¹ else 0 := by
-    exact canonical_frequencyRow_zero (P i) (hg i) (hchar i) (ψi i) (j i) (hj i) (σ i) (ε i) (x i)
-  change (∑h:T,finiteAdditiveFourierCoeff ψ (fun t=>∏i,(χ i^j i) (e t i)) h*
-      ∏i,frequencyMultiplier (χ i) (ψi i) (σ i) (ε i) (x i) (e h i))=_
-  rw [hsum,FixedRayActiveSet.product_sum_by_active_set (fun i=>Eis⧸P i) f]
-  simp only [hactive,hzero]
-  rfl
-
-theorem canonical_principal_reflection_crt {ι : Type*} [Fintype ι]
-    (P : ι→Ideal Eis) [∀i,(P i).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime P))
-    (hg : ∀i,lambda∉P i) (hchar : ∀i,ringChar (Eis⧸P i)≠2)
-    (j : ι→ℕ) (hj : ∀i,j i<6) (σ ε : ∀i,(Eis⧸P i)ˣ) (x : ∀i,Eis⧸P i)
-    (c : Eis) (hc : c≠0) (hcP : Ideal.span {c}=∏i,P i)
-    [Fintype (Eis⧸Ideal.span {c})] :
-    let e := (Ideal.quotEquivOfEq hcP).trans (quotientProdEquivPi P hcop)
-    let ψ := quotientTrace c hc
-    let χ := fun i=>actualSextic (P i) (hg i)
-    let ψi := coordinateAddChar (fun i=>Eis⧸P i) e ψ
-    (∑h:Eis⧸Ideal.span {c},finiteAdditiveFourierCoeff ψ (principalSexticRow P hcop hg j c hcP) h*
-      ∏i,frequencyMultiplier (χ i) (ψi i) (σ i) (ε i) (x i) (e h i))=
-      ∑A∈(Finset.univ:Finset ι).powerset,
-        (∏i∈A,(((χ i)⁻¹)^2) (σ i)*phase (χ i) (ψi i) (j i) (ε i)*bracket (χ i) (j i) (x i))*
-        (∏i∈(Finset.univ:Finset ι)\A,if j i=0 then 1-(Fintype.card (Eis⧸P i):ℂ)⁻¹ else 0) := by
-  let e := (Ideal.quotEquivOfEq hcP).trans (quotientProdEquivPi P hcop)
-  have hψ : (quotientTrace c hc).IsPrimitive :=
-    GeneralPrimitiveTrace.eisTraceModChar_breveE_primitive c hc
-  have hrow : principalSexticRow P hcop hg j c hcP=
-      fun t=>∏i,(actualSextic (P i) (hg i)^j i) (e t i) := by
-    funext t
-    rfl
-  dsimp only
-  rw [hrow]
-  exact canonical_finite_reflection_crt P e (quotientTrace c hc) hψ hg hchar j hj σ ε x
 
 end LocalReflectionBrackets
 end
@@ -583,100 +375,12 @@ lemma datum_additive_phase (h:((g:SL(2,Eis))*H) 1 0≠0) (freq:ℂ) (scale:ℂ) 
 end FixedCuspShape
 end CubicEisenstein
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups ContDiff
+open scoped MatrixGroups
 
 namespace CompletedGauss
 open ActualEisensteinCubic CubicEisenstein CanonicalQuadraticSieve CompletedDyadic
-local notation "Eis" => ActualEisensteinCubic.O
 
 namespace ReflectedBranchData
-
-def withFixedCuspArray {levelBound K:ℝ} {I F Q:Ideal Eis}
-    (d:ReflectedBranchData levelBound K I F Q) (cusp:Fin 3) (u:Eisˣ)
-    (rowPhase:ℕ→idealRange (completedResidualScale K I Q)→ℂ)
-    (hrow:∀m k,‖rowPhase m k‖≤1) : ReflectedBranchData levelBound K I F Q :=
-  d.withCanonicalCuspArray (fixedConjugateCuspArray cusp u)
-    (fun m n b=>fixedConjugateCuspArray_norm_le_one cusp u m n.val b.val) rowPhase hrow
-
-lemma withFixedCuspArray_amplitude {levelBound K:ℝ} {I F Q:Ideal Eis}
-    (d:ReflectedBranchData levelBound K I F Q) (cusp:Fin 3) (u:Eisˣ)
-    (rowPhase:ℕ→idealRange (completedResidualScale K I Q)→ℂ)
-    (hrow:∀m k,‖rowPhase m k‖≤1) (i:ℕ×ℕ×ℕ) (n b:Ideal Eis) :
-    (d.withFixedCuspArray cusp u rowPhase hrow).amplitude i n b=
-      fixedConjugateCuspArray cusp u i.1 n b := rfl
-
-theorem withFixedCuspArray_value {levelBound K:ℝ} {I F Q:Ideal Eis}
-    (d:ReflectedBranchData levelBound K I F Q) (cusp:Fin 3) (u:Eisˣ)
-    (rowPhase:ℕ→idealRange (completedResidualScale K I Q)→ℂ)
-    (hrow:∀m k,‖rowPhase m k‖≤1)
-    (W:ℝ→ℂ) (a b:ℝ) (ha:0<a)
-    (hsupp:Function.support W⊆Set.Icc a b) (hW:ContDiff ℝ ∞ W)
-    (X ρ q:ℝ) (hX:0<X) (hρ:0<ρ) (hq:1<q)
-    (hK:0<completedResidualScale K I Q)
-    (k:idealRange (completedResidualScale K I Q))
-    (hk:completedResidualScale K I Q/2≤(Ideal.absNorm k.val:ℝ)) :
-    (d.withFixedCuspArray cusp u rowPhase hrow).value W X ρ q k=
-      d.rawValue (fixedConjugateCuspArray cusp u) rowPhase W X ρ q k :=
-  d.withCanonicalCuspArray_value (fixedConjugateCuspArray cusp u)
-    (fun m n b=>fixedConjugateCuspArray_norm_le_one cusp u m n.val b.val)
-    rowPhase hrow W a b ha hsupp hW X ρ q hX hρ hq hK k hk
-
-def extractedFixedCuspArray {levelBound K:ℝ} {I F Q:Ideal Eis}
-    (d:ReflectedBranchData levelBound K I F Q) (cusp:Fin 3) (u:Eisˣ)
-    (m:ℕ) (n b:Ideal Eis) : ℂ :=
-  fixedConjugateCuspArray cusp u m
-    (reflectionExtractedDivisor (fun p:d.primes=>p.val)
-      (fun p=>completedLocalExponent I F p.val) d.label 1*n)
-    (reflectionExtractedDivisor (fun p:d.primes=>p.val)
-      (fun p=>completedLocalExponent I F p.val) d.label 2*b)
-
-lemma extractedFixedCuspArray_norm_le_one {levelBound K:ℝ} {I F Q:Ideal Eis}
-    (d:ReflectedBranchData levelBound K I F Q) (cusp:Fin 3) (u:Eisˣ)
-    (m:ℕ) (n b:Ideal Eis) : ‖d.extractedFixedCuspArray cusp u m n b‖≤1 :=
-  fixedConjugateCuspArray_norm_le_one cusp u m _ _
-
-lemma extractedFixedCuspArray_zero {levelBound K:ℝ} {I F Q:Ideal Eis}
-    (d:ReflectedBranchData levelBound K I F Q) (cusp:Fin 3) (u:Eisˣ)
-    (m:ℕ) (n b:Ideal Eis)
-    (h:¬fixedCuspArrayEligible
-      (reflectionExtractedDivisor (fun p:d.primes=>p.val)
-        (fun p=>completedLocalExponent I F p.val) d.label 1*n)
-      (reflectionExtractedDivisor (fun p:d.primes=>p.val)
-        (fun p=>completedLocalExponent I F p.val) d.label 2*b)) :
-    d.extractedFixedCuspArray cusp u m n b=0 := by
-  simp only [extractedFixedCuspArray,fixedConjugateCuspArray,
-    fixedCuspArray_zero_of_ineligible _ _ _ _ _ h,star_zero]
-
-def withExtractedFixedCuspArray {levelBound K:ℝ} {I F Q:Ideal Eis}
-    (d:ReflectedBranchData levelBound K I F Q) (cusp:Fin 3) (u:Eisˣ)
-    (rowPhase:ℕ→idealRange (completedResidualScale K I Q)→ℂ)
-    (hrow:∀m k,‖rowPhase m k‖≤1) : ReflectedBranchData levelBound K I F Q :=
-  d.withCanonicalCuspArray (d.extractedFixedCuspArray cusp u)
-    (fun m n b=>d.extractedFixedCuspArray_norm_le_one cusp u m n.val b.val) rowPhase hrow
-
-lemma withExtractedFixedCuspArray_amplitude {levelBound K:ℝ} {I F Q:Ideal Eis}
-    (d:ReflectedBranchData levelBound K I F Q) (cusp:Fin 3) (u:Eisˣ)
-    (rowPhase:ℕ→idealRange (completedResidualScale K I Q)→ℂ)
-    (hrow:∀m k,‖rowPhase m k‖≤1) (i:ℕ×ℕ×ℕ) (n b:Ideal Eis) :
-    (d.withExtractedFixedCuspArray cusp u rowPhase hrow).amplitude i n b=
-      d.extractedFixedCuspArray cusp u i.1 n b := rfl
-
-theorem withExtractedFixedCuspArray_value {levelBound K:ℝ} {I F Q:Ideal Eis}
-    (d:ReflectedBranchData levelBound K I F Q) (cusp:Fin 3) (u:Eisˣ)
-    (rowPhase:ℕ→idealRange (completedResidualScale K I Q)→ℂ)
-    (hrow:∀m k,‖rowPhase m k‖≤1)
-    (W:ℝ→ℂ) (a b:ℝ) (ha:0<a)
-    (hsupp:Function.support W⊆Set.Icc a b) (hW:ContDiff ℝ ∞ W)
-    (X ρ q:ℝ) (hX:0<X) (hρ:0<ρ) (hq:1<q)
-    (hK:0<completedResidualScale K I Q)
-    (k:idealRange (completedResidualScale K I Q))
-    (hk:completedResidualScale K I Q/2≤(Ideal.absNorm k.val:ℝ)) :
-    (d.withExtractedFixedCuspArray cusp u rowPhase hrow).value W X ρ q k=
-      d.rawValue (d.extractedFixedCuspArray cusp u) rowPhase W X ρ q k :=
-  d.withCanonicalCuspArray_value (d.extractedFixedCuspArray cusp u)
-    (fun m n b=>d.extractedFixedCuspArray_norm_le_one cusp u m n.val b.val)
-    rowPhase hrow W a b ha hsupp hW X ρ q hX hρ hq hK k hk
 
 end ReflectedBranchData
 end CompletedGauss

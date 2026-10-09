@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Energy.ZeroReferenceOriginal
 import OAI.NumberTheory.DirichletL.Energy.StageReserveBounded
 import OAI.NumberTheory.DirichletL.Energy.ReferenceProfileBudget
-
 namespace OAI
 
 noncomputable section

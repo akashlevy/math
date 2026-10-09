@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Energy.State
 import OAI.NumberTheory.DirichletL.Moments.DetectorPlainFiberSource
 import OAI.NumberTheory.DirichletL.Moments.NaturalFixedRaySourceFixedIdeal
 import OAI.NumberTheory.DirichletL.Moments.DetectorDictionaryUniformTests
-
 namespace OAI
 
 noncomputable section
@@ -105,37 +104,6 @@ lemma source_fixed_gates (F:ProbeFinalAssembly.SourceData D)(η:Character):
   ⟨internalQ_ne_zero _ (sourceFixedIdeal_ne_zero F) η,
     inf_le_left.trans (sourceFixedIdeal_le_modulus F),inf_le_right,
     inf_le_left.trans (sourceFixedIdeal_le_72 F)⟩
-
-theorem source_energy_split_state (F:ProbeFinalAssembly.SourceData D)(η:Character)
-    (rows:Finset FreeRow)(f:FreeRow→ℂ):
-    (∑u∈rows,‖f u‖^2)=
-      (∑u∈rows.filter (fun u=>initialKeep η (internalQ (sourceFixedIdeal F) η) u.val),‖f u‖^2)+
-      ∑u∈rows.filter (sourceExceptional F η),‖f u‖^2:=by
-  simpa only [source_keep_iff] using source_energy_split F η rows f
-
-theorem source_initial_states (F:ProbeFinalAssembly.SourceData D):
-    ∃bΦ:ℝ,0<bΦ ∧ ∀η:Character,∀δ:ℝ,0<δ→
-      ∀ᶠZ:ℝ in atTop,∀label:Sum Bool (RayQuotient.Characters F.modulus ⊤),
-      ∀d:ℝ,(1/200:ℝ)≤d→
-      let η₀:=sourceMomentBase F.modulus ⊤ le_top F.S F.exclusions.prime η label;
-      ∃s:NaturalState (Z^d) 0 bΦ,
-        s.character=η₀ ∧ s.fixedModulus=internalQ (sourceFixedIdeal F) η₀ ∧
-        s.puncture=1 ∧ s.radial.profile=radialMajorant ∧ s.radial.scale=Z^d ∧
-        s.radial.keep=initialKeep η₀ (internalQ (sourceFixedIdeal F) η₀) ∧
-        s.rowWidth=1 ∧ s.characterWidth=δ ∧ s.width=1+δ:=by
-  obtain ⟨bΦ,hbΦ,hs⟩:=radialMajorant_support_bound
-  refine ⟨bΦ,hbΦ,?_⟩
-  intro η δ hδ
-  filter_upwards [source_label_modulus_eventually F η δ hδ] with Z hz
-  intro label d hd
-  have hd0:0<d:=by linarith
-  have hU:1≤Z^d:=(Real.one_lt_rpow hz.1 hd0).le
-  dsimp only
-  refine ⟨initialState (sourceMomentBase F.modulus ⊤ le_top F.S F.exclusions.prime η label)
-    (internalQ (sourceFixedIdeal F) (sourceMomentBase F.modulus ⊤ le_top F.S F.exclusions.prime η label))
-    radialMajorant bΦ (Z^d) δ hU hδ.le hs
-    radialMajorant_nonneg (hz.2 label d hd),?_⟩
-  exact ⟨rfl,rfl,rfl,rfl,rfl,rfl,rfl,rfl,rfl⟩
 
 end SevenEighths.CenteredMomentDetectorEnergyInitialState
 

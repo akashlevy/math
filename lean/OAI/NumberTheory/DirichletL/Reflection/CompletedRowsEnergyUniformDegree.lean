@@ -1,6 +1,7 @@
-import OAI.NumberTheory.DirichletL.Reflection.CompletedRowsEnergy
+import OAI.NumberTheory.DirichletL.Reflection.CompletedCanonicalEnergy
+import OAI.NumberTheory.DirichletL.Reflection.CompletedAggregation
+import OAI.NumberTheory.DirichletL.Reflection.CanonicalCaps
 import OAI.NumberTheory.DirichletL.Reflection.CompletedCanonicalEnergyUniformDegree
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

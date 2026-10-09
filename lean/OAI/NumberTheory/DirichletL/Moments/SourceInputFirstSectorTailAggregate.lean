@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SourceInputFirstSectorTailPair
 import OAI.NumberTheory.DirichletL.Moments.FirstSectorLocalization
-
 namespace OAI
 
 noncomputable section

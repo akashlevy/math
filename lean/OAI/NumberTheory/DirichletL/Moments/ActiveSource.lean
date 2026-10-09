@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondLocalization
-
 namespace OAI
 
 noncomputable section
@@ -21,27 +20,6 @@ theorem supportedColumns_active (S : Finset (Ideal O)) (β : Ideal O → ℂ) :
   ext I
   simp only [supportedColumns,activeSource,Finset.mem_filter]
   tauto
-
-theorem active_sum (S : Finset (Ideal O)) (β F : Ideal O → ℂ) :
-    (∑I∈supportedColumns (activeSource S β),β I*F I)=
-      ∑I∈supportedColumns S,β I*F I := by
-  rw [supportedColumns_active,Finset.sum_filter]
-  apply Finset.sum_congr rfl
-  intro I hI
-  split_ifs with h <;> simp_all
-
-theorem sourceGaussEnergy_active (S : Finset (Ideal O)) (β f : Ideal O → ℂ)
-    (W : 𝓢(ℝ,ℂ)) (K : ℝ) :
-    sourceGaussEnergy (activeSource S β) β f W K=sourceGaussEnergy S β f W K := by
-  unfold sourceGaussEnergy gaussEnergy
-  apply tsum_congr
-  intro z
-  congr 2
-  have hp := source_gaussPolynomial (activeSource S β) (fun I => β I*f I) z
-  have hq := source_gaussPolynomial S (fun I => β I*f I) z
-  rw [hp,hq]
-  congr 2
-  simpa only [mul_assoc] using active_sum S β (fun I => f I*primaryGaussRow I z)
 
 def retainedKernel (I J : Ideal O) (W : 𝓢(ℝ,ℂ)) (K T Z ξ : ℝ) : ℂ :=
   if hI : Supported I then if hJ : Supported J then
@@ -120,19 +98,6 @@ theorem residualPool_data (S : Finset (Ideal O)) (β : Ideal O → ℂ)
   refine ⟨hm,hβ,hsa,ha0,?_,?_⟩
   · exact_mod_cast Nat.one_le_iff_ne_zero.mpr (Ideal.absNorm_eq_zero_iff.not.mpr ha0)
   · exact (le_div_iff₀ hpos).mpr (by simpa only [mul_comm] using hab)
-
-theorem source_energy_active_sectors (τ : HeckeFamily.Character) (t : ℝ)
-    (S : Finset (Ideal O)) (β : Ideal O → ℂ) (W : 𝓢(ℝ,ℂ)) (K : ℝ) (hK : 0<K) :
-    sourceGaussEnergy S β (CenteredMomentHeckeColumnWindow.heightCoeff τ t) W K =
-      ∑p∈commonLabels (supportedColumns (activeSource S β))
-        (supportedColumns (activeSource S β)),
-      ∑q∈pairSector p.1 p.2 (supportedColumns (activeSource S β))
-        (supportedColumns (activeSource S β)),
-      ((β q.1*CenteredMomentHeckeColumnWindow.heightCoeff τ t q.1)*
-        star (β q.2*CenteredMomentHeckeColumnWindow.heightCoeff τ t q.2))*
-        CenteredMomentSecondSourceEnergy.secondSourceKernel q.1 q.2 W K := by
-  rw [←sourceGaussEnergy_active S β]
-  exact CenteredMomentSecondSourceEnergy.source_energy_common_sectors τ t _ β W K hK
 
 end SevenEighths.CenteredMomentActiveSource
 

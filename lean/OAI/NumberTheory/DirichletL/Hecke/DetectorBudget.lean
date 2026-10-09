@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorFinite
-
 namespace OAI
 
 noncomputable section

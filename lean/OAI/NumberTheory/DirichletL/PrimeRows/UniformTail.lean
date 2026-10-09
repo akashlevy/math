@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.TailIntegral
 import OAI.NumberTheory.DirichletL.PrimeRows.FirstTransport
 import OAI.NumberTheory.DirichletL.PrimeRows.CoarseAmplitude
-
 namespace OAI
 
 noncomputable section

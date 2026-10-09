@@ -1,76 +1,23 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.FrequencyCutoffs
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal UniqueFactorizationMonoid CompletedGauss
@@ -206,13 +153,6 @@ theorem scatteringCoefficient_zero_zeta (s : ℂ) (hs : (4:ℝ)/3<s.re) :
   rw [show 3*s-2-1=3*s-3 by ring]
   ring
 
-theorem eisensteinConstantCoefficient_zeta (v : ℝ) (hv : 0<v) (s : ℂ) (hs : 2<s.re) :
-    eisensteinFourierCoefficient v hv s 0 = (v:ℂ)^s+
-      (v:ℂ)^(2-s)*((Real.pi:ℂ)/(s-1))*
-      ((2/((9*Real.sqrt 3/2:ℝ):ℂ))*((3:ℂ)^(3*s-3)-1)⁻¹*
-        (unramifiedIdealZeta (3*s-3)/unramifiedIdealZeta (3*s-2))) := by
-  rw [eisensteinConstantCoefficient_formula v hv s hs,scatteringCoefficient_zero_zeta s (by linarith)]
-
 end CubicEisenstein
 
 namespace CanonicalQuadraticSieve
@@ -268,72 +208,6 @@ def dualPrincipalIdeal (I J : Ideal O) (V : ℝ → ℂ) (X : ℝ) : ℂ :=
     (idealZeroMask I (idealGenerator A.val) * idealZeroMask J (idealGenerator A.val)) *
       V ((Ideal.absNorm A.val : ℝ) / X)
 
-def dualPrincipalLattice (I J : Ideal O) (V : ℝ → ℂ) (X : ℝ) : ℂ :=
-  ∑' z : O, rowCoprimeMask (fun P : primePool {I * J} => P.val) Finset.univ z *
-    V (‖eisEmbedding z‖ ^ 2 / X)
-
-theorem idealZeroMask_pair_zero (I J : Ideal O) (hI : Admissible I) (hJ : Admissible J)
-    (hnt : I ≠ 1 ∨ J ≠ 1) : idealZeroMask I 0 * idealZeroMask J 0 = 0 := by
-  rw [← canonical_quadraticRow_squared I hI, ← canonical_quadraticRow_squared J hJ]
-  calc
-    _ = (quadraticRow I 0 * quadraticRow J 0) ^ 2 := by ring
-    _ = 0 := by rw [quadratic_pair_zero_of_nontrivial I J hI hJ hnt]; ring
-
-theorem dualPrincipalIdeal_eq_lattice (I J : Ideal O) (hI : Admissible I) (hJ : Admissible J)
-    (hnt : I ≠ 1 ∨ J ≠ 1) (V : 𝓢(ℝ, ℂ)) (X : ℝ) (hX : 0 < X) :
-    dualPrincipalIdeal I J V X = (6 : ℂ)⁻¹ * dualPrincipalLattice I J V X := by
-  let P := fun P : primePool {I * J} => P.val
-  let f : O → ℂ := fun z => rowCoprimeMask P Finset.univ z * V (‖eisEmbedding z‖ ^ 2 / X)
-  have hV : Summable (fun z : O => ‖V (‖eisEmbedding z‖ ^ 2 / X)‖) := by
-    simpa only [scaledRadialTest_apply] using actual_eisenstein_summable_norm (scaledRadialTest V X hX)
-  have hf : Summable f := by
-    apply Summable.of_norm
-    apply Summable.of_nonneg_of_le (fun z => norm_nonneg _) _ hV
-    intro z
-    dsimp only [f]
-    rw [norm_mul]
-    exact mul_le_of_le_one_left (norm_nonneg _)
-      (QuadraticUnitInvariance.rowCoprimeMask_norm_le_one P Finset.univ z)
-  have hm (z : O) : rowCoprimeMask P Finset.univ z = idealZeroMask I z * idealZeroMask J z := by
-    rw [singleton_rowCoprimeMask_eq_idealZeroMask, idealZeroMask_mul I J hI.1 hJ.1]
-  have h0 : f 0 = 0 := by
-    dsimp only [f]
-    rw [hm, idealZeroMask_pair_zero I J hI hJ hnt, zero_mul]
-  have hu (u : Oˣ) (z : O) : f (u.val * z) = f z := by
-    dsimp only [f]
-    rw [QuadraticUnitInvariance.rowCoprimeMask_unit_mul, norm_eisEmbedding_unit_mul]
-  have he := tsum_unit_invariant_of_zero f hf h0 hu
-  have hd : (∑' A : NonzeroIdeal, f (idealGenerator A.val)) = dualPrincipalIdeal I J V X := by
-    apply tsum_congr
-    intro A
-    simp only [f, hm, idealGenerator_norm_sq]
-  change dualPrincipalLattice I J V X = 6 * ∑' A : NonzeroIdeal, f (idealGenerator A.val) at he
-  rw [hd] at he
-  rw [he]
-  ring
-
-theorem dualPrincipalIdeal_truncated (I J : Ideal O) (hI : Admissible I) (hJ : Admissible J)
-    (hnt : I ≠ 1 ∨ J ≠ 1) (V : 𝓢(ℝ, ℂ)) (X Y Z lengthScale : ℝ) (hX : 0 < X) :
-    dualPrincipalIdeal I J V X = (6 : ℂ)⁻¹ *
-      (principalTruncation (fun P : primePool {I * J} => P.val) Finset.univ V X Z +
-       middleTruncation (fun P : primePool {I * J} => P.val) Finset.univ V X Y Z lengthScale +
-       truncationError (fun P : primePool {I * J} => P.val) Finset.univ V X Y Z lengthScale) := by
-  rw [dualPrincipalIdeal_eq_lattice I J hI hJ hnt V X hX]
-  congr 1
-  unfold truncationError
-  have he : dualPrincipalLattice I J V X =
-      ∑' z : O, rowCoprimeMask (fun P : primePool {I * J} => P.val) Finset.univ z *
-        (if z = 0 then 0 else V (‖eisEmbedding z‖ ^ 2 / X)) := by
-    apply tsum_congr
-    intro z
-    by_cases hz : z = 0
-    · subst z
-      rw [singleton_rowCoprimeMask_eq_idealZeroMask, idealZeroMask_mul I J hI.1 hJ.1,
-        idealZeroMask_pair_zero I J hI hJ hnt, zero_mul, zero_mul]
-    · simp only [ite_eq_right hz]
-  rw [he]
-  ring
-
 theorem canonical_pair_ideal_fourier_summable (I J : Ideal O) (W : 𝓢(ℝ, ℂ))
     (t : ℝ) (ht : 0 < t) :
     Summable (fun lengthScale : NonzeroIdeal => unrestrictedPairCharacter I J lengthScale.val *
@@ -346,126 +220,11 @@ theorem canonical_pair_ideal_fourier_summable (I J : Ideal O) (W : 𝓢(ℝ, ℂ
   have h := (canonical_pair_fourier_summable I J W t ht).comp_injective hi
   simpa only [Function.comp_def, idealGenerator_norm_sq, unrestrictedPairCharacter] using h
 
-theorem canonical_nonprincipal_dual_principal
-    (I J : Ideal O) (hI : Admissible I) (hJ : Admissible J)
-    (hray : columnRay I = columnRay J) (hnt : I ≠ 1 ∨ J ≠ 1)
-    (W : 𝓢(ℝ, ℂ)) (t : ℝ) (ht : 0 < t) :
-    (∑' h : O, (quadraticRow I h * quadraticRow J h) *
-      paperRadialFourier W (t * ‖eisEmbedding h‖ ^ 2)) =
-      (6 : ℂ) * ∑' B : {B : Ideal O // Squarefree B},
-        unrestrictedPairCharacter I J B.val *
-          dualPrincipalIdeal I J (quadraticTransformedSquareProfile W)
-            (Real.sqrt (1 / (t * (Ideal.absNorm B.val : ℝ)))) := by
-  rw [canonical_nonprincipal_dual_squarefree I J hI hJ hray hnt W t ht]
-  congr 1
-  let F : (NonzeroIdeal × {B : Ideal O // Squarefree B}) → ℂ := fun p =>
-    (idealZeroMask I (idealGenerator p.1.val) * idealZeroMask J (idealGenerator p.1.val)) *
-    unrestrictedPairCharacter I J p.2.val * paperRadialFourier W
-      (t * ((Ideal.absNorm p.1.val : ℝ) ^ 2 * (Ideal.absNorm p.2.val : ℝ)))
-  have hf : Summable F := by
-    have hs := decompositionEquiv.symm.summable_iff.mpr
-      (canonical_pair_ideal_fourier_summable I J W t ht)
-    apply hs.congr
-    intro p
-    change unrestrictedPairCharacter I J (p.1.val ^ 2 * p.2.val) *
-      paperRadialFourier W (t * (Ideal.absNorm (p.1.val ^ 2 * p.2.val) : ℝ)) = F p
-    rw [unrestrictedPairCharacter_mul I J hI hJ hray,
-      unrestrictedPairCharacter_square I J hI hJ hray]
-    simp only [F, map_mul, map_pow, Nat.cast_mul, Nat.cast_pow]
-  change (∑' p, F p) = _
-  calc
-    _ = ∑' p : ({B : Ideal O // Squarefree B} × NonzeroIdeal), F (p.2, p.1) :=
-      (Equiv.prodComm _ _).tsum_eq (fun p => F (p.2, p.1))
-    _ = ∑' B : {B : Ideal O // Squarefree B}, ∑' A : NonzeroIdeal, F (A, B) := hf.prod_symm.tsum_prod
-    _ = _ := by
-      apply tsum_congr
-      intro B
-      rw [dualPrincipalIdeal, ← tsum_mul_left]
-      apply tsum_congr
-      intro A
-      have hB : 0 < (Ideal.absNorm B.val : ℝ) := by
-        exact_mod_cast Nat.pos_iff_ne_zero.mpr (fun h => B.property.ne_zero (Ideal.absNorm_eq_zero_iff.mp h))
-      have htb : 0 < t * (Ideal.absNorm B.val : ℝ) := mul_pos ht hB
-      have harg : ((Ideal.absNorm A.val : ℝ) / Real.sqrt (1 / (t * (Ideal.absNorm B.val : ℝ)))) ^ 2 =
-          t * ((Ideal.absNorm A.val : ℝ) ^ 2 * (Ideal.absNorm B.val : ℝ)) := by
-        rw [div_pow, Real.sq_sqrt (one_div_pos.mpr htb).le]
-        field_simp
-
-      simp only [F, quadraticTransformedSquareProfile_apply, harg]
-      ring
-
 end
 section
 
 open ActualEisensteinCubic CompletedGauss IdealMobiusDivisorSum
 open QuadraticMainOperatorBound IdealCoprimeSieveOperator DivisorBlockCauchy
-
-def canonicalMainBoundary (H : Finset (Ideal O)) (G : Ideal O) (K N : ℝ)
-    (a : idealRange N → ℂ) : ℂ :=
-  ∑ D ∈ idealDivisors G, ∑ E ∈ idealDivisors G,
-    (UniqueFactorizationMonoid.moebius E : ℂ) *
-    (∑ B : H, mainWeight K B.val D E *
-      (∑ J : idealRange N, ∑ lengthScale : idealRange N, if IsCoprime J.val lengthScale.val then
-        star (quadraticRow J.val (primaryGenerator B.val) *
-          (a J * quadraticRow J.val (primaryGenerator D * primaryGenerator E))) *
-        (quadraticRow lengthScale.val (primaryGenerator B.val) *
-          (a lengthScale * quadraticRow lengthScale.val (primaryGenerator D * primaryGenerator E))) else 0))
-
-theorem canonicalMainBoundary_bound
-    (ε : ℝ) (hε : 0 < ε) (K N : ℝ) (hK : 0 < K) (hN : 0 ≤ N)
-    (H : Finset (Ideal O)) (hH : H ⊆ idealRange K) (G : Ideal O) (hG : G ≠ 0)
-    (a : idealRange N → ℂ) :
-    ‖canonicalMainBoundary H G K N a‖ ≤
-      ((idealDivisors G).card : ℝ) ^ 2 *
-        ((1 / Real.sqrt K) * sieveNorm K N * (supportConstant ε hε * N ^ ε) *
-          ∑ J, ‖a J‖ ^ 2) := by
-  let A : Matrix H (idealRange N) ℂ := fun B J => quadraticRow J.val (primaryGenerator B.val)
-  let r : Ideal O → Ideal O → idealRange N → ℂ := fun D E J =>
-    quadraticRow J.val (primaryGenerator D * primaryGenerator E)
-  have he := main_difference_operator_bound ε hε K hK G hG
-    (fun B : H => B.val) (fun J : idealRange N => J.val)
-    (fun J => (mem_idealRange.mp J.property).1.1) N hN
-    (fun J => (mem_idealRange.mp J.property).2) A a r
-    (fun D E J => quadraticRow_norm_le_one J.val _)
-  have hA : ‖FiniteSieveOperator.operator A‖ ^ 2 ≤ sieveNorm K N :=
-    family_squared_norm_le (fun B : H => B.val) (fun J : idealRange N => J.val)
-      Subtype.val_injective Subtype.val_injective K N
-      (fun B => mem_idealRange.mp (hH B.property)) (fun J => mem_idealRange.mp J.property)
-  change ‖canonicalMainBoundary H G K N a‖ ≤ _ at he
-  apply he.trans
-  have hs : 0 ≤ supportConstant ε hε := (supportConstant_pos ε hε).le
-  gcongr
-
-theorem canonicalMainBoundary_small_power
-    (ε : ℝ) (hε : 0 < ε) (K N : ℝ) (hK : 0 < K) (hN : 0 ≤ N)
-    (H : Finset (Ideal O)) (hH : H ⊆ idealRange K) (G : Ideal O) (hG : G ≠ 0)
-    (a : idealRange N → ℂ) :
-    ‖canonicalMainBoundary H G K N a‖ ≤
-      (divisorConstant ε hε * (Ideal.absNorm G : ℝ) ^ ε) ^ 2 *
-        ((1 / Real.sqrt K) * sieveNorm K N * (supportConstant ε hε * N ^ ε) *
-          ∑ J, ‖a J‖ ^ 2) := by
-  apply (canonicalMainBoundary_bound ε hε K N hK hN H hH G hG a).trans
-  have hd : ((idealDivisors G).card : ℝ) ≤ divisorConstant ε hε * (Ideal.absNorm G : ℝ) ^ ε :=
-    (IdealDivisorBound.ideal_divisor_small_power ε hε).choose_spec.2 G hG
-  have hs : 0 ≤ supportConstant ε hε := (supportConstant_pos ε hε).le
-  have hB := sieveNorm_nonneg K N
-  gcongr
-
-theorem canonicalMainBoundary_reverse
-    (ε : ℝ) (hε : 0 < ε) (K N : ℝ) (hK : 0 < K) (hN : 0 ≤ N)
-    (H : Finset (Ideal O)) (hH : H ⊆ idealRange K) (G : Ideal O) (hG : G ≠ 0)
-    (a : idealRange N → ℂ) :
-    ‖canonicalMainBoundary H G K N a‖ ≤
-      ((idealDivisors G).card : ℝ) ^ 2 *
-        ((262144 / Real.sqrt K) * sieveNorm N K * (supportConstant ε hε * N ^ ε) *
-          ∑ J, ‖a J‖ ^ 2) := by
-  apply (canonicalMainBoundary_bound ε hε K N hK hN H hH G hG a).trans
-  have hs : 0 ≤ supportConstant ε hε := (supportConstant_pos ε hε).le
-  calc
-    _ ≤ ((idealDivisors G).card : ℝ) ^ 2 *
-        ((1 / Real.sqrt K) * (262144 * sieveNorm N K) * (supportConstant ε hε * N ^ ε) *
-          ∑ J, ‖a J‖ ^ 2) := by gcongr; exact sieveNorm_reverse_le K N
-    _ = _ := by ring
 
 end
 
@@ -515,14 +274,6 @@ theorem weighted_energy_column_shells {m : Type*} [Fintype m]
         v i * ‖∑ J, A i J * dyadicColumnCoefficient N lengthScale hNL j a J‖ ^ 2 := by
   simpa only [Fintype.card_fin, Nat.cast_add, Nat.cast_one, dyadicColumnCoefficient] using
     sector_weighted_energy_bound A (columnDyadicSector N lengthScale hNL) a v hv
-
-theorem annularHighEnergy_column_shells (M N K : ℝ) (lengthScale : ℕ) (hNL : N ≤ (2 : ℝ) ^ lengthScale)
-    (a : idealRange N → ℂ) :
-    annularHighEnergy M N K a ≤ (lengthScale + 1 : ℝ) *
-      ∑ j : Fin (lengthScale + 1), annularHighEnergy M N K (dyadicColumnCoefficient N lengthScale hNL j a) := by
-  exact weighted_energy_column_shells N lengthScale hNL
-    (fun I : highKernelRange (2 * M) K => fun J => quadraticRow J.val (primaryGenerator I.val))
-    (fun I => annularHighWeight M I.val) (fun _ => QuadraticInitialBound.annularSieveBump.nonneg) a
 
 def coefficientAtScale (N X : ℝ) (a : idealRange N → ℂ) (J : idealRange X) : ℂ :=
   if h : J.val ∈ idealRange N then a ⟨J.val, h⟩ else 0
@@ -599,18 +350,6 @@ theorem annularHighEnergy_coefficientAtScale (M N X K : ℝ) (a : idealRange N �
     annularHighEnergy M N K a = annularHighEnergy M X K (coefficientAtScale N X a) := by
   unfold annularHighEnergy
   simp_rw [coefficientAtScale_row_sum N X a ha]
-
-theorem annularHighEnergy_column_shells_at_scale (M N K : ℝ) (lengthScale : ℕ) (hNL : N ≤ (2 : ℝ) ^ lengthScale)
-    (a : idealRange N → ℂ) :
-    annularHighEnergy M N K a ≤ (lengthScale + 1 : ℝ) * ∑ j : Fin (lengthScale + 1),
-      annularHighEnergy M ((2 : ℝ) ^ j.val) K
-        (coefficientAtScale N ((2 : ℝ) ^ j.val) (dyadicColumnCoefficient N lengthScale hNL j a)) := by
-  apply (annularHighEnergy_column_shells M N K lengthScale hNL a).trans_eq
-  apply congrArg (fun x : ℝ => (lengthScale + 1 : ℝ) * x)
-  apply Finset.sum_congr rfl
-  intro j _
-  exact annularHighEnergy_coefficientAtScale M N _ K _
-    (fun J hJ => (dyadicColumnCoefficient_shell N lengthScale hNL j a J hJ).2)
 
 theorem dyadicColumnCoefficient_at_scale_energy (N : ℝ) (lengthScale : ℕ) (hNL : N ≤ (2 : ℝ) ^ lengthScale)
     (a : idealRange N → ℂ) :

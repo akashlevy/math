@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DyadicReflectedControl
-
 namespace OAI
 
 noncomputable section

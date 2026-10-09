@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.CommonSectors
-
 namespace OAI
 
 noncomputable section

@@ -1,79 +1,23 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.ReflectionFibers
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
-
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CanonicalRowCompletion
 open ActualEisensteinCubic CompletedGauss CanonicalQuadraticSieve UniqueFactorizationMonoid
@@ -109,13 +53,6 @@ lemma freePrimaryPrime_odd (I Q:Ideal Eis) (hI:Supported I) (P:FreePrimeIndex I 
   rw [freePrimaryPrime_span I Q hI P]
   exact (supported_factors_good I hI P.val.val (Multiset.mem_toFinset.mp P.val.property)).2.2
 
-lemma freePrimaryPrime_injective (I Q:Ideal Eis) (hI:Supported I) :
-    Function.Injective (freePrimaryPrime I Q) := by
-  intro P R he
-  have hh:=congrArg (fun x:Eis=>(Ideal.span {x}:Ideal Eis)) he
-  rw [freePrimaryPrime_span I Q hI P,freePrimaryPrime_span I Q hI R] at hh
-  exact Subtype.ext (Subtype.ext hh)
-
 lemma freePrimaryPrime_coprime (I Q:Ideal Eis) (hI:Supported I) :
     Pairwise (fun P R:FreePrimeIndex I Q =>
       IsCoprime (Ideal.span {freePrimaryPrime I Q P}:Ideal Eis) (Ideal.span {freePrimaryPrime I Q R})) := by
@@ -127,19 +64,6 @@ lemma freePrimaryPrime_coprime_fixed (I Q:Ideal Eis) (hI:Supported I) (P:FreePri
     IsCoprime Q (Ideal.span {freePrimaryPrime I Q P}:Ideal Eis) := by
   rw [freePrimaryPrime_span I Q hI P]
   exact freePrimeIndex_coprime I Q P
-
-lemma freePrimaryPrime_product_span (I Q:Ideal Eis) (hI:Supported I) :
-    Ideal.span {∏P:FreePrimeIndex I Q,freePrimaryPrime I Q P}=
-      ∏P:FreePrimeIndex I Q,P.val.val := by
-  rw [FiniteGaussPhase.span_finset_prod]
-  apply Finset.prod_congr rfl
-  intro P _
-  exact freePrimaryPrime_span I Q hI P
-
-lemma freePrimaryPrime_product_coprime_fixed (I Q:Ideal Eis) (hI:Supported I) :
-    IsCoprime Q (Ideal.span {∏P:FreePrimeIndex I Q,freePrimaryPrime I Q P}:Ideal Eis) := by
-  rw [freePrimaryPrime_product_span I Q hI]
-  exact freePrimeProduct_coprime I Q
 
 lemma actualSextic_power_transport (P R:Ideal Eis) [P.IsMaximal] [R.IsMaximal]
     (hP:lambda∉P) (hR:lambda∉R) (he:P=R) (j:ℕ) (n:Eis) :
@@ -206,8 +130,6 @@ theorem fourier_inversion_by_active_set {ι:Type*} [Fintype ι]
     _=_:=Fintype.prod_sum (fun (i:A) (u:(F i.val)ˣ)=>f i.val (u:F i.val))
 
 end FixedRayActiveSet
-
-open scoped BigOperators Classical ContDiff
 
 namespace CubicEisenstein
 
@@ -313,8 +235,6 @@ lemma ControlledStratumArithmetic.datum_fourier_phase {ι:Type*} [Fintype ι]
   rw [theta_lifted_phase,D.lift_residue]
 
 end CubicEisenstein
-
-open scoped BigOperators Classical ContDiff
 
 namespace CompletedGauss
 open ActualEisensteinCubic CubicEisenstein CompletedDyadic
@@ -559,8 +479,6 @@ theorem smoothedValue_eq_extracted_branch_sums
 
 end FixedFourierGeometry
 end CubicEisenstein
-
-open scoped BigOperators Classical
 
 namespace CanonicalRowCompletion
 open ActualEisensteinCubic CompletedGauss CanonicalQuadraticSieve CubicEisenstein

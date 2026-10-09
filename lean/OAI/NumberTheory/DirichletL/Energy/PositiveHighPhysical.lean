@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Energy.CanonicalHighPhysical
 import OAI.NumberTheory.DirichletL.Energy.PositiveBalancedAdmission
 import OAI.NumberTheory.DirichletL.Energy.PositiveHighSourceBound
 import OAI.NumberTheory.DirichletL.Energy.FirstSourceParameters
-
 namespace OAI
 
 noncomputable section

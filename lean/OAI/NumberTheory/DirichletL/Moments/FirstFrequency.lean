@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstAssembly
-
 namespace OAI
 
 noncomputable section
@@ -64,57 +63,6 @@ def dilatedFrequency {ι : Type*} [Fintype ι]
     ((k/‖eisEmbedding (a*(b*r))‖^2:ℝ):ℂ)*
     tripleFourier a b r (supported_element_ne_zero a ha) (supported_element_ne_zero b hb)
       (finitePrimeModulus_ne_zero P) (supportedModulusCharacter a ha) (supportedModulusCharacter b hb)⁻¹ G h
-
-theorem finite_dilated_children {ι α β : Type*} [Fintype ι]
-    (P : ι → Ideal O) [∀ i,(P i).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime P))
-    (hg : ∀ i,ConcretePrimeRowBridge.goodLambda ∉ P i)
-    (hchar : ∀ i,ringChar (O ⧸ P i)≠2)
-    (j : ι → ℕ) (hj0 : ∀ i,j i≠0) (hj6 : ∀ i,j i<6)
-    (S : Finset α) (T : Finset β) (a : α → O) (b : β → O)
-    (ha : ∀ i,Supported (Ideal.span {a i})) (hb : ∀ l,Supported (Ideal.span {b l}))
-    (hpa : ∀ i,ConcretePrimeRowBridge.goodLambda^2∣a i-1)
-    (hpb : ∀ l,ConcretePrimeRowBridge.goodLambda^2∣b l-1)
-    (har : ∀ i,IsCoprime (a i) (finitePrimeModulus P))
-    (hbr : ∀ l,IsCoprime (b l) (finitePrimeModulus P))
-    (c : α → ℂ) (d : β → ℂ) (e : O) (k : ℝ) (h : O) (K : α → β → ℂ) :
-    let r := finitePrimeModulus P
-    let ρ := finiteSexticRow P hg j
-    (∑ i∈S,∑ l∈T,
-      (if IsCoprime (a i) (b l) then dilatedFrequency P hcop hg j e (a i) (b l) (ha i) (hb l) k h else 0)*
-        (c i*star (d l))*K i l) =
-      ((k:ℂ)*canonicalNormalizedGauss P hcop hg j/(‖eisEmbedding r‖:ℂ))*star (ρ h)*
-        ∑ L∈divisorPool T (fun l => Ideal.span {b l}),
-          (UniqueFactorizationMonoid.moebius L:ℂ)*ρ e*
-            ∑ χ : RayCharacter,∑ ξ : RayCharacter,pairCoeff firstPhaseTable χ ξ*
-              ∑ i∈S,∑ l∈T,
-                ((divisorCoefficient L a (fun i => (c i/(‖eisEmbedding (a i)‖:ℂ))*leftCoefficient e r ρ (a i)) χ i*
-                    gaussRow (a i) (ha i) h)*
-                  star (divisorCoefficient L b (fun l => (d l/(‖eisEmbedding (b l)‖:ℂ))*rightCoefficient e r ρ (b l)) (ξ⁻¹) l*
-                    gaussRow (b l) (hb l) (-h)))*K i l := by
-  dsimp only
-  let r := finitePrimeModulus P
-  let ρ := finiteSexticRow P hg j
-  let F := ((k:ℂ)*canonicalNormalizedGauss P hcop hg j/(‖eisEmbedding r‖:ℂ))*star (ρ h)
-  have ht (i : α) (l : β) :
-      (if IsCoprime (a i) (b l) then dilatedFrequency P hcop hg j e (a i) (b l) (ha i) (hb l) k h else 0)*
-          (c i*star (d l))*K i l =
-        F*((if IsCoprime (a i) (b l) then originalPhase e r ρ (a i) (b l) else 0)*
-          ((c i/(‖eisEmbedding (a i)‖:ℂ))*star (d l/(‖eisEmbedding (b l)‖:ℂ)))*
-          (gaussRow (a i) (ha i) h*star (gaussRow (b l) (hb l) (-h)))*K i l) := by
-    by_cases hab : IsCoprime (a i) (b l)
-    · simp only [hab,ite_true]
-      rw [show dilatedFrequency P hcop hg j e (a i) (b l) (ha i) (hb l) k h=_ from
-        normalized_dilated_frequency P hcop hg hchar j hj0 hj6 e (a i) (b l) (ha i) (hb l)
-          (hab.mul_right (har i)) (hbr l) k h]
-      dsimp only [F,r,ρ]
-      simp only [Complex.star_def,map_div₀,Complex.conj_ofReal]
-      ring
-    · simp [hab]
-  simp_rw [ht,← Finset.mul_sum]
-  rw [finite_first_children S T a b ha hb hpa hpb
-    (fun i => c i/(‖eisEmbedding (a i)‖:ℂ)) (fun l => d l/(‖eisEmbedding (b l)‖:ℂ)) e r ρ
-    (finiteSexticRow_mul P hg j) h K]
 
 end SevenEighths.CenteredMomentFirstFrequency
 

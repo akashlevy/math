@@ -1,77 +1,23 @@
 import OAI.NumberTheory.DirichletL.Cusp.StaticReflectionPhases
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 
@@ -309,26 +255,6 @@ theorem smoothed_eq_reflected (D:ControlledStratumArithmetic p N a0 c0 mode)
 
 end ControlledStratumArithmetic
 
-theorem exists_constructed_stratum_reflection {ι:Type*} [Fintype ι]
-    (p:ι→Eis) [∀i,(Ideal.span {p i}).IsMaximal] (hp:∀i,p i≠0)
-    (hcop:Pairwise (Function.onFun IsCoprime (fun i=>Ideal.span {p i})))
-    (hprimary:∀i,lambda^2∣p i-1)
-    (hg:∀i,lambda∉Ideal.span {p i}) (hchar:∀i,ringChar (Eis⧸Ideal.span {p i})≠2)
-    (N a0 c0:Eis) (hc0:c0≠0) (hN:(9:Eis)*c0∣N)
-    (mode:Bool) (hbase:if mode then lambda^2∣a0-1 else lambda^2∣c0-1)
-    (hac:IsCoprime a0 c0) (hNp:∀i,IsCoprime N (p i)) :
-    ∃s:FixedCuspShape (ControlledStratumArithmetic.fixedCusp a0 c0 mode),
-      ∃D:ControlledStratumArithmetic p N a0 c0 mode,
-      ∀j:ι→ℕ,(∀i,j i<6)→∀(W:ℝ→ℂ)(lo hi:ℝ),0<lo→
-        Function.support W⊆Set.Icc lo hi→ContDiff ℝ ∞ W→∀X:ℝ,0<X→
-        D.smoothedValue hN (primary_finset_product Finset.univ p (fun i _=>hprimary i))
-          hbase s hp hc0 hg j W X=D.reflectedValue s hp hc0 hg j W X := by
-  obtain ⟨s⟩:=exists_fixedCuspShape (ControlledStratumArithmetic.fixedCusp a0 c0 mode)
-  obtain ⟨D⟩:=exists_controlledStratumArithmetic p hp hcop hprimary N a0 c0 hc0 hN mode hbase hac hNp
-  refine ⟨s,D,?_⟩
-  intro j hj W lo hi hlo hsupp hW X hX
-  exact D.smoothed_eq_reflected hN _ hbase s hp hc0 hcop hg hchar j hj W lo hi hlo hsupp hW X hX
-
 end
 
 section
@@ -398,11 +324,6 @@ lemma array_norm_le_one (v:G.PhaseResidue) (u:Eisˣ) (m:ℕ) (I J:Ideal Eis) :
     ‖G.array v u m I J‖≤1 :=
   fixedCuspArrayWithPhase_norm_le_one G.shape.index u _ (G.staticPhase_norm_le_one v u) m I J
 
-lemma array_eq (v:G.PhaseResidue) (u:Eisˣ) (m:ℕ) (I J:Ideal Eis) :
-    G.array v u m I J=G.shape.amplitude u m I J*
-      A4PhaseFromResidue G.c0 G.denominator_ne_zero v (G.dualNumerator u m I J) :=
-  G.shape.fixedCuspArrayWithPhase_reflectionStaticPhase G.c0 G.denominator_ne_zero v _ u m I J
-
 end FixedFourierGeometry
 
 def FixedReflectionRay (c:Eis) (hc:c≠0) :=
@@ -421,14 +342,6 @@ def fixedReflectionRayCount (c:Eis) (hc:c≠0) : ℕ := Fintype.card (FixedRefle
 
 def fixedReflectionRayEquiv (c:Eis) (hc:c≠0) :
     FixedReflectionRay c hc≃Fin (fixedReflectionRayCount c hc) := Fintype.equivFin _
-
-lemma fixedReflectionRayCount_subpower (c:Eis) (hc:c≠0) (z:ℂ) (κ:ℝ) (hκ:0≤κ) :
-    ∃C:ℝ,0≤C ∧ ∀Z:ℝ,1≤Z→
-      (fixedReflectionRayCount c hc:ℝ)^2*‖z‖^2≤C*Z^κ := by
-  refine ⟨(fixedReflectionRayCount c hc:ℝ)^2*‖z‖^2,by positivity,?_⟩
-  intro Z hZ
-  have hz:1≤Z^κ:=Real.one_le_rpow hZ hκ
-  exact le_mul_of_one_le_right (by positivity) hz
 
 end
 
@@ -504,8 +417,6 @@ theorem completedT_of_finite_cusp_profiles
 
 end CubicEisenstein
 
-open scoped BigOperators Classical
-
 namespace CanonicalRowCompletion
 
 section
@@ -516,41 +427,10 @@ local notation "Eis" => ActualEisensteinCubic.O
 def fixedRowFourierPhase (c:Eis) (hc:c≠0) (h:Eis⧸Ideal.span {c}) (n:Eis) : ℂ :=
   quotientTrace c hc (h*Ideal.Quotient.mk _ n)
 
-def fixedRowFourierCoeff (c:Eis) (hc:c≠0) [Fintype (Eis⧸Ideal.span {c})]
-    (φ:Eis→*ℂ) (h:Eis⧸Ideal.span {c}) : ℂ :=
-  finiteAdditiveFourierCoeff (quotientTrace c hc) (fixedQuotientValue (Ideal.span {c}) φ) h
-
-lemma fixedRowFourierCoeff_norm (c:Eis) (hc:c≠0) [Fintype (Eis⧸Ideal.span {c})]
-    (φ:Eis→*ℂ) (hφ:∀n,‖φ n‖≤1) (h:Eis⧸Ideal.span {c}) :
-    ‖fixedRowFourierCoeff c hc φ h‖≤1 :=
-  finiteAdditiveFourierCoeff_norm _ _ (fixedQuotientValue_norm _ φ hφ) h
-
-lemma fixedRowFourierCoeff_mass (c:Eis) (hc:c≠0) [Fintype (Eis⧸Ideal.span {c})]
-    (φ:Eis→*ℂ) (hφ:∀n,‖φ n‖≤1) :
-    (∑h:Eis⧸Ideal.span {c},‖fixedRowFourierCoeff c hc φ h‖)≤
-      (Fintype.card (Eis⧸Ideal.span {c}):ℝ) := by
-  calc
-    _≤∑_h:Eis⧸Ideal.span {c},(1:ℝ):=
-      Finset.sum_le_sum (fun h _=>fixedRowFourierCoeff_norm c hc φ hφ h)
-    _=_:=by simp
-
-lemma fixedRowFourierPhase_norm (c:Eis) (hc:c≠0) [Fintype (Eis⧸Ideal.span {c})] (h:Eis⧸Ideal.span {c}) (n:Eis) :
-    ‖fixedRowFourierPhase c hc h n‖=1 := AddChar.norm_apply _ _
-
 lemma fixedRowFourierPhase_translation (c:Eis) (hc:c≠0) (h:Eis⧸Ideal.span {c}) (n:Eis) :
     fixedRowFourierPhase c hc h n=
       ShortDraftTrace.breveE (-cuspFrequency n*thetaFourierTranslation c h) :=
   (thetaFourierTranslation_phase c hc h n).symm
-
-lemma fixedRowFourier_inversion (c:Eis) (hc:c≠0) [Fintype (Eis⧸Ideal.span {c})]
-    (φ:Eis→*ℂ) (hφ:CanonicalCoefficientClass.FactorsModulo (Ideal.span {c}) φ) (n:Eis) :
-    (∑h:Eis⧸Ideal.span {c},fixedRowFourierCoeff c hc φ h*fixedRowFourierPhase c hc h n)=φ n := by
-  rw [show (∑h:Eis⧸Ideal.span {c},fixedRowFourierCoeff c hc φ h*fixedRowFourierPhase c hc h n)=
-      fixedQuotientValue (Ideal.span {c}) φ (Ideal.Quotient.mk _ n) from
-    finiteAdditiveFourier_inversion (quotientTrace c hc)
-      (GeneralPrimitiveTrace.eisTraceModChar_breveE_primitive c hc)
-      (fixedQuotientValue (Ideal.span {c}) φ) _]
-  exact fixedQuotientValue_mk _ φ hφ n
 
 lemma summand_mul_fixed_twist (φ χ:Eis→*ℂ) (W:ℝ→ℂ) (X:ℝ) (I J:Ideal Eis) :
     summand (φ*χ) W X I J=
@@ -562,73 +442,10 @@ lemma summand_mul_fixed_twist (φ χ:Eis→*ℂ) (W:ℝ→ℂ) (X:ℝ) (I J:Idea
   simp only [columnWeight,MonoidHom.mul_apply,map_mul,map_pow,mul_pow]
   ring
 
-def completedFixedFrequency (χ:Eis→*ℂ) (c:Eis) (hc:c≠0)
-    (h:Eis⧸Ideal.span {c}) (W:ℝ→ℂ) (X:ℝ) : ℂ :=
-  ∑'p:Ideal Eis×Ideal Eis,summand χ W X p.1 p.2*
-    fixedRowFourierPhase c hc h (primaryGenerator p.1*(primaryGenerator p.2)^3)
-
-lemma completedFixedFrequency_summable (χ:Eis→*ℂ) (c:Eis) (hc:c≠0)
-    (h:Eis⧸Ideal.span {c}) (W:ℝ→ℂ) (hW:HasCompactSupport W) (X:ℝ) (hX:0<X) :
-    Summable (fun p:Ideal Eis×Ideal Eis=>summand χ W X p.1 p.2*
-      fixedRowFourierPhase c hc h (primaryGenerator p.1*(primaryGenerator p.2)^3)) := by
-  apply summable_of_hasFiniteSupport
-  apply (completedT_finite_support χ W hW X hX).subset
-  intro p hp
-  exact left_ne_zero_of_mul hp
-
-theorem completedT_fixed_fourier (c:Eis) (hc:c≠0) [Fintype (Eis⧸Ideal.span {c})]
-    (φ χ:Eis→*ℂ) (hφ:CanonicalCoefficientClass.FactorsModulo (Ideal.span {c}) φ)
-    (W:ℝ→ℂ) (hW:HasCompactSupport W) (X:ℝ) (hX:0<X) :
-    completedT (φ*χ) W X=
-      ∑h:Eis⧸Ideal.span {c},fixedRowFourierCoeff c hc φ h*completedFixedFrequency χ c hc h W X := by
-  have hp (p:Ideal Eis×Ideal Eis) : summand (φ*χ) W X p.1 p.2=
-      ∑h:Eis⧸Ideal.span {c},fixedRowFourierCoeff c hc φ h*
-        (summand χ W X p.1 p.2*
-          fixedRowFourierPhase c hc h (primaryGenerator p.1*(primaryGenerator p.2)^3)) := by
-    rw [summand_mul_fixed_twist,←fixedRowFourier_inversion c hc φ hφ,Finset.sum_mul]
-    apply Finset.sum_congr rfl
-    intro h hh
-    ring
-  calc
-    completedT (φ*χ) W X=∑'p:Ideal Eis×Ideal Eis,summand (φ*χ) W X p.1 p.2 :=
-      (completedT_summable (φ*χ) W hW X hX).tsum_prod.symm
-    _=∑'p:Ideal Eis×Ideal Eis,∑h:Eis⧸Ideal.span {c},fixedRowFourierCoeff c hc φ h*
-        (summand χ W X p.1 p.2*
-          fixedRowFourierPhase c hc h (primaryGenerator p.1*(primaryGenerator p.2)^3)) :=
-      tsum_congr hp
-    _=∑h:Eis⧸Ideal.span {c},∑'p:Ideal Eis×Ideal Eis,fixedRowFourierCoeff c hc φ h*
-        (summand χ W X p.1 p.2*
-          fixedRowFourierPhase c hc h (primaryGenerator p.1*(primaryGenerator p.2)^3)) :=
-      Summable.tsum_finsetSum (fun h _=>(completedFixedFrequency_summable χ c hc h W hW X hX).mul_left _)
-    _=_:=by simp only [tsum_mul_left,completedFixedFrequency]
-
 end
 
 open ActualEisensteinCubic CompletedGauss CanonicalQuadraticSieve
 open CubicEisenstein hiding summand
-local notation "Eis" => ActualEisensteinCubic.O
-
-theorem actual_completedT_fixed_fourier (c:Eis) (hc:c≠0) [Fintype (Eis⧸Ideal.span {c})]
-    (Ψ:Eis→*ℂ) (Q:Ideal Eis) (hQ:Q≠0)
-    (hcQ:Ideal.span {c}≤Q*Ideal.span {(72:Eis)})
-    (hΨ:CanonicalCoefficientClass.FactorsModulo Q Ψ) (hΨnorm:∀n,‖Ψ n‖≤1)
-    (m f z:Eis) (hm:m≠0) (hf:f≠0) (hz:z≠0) (hmLam:lambda∣m) (hm2:(2:Eis)∣m) :
-    ∃(I:Ideal Eis)(hI:Supported I)(φ:Eis→*ℂ),
-      CanonicalCoefficientClass.FactorsModulo (Q*Ideal.span {(72:Eis)}) φ ∧
-      (∀n,‖φ n‖≤1) ∧
-      IsCoprime (Q*Ideal.span {(72:Eis)})
-        (∏P:FreePrimeIndex I (Q*Ideal.span {(72:Eis)}),P.val.val) ∧
-      (∀h:Eis⧸Ideal.span {c},‖fixedRowFourierCoeff c hc φ h‖≤1) ∧
-      (∀(W:ℝ→ℂ),HasCompactSupport W→∀X:ℝ,0<X→
-        completedT (rowTwist Ψ m f z) W X=
-          ∑h:Eis⧸Ideal.span {c},fixedRowFourierCoeff c hc φ h*
-            completedFixedFrequency (freePrimeRow I hI (Q*Ideal.span {(72:Eis)})) c hc h W X) := by
-  obtain ⟨I,hI,φ,hφ,hφn,hcop,hmod,hperiod,hnorm,hT⟩:=
-    exists_actual_coprime_completed_row Ψ Q hQ hΨ hΨnorm m f z hm hf hz hmLam hm2
-  refine ⟨I,hI,φ,hφ,hφn,hcop,fixedRowFourierCoeff_norm c hc φ hφn,?_⟩
-  intro W hW X hX
-  rw [hT W X]
-  exact completedT_fixed_fourier c hc φ _ (fun x y hxy=>hφ x y (hcQ hxy)) W hW X hX
 
 end CanonicalRowCompletion
 

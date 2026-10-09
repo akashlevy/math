@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseMarkedReferenceFiber
 import OAI.NumberTheory.DirichletL.Dictionary.InverseRawConjugateGates
 import OAI.NumberTheory.DirichletL.Inversion.InitialExcludedEnergy
-
 namespace OAI
 
 noncomputable section
@@ -22,15 +21,6 @@ theorem deletedBase_zero_unsupported (data:RowData)(I:Ideal O)(hI:¬Supported I)
   rw [idealCoeff_excludePrimes,baseCharacter_coeff,
     fixedBase_zero_unsupported data.η data.m data.f data.lambda_dvd data.two_dvd I hI]
   split_ifs <;> rfl
-
-theorem deletedBase_eq_of_ne_zero (data:RowData)(I:Ideal O)
-    (hI:idealCoeff (deletedBase data) I≠0) :
-    idealCoeff (deletedBase data) I=fixedBase data.η data.m data.f I := by
-  unfold deletedBase excluded at hI ⊢
-  rw [idealCoeff_excludePrimes,baseCharacter_coeff] at hI ⊢
-  split_ifs with h
-  · rfl
-  · exact False.elim (hI (by simp [h]))
 
 def deletedSelectedSource (data:RowData)(M:Ideal O)[NeZero M]
     (H:Subgroup (O⧸M)ˣ)(W:ℝ→ℂ)(V:ι→ℝ→ℂ)

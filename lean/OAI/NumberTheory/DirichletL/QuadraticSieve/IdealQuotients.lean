@@ -1,77 +1,26 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.CoprimeBilinearBound
 import OAI.NumberTheory.DirichletL.CubicSieve.RayExpansion
 import OAI.NumberTheory.DirichletL.GaussSum.ReflectionBrackets
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace CanonicalQuadraticSieve
 
 section
@@ -255,8 +204,6 @@ theorem quotientMatrix_squared_norm_le {m n : Type*} [Fintype m] [Fintype n]
 end CanonicalQuadraticSieve
 
 section
-open MeasureTheory
-open scoped FourierTransform SchwartzMap ContDiff
 namespace FourierBridge
 
 def fourierSeminormBound (k : ℕ) (C : ℝ) : ℝ :=
@@ -438,12 +385,9 @@ theorem paperRadialFourier_log_separation_envelope
 end EisensteinSchwartzPoisson
 end
 
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory
 namespace FirstPassCubeLabels
 open ActualEisensteinCubic
-open FirstCauchyArithmetic (supportMobius supportRay supportIdealFamily supportIdealFamily_pos
-  supportIdealFamily_good recoveredSupport)
+open FirstCauchyArithmetic (supportMobius supportRay supportIdealFamily supportIdealFamily_pos supportIdealFamily_good recoveredSupport)
 open ConcretePrimeRowBridge (conjugateIdealRowSum)
 open RayFourExpansion (RayCharacter crossCoeff)
 open ConcreteTraceCRT (eisEmbedding)

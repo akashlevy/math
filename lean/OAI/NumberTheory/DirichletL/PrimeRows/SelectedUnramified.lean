@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.Selected
-
 namespace OAI
 
 noncomputable section

@@ -5,7 +5,6 @@ import OAI.NumberTheory.DirichletL.Inversion.InitialResidualUniformEnergy
 import OAI.NumberTheory.DirichletL.Inversion.InitialMarkedAssignedGeometry
 import OAI.NumberTheory.DirichletL.Inversion.InitialMarkedReserve
 import OAI.NumberTheory.DirichletL.Dictionary.InverseMarkedPadding
-
 namespace OAI
 
 noncomputable section

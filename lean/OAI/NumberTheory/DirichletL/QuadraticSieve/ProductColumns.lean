@@ -1,76 +1,24 @@
 import OAI.NumberTheory.DirichletL.MeanSquare.TransformedColumns
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace CanonicalQuadraticSieve
 open ActualEisensteinCubic CompletedGauss IdealMobiusDivisorSum
 
@@ -119,51 +67,6 @@ theorem productColumnCoefficient_row_sum (S T : Finset (Ideal O))
   apply Finset.sum_congr rfl
   intro p hp
   rw [(Finset.mem_filter.mp hp).2]
-
-theorem product_quadratic_norm :
-    ∀ε : ℝ, 0<ε → ∃C : ℝ, 0<C ∧ ∀K U B : ℝ,
-      1≤K → 1≤U → 1≤B → ∀S T : Finset (Ideal O),
-      (∀I∈S,Supported I ∧ (Ideal.absNorm I:ℝ)≤U) →
-      (∀I∈T,Supported I ∧ (Ideal.absNorm I:ℝ)≤B) →
-      ∀β : Ideal O → Ideal O → ℂ, (∀n∈S,∀b∈T,‖β n b‖≤1) →
-      (∑k : idealRange K,‖∑n∈S,∑b∈T,quadraticRow k.val (primaryGenerator (n*b))*β n b‖^2)≤
-        C*(K*(U*B))^ε*(K+U*B)*(U*B) := by
-  intro ε hε
-  have hh : 0<ε/2 := by positivity
-  have hq : 0<ε/4 := by positivity
-  obtain ⟨C,hC,hbound⟩ := bounded_supported_quadratic_norm (ε/2) hh
-  obtain ⟨D,hD,hdiv⟩ := IdealDivisorBound.ideal_divisor_small_power (ε/4) hq
-  refine ⟨C*D^2,by positivity,?_⟩
-  intro K U B hK hU hB S T hS hT β hβ
-  let X := U*B
-  let P := (S×ˢT).image (fun p => p.1*p.2)
-  have hX : 1≤X := by dsimp [X]; nlinarith
-  have hX0 : 0<X := by linarith
-  have hK0 : 0<K := by linarith
-  have hp (I : Ideal O) (hI : I∈P) : Supported I ∧ (Ideal.absNorm I:ℝ)≤X := by
-    obtain ⟨⟨n,b⟩,hnb,rfl⟩ := Finset.mem_image.mp hI
-    have hm := Finset.mem_product.mp hnb
-    refine ⟨(supported_mul_iff n b).mpr ⟨(hS n hm.1).1,(hT b hm.2).1⟩,?_⟩
-    rw [map_mul,Nat.cast_mul]
-    exact mul_le_mul (hS n hm.1).2 (hT b hm.2).2 (Nat.cast_nonneg _) (by linarith)
-  have hcoeff (I : Ideal O) (hI : I∈P) : ‖productColumnCoefficient S T β I‖≤D*X^(ε/4) := by
-    apply (productColumnCoefficient_norm S T β hβ I (hp I hI).1.1).trans
-    apply (hdiv I (hp I hI).1.1).trans
-    exact mul_le_mul_of_nonneg_left (Real.rpow_le_rpow (Nat.cast_nonneg _) (hp I hI).2 hq.le) hD.le
-  have hb := hbound K X (D*X^(ε/4)) hK hX (by positivity) P hp (productColumnCoefficient S T β) hcoeff
-  simp_rw [productColumnCoefficient_row_sum]
-  apply hb.trans
-  have hpow : (K*X)^(ε/2)*(X^(ε/4))^2≤(K*X)^ε := by
-    have hXP : X≤K*X := by nlinarith
-    calc
-      _ ≤ (K*X)^(ε/2)*((K*X)^(ε/4))^2 := by gcongr
-      _ = _ := by
-        rw [pow_two,←mul_assoc,←Real.rpow_add (by positivity : 0<K*X),←Real.rpow_add (by positivity : 0<K*X)]
-        congr 1
-        ring
-  calc
-    _ = (C*D^2)*((K*X)^(ε/2)*(X^(ε/4))^2)*(K+X)*X := by ring
-    _ ≤ _ := by change _≤(C*D^2)*(K*X)^ε*(K+X)*X; gcongr
 
 end CanonicalQuadraticSieve
 

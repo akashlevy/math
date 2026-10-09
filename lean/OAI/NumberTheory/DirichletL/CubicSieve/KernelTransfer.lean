@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.FullNorm
 import OAI.NumberTheory.DirichletL.CubicSieve.PairPoisson
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

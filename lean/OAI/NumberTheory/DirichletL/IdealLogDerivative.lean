@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.IdealMangoldt
-
 namespace OAI
 
 namespace SevenEighths.IdealLogDerivative
@@ -21,12 +20,6 @@ theorem norm_coeff_le (a : Ideal O →*₀ ℂ) (ha : ∀ I, ‖a I‖ ≤ 1) (n
   simp only [norm_mul, Complex.norm_real, Real.norm_eq_abs,
     abs_of_nonneg (IdealMangoldt.value_nonneg I), one_mul]
   exact mul_le_of_le_one_right (IdealMangoldt.value_nonneg I) (ha I)
-
-theorem norm_coeff_le_two_vonMangoldt (a : Ideal O →*₀ ℂ)
-    (ha : ∀ I, ‖a I‖ ≤ 1) (n : ℕ) :
-    ‖coeff a n‖ ≤ 2 * ArithmeticFunction.vonMangoldt n :=
-  (norm_coeff_le a ha n).trans
-    (IdealMangoldt.coeff_le_two_vonMangoldt (fun _ => 1) (fun _ => le_refl _) n)
 
 theorem coeff_summable (a : Ideal O →*₀ ℂ) (ha : ∀ I, ‖a I‖ ≤ 1)
     (s : ℂ) (hs : 1 < s.re) : LSeriesSummable (coeff a) s := by

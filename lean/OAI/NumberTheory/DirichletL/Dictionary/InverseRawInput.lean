@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseRawConjugateGates
 import OAI.NumberTheory.DirichletL.Inversion.InitialExcludedForcing
-
 namespace OAI
 
 noncomputable section

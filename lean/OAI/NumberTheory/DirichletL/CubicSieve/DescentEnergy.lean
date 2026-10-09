@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.Mobius
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

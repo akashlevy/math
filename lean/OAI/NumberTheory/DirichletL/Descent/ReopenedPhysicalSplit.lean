@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.ReopenedBlocks
 import OAI.NumberTheory.DirichletL.Descent.FirstRetainedPhysical
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

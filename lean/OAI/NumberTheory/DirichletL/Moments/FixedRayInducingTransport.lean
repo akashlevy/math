@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.ExceptionalPair
 import OAI.NumberTheory.DirichletL.Moments.FixedRowMask
-
 namespace OAI
 
 noncomputable section
@@ -83,20 +82,6 @@ theorem not_fixedInducingRow_product_iff (η ν : Character) (Q : Ideal O)
     (hmLam : goodLambda ∣ m) (hm2 : (2:O) ∣ m) :
     (¬FixedInducingRow (η.product ν) Q m A z) ↔ ¬FixedInducingRow η Q m A z :=
   not_congr (fixedInducingRow_product_iff η ν Q m A z hν hm hA hz hmLam hm2)
-
-theorem fixedInducingRow_product_inverse_iff (η ν : Character) (Q : Ideal O)
-    (m A z : O) (hν : Q ≤ ν.modulus)
-    (hm : m≠0) (hA : A≠0) (hz : z≠0)
-    (hmLam : goodLambda ∣ m) (hm2 : (2:O) ∣ m) :
-    FixedInducingRow (η.product ν.inverse) Q m A z ↔ FixedInducingRow η Q m A z :=
-  fixedInducingRow_product_iff η ν.inverse Q m A z hν hm hA hz hmLam hm2
-
-theorem not_fixedInducingRow_product_inverse_iff (η ν : Character) (Q : Ideal O)
-    (m A z : O) (hν : Q ≤ ν.modulus)
-    (hm : m≠0) (hA : A≠0) (hz : z≠0)
-    (hmLam : goodLambda ∣ m) (hm2 : (2:O) ∣ m) :
-    (¬FixedInducingRow (η.product ν.inverse) Q m A z) ↔ ¬FixedInducingRow η Q m A z :=
-  not_congr (fixedInducingRow_product_inverse_iff η ν Q m A z hν hm hA hz hmLam hm2)
 
 end SevenEighths.CenteredMomentFixedRayInducingTransport
 

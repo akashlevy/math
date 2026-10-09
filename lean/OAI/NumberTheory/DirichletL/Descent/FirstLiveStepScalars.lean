@@ -3,7 +3,6 @@ import OAI.NumberTheory.DirichletL.Descent.FirstLiveColumnScale
 import OAI.NumberTheory.DirichletL.Descent.FirstLiveRadiusPositive
 import OAI.NumberTheory.DirichletL.Descent.FirstStepScalarCaps
 import OAI.NumberTheory.DirichletL.Descent.FirstLabelCellStep
-
 namespace OAI
 
 noncomputable section

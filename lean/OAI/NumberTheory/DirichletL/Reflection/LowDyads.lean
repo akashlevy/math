@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.LowFixedMember
 import OAI.NumberTheory.DirichletL.Reflection.DyadCompletionEnergy
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

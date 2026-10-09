@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.AmplificationAllocation
 import OAI.NumberTheory.DirichletL.Moments.LiveDomain
-
 namespace OAI
 
 noncomputable section

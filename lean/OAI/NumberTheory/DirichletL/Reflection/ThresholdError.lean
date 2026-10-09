@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.TerminalThreshold
 import OAI.NumberTheory.DirichletL.Reflection.RamifiedWidth
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

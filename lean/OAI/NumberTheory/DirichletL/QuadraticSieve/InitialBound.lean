@@ -1,76 +1,25 @@
 import OAI.NumberTheory.DirichletL.Mellin.CompactWeights
 import OAI.NumberTheory.DirichletL.QuadraticSieve.CoefficientCancellation
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical SchwartzMap
 namespace QuadraticInitialBound
 open ActualEisensteinCubic ConcreteTraceCRT EisensteinSchwartzPoisson
 
@@ -458,7 +407,6 @@ theorem quadratic_initial_finite_bound {α β : Type*} [DecidableEq α] [Decidab
     _ ≤ _ := quadratic_initial_mean_bound P hinj hg hc C support hsupp N hN hNorm
       a sieveCutoff M hM
 
-open ActualEisensteinCubic ConcreteTraceCRT EisensteinSchwartzPoisson
 open ConcretePrimeRowBridge ShortDraftHeckeBridge
 
 def initialSieveConstant : ℝ :=
@@ -519,17 +467,11 @@ theorem ideal_initial_quadratic_sieve
 
 end QuadraticInitialBound
 
-open scoped Classical FourierTransform SchwartzMap ContDiff
-open MeasureTheory
-
 namespace CubicReflectionKernel
 
 def gammaMultiplier (s : ℂ) : ℂ :=
   Complex.Gamma ((7 / 6 : ℂ) + s) * Complex.Gamma ((5 / 6 : ℂ) + s) /
     (Complex.Gamma ((7 / 6 : ℂ) - s) * Complex.Gamma ((5 / 6 : ℂ) - s))
-
-theorem gammaMultiplier_neg (s : ℂ) : gammaMultiplier (-s) = (gammaMultiplier s)⁻¹ := by
-  simp only [gammaMultiplier, sub_neg_eq_add, ← sub_eq_add_neg, inv_div]
 
 theorem Gamma_vertical_ne_zero (a u : ℝ) (ha : 0 < a) :
     Complex.Gamma ((a : ℂ) + u * Complex.I) ≠ 0 := by

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GramJointPeriod
-
 namespace OAI
 
 noncomputable section

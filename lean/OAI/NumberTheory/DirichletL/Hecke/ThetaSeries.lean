@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.Theta
 import OAI.NumberTheory.DirichletL.LatticeSummability
-
 namespace OAI
 
 noncomputable section

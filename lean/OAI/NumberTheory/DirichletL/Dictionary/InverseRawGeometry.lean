@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialCanonicalState
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationRaw
-
 namespace OAI
 
 noncomputable section
@@ -52,22 +51,6 @@ theorem raw_fixed_reserves (c κ : ℝ) (hc : 0<c) (hκ : 0<κ) :
   have hη1 : η≤1/100:=(min_le_right _ _).trans (min_le_right _ _)
   refine ⟨η,η,κ/4,κ/4,hη,hη,by positivity,by positivity,by linarith,hηg,hηg,?_⟩
   linarith
-
-theorem raw_retained_margins (H D c B θ v Hfreq η τ Q : ℝ)
-    (hH : 1<H) (hD : 1≤D) (hc : 0<c) (hcap : D^(1+c)≤H)
-    (hP : -2*η≤B-θ) (hQ : Q≤B-θ+3*η) (hη : 0≤η)
-    (hηsmall : η≤capacityGap c/100) (hτ : τ≤capacityGap c/100)
-    (hcut : InverseInitialProfile.radialCenter 1 Hfreq θ (Real.logb H D) B≤4*η+τ) :
-    CanonicalMargins
-      (max 0 (Real.logb H D-B-v)+(θ+v+2*η)) (θ+Hfreq+2*η) Q 0
-      (3*capacityGap c/4) := by
-  obtain ⟨hr,hfirst,hsecond,_⟩:=raw_log_capacity H D c hH hD hc hcap
-  have hh:=enlarged_initial_margins 1 (Real.logb H D) 0 0 B θ v Hfreq η τ Q
-    (capacityGap c) (capacityGap c)
-    (by simpa using hfirst) (by simpa using hsecond) (by norm_num) hP
-    (by simpa using hQ) (by simpa using (capacityGap_pos c hc).le) hη
-    (by simpa using hηsmall) (by simpa using hτ) (by simpa using hcut)
-  simpa using hh
 
 theorem raw_output_budget (H D κ e : ℝ) (hH : 1≤H) (hκ : 0≤κ) (he : e≤κ) :
     H^(1+e)≤H*(H*max 1 D)^κ := by

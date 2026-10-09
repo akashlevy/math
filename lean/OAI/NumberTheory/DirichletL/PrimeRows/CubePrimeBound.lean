@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Detector.CentralPrimeSum
 import OAI.NumberTheory.DirichletL.PrimeRows.CubePhaseBins
 import OAI.NumberTheory.DirichletL.PrimeRows.CubePrimeThresholds
 import OAI.NumberTheory.DirichletL.PrimeRows.CentralHeightCost
-
 namespace OAI
 
 noncomputable section

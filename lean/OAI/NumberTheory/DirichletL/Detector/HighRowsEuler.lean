@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsMultiplicative
-
 namespace OAI
 
 noncomputable section
@@ -30,20 +29,6 @@ local notation "Id" => Ideal O
     bareIdealHighSummand η u x w z 1 1 1 1=1 := by
   have hw (t : ℂ) : fullIdealWeight t (1:Ideal O)=1 := (IdealEuler.normWeight t).map_one
   simp only [bareIdealHighSummand,bareIdealHighCoefficient_row_one,hw,one_mul]
-
-theorem bareIdealHighSeries_row_hasProd (η : HeckeFamily.Character) (u : O) (x w z : ℂ)
-    (hx : 3/2<x.re) (hw : 2<w.re) (hz : 1/6<z.re) :
-    HasProd (fun P : PrimeIdeal=>∑' b : HighValuation,
-      bareIdealHighSummand η u x w z (P.val^b.1.1) (P.val^b.1.2) (P.val^b.2.1) (P.val^b.2.2))
-      (bareIdealHighSeries η u x w z) := by
-  apply highArray_hasProd (fun a : HighIdeal=>bareIdealHighSummand η u x w z a.1.1 a.1.2 a.2.1 a.2.2)
-  · exact bareIdealHighSummand_row_one η u x w z
-  · intro a b hc
-    exact bareIdealHighSummand_row_mul η u x w z _ _ _ _ _ _ _ _ hc
-  · intro a ha
-    have hs := bareIdealHighSummand_support η u x w z a.1.1 a.1.2 a.2.1 a.2.2 ha
-    exact ⟨hs.2.1.1,hs.2.2.1.1,hs.2.2.2.1.1,hs.2.2.2.2.1⟩
-  · exact (bareIdealHighSummand_summable η u x w z hx hw hz).norm
 
 end SevenEighths.ProbePhysical
 end

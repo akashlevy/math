@@ -1,5 +1,4 @@
-import OAI.NumberTheory.DirichletL.Descent.CanonicalLongBins
-
+import OAI.NumberTheory.DirichletL.Descent.CanonicalLongNormalization
 namespace OAI
 
 noncomputable section

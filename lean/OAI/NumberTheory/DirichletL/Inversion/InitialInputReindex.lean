@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialTotalFourier
-
 namespace OAI
 
 noncomputable section
@@ -23,21 +22,6 @@ theorem input_puncture_span {ι:Type*}[DecidableEq ι](p:ι→O)
   intro A hA
   dsimp only
   rw [rowCoprimeMask_eq_of_span_eq (fun i=>Ideal.span {p i}) A hspan]
-
-theorem primeMark_subtype {σ ι:Type*}[DecidableEq σ][DecidableEq ι]
-    (I:Finset σ)(L:σ→Finset ι)(a:σ→ι→ℂ)(A:Finset ι):
-    primeMark Finset.univ (fun i:I=>L i.val) (fun i:I=>a i.val) A=
-      primeMark I L a A:=by
-  exact Finset.prod_coe_sort I (fun i=>primeSlot (L i) (a i) A)
-
-theorem primeMark_remaining {σ ι:Type*}[Fintype σ][DecidableEq σ][DecidableEq ι]
-    (J:Finset σ)(L:σ→Finset ι)(a:σ→ι→ℂ)(A:Finset ι):
-    primeMark Finset.univ (fun i:{i:σ//i∉J}=>L i.val) (fun i:{i:σ//i∉J}=>a i.val) A=
-      primeMark (Finset.univ\J) L a A:=by
-  classical
-  unfold primeMark
-  exact (Finset.prod_subtype (Finset.univ\J) (by intro i;simp)
-    (fun i=>primeSlot (L i) (a i) A)).symm
 
 end SevenEighths.InverseInitialInputReindex
 

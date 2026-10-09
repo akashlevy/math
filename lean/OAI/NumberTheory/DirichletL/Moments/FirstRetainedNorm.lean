@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstRetainedAssembly
 import OAI.NumberTheory.DirichletL.Moments.FirstRetainedActive
 import OAI.NumberTheory.DirichletL.Moments.FirstTailAggregate
-
 namespace OAI
 
 noncomputable section

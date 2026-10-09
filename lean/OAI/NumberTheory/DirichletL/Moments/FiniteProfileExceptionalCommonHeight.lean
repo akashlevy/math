@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalCommonSource
 import OAI.NumberTheory.DirichletL.Moments.CommonHeightEnvelope
 import OAI.NumberTheory.DirichletL.Moments.HeckeWindowEnergy
-
 namespace OAI
 noncomputable section
 open scoped Classical BigOperators

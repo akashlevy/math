@@ -1,77 +1,23 @@
 import OAI.NumberTheory.DirichletL.Cusp.WeylRepresentatives
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace ShortDraftCRT
 open scoped BigOperators Classical Matrix MatrixGroups
@@ -160,12 +106,6 @@ end
 section
 variable {R:Type*} [CommRing R] [IsDomain R]
 
-omit [IsDomain R] in
-lemma controlled_inverse_sector (B M c a a0 d0:R)
-    (hBM:B∣M) (ha:M*c∣a-a0) (hinv:B*c∣a0*d0-1) : B*c∣a*d0-1 := by
-  have hdiff:=dvd_mul_of_dvd_left ((mul_dvd_mul_right hBM c).trans ha) d0
-  convert dvd_add hdiff hinv using 1 ; ring
-
 theorem exists_fixed_matrix_completion_controlled
     (B N M c a0 r0 b0 d0 bResidue dResidue:R)
     (hc:c≠0) (hBM:B∣M) (hNM:N∣M)
@@ -195,54 +135,6 @@ local notation "Eis" => ActualEisensteinCubic.O
 
 def controlledCompletionMatrix (a b c d:Eis) (hdet:a*d-b*c=1) : SL(2,Eis) :=
   ⟨!![a,b;c,d],by simpa [Matrix.det_fin_two] using hdet⟩
-
-theorem exists_primary_numerator_matrix (M c a:Eis)
-    (hc:c≠0) (h9M:(9:Eis)∣M) (ha:lambda^2∣a-1) (hac:IsCoprime a c) :
-    ∃d0:Eis,(9:Eis)*c∣a*d0-1 ∧
-      ∀r:Eis,IsCoprime r (M*c)→IsCoprime a r→lambda^2∣r-1→
-      ∃g:SL(2,Eis),g 0 0=a ∧ g 1 0=c*r ∧ M*c∣g 1 1-d0 ∧
-        (9:Eis)∣g 0 1 ∧ (3:Eis)∣g 0 0-1 ∧ (3:Eis)∣g 1 1-1 ∧ (3:Eis)∣g 1 0-c := by
-  obtain ⟨d0,hd0,hcomp⟩:=exists_primary_numerator_completion M c a hc h9M ha hac
-  refine ⟨d0,hd0,?_⟩
-  intro r hr har hpr
-  obtain ⟨b,d,hdet,hd,hb,hd3,hc3⟩:=hcomp r hr har hpr
-  exact ⟨controlledCompletionMatrix a b (c*r) d hdet,rfl,rfl,hd,hb,
-    three_dvd_primary_sub_one a ha,hd3,hc3⟩
-
-theorem exists_primary_denominator_matrix (M c a:Eis)
-    (h9M:(9:Eis)∣M) (hc:lambda^2∣c-1) (hac:IsCoprime a c) :
-    ∃d0:Eis,(9:Eis)∣d0 ∧ c∣a*d0-1 ∧
-      ∀r:Eis,IsCoprime r (M*c)→IsCoprime a r→lambda^2∣r-1→
-      ∃g:SL(2,Eis),g 0 0=a ∧ g 1 0=c*r ∧ M*c∣g 1 1-d0 ∧
-        (9:Eis)∣g 1 1 ∧ (9:Eis)∣g 0 0*g 1 1 ∧
-        (9:Eis)∣g 0 1*g 1 0+1 ∧ (3:Eis)∣g 0 1+1 ∧ (3:Eis)∣g 1 0-1 := by
-  obtain ⟨d0,hzero,hinv,hcomp⟩:=exists_primary_denominator_completion M c a h9M hc hac
-  refine ⟨d0,hzero,hinv,?_⟩
-  intro r hr har hpr
-  obtain ⟨b,d,hdet,hd,hBd,had,hbc,hb3,hc3⟩:=hcomp r hr har hpr
-  exact ⟨controlledCompletionMatrix a b (c*r) d hdet,rfl,rfl,hd,hBd,had,hbc,hb3,hc3⟩
-
-lemma controlled_primary_principal (g:SL(2,Eis)) (c:Eis)
-    (ha:(3:Eis)∣g 0 0-1) (hb:(9:Eis)∣g 0 1)
-    (hc:(3:Eis)∣g 1 0-c) (hc0:(3:Eis)∣c) (hd:(3:Eis)∣g 1 1-1) :
-    g∈levelThree := by
-  apply A3_principal_mem_levelThree g ha
-    ((show (3:Eis)∣9 from ⟨3,by norm_num⟩).trans hb) _ hd
-  convert dvd_add hc hc0 using 1 ; ring
-
-lemma controlled_primary_ramified (g:SL(2,Eis)) (c u:Eis)
-    (ha:(3:Eis)∣g 0 0-1) (hb:(9:Eis)∣g 0 1)
-    (hc:(3:Eis)∣g 1 0-c) (hcu:(3:Eis)∣c-u) (hd:(3:Eis)∣g 1 1-1) :
-    g*(lowerCuspMatrix u)⁻¹∈levelThree := by
-  apply A3_ramified_mem_levelThree g u ha
-    ((show (3:Eis)∣9 from ⟨3,by norm_num⟩).trans hb) _ hd
-  convert dvd_add hc hcu using 1 ; ring
-
-lemma controlled_denominator_unramified (g:SL(2,Eis)) (u:Eis)
-    (ha:(3:Eis)∣g 0 0-u) (hb:(3:Eis)∣g 0 1+1)
-    (hc:(3:Eis)∣g 1 0-1) (hd:(9:Eis)∣g 1 1) :
-    g*(A3WeylCusp u)⁻¹∈levelThree :=
-  A3_unramified_mem_levelThree g u ha hb hc ((show (3:Eis)∣9 from ⟨3,by norm_num⟩).trans hd)
 
 end
 
@@ -382,8 +274,6 @@ theorem sum_smoothedKernel_common_cusp {ι:Type*} [Fintype ι]
 
 end CubicEisenstein
 
-open scoped Classical BigOperators
-
 namespace CanonicalRowCompletion
 open ActualEisensteinCubic CanonicalQuadraticSieve ConcretePrimeRowBridge
 open UniqueFactorizationMonoid
@@ -462,7 +352,7 @@ lemma rowTwist_extract_sixth_mask (Ψ:Eis→*ℂ) (m f z n:Eis)
 
 end CanonicalRowCompletion
 
-open scoped BigOperators Classical MatrixGroups Matrix
+open scoped MatrixGroups Matrix
 
 namespace ShortDraftCusp
 

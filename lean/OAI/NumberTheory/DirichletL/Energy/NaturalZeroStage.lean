@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Energy.ZeroGrowthPhysical
 import OAI.NumberTheory.DirichletL.Energy.ZeroGrowthSourceControlled
 import OAI.NumberTheory.DirichletL.Energy.ZeroGrowthContourBounded
 import OAI.NumberTheory.DirichletL.Energy.StageMonotonicity
-
 namespace OAI
 
 noncomputable section

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialCanonicalStateSource
-
 namespace OAI
 
 noncomputable section

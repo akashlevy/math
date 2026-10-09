@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.ReciprocityCRT
 import OAI.NumberTheory.DirichletL.Detector.CubicGaussCRT
 import OAI.NumberTheory.DirichletL.Detector.CompletedCRTPhase
-
 namespace OAI
 
 noncomputable section

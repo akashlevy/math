@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstCommonFourierTransport
 import OAI.NumberTheory.DirichletL.Moments.FirstSectorTransform
 import OAI.NumberTheory.DirichletL.Moments.SecondSectorColumns
-
 namespace OAI
 
 noncomputable section
@@ -47,34 +46,6 @@ theorem retainedEnergy_common_sectors (η : Character) (m A : O) (t : ℝ)
   simp_rw [hj]
   rw [Finset.sum_coe_sort (supportedColumns S) (fun I=>∑ J∈supportedColumns S,F I J)]
   exact sum_common_sectors _ _ F
-
-theorem retained_sector_independent (η : Character) (m A : O) (t : ℝ)
-    (S : Finset (Ideal O)) (β : Ideal O→ℂ) (C D : Ideal O) (hC : C≠0) (hD : D≠0)
-    (hCD : CompletedGauss.primeSupport C=CompletedGauss.primeSupport D)
-    (W : 𝓢(ℝ,ℂ)) (K X Z ξ : ℝ) :
-    (∑ q∈pairSector C D (supportedColumns S) (supportedColumns S),
-      ((β q.1*rowWeight η m A 1 t q.1)*star (β q.2*rowWeight η m A 1 t q.2))*
-        retainedKernel q.1 q.2 W K X Z ξ)=
-      rowWeight η m A 1 t C*star (rowWeight η m A 1 t D)*
-        ∑ I : sectorPool C hC S,∑ J : sectorPool D hD S,
-          if IsCoprime (I:Ideal O) (J:Ideal O) then
-            ((β (C*I)*rowWeight η m A 1 t I)*star (β (D*J)*rowWeight η m A 1 t J))*
-              retainedKernel (C*I) (D*J) W K X Z ξ else 0 := by
-  rw [←independent_sector_pools C D hC hD hCD S
-    (fun I J=>((β (C*I)*rowWeight η m A 1 t I)*star (β (D*J)*rowWeight η m A 1 t J))*
-      retainedKernel (C*I) (D*J) W K X Z ξ)]
-  rw [pairSector_double_sum C D hC hD hCD _ _
-    (fun I hI=>(Finset.mem_filter.mp hI).2.1) (fun I hI=>(Finset.mem_filter.mp hI).2.1)
-    (fun I J=>((β I*rowWeight η m A 1 t I)*star (β J*rowWeight η m A 1 t J))*
-      retainedKernel I J W K X Z ξ)]
-  rw [Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro I hI
-  rw [Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro J hJ
-  split_ifs <;> simp only [map_mul,star_mul,mul_zero]
-  ring
 
 theorem reconstructed_residualParts (C D I J:Ideal O)(hC:C≠0)(hD:D≠0)(hI:I≠0)(hJ:J≠0)
     (hCD:CompletedGauss.primeSupport C=CompletedGauss.primeSupport D)

@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Energy.State
 import OAI.NumberTheory.DirichletL.Moments.SecondNonexceptionalChosenBlock
 import OAI.NumberTheory.DirichletL.Moments.SecondChildRadialWidth
 import OAI.NumberTheory.DirichletL.Moments.AmplifiedRetainedRadius
-
 namespace OAI
 
 noncomputable section
@@ -71,12 +70,6 @@ lemma canonicalState_power (Z Bmask:ℝ)(hZ:1<Z)(τ:Character)(Q R:Ideal O)
       exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr τ.modulus_ne_bot))]
   ring
 
-lemma common_puncture_bound (Z Bmask Bsource:ℝ)(hZ:0<Z)(R C:Ideal O)
-    (hR:(R.absNorm:ℝ)≤Z^Bmask)(hC:(C.absNorm:ℝ)≤Z^Bsource):
-    ((R*C).absNorm:ℝ)≤Z^(Bmask+Bsource):=by
-  rw [map_mul,Nat.cast_mul,Real.rpow_add hZ]
-  exact mul_le_mul hR hC (Nat.cast_nonneg _) (Real.rpow_nonneg hZ.le _)
-
 section Actual
 variable {η:Character}{C D:Ideal O}{hC:Supported C}{hD:Supported D}
   {U:Finset (CommonIndex C D)}{τ:RayCharacter→Character}
@@ -91,22 +84,6 @@ lemma actual_dyad_ge_one : 1≤dyadicScale (n 1):=by
   obtain ⟨z,_,hz,hz0,_⟩:=physicalBlock_live_dyadic_witness η t S β C D hC hD U
     radius rows W K n hne
   exact (normValue_ge_one z hz0).trans (dyadicRows_norm rows n z hz).2.le
-
-def actualState (Z Bmask:ℝ)(hZ:1<Z)(χ:RayCharacter)(Q R:Ideal O)
-    (hR:R≠0)(hRN:(R.absNorm:ℝ)≤Z^Bmask):NaturalState Z Bmask 2:=
-  canonicalState Z Bmask hZ (τ χ) Q R hR hRN n
-    (actual_dyad_ge_one t S β radius rows W K n hne)
-
-include h hK in
-
-theorem actualState_width (Z Bmask:ℝ)(hZ:1<Z)(χ:RayCharacter)(Q R:Ideal O)
-    (hR:R≠0)(hRN:(R.absNorm:ℝ)≤Z^Bmask):
-    (actualState (τ:=τ) t S β radius rows W K n hne Z Bmask hZ χ Q R hR hRN).width≤
-      Real.logb Z radius+Real.logb Z (η.modulus.absNorm:ℝ)-
-        Real.logb Z (normValue (commonFrequencyGenerator C D))+
-        Real.logb Z ((∏P∈U,P.val).absNorm:ℝ)+
-        Real.logb Z (16*(CenteredMomentSecondRadicalBudget.fixedFactor:ℝ)):=by
-  exact dyadic_log_budget h t S β radius rows W K hK n hne Z hZ χ
 
 end Actual
 end SevenEighths.CenteredMomentEnergyChildState

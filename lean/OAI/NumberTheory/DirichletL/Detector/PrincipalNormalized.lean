@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.PrincipalPhysicalRemainder
 import OAI.NumberTheory.DirichletL.Detector.PrincipalResidueActual
 import OAI.NumberTheory.DirichletL.Detector.RayPoolThresholds
-
 namespace OAI
 
 noncomputable section

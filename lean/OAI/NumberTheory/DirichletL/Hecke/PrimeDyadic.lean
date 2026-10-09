@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.DyadicMellin
 import OAI.NumberTheory.DirichletL.Hecke.LogDerivative
-
 namespace OAI
 
 noncomputable section

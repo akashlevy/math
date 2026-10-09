@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerReference
 import OAI.NumberTheory.DirichletL.Inversion.InitialCanonicalEnergy
 import OAI.NumberTheory.DirichletL.Descent.CanonicalRankExistence
 import OAI.NumberTheory.DirichletL.Inversion.InitialCanonicalState
-
 namespace OAI
 
 noncomputable section

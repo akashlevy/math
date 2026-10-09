@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GramGlobalExtension
-
 namespace OAI
 
 noncomputable section

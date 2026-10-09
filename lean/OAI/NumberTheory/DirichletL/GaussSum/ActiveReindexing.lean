@@ -1,79 +1,23 @@
 import OAI.NumberTheory.DirichletL.RowCompletion.RowAmplitudes
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
-
-open scoped BigOperators Classical ContDiff
+open scoped ContDiff
+open Set
 
 namespace CompletedGauss
 open ActualEisensteinCubic CubicEisenstein CanonicalQuadraticSieve CompletedDyadic LocalReflectionBrackets
@@ -295,8 +239,6 @@ theorem sixPhaseFixedCuspBranch_value_eq_geometric_rawValue
 
 end CubicEisenstein.FixedFourierGeometry
 
-open scoped BigOperators Classical
-
 namespace CompletedGauss.FreeReflection
 open ActualEisensteinCubic
 local notation "Eis" => ActualEisensteinCubic.O
@@ -322,48 +264,6 @@ lemma supportActivePoolEquiv_label (I Q Q0:Ideal Eis) (e:pool I Q Q0 → Fin 6)
     (b:reflectionSixSupport e) :
     reflectionActiveLabel I Q Q0 e (supportActivePoolEquiv I Q Q0 e b)=
       reflectionSixLabel (e b.val) := rfl
-
-def encodedActivePoolEquiv (I Q Q0:Ideal Eis) (B:Finset (pool I Q Q0)) (l:B → Fin 3) :
-    B ≃ reflectionActivePool I Q Q0 (encodeReflectionSix ⟨B,l⟩) where
-  toFun b:=⟨b.val.val,by
-    rw [reflectionActivePool_encode]
-    exact Finset.mem_image.mpr ⟨b.val,b.property,rfl⟩⟩
-  invFun P:=⟨⟨P.val,reflectionActivePool_subset I Q Q0 _ P.property⟩,by
-    have hp:P.val∈B.image Subtype.val:=by
-      simpa only [reflectionActivePool_encode] using P.property
-    obtain ⟨b,hb,he⟩:=Finset.mem_image.mp hp
-    have he':b=⟨P.val,reflectionActivePool_subset I Q Q0 _ P.property⟩:=Subtype.ext he
-    exact he' ▸ hb⟩
-  left_inv b:=rfl
-  right_inv P:=rfl
-
-lemma encodedActivePoolEquiv_val (I Q Q0:Ideal Eis) (B:Finset (pool I Q Q0)) (l:B → Fin 3)
-    (b:B) : (encodedActivePoolEquiv I Q Q0 B l b).val=b.val.val := rfl
-
-lemma encodedActivePoolEquiv_label (I Q Q0:Ideal Eis) (B:Finset (pool I Q Q0)) (l:B → Fin 3)
-    (b:B) :
-    reflectionActiveLabel I Q Q0 (encodeReflectionSix ⟨B,l⟩) (encodedActivePoolEquiv I Q Q0 B l b)=l b := by
-  change reflectionSixLabel (encodeReflectionSix ⟨B,l⟩ b.val)=l b
-  apply Fin.ext
-  simp only [encodeReflectionSix,dite_eq_left b.property,reflectionSixLabel]
-  change (3+(l b).val)%3=(l b).val
-  have hlt:=(l b).isLt
-  omega
-
-lemma encodedActivePoolEquiv_divisor (I F Q Q0:Ideal Eis)
-    (B:Finset (pool I Q Q0)) (l:B → Fin 3) (side:Fin 3) :
-    reflectionExtractedDivisor
-      (fun P:reflectionActivePool I Q Q0 (encodeReflectionSix ⟨B,l⟩)=>P.val)
-      (fun P=>completedLocalExponent I F P.val)
-      (reflectionActiveLabel I Q Q0 (encodeReflectionSix ⟨B,l⟩)) side=
-    reflectionExtractedDivisor (fun b:B=>b.val.val)
-      (fun b=>completedLocalExponent I F b.val.val) l side := by
-  unfold reflectionExtractedDivisor
-  symm
-  apply Fintype.prod_equiv (encodedActivePoolEquiv I Q Q0 B l)
-  intro b
-  rw [encodedActivePoolEquiv_label]
-  rfl
 
 end CompletedGauss.FreeReflection
 
@@ -561,8 +461,6 @@ theorem inactive_source_reindex (w:Finset (FreePrimeIndex D.movingIdeal Q0)→�
 end GoodMaskRowData
 end CanonicalRowCompletion
 
-open scoped BigOperators Classical
-
 namespace CubicEisenstein
 open ActualEisensteinCubic
 local notation "Eis" => ActualEisensteinCubic.O
@@ -589,18 +487,6 @@ theorem sum_fixedReflectionRay {M:Type*} [AddCommMonoid M]
       apply Finset.sum_congr rfl
       intro h hh
       exact Fintype.sum_prod_type _
-
-theorem sum_fixedReflectionRayFin {M:Type*} [AddCommMonoid M]
-    (c:Eis) (hc:c≠0) [Fintype (Eis⧸Ideal.span {c})]
-    [∀h:Eis⧸Ideal.span {c},Fintype (fixedFourierGeometry c hc h).PhaseResidue]
-    (F:Fin (fixedReflectionRayCount c hc) → M) :
-    (∑i:Fin (fixedReflectionRayCount c hc),F i)=
-      ∑h:Eis⧸Ideal.span {c},∑rho:(fixedFourierGeometry c hc h).PhaseResidue,
-        ∑u:Eisˣ,F (fixedReflectionRayEquiv c hc ⟨h,rho,u⟩) := by
-  calc
-    _=∑r:FixedReflectionRay c hc,F (fixedReflectionRayEquiv c hc r):=
-      (Fintype.sum_equiv (fixedReflectionRayEquiv c hc) _ _ (fun _=>rfl)).symm
-    _=_:=sum_fixedReflectionRay c hc _
 
 end CubicEisenstein
 

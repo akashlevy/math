@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Energy.OriginalSource
 import OAI.NumberTheory.DirichletL.Energy.ReferenceLowWindow
 import OAI.NumberTheory.DirichletL.Energy.ReferenceLowReflectionError
-
 namespace OAI
 
 noncomputable section
@@ -101,19 +100,6 @@ theorem endpoint_threshold (b δ : ℝ) (hδ : 0 < δ) :
     exact (div_le_iff₀ hδ).mp hh |>.trans_eq (mul_comm _ _)
   rw [Real.logb, ← mul_div_assoc]
   exact (div_le_iff₀ (Real.log_pos hZ)).mpr hbound
-
-theorem profiles_uniform_defect (a b δ : ℝ) (hδ : 0 < δ) :
-    ∃ Z₀ : ℝ, 1 < Z₀ ∧ ∀ Z : ℝ, Z₀ ≤ Z →
-      ∀ (η : Character) (m A z : O) (p : Profiles a b)
-        (S : ι → Finset (Ideal O)) (β : ι → Ideal O → ℂ) (P : ι → ℝ)
-        (t X₁ X₂ : ℝ), 0 < X₁ → 0 < X₂ →
-        positiveSlotRow η m A z (p.profile 0) (p.profile 1) S β P t X₁ X₂ ≠ 0 →
-        length Z X₁ + length Z X₂ - Real.logb Z (X₁ * X₂) ≤ δ := by
-  obtain ⟨Z₀, hZ₀, hh⟩ := endpoint_threshold b δ hδ
-  refine ⟨Z₀, hZ₀, ?_⟩
-  intro Z hZZ η m A z p S β P t X₁ X₂ hX₁ hX₂ hrow
-  obtain ⟨h1, h2⟩ := positiveSlotRow_profiles_scales η m A z p S β P t X₁ X₂ hX₁ hX₂ hrow
-  exact (total_clipping_defect Z X₁ X₂ b (hZ₀.trans_le hZZ) hX₁ hX₂ h1 h2).trans (hh Z hZZ)
 
 theorem total_clipping_defect_nonneg (Z X₁ X₂ : ℝ) (hZ : 1 < Z)
     (hX₁ : 0 < X₁) (hX₂ : 0 < X₂) :
@@ -238,36 +224,6 @@ theorem robust_reflected_low_admissible (M xi defect short reflected z kappa : �
     reflected+short+z ≤ 5*M/6 ∧ reflected+short+6*kappa*z ≤ M := by
   constructor <;> linarith
 
-theorem robust_deleted_cases (M total short along ell z kappa xi defect reflected : ℝ)
-    (hM : 0 ≤ M) (hs : 0 ≤ short) (hsM : short ≤ M/4)
-    (hell : 0 ≤ ell) (hz : 0 ≤ z) (hze : z ≤ ell) (hk : 3/4 ≤ kappa)
-    (hxi : 0 ≤ xi) (hd : 0 ≤ defect)
-    (hreserve : xi+11*defect/7 ≤ M/14)
-    (hlarge : 5*M/6-defect ≤ total+ell)
-    (hcap : total+ell+(6*kappa-1)*ell ≤ M)
-    (halong : max 0 along ≤ total-M/4)
-    (href : reflected ≤ max 0 (M-along+xi)) :
-    (short+max 0 along+z ≤ 5*M/6 ∧ short+max 0 along+6*kappa*z ≤ M) ∨
-    (0 < along ∧ reflected+short+z ≤ 5*M/6 ∧
-      reflected+short+6*kappa*z ≤ M) := by
-  obtain ⟨he,hbudget⟩ := robust_slot_budgets M total ell kappa defect hell hk hlarge hcap
-  by_cases hlo : short+max 0 along+z ≤ 5*M/6
-  · refine Or.inl ⟨hlo, ?_⟩
-    have hzcap := mul_le_mul_of_nonneg_left hze (by linarith : 0 ≤ 6*kappa)
-    nlinarith
-  · obtain ⟨hapos, ht, hc⟩ := robust_reflected_low M short along ell z kappa xi defect reflected
-      hM hs hsM hell hz hze hk he hbudget hxi hd
-      (robust_defect_le_width M xi defect hM hxi hreserve) (lt_of_not_ge hlo) href
-    exact Or.inr ⟨hapos, robust_reflected_low_admissible M xi defect short reflected z kappa hd hreserve ht hc⟩
-
-theorem robust_fixed_slack (M₀ : ℝ) (hM₀ : 0 < M₀) :
-    0 < M₀/56 ∧ ∀M : ℝ, M₀ ≤ M →
-      M₀/56+11*(M₀/56)/7 ≤ M/14 := by
-  constructor
-  · positivity
-  · intro M hM
-    linarith
-
 open CenteredMomentEnergyReferenceState CenteredMomentEnergyReferenceDeletionBudget
 open CenteredMomentEnergyReferenceDeletionCapacity
 
@@ -317,65 +273,6 @@ theorem robust_deleted_reference_cases (Z M X₁ X₂ ell z κ ξ e reflected : 
       hellbound hslot hξ he (robust_defect_le_width M ξ e hM hξ hreserve) _ href
     rw [← CenteredMomentEnergyReferenceLowBranchGeometry.length_eq_max_log Z _ hZ hlongpos]
     exact lt_of_not_ge hlo
-
-theorem robust_deleted_reference_window (Z M X₁ X₂ ell z κ ξ e : ℝ)
-    (hZ : 1 < Z) (hM : 0 ≤ M) (hX₁ : 0 < X₁) (hX₂ : 0 < X₂)
-    (hell : 0 ≤ ell) (hz : 0 ≤ z) (hze : z ≤ ell) (hκ : 3/4 ≤ κ)
-    (hξ : 0 ≤ ξ) (he : 0 ≤ e) (hreserve : ξ+11*e/7 ≤ M/14)
-    (hlarge : 5*M/6-e ≤ Real.logb Z (X₁*X₂)+ell)
-    (hcap : Real.logb Z (X₁*X₂)+ell+(6*κ-1)*ell ≤ M)
-    (D₁ D₂ : Finset (Ideal O)) (hD₁ : ∀ I ∈ D₁, Prime I) (hD₂ : ∀ I ∈ D₂, Prime I) :
-    let short := length Z (comparisonFirst Z M / ((∏ I ∈ D₁, I).absNorm : ℝ));
-    let along := Real.logb Z (comparisonSecond Z M X₁ X₂ / ((∏ I ∈ D₂, I).absNorm : ℝ));
-    (short+length Z (comparisonSecond Z M X₁ X₂ / ((∏ I ∈ D₂, I).absNorm : ℝ))+z ≤ 5*M/6 ∧
-      short+length Z (comparisonSecond Z M X₁ X₂ / ((∏ I ∈ D₂, I).absNorm : ℝ))+6*κ*z ≤ M) ∨
-    (0 < along ∧ ∀ x ∈ Set.Icc 0 (max 0 (M-along+ξ)*Real.log Z),
-      length Z (Real.exp x)+short+z ≤ 5*M/6 ∧
-      length Z (Real.exp x)+short+6*κ*z ≤ M) := by
-  dsimp only
-  let along := Real.logb Z (comparisonSecond Z M X₁ X₂ / ((∏ I ∈ D₂, I).absNorm : ℝ))
-  rcases robust_deleted_reference_cases Z M X₁ X₂ ell z κ ξ e (max 0 (M-along+ξ))
-    hZ hM hX₁ hX₂ hell hz hze hκ hξ he hreserve hlarge hcap D₁ D₂ hD₁ hD₂ le_rfl with h | h
-  · exact Or.inl h
-  · refine Or.inr ⟨h.1, ?_⟩
-    intro x hx
-    have hh := CenteredMomentEnergyReferenceLowWindow.reflection_window_length Z
-      (max 0 (M-along+ξ)) x hZ (le_max_left _ _) hx
-    have hb := robust_reflected_low_admissible M ξ e _ (max 0 (M-along+ξ)) z κ
-      he hreserve h.2.1 h.2.2
-    constructor <;> linarith [hh.1]
-
-theorem live_profiles_reference_window (a b M₀ : ℝ) (hM₀ : 0 < M₀) :
-    ∃ e ξ Z₀ : ℝ, 0 < e ∧ 0 < ξ ∧ 1 < Z₀ ∧
-      ∀ (Z M : ℝ), Z₀ ≤ Z → M₀ ≤ M →
-      ∀ (η : Character) (m A u : O) (p : Profiles a b)
-        (S : ι → Finset (Ideal O)) (β : ι → Ideal O → ℂ) (P : ι → ℝ)
-        (t X₁ X₂ ell z κ : ℝ), 0 < X₁ → 0 < X₂ → 0 ≤ ell →
-        0 ≤ z → z ≤ ell → 3/4 ≤ κ →
-        5*M/6 ≤ length Z X₁+length Z X₂+ell →
-        length Z X₁+length Z X₂+6*κ*ell ≤ M →
-      ∀ (D₁ D₂ : Finset (Ideal O)), (∀ I ∈ D₁, Prime I) → (∀ I ∈ D₂, Prime I) →
-      positiveSlotRow η m A u (p.profile 0) (p.profile 1) S β P t X₁ X₂ = 0 ∨
-      (let short := length Z (comparisonFirst Z M / ((∏ I ∈ D₁, I).absNorm : ℝ));
-       let along := Real.logb Z (comparisonSecond Z M X₁ X₂ / ((∏ I ∈ D₂, I).absNorm : ℝ));
-       (short+length Z (comparisonSecond Z M X₁ X₂ / ((∏ I ∈ D₂, I).absNorm : ℝ))+z ≤ 5*M/6 ∧
-        short+length Z (comparisonSecond Z M X₁ X₂ / ((∏ I ∈ D₂, I).absNorm : ℝ))+6*κ*z ≤ M) ∨
-       (0 < along ∧ ∀ x ∈ Set.Icc 0 (max 0 (M-along+ξ)*Real.log Z),
-         length Z (Real.exp x)+short+z ≤ 5*M/6 ∧
-         length Z (Real.exp x)+short+6*κ*z ≤ M)) := by
-  have he : 0 < M₀/56 := by positivity
-  obtain ⟨Z₀, hZ₀, hdefect⟩ := profiles_uniform_defect (ι := ι) a b (M₀/56) he
-  refine ⟨M₀/56, M₀/56, Z₀, he, he, hZ₀, ?_⟩
-  intro Z M hZZ hMM η m A u p S β P t X₁ X₂ ell z κ hX₁ hX₂ hell hz hze hκ hlarge hcap D₁ D₂ hD₁ hD₂
-  by_cases hrow : positiveSlotRow η m A u (p.profile 0) (p.profile 1) S β P t X₁ X₂ = 0
-  · exact Or.inl hrow
-  · apply Or.inr
-    have hZ := hZ₀.trans_le hZZ
-    obtain ⟨hl, hc⟩ := raw_gates_of_defect Z M X₁ X₂ ell κ (M₀/56) hZ hX₁ hX₂
-      (hdefect Z hZZ η m A u p S β P t X₁ X₂ hX₁ hX₂ hrow) hlarge hcap
-    exact robust_deleted_reference_window Z M X₁ X₂ ell z κ (M₀/56) (M₀/56)
-      hZ (hM₀.le.trans hMM) hX₁ hX₂ hell hz hze hκ he.le he.le
-      ((robust_fixed_slack M₀ hM₀).2 M hMM) hl hc D₁ D₂ hD₁ hD₂
 
 end SevenEighths.CenteredMomentEnergyLiveClippingDefect
 

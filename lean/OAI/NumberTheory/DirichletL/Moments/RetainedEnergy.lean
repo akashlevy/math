@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.DivisorRawEnergy
 import OAI.NumberTheory.DirichletL.Moments.RetainedProfile
-
 namespace OAI
 
 noncomputable section
@@ -39,50 +38,6 @@ theorem retained_rectangle_raw_energy (η : Character) (m A z : O) (W₁ W₂ : 
   rw [normalized_norm_sq _ (mul_pos hT hp),normalized_norm_sq _ (mul_pos (mul_pos hc₁ hc₂) hp),
     clipped_rowTwistedSum η m A z W₁ t X₁ hX₁,clipped_rowTwistedSum η m A z W₂ t X₂ hX₂]
   field_simp [hp.ne',hT.ne',hc₁.ne',hc₂.ne']
-
-omit [DecidableEq ι] in
-theorem centered_to_retained_energy (η : Character) (m A z : O) (W₁ W₂ : ℝ → ℂ)
-    (S : ι → Finset (Ideal O)) (β : ι → Ideal O → ℂ) (P : ι → ℝ)
-    (hP : ∀ i,0 < P i) (t X₁ X₂ Y₁ Y₂ T : ℝ)
-    (hX₁ : 0 < X₁) (hX₂ : 0 < X₂) (hY₁ : 0 < Y₁) (hY₂ : 0 < Y₂) (hT : 0 < T) :
-    ‖centeredSlotRow η m A z W₁ W₂ S β P t X₁ X₂ Y₁ Y₂ T‖^2 ≤
-      2*(clippedScale X₁*clippedScale X₂/T)*‖retainedPositiveRow η m A z W₁ W₂ S β P t X₁ X₂‖^2+
-      2*(clippedScale Y₁*clippedScale Y₂/T)*‖retainedPositiveRow η m A z W₁ W₂ S β P t Y₁ Y₂‖^2 := by
-  let F (U V : ℝ) : ℂ := (Real.sqrt (T*∏ i,P i):ℂ)⁻¹*
-    ((rowTwistedSum η m A z W₁ t U*rowTwistedSum η m A z W₂ t V)*
-      ∏ i,rowSlot η m A z (S i) (β i) t)
-  have he : centeredSlotRow η m A z W₁ W₂ S β P t X₁ X₂ Y₁ Y₂ T=F X₁ X₂-F Y₁ Y₂ := by
-    unfold centeredSlotRow F
-    ring
-  rw [he]
-  have hh := pow_le_pow_left₀ (norm_nonneg _) (norm_sub_le (F X₁ X₂) (F Y₁ Y₂)) 2
-  have hn : ‖F X₁ X₂-F Y₁ Y₂‖^2 ≤ 2*‖F X₁ X₂‖^2+2*‖F Y₁ Y₂‖^2 := by
-    nlinarith [sq_nonneg (‖F X₁ X₂‖-‖F Y₁ Y₂‖)]
-  have hx := retained_rectangle_raw_energy η m A z W₁ W₂ S β P hP t X₁ X₂ T hX₁ hX₂ hT
-  have hy := retained_rectangle_raw_energy η m A z W₁ W₂ S β P hP t Y₁ Y₂ T hY₁ hY₂ hT
-  change ‖F X₁ X₂‖^2=_ at hx
-  change ‖F Y₁ Y₂‖^2=_ at hy
-  rw [hx,hy] at hn
-  convert hn using 1 ; ring
-
-omit [DecidableEq ι] in
-theorem centered_to_retained_weighted_energy (η : Character) (m A : O) (W₁ W₂ : ℝ → ℂ)
-    (S : ι → Finset (Ideal O)) (β : ι → Ideal O → ℂ) (P : ι → ℝ)
-    (hP : ∀ i,0 < P i) (t X₁ X₂ Y₁ Y₂ T : ℝ)
-    (hX₁ : 0 < X₁) (hX₂ : 0 < X₂) (hY₁ : 0 < Y₁) (hY₂ : 0 < Y₂) (hT : 0 < T)
-    (rows : Finset O) (ω : O → ℝ) (hω : ∀ z∈rows,0 ≤ ω z) :
-    (∑ z∈rows,ω z*‖centeredSlotRow η m A z W₁ W₂ S β P t X₁ X₂ Y₁ Y₂ T‖^2) ≤
-      2*(clippedScale X₁*clippedScale X₂/T)*
-        (∑ z∈rows,ω z*‖retainedPositiveRow η m A z W₁ W₂ S β P t X₁ X₂‖^2)+
-      2*(clippedScale Y₁*clippedScale Y₂/T)*
-        (∑ z∈rows,ω z*‖retainedPositiveRow η m A z W₁ W₂ S β P t Y₁ Y₂‖^2) := by
-  rw [Finset.mul_sum,Finset.mul_sum,← Finset.sum_add_distrib]
-  apply Finset.sum_le_sum
-  intro z hz
-  have hh := mul_le_mul_of_nonneg_left
-    (centered_to_retained_energy η m A z W₁ W₂ S β P hP t X₁ X₂ Y₁ Y₂ T
-      hX₁ hX₂ hY₁ hY₂ hT) (hω z hz)
-  convert hh using 1 ; ring
 
 omit [DecidableEq ι] in
 theorem retained_rectangle_uniform_energy (η : Character) (m A z : O) (W₁ W₂ : ℝ → ℂ)

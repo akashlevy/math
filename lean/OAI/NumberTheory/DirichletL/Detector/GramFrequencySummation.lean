@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Foundation
 import OAI.NumberTheory.DirichletL.Detector.LowGramExceptional
-
 namespace OAI
 
 noncomputable section

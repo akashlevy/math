@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.FrequencyShell
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

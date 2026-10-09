@@ -1,81 +1,27 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.WhittakerContinuation
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
 
-open scoped BigOperators Classical MatrixGroups
+open scoped MatrixGroups
 namespace CubicKubota
 open ActualEisensteinCubic
 open CubicJacobiGlobal hiding O
@@ -133,10 +79,6 @@ theorem value_conjugate_S (M : levelThree) :
     Matrix.SpecialLinearGroup.coe_inv,ModularGroup.coe_S,Matrix.adjugate_fin_two,
     Matrix.mul_apply,Fin.sum_univ_two]
   simpa using symbol_neg_numerator ((M:SL(2,ActualEisensteinCubic.O)) 0 1) ((M:SL(2,ActualEisensteinCubic.O)) 1 1) (levelThree_bottom_primary M)
-
-theorem complexCharacter_conjugate_S (M : levelThree) :
-    complexCharacter (levelThreeConjugate (rationalEmbedding ModularGroup.S) M)=complexCharacter M :=
-  congrArg ConcreteTraceCRT.eisEmbedding (value_conjugate_S M)
 
 end CubicKubota
 
@@ -213,7 +155,6 @@ theorem complexCharacter_conjugate_rational (g : SL(2,ℤ)) (M : levelThree) :
 end CubicKubota
 end
 
-open scoped BigOperators Classical
 namespace CubicJacobiGlobal
 open ActualEisensteinCubic
 open CubicRamified
@@ -338,7 +279,7 @@ end CubicJacobiGlobal
 
 section
 
-open scoped BigOperators Classical MatrixGroups
+open scoped MatrixGroups
 namespace CubicJacobiGlobal
 open ActualEisensteinCubic
 
@@ -427,16 +368,6 @@ lemma levelThree_le_levelTwo : levelThree≤levelTwo := by
 lemma rational_mem_levelTwo (r : SL(2,ℤ)) : rationalEmbedding r∈levelTwo :=
   ⟨1,r,by simp⟩
 
-lemma levelTwo_eq_sup : levelTwo=levelThree⊔rationalEmbedding.range := by
-  apply le_antisymm
-  · rintro g ⟨n,r,rfl⟩
-    exact Subgroup.mul_mem _
-      ((show levelThree≤levelThree⊔rationalEmbedding.range from le_sup_left) n.property)
-      ((show rationalEmbedding.range≤levelThree⊔rationalEmbedding.range from le_sup_right) ⟨r,rfl⟩)
-  · apply sup_le levelThree_le_levelTwo
-    rintro g ⟨r,rfl⟩
-    exact rational_mem_levelTwo r
-
 lemma complexCharacter_product_well_defined (n m : levelThree) (r s : SL(2,ℤ))
     (h : (n:SL(2,ActualEisensteinCubic.O))*rationalEmbedding r=(m:SL(2,ActualEisensteinCubic.O))*rationalEmbedding s) :
     complexCharacter n=complexCharacter m := by
@@ -523,27 +454,9 @@ theorem globalKubotaKernel_conjugate (g : levelTwo) (k : SL(2,ActualEisensteinCu
     (levelTwoComplexCharacter_restrict n).trans hkv
   rw [hn,mul_one,←map_mul,mul_inv_cancel,map_one]
 
-def kernelInLevelTwo : Subgroup levelTwo := globalKubotaKernel.comap levelTwo.subtype
-
-instance kernelInLevelTwo_normal : kernelInLevelTwo.Normal where
-  conj_mem k hk g := globalKubotaKernel_conjugate g k hk
-
-theorem globalKubotaKernel_rational_conjugate_iff (r : SL(2,ℤ)) (k : SL(2,ActualEisensteinCubic.O)) :
-    rationalEmbedding r*k*(rationalEmbedding r)⁻¹∈globalKubotaKernel ↔
-      k∈globalKubotaKernel := by
-  constructor
-  · intro h
-    have hh := globalKubotaKernel_conjugate
-      (⟨rationalEmbedding r⁻¹,rational_mem_levelTwo r⁻¹⟩:levelTwo) _ h
-    simpa [map_inv,mul_assoc] using hh
-  · exact globalKubotaKernel_conjugate
-      (⟨rationalEmbedding r,rational_mem_levelTwo r⟩:levelTwo) k
-
 end CubicKubota
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ENNReal
-open Finset AddChar MulChar EisensteinEmbedding
+open scoped ENNReal
 
 namespace CubicEisenstein
 

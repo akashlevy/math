@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.PairPrimes
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

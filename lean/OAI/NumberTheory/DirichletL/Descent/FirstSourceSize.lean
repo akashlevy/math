@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstTailAbsorption
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -10,34 +9,7 @@ noncomputable section
 local notation "O" => ActualEisensteinCubic.O
 variable {ι : Type*} (p : ι→O) (hp : ∀i,p i≠0)
 
-include hp in
-theorem first_nonempty_column_center (U : Finset ι) (Z r eta : ℝ) (hZ : 1<Z)
-    (hU : primeProductNorm p U≤Z^(r+eta)) : -eta≤r := by
-  have hh : Z^(0:ℝ)≤Z^(r+eta) := by
-    rw [Real.rpow_zero]
-    exact (primeProductNorm_ge_one p hp U).trans hU
-  have := (Real.rpow_le_rpow_left_iff hZ).mp hh
-  linarith
-
 variable [DecidableEq ι]
-
-include hp in
-
-theorem first_source_divisor_center (b : CubeCoordinates ι) (C D : Finset ι)
-    (hCB : Disjoint C b.support)
-    (hD : D⊆C∪cubePrincipalSupport b.support b.leftExponent b.rightExponent b.leftBit b.rightBit)
-    (Z r ell delta eta : ℝ) (hZ : 1<Z)
-    (h1 : ‖eisEmbedding (primeProduct p b.support b.leftExponent)‖^2≤Z^(ell+eta))
-    (h2 : ‖eisEmbedding (primeProduct p b.support b.rightExponent)‖^2≤Z^(ell+eta))
-    (hC : primeProductNorm p C≤Z^(r+eta))
-    (hd : Z^(delta-eta)≤primeProductNorm p D) : delta≤r+2*ell+4*eta := by
-  have hz : 0<Z := zero_lt_one.trans hZ
-  have hh := hd.trans (cubeSourceDivisor_norm_bound p hp b C D (Z^(ell+eta)) (Z^(r+eta))
-    (Real.rpow_pos_of_pos hz _).le (Real.rpow_pos_of_pos hz _).le hCB h1 h2 hC hD)
-  rw [←Real.rpow_mul_natCast hz.le,←Real.rpow_add hz] at hh
-  have := (Real.rpow_le_rpow_left_iff hZ).mp hh
-  norm_num at this
-  linarith
 
 include hp in
 theorem first_source_scalar_caps (b : CubeCoordinates ι) (C D : Finset ι)

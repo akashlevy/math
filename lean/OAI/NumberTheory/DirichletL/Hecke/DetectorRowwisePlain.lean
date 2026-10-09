@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRowwiseMarked
-
 namespace OAI
 
 noncomputable section

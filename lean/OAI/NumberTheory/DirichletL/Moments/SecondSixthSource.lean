@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondSixthReduction
-
 namespace OAI
 
 noncomputable section
@@ -52,9 +51,6 @@ theorem activeExponent_pos (C D : Ideal O) (U : Finset (CommonIndex C D))
     (P : ActiveIndex C D U) : 0<activeExponent C D U P := by
   have hp : ¬6∣fixedExponent C D U P.val := (Finset.mem_filter.mp P.property).2
   exact Nat.pos_of_ne_zero (fun h=>hp (Nat.dvd_of_mod_eq_zero h))
-
-theorem activeExponent_lt (C D : Ideal O) (U : Finset (CommonIndex C D))
-    (P : ActiveIndex C D U) : activeExponent C D U P<6 := Nat.mod_lt _ (by norm_num)
 
 theorem reducedNumerator_active_product (C D : Ideal O) (U : Finset (CommonIndex C D)) :
     reducedNumerator C D U=∏ P : ActiveIndex C D U,activePrime C D U P^activeExponent C D U P := by

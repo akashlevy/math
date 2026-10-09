@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CenteredExceptionalCount
-
 namespace OAI
 
 noncomputable section

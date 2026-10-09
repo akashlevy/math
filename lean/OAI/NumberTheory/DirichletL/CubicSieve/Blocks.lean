@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.Operator
 import Mathlib.Tactic.Positivity
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

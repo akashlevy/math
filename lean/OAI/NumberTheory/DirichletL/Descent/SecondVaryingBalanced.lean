@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondVaryingDensity
 import OAI.NumberTheory.DirichletL.Inversion.SecondProfileUniform
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

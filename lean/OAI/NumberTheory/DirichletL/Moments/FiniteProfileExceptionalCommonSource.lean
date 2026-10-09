@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalCommonMass
 import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalCommonGates
 import OAI.NumberTheory.DirichletL.Moments.CommonExceptionalMass
 import OAI.NumberTheory.DirichletL.Moments.CommonExceptionalGates
-
 namespace OAI
 
 noncomputable section
@@ -15,7 +14,7 @@ open CenteredMomentCommonRadialData CenteredMomentCommonAllocationSum
 open CenteredMomentCommonLinearNormalization CenteredMomentCommonPairedSource
 open CenteredMomentCommonExceptionalCost CenteredMomentCommonExceptionalMass CenteredMomentCommonExceptionalGates
 open CenteredMomentExceptionalAsymmetricSource CenteredMomentExceptionalMaskedSource
-open CenteredMomentExceptionalAmplitudePair CenteredMomentExceptionalSourceShell
+open CenteredMomentExceptionalAmplitudePair
 open CenteredMomentSecondHeightFamily
 open CenteredMomentFiniteProfileExceptional
 local notation "O" => HeckeFamily.O

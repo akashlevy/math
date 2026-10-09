@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.DivisorBoundary
-
 namespace OAI
 
 noncomputable section
@@ -50,19 +49,6 @@ theorem frozen_subset_ratio_bound (entrance frozen : Finset ι) (hsub : frozen �
     _ = (∑ i ∈ frozen,logWindow (a i) (b i))/Real.log Z := (Finset.sum_div _ _ _).symm
     _ ≤ _ := div_le_div_of_nonneg_right (Finset.sum_le_sum_of_subset_of_nonneg hsub
       (fun i _ _ => logWindow_nonneg (a i) (b i))) (Real.log_pos hZ).le
-
-theorem disjoint_frozen_ratio_bound (entrance old fresh : Finset ι)
-    (hold : old ⊆ entrance) (hfresh : fresh ⊆ entrance) (hdis : Disjoint old fresh)
-    (W : ι → ℝ → ℂ) (a b P : ι → ℝ) (v : ι → Ideal O) (Z : ℝ) (hZ : 1 < Z)
-    (ha : ∀ i ∈ entrance,0 < a i)
-    (hs : ∀ i ∈ entrance,Function.support (W i) ⊆ Set.Icc (a i) (b i))
-    (hW : ∀ i ∈ old ∪ fresh,W i ((Ideal.absNorm (v i):ℝ)/P i) ≠ 0) :
-    |(∑ i ∈ old,Real.logb Z ((Ideal.absNorm (v i):ℝ)/P i))+
-      (∑ i ∈ fresh,Real.logb Z ((Ideal.absNorm (v i):ℝ)/P i))| ≤
-      (∑ i ∈ entrance,logWindow (a i) (b i))/Real.log Z := by
-  rw [← Finset.sum_union hdis]
-  exact frozen_subset_ratio_bound entrance (old ∪ fresh) (Finset.union_subset hold hfresh)
-    W a b P v Z hZ ha hs hW
 
 end SevenEighths.CenteredMomentSlotRatios
 

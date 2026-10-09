@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsCentralCancellation
 import OAI.NumberTheory.DirichletL.Detector.HighRowsSelectedUnramified
-
 namespace OAI
 
 noncomputable section

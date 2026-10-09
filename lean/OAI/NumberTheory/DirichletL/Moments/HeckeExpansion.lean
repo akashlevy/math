@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.HeckeSlots
 import OAI.NumberTheory.DirichletL.Moments.Extraction
-
 namespace OAI
 
 noncomputable section

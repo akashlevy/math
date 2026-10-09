@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsSummability
-
 namespace OAI
 
 noncomputable section

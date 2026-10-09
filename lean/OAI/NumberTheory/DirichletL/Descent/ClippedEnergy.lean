@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.ClippedFourier
 import OAI.NumberTheory.DirichletL.Moments.HeckeWindowEnergy
-
 namespace OAI
 
 noncomputable section

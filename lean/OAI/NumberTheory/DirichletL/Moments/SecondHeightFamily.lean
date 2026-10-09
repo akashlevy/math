@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondChildProfile
-
 namespace OAI
 
 noncomputable section
@@ -37,29 +36,6 @@ theorem heightCoeff_eq_fixed_rowWeight (τ : Character) (t : ℝ)
   change idealCoeff τ I*(Ideal.absNorm I:ℂ)^(Complex.I*t)=
     ((idealCoeff τ I*idealRowHom (fixedBadMask^6*(1*1)) I)*(Ideal.absNorm I:ℂ)^(Complex.I*t))
   simp only [mul_one,hs]
-
-theorem exists_second_family (η : Character) (χ : RayCharacter) (A : O) (hA : A≠0) :
-    ∃ τ : Character,
-      τ.modulus.absNorm≤HeckeRowClosure.rowConductorBound (childCharacter η χ) fixedBadMask 1 A ∧
-      ∀ I : Ideal O,Supported I → ∀ t : ℝ,
-        heightCoeff τ t I=heightCoeff η t I*idealRowHom A I*
-          rayCharacter χ (primaryGenerator I) := by
-  obtain ⟨τ,hN,hτ⟩ := exists_second_height_character η χ fixedBadMask A fixedBadMask_ne_zero hA
-    (by exact dvd_mul_right goodLambda (2:O)) (by exact dvd_mul_left (2:O) goodLambda)
-  refine ⟨τ,hN,?_⟩
-  intro I hI t
-  rw [hτ I hI t,←heightCoeff_eq_fixed_rowWeight η t I hI]
-
-theorem second_height_divisor_column (η τ : Character) (χ : RayCharacter) (A : O)
-    (hτ : ∀ I : Ideal O,Supported I → ∀ t : ℝ,
-      heightCoeff τ t I=heightCoeff η t I*idealRowHom A I*rayCharacter χ (primaryGenerator I))
-    (L I : Ideal O) (hI : Supported I) (β : Ideal O → ℂ) (t : ℝ) :
-    divisorCoefficient L (fun J : Ideal O => primaryGenerator J)
-      (movingCoefficient A (fun J : Ideal O => primaryGenerator J)
-        (fun J => β J*heightCoeff η t J)) χ I=
-      (if L∣I then β I else 0)*heightCoeff τ t I := by
-  rw [divisorCoefficient,movingCoefficient,primary_span_supported I hI,hτ I hI t]
-  split_ifs <;> ring
 
 end SevenEighths.CenteredMomentSecondHeightFamily
 

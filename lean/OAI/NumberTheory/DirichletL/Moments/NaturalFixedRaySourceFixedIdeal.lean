@@ -1,5 +1,6 @@
-import OAI.NumberTheory.DirichletL.Moments.NaturalFixedRaySourceSupport
-
+import OAI.NumberTheory.DirichletL.Moments.NaturalFixedRaySourceFiber
+import OAI.NumberTheory.DirichletL.Detector.FinalAssemblyData
+import OAI.NumberTheory.DirichletL.Moments.NaturalFixedRaySourceInternal
 namespace OAI
 
 noncomputable section
@@ -38,23 +39,6 @@ lemma sourceFixedIdeal_le_72 (F : ProbeFinalAssembly.SourceData D) : sourceFixed
 def sourceExceptional (F : ProbeFinalAssembly.SourceData D) (η : Character) (u : FreeRow) : Prop :=
   FixedInducingRow η (internalQ (sourceFixedIdeal F) η)
     (fixedBadMask*idealGenerator 1) 1 u.val
-
-theorem source_retained_sector_nonprincipal (F : ProbeFinalAssembly.SourceData D)
-    (η : Character) (u : FreeRow) (hu : ¬sourceExceptional F η u)
-    (θ : RayQuotient.Characters F.modulus ⊤) :
-    ((naturalRow η u.val u.property.1).character.product
-      (relativeCharacter F.modulus ⊤ le_top η θ)).residue≠1 :=
-  internal_sector_nonprincipal F.modulus ⊤ le_top (naturalRow η u.val u.property.1)
-    η θ (sourceFixedIdeal F) 1 (sourceFixedIdeal_le_modulus F) one_ne_zero u.property.1 hu
-
-theorem source_energy_split (F : ProbeFinalAssembly.SourceData D) (η : Character)
-    (rows : Finset FreeRow) (f : FreeRow→ℂ) :
-    (∑u∈rows,‖f u‖^2)=
-      (∑u∈rows.filter (fun u=>¬sourceExceptional F η u),‖f u‖^2)+
-      ∑u∈rows.filter (sourceExceptional F η),‖f u‖^2 := by
-  simpa only [not_not] using
-    (Finset.sum_filter_add_sum_filter_not rows (fun u=>¬sourceExceptional F η u)
-      (fun u=>‖f u‖^2)).symm
 
 end SevenEighths.CenteredMomentNaturalFixedRaySource
 

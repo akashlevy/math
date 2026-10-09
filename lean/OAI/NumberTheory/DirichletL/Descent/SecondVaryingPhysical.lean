@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondModeIntegral
 import OAI.NumberTheory.DirichletL.Descent.SecondVaryingBalanced
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

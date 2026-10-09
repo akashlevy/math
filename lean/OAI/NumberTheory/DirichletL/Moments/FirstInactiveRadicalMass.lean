@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondBlockRadicalHarmonicMass
 import OAI.NumberTheory.DirichletL.Moments.FirstDiscardedEnergy
-
 namespace OAI
 
 noncomputable section
@@ -60,21 +59,6 @@ theorem actual_inactive_radical_mass (B ε:ℝ)(hB:0≤B)(hε:0<ε):
     _≤∑_E:Finset (CommonIndex p.val.1 p.val.2),radicalWeight p.val.1 p.val.2:=
       Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ _)
         (fun _ _ _=>radicalWeight_nonneg _ _)
-
-theorem original_input_inactive_radical_mass (B ε:ℝ)(hB:0≤B)(hε:0<ε):
-    ∃C:ℝ,0<C ∧ ∀Z:ℝ,2≤Z→∀(ι:Type*)[Fintype ι][DecidableEq ι](s:Input ι),
-      s.W₁ 0=0→s.W₂ 0=0→sourceRadius s≤Z^B→
-      ∀puncture seed:Ideal O,Squarefree seed→seed≠0→∀a:ℝ,0≤a→
-      (∑p:ActiveLabel (finiteColumns (Fintype.piFinset s.pools)) (coefficient s puncture seed),
-        ∑E∈inactiveSubsets p.val.1 p.val.2,
-          inactiveWeight p.val.1 p.val.2 E a/
-            (Ideal.absNorm (commonRadical p.val.1 p.val.2):ℝ))≤C*Z^ε/(seed.absNorm:ℝ):=by
-  obtain ⟨C,hC,hb⟩:=actual_inactive_radical_mass B ε hB hε
-  refine ⟨C,hC,?_⟩
-  intro Z hZ ι _ _ s hz₁ hz₂ hcap puncture seed hs hs0 a ha
-  exact hb Z hZ seed hs hs0 _ _
-    (fun I _ hI=>original_column_mask s puncture seed I hI)
-    (fun I _ hI=>(original_column_norm s puncture seed I hz₁ hz₂ hI).2.trans hcap) a ha
 
 end SevenEighths.CenteredMomentFirstInactiveRadicalMass
 

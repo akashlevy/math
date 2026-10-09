@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.TailEnergyBudget
 import OAI.NumberTheory.DirichletL.Reflection.PoolArithmetic
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

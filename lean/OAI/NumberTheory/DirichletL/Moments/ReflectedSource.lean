@@ -1,9 +1,10 @@
-import OAI.NumberTheory.DirichletL.Moments.CommonExceptionalSource
+import OAI.NumberTheory.DirichletL.Moments.ExceptionalAsymmetricSource
+import OAI.NumberTheory.DirichletL.Moments.CommonExceptionalMass
+import OAI.NumberTheory.DirichletL.Moments.CommonExceptionalGates
 import OAI.NumberTheory.DirichletL.Moments.CommonHeightEnvelope
 import OAI.NumberTheory.DirichletL.Moments.ExceptionalReflection
 import OAI.NumberTheory.DirichletL.Hecke.UnitRows
 import OAI.NumberTheory.DirichletL.Hecke.PrimeScale
-
 namespace OAI
 
 noncomputable section
@@ -34,42 +35,6 @@ theorem reflected_height (η:Character)(t:ℝ)(I:Ideal O)(hI:Supported I):
     heightCoeff (reflected η) t I=heightCoeff η t I*idealRowHom (-1) I:=by
   rw [heightCoeff,reflected,idealCoeff_product,unit_ideal I hI,heightCoeff]
   ring
-
-theorem polynomial_neg {α:Type*}(S:Finset α)(a:α→O)
-    (ha:∀i,Supported (Ideal.span {a i}))(c:α→ℂ)(η:Character)(t:ℝ)(z:O):
-    rowPolynomial S a (fun i=>c i*heightCoeff η t (Ideal.span {a i})) (-z)=
-      rowPolynomial S a (fun i=>c i*heightCoeff (reflected η) t (Ideal.span {a i})) z:=by
-  unfold rowPolynomial
-  apply Finset.sum_congr rfl
-  intro i hi
-  dsimp only
-  rw [reflected_height η t _ (ha i),show -z=(-1)*z by ring,idealRowHom_argument_mul]
-  ring
-
-theorem sourceColumn_neg {ι:Type*}[Fintype ι][DecidableEq ι]
-    (s:Input ι)(C:Ideal O)(hC:Supported C)(R seed L:Ideal O)(z:O):
-    sourceColumn s C hC R seed L (-z)=
-      sourceColumn (withHeight s (reflected s.η) s.t) C hC R seed L z:=by
-  let Q:=residualPool C hC.1 (finiteColumns (Fintype.piFinset s.pools))
-  let β:=finiteColumnCoefficient (Fintype.piFinset s.pools)
-    (profileCoefficient R s.ν s.W s.P s.W₁ s.W₂ s.X₁ s.X₂ s.Y₁ s.Y₂ 1 1 seed)
-  have h:=polynomial_neg Finset.univ (sourceGenerator Q) (sourceGenerator_supported Q)
-    (fun I:supportedColumns Q=>if IsCoprime C (I:Ideal O) ∧ L∣(I:Ideal O) then β (C*I) else 0)
-    s.η s.t z
-  have hspan (I:supportedColumns Q):Ideal.span {sourceGenerator Q I}=(I:Ideal O):=
-    primary_span_supported I (Finset.mem_filter.mp I.property).2
-  simp only [hspan] at h
-  dsimp only [sourceColumn, withHeight, Input.pools, Q, β] at h ⊢
-  convert h using 1
-  rfl
-
-theorem normalizedColumn_neg {ι:Type*}[Fintype ι][DecidableEq ι]
-    (s:Input ι)(C:Ideal O)(hC:Supported C)(R seed L:Ideal O)(z:O):
-    normalizedColumn s C hC R seed L (-z)=
-      normalizedColumn (withHeight s (reflected s.η) s.t) C hC R seed L z:=by
-  unfold normalizedColumn
-  rw [sourceColumn_neg]
-  simp only [withHeight,CenteredMomentExceptionalAmplitudePair.volume]
 
 theorem reflected_row (η:Character)(m A z n:O)
     (hmLam:ConcretePrimeRowBridge.goodLambda∣m)(hm2:(2:O)∣m):

@@ -1,7 +1,7 @@
 import OAI.NumberTheory.DirichletL.Moments.ActiveSource
-import OAI.NumberTheory.DirichletL.Moments.RankinScale
-import OAI.NumberTheory.DirichletL.Moments.SecondSourceMask
-
+import OAI.NumberTheory.DirichletL.Moments.RankinLabels
+import OAI.NumberTheory.DirichletL.Moments.SecondSectorColumns
+import OAI.NumberTheory.DirichletL.Moments.AmplificationLiveMask
 namespace OAI
 
 noncomputable section
@@ -9,7 +9,7 @@ open scoped BigOperators Classical
 
 namespace SevenEighths.CenteredMomentSecondActiveCount
 open CanonicalQuadraticSieve CenteredMomentSourceRow CenteredMomentActiveSource
-open CenteredMomentFirstSectors CenteredMomentCompleteCommon CenteredMomentRankinScale
+open CenteredMomentFirstSectors CenteredMomentCompleteCommon
 open CenteredMomentRankinRadical
 local notation "O" => ActualEisensteinCubic.O
 
@@ -50,33 +50,6 @@ theorem active_common_data (S : Finset (Ideal O)) (β : Ideal O→ℂ) (s : Idea
     have hr : commonRadical I J=commonRadical J I := by unfold commonRadical;rw [Finset.inter_comm]
     rw [hr] at hsR
     exact hsR.trans (commonRadical_dvd_commonPart J I)
-
-theorem actual_partition_count (B δ : ℝ) (hB : 0≤B) (hδ : 0<δ) :
-    ∃C:ℝ,0<C ∧ ∀Z p s₀:ℝ,1≤Z → 0≤p → p≤B →
-      ∀s:Ideal O,Squarefree s → s≠0 → Z^s₀≤(Ideal.absNorm s:ℝ) →
-      ∀(S:Finset (Ideal O)) (β:Ideal O→ℂ),
-      (∀I∈S,β I≠0 → s∣I) →
-      (∀I∈S,β I≠0 → (Ideal.absNorm I:ℝ)≤Z^B) →
-      ((partitionLabels S β (Z^p)).card:ℝ)≤C*Z^(p-s₀+δ) := by
-  obtain ⟨C,hC,hcount⟩:=source_partition_count B δ hB hδ
-  refine ⟨C,hC,?_⟩
-  intro Z p s₀ hZ hp hpB s hs hs0 hNs S β hmask hN
-  have hd (v) (hv:v∈partitionLabels S β (Z^p)) :=
-    active_common_data S β s hs hmask (Z^p) v.1 ((mem_partitionLabels S β (Z^p) v).mp hv).1
-  apply hcount Z p s₀ hZ hp hpB s hs hs0 hNs _
-  · intro v hv
-    exact ⟨(hd v hv).1,(hd v hv).2.1⟩
-  · intro v hv
-    exact (hd v hv).2.2.1
-  · intro v hv
-    exact (hd v hv).2.2.2
-  · intro v hv
-    exact ((mem_partitionLabels S β (Z^p) v).mp hv).2
-  · intro v hv
-    exact commonLabel_norm_bounds S β (Z^B) hN v.1.1 v.1.2
-      (Finset.mem_filter.mp ((mem_partitionLabels S β (Z^p) v).mp hv).1).1
-  · intro v hv
-    exact (Finset.mem_filter.mp ((mem_partitionLabels S β (Z^p) v).mp hv).1).2
 
 end SevenEighths.CenteredMomentSecondActiveCount
 

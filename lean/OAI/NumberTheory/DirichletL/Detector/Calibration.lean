@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.Physical
 import Mathlib.Algebra.Group.Pi.Units
-
 namespace OAI
 
 noncomputable section
@@ -146,12 +145,6 @@ theorem calibrationFromPrimes_tau_norm {ι : Type*} [Fintype ι]
     (Real.sqrt (elementNorm b) : ℂ)‖ = 1
   rw [tsum_fintype, norm_div, hn, Complex.norm_real, Real.norm_eq_abs,
     abs_of_nonneg (Real.sqrt_nonneg _), div_self (Real.sqrt_pos.mpr hQ).ne']
-
-theorem calibrationFromPrimes_tau_ne_zero {ι : Type*} [Fintype ι]
-    (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime P)) :
-    (calibrationFromPrimes P hcop).tau ≠ 0 := by
-  exact norm_ne_zero_iff.mp (by rw [calibrationFromPrimes_tau_norm]; norm_num)
 
 def calibrationForSet (S : Finset (Ideal O)) (hS : ∀ P ∈ S, P.IsMaximal) : CalibrationData := by
   letI (P : S) : P.val.IsMaximal := hS P.val P.property

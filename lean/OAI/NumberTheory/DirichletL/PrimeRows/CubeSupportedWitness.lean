@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.DetectorReady
 import OAI.NumberTheory.DirichletL.Hecke.DetectorSupportedWitness
-
 namespace OAI
 
 noncomputable section

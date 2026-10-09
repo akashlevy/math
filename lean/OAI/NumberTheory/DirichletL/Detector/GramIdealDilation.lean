@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GramGcd
-
 namespace OAI
 
 noncomputable section

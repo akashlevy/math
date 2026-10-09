@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.StageReserve
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
-import OAI.NumberTheory.DirichletL.Reflection.KernelActualSource
+import OAI.NumberTheory.DirichletL.Reflection.KernelActual
 import OAI.NumberTheory.DirichletL.Reflection.WeightedSourceSum
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.CompleteMarkedPool
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

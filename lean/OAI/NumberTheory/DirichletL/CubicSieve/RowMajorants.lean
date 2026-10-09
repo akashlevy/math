@@ -1,147 +1,30 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.IntegratedTransfer
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical SchwartzMap
 namespace SecondPassArithmetic
 
 section
 open ActualEisensteinCubic
 open FirstPassCubeLabels (actualFirstKernel originalLabelColumn cubeActiveSupport dilationLabel)
 open ConcreteTraceCRT (eisEmbedding)
-
-theorem first_passage_transfer_input_family {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1) (F B : Finset ι) (hFB : Disjoint F B)
-    (v : ι → ℕ) (ε₁ ε₂ : ι → Bool) (hv : ∀ j ∈ B, 0 < v j)
-    (Ψ₁ Ψ₂ : O →* ℂ) (m₁ m₂ : O) (H₁ H₂ : Finset ι → ℂ)
-    (hΨ₁ : ∀ D ∈ F.powerset, ‖Ψ₁ (∏ i ∈ D, p i)‖ ≤ 1)
-    (hΨ₂ : ∀ D ∈ F.powerset, ‖Ψ₂ (∏ i ∈ D, p i)‖ ≤ 1)
-    (W : 𝓢(ℝ, ℂ)) (V₁ V₂ : ℝ → ℂ)
-    (X₁ X₂ : ℝ) (hX₁ : 0 < X₁) (hX₂ : 0 < X₂)
-    (M₁ M₂ : ℝ) (hM₁ : 0 ≤ M₁) (hM₂ : 0 ≤ M₂)
-    (hV₁ : ∀ x, V₁ x ≠ 0 → |x| ≤ M₁) (hV₂ : ∀ y, V₂ y ≠ 0 → |y| ≤ M₂)
-    (J : ℕ) (deltaLoss : ℝ) (hδ : 0 < deltaLoss) :
-    ∃ K : ℝ, 0 ≤ K ∧ ∀ lengthScale : ℝ, 0 < lengthScale → ∀ c d : O, d ≠ 0 →
-      ∀ (s : Finset (Ideal O × O)) (T : Finset O) (w : Ideal O × O → ℂ) (M Y : ℝ),
-      0 ≤ M → 0 ≤ Y → (∀ x ∈ s, Squarefree x.1) → (∀ x ∈ s, x.2 ≠ 0) →
-      (∀ x ∈ s, DescentWeightedCauchy.firstElementRowMap (dilationLabel p B v ε₁ ε₂) x ∈ T) →
-      (∀ z ∈ T, z ≠ 0) → (∀ z ∈ T, (Ideal.absNorm (Ideal.span {z}) : ℝ) ≤ Y) →
-      (∀ x ∈ s, ‖w x‖ ≤ M) →
-      ‖∑ x ∈ s, w x * actualFirstKernel p hp hcop hg F B v ε₁ ε₂
-        (originalLabelColumn p hg B ε₁ ε₂ true (multiplicativeCoreColumn p Ψ₁ m₁ H₁)
-          c (ConcretePrimeRowBridge.idealGenerator x.1))
-        (originalLabelColumn p hg B ε₁ ε₂ false (multiplicativeCoreColumn p Ψ₂ m₂ H₂)
-          c (ConcretePrimeRowBridge.idealGenerator x.1))
-        W V₁ V₂ X₁ X₂ lengthScale d x.2‖ ≤
-      (lengthScale / ‖eisEmbedding (∏ i ∈ cubeActiveSupport B v ε₁ ε₂, p i)‖) * (M * K * Y ^ deltaLoss) *
-        Real.sqrt (firstInputFamilyEnergy p hg F B v ε₁ ε₂ true Ψ₁ m₁ H₁ V₁ X₁ c d J T) *
-        Real.sqrt (firstInputFamilyEnergy p hg F B v ε₁ ε₂ false Ψ₂ m₂ H₂ V₂ X₂ c d J T) := by
-  obtain ⟨K, hK, hb⟩ := FirstPassCubeLabels.first_passage_transfer p hp hinj hcop hg hc hpr F B hFB
-    v ε₁ ε₂ hv (multiplicativeCoreColumn p Ψ₁ m₁ H₁) (multiplicativeCoreColumn p Ψ₂ m₂ H₂)
-    W V₁ V₂ X₁ X₂ hX₁ hX₂ M₁ M₂ hM₁ hM₂ hV₁ hV₂ J deltaLoss hδ
-  refine ⟨(32 * 512) * K, mul_nonneg (by norm_num) hK, ?_⟩
-  intro lengthScale hL c d hd s T w M Y hM hY hs hnonzero hmap hT hnorm hw
-  have hf := hb lengthScale hL c d hd s T w M Y hM hY hs hnonzero hmap hT hnorm hw
-  have h₁ := firstOutputEnergy_le_input_family p hp hcop hg hc hpr F B v ε₁ ε₂ true
-    Ψ₁ m₁ H₁ V₁ X₁ c d J T hΨ₁
-  have h₂ := firstOutputEnergy_le_input_family p hp hcop hg hc hpr F B v ε₁ ε₂ false
-    Ψ₂ m₂ H₂ V₂ X₂ c d J T hΨ₂
-  have hq : 0 ≤ lengthScale / ‖eisEmbedding (∏ i ∈ cubeActiveSupport B v ε₁ ε₂, p i)‖ :=
-    div_nonneg hL.le (norm_nonneg _)
-  have hfactor : 0 ≤ M * K * Y ^ deltaLoss :=
-    mul_nonneg (mul_nonneg hM hK) (Real.rpow_nonneg hY deltaLoss)
-  calc
-    _ ≤ (lengthScale / ‖eisEmbedding (∏ i ∈ cubeActiveSupport B v ε₁ ε₂, p i)‖) * (M * K * Y ^ deltaLoss) *
-        Real.sqrt (FirstPassCubeLabels.firstOutputEnergy p hp hcop hg F B v ε₁ ε₂ true
-          (multiplicativeCoreColumn p Ψ₁ m₁ H₁) V₁ X₁ c d J T) *
-        Real.sqrt (FirstPassCubeLabels.firstOutputEnergy p hp hcop hg F B v ε₁ ε₂ false
-          (multiplicativeCoreColumn p Ψ₂ m₂ H₂) V₂ X₂ c d J T) := hf
-    _ ≤ (lengthScale / ‖eisEmbedding (∏ i ∈ cubeActiveSupport B v ε₁ ε₂, p i)‖) * (M * K * Y ^ deltaLoss) *
-        Real.sqrt ((32 * 512) * firstInputFamilyEnergy p hg F B v ε₁ ε₂ true Ψ₁ m₁ H₁ V₁ X₁ c d J T) *
-        Real.sqrt ((32 * 512) * firstInputFamilyEnergy p hg F B v ε₁ ε₂ false Ψ₂ m₂ H₂ V₂ X₂ c d J T) := by
-      gcongr
-    _ = _ := by
-      rw [Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 32 * 512),
-        Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 32 * 512)]
-      calc
-        _ = (lengthScale / ‖eisEmbedding (∏ i ∈ cubeActiveSupport B v ε₁ ε₂, p i)‖) * (M * K * Y ^ deltaLoss) *
-            (Real.sqrt (32 * 512)) ^ 2 *
-            Real.sqrt (firstInputFamilyEnergy p hg F B v ε₁ ε₂ true Ψ₁ m₁ H₁ V₁ X₁ c d J T) *
-            Real.sqrt (firstInputFamilyEnergy p hg F B v ε₁ ε₂ false Ψ₂ m₂ H₂ V₂ X₂ c d J T) := by ring
-        _ = _ := by rw [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 32 * 512)]; ring
 
 end
 section
@@ -265,45 +148,6 @@ theorem firstCoreInputRow_finite_le_second_poisson
     negative χ Ψ m H V y c d r t rowMajorant Y hY
   rw [← he]
   exact finite_row_energy_le_rowMajorant _ T Y hY hT
-
-theorem firstCoreInputRow_majorant_integrable
-    (F D B : Finset ι) (v : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (negative : Bool) (χ : RayCharacter) (Ψ : O →* ℂ) (m : O)
-    (H : Finset ι → ℂ) (V : ℝ → ℂ) (y : Finset ι → ℝ) (c d : O)
-    (r : FirstCoreIndex) (Y : ℝ) (hY : 0 < Y)
-    {k : ℝ → ℝ} (hk : Integrable k volume) :
-    Integrable (fun t : ℝ => k t *
-      (∑' z : O, rowMajorant (‖eisEmbedding z‖ ^ 2 / Y) *
-        (↑(‖firstCoreInputRow p hg F D B v ε₁ ε₂ negative χ Ψ m H V y c d r t z‖ ^ 2) : ℂ)).re) volume := by
-  simp_rw [rowMajorant_tsum_eq_sum _ Y hY, Complex.re_sum,
-    Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, mul_zero, sub_zero]
-  simp only [Finset.mul_sum]
-  apply integrable_finsetSum
-  intro z hz
-  convert (firstCoreInputRow_integrable p hg F D B v ε₁ ε₂ negative χ Ψ m H V y c d r z hk).const_mul
-    (rowMajorant (‖eisEmbedding z‖ ^ 2 / Y)).re using 1
-  funext t
-  ring
-
-theorem firstCoreInputRow_integrated_le_majorant
-    (F D B : Finset ι) (v : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (negative : Bool) (χ : RayCharacter) (Ψ : O →* ℂ) (m : O)
-    (H : Finset ι → ℂ) (V : ℝ → ℂ) (y : Finset ι → ℝ) (c d : O)
-    (r : FirstCoreIndex) (T : Finset O) (Y : ℝ) (hY : 0 < Y)
-    (hT : ∀ z ∈ T, (Ideal.absNorm (Ideal.span {z}) : ℝ) ≤ Y)
-    {k : ℝ → ℝ} (hk : Integrable k volume) (hk0 : ∀ t, 0 ≤ k t) :
-    (∫ t : ℝ, k t * ∑ z ∈ T,
-      ‖firstCoreInputRow p hg F D B v ε₁ ε₂ negative χ Ψ m H V y c d r t z‖ ^ 2) ≤
-    ∫ t : ℝ, k t *
-      (∑' z : O, rowMajorant (‖eisEmbedding z‖ ^ 2 / Y) *
-        (↑(‖firstCoreInputRow p hg F D B v ε₁ ε₂ negative χ Ψ m H V y c d r t z‖ ^ 2) : ℂ)).re := by
-  apply integral_mono
-  · simp only [Finset.mul_sum]
-    exact integrable_finsetSum _ (fun z hz =>
-      firstCoreInputRow_integrable p hg F D B v ε₁ ε₂ negative χ Ψ m H V y c d r z hk)
-  · exact firstCoreInputRow_majorant_integrable p hg F D B v ε₁ ε₂ negative χ Ψ m H V y c d r Y hY hk
-  · intro t
-    exact mul_le_mul_of_nonneg_left (finite_row_energy_le_rowMajorant _ T Y hY hT) (hk0 t)
 
 end
 
@@ -522,19 +366,6 @@ def primitiveTerm (z : ℂ) (v : ℝ) (s : ℂ) (c d : O) : ℂ :=
   eisEmbedding (symbol c d) *
     ((v/(‖eisEmbedding c*z+eisEmbedding d‖^2+‖eisEmbedding c‖^2*v^2):ℝ):ℂ)^s
 
-theorem primitive_terms_summable (z : ℂ) (v : ℝ) (hv : 0 < v) (s : ℂ) (hs : 2 < s.re) :
-    Summable (fun p : Σ c : LevelLower, AdmissibleDenominator c.1 =>
-      primitiveTerm z v s p.1.1 p.2.1) := by
-  apply primitiveSigmaEquiv.summable_iff.mp
-  exact (primitive_rows_summable_norm z v hv s hs).of_norm
-
-theorem upperEisenstein_eq_by_lower (z : ℂ) (v : ℝ) (hv : 0 < v) (s : ℂ) (hs : 2 < s.re) :
-    upperEisenstein z v hv s=
-      ∑' c : LevelLower, ∑' d : AdmissibleDenominator c.1, primitiveTerm z v s c.1 d.1 := by
-  rw [upperEisenstein_eq_primitive_rows]
-  exact (primitiveSigmaEquiv.tsum_eq (fun p : Σ c : LevelLower, AdmissibleDenominator c.1 =>
-    primitiveTerm z v s p.1.1 p.2.1)).trans (primitive_terms_summable z v hv s hs).tsum_sigma
-
 theorem denominator_sum_residues (c : O) (hc : c ≠ 0) (f : O → ℂ)
     (hf : Summable (fun d : AdmissibleDenominator c => f d.1)) :
     (∑' d : AdmissibleDenominator c, f d.1)=
@@ -559,51 +390,10 @@ lemma denominator_zero_unique (d : AdmissibleDenominator 0) : d.1=1 := by
   apply A3_primary_unit_eq_one _ _ (lambda_sq_dvd_three.trans d.2.2)
   simpa only [isCoprime_zero_left] using d.2.1
 
-lemma zero_lower_sum (z : ℂ) (v : ℝ) (s : ℂ) :
-    (∑' d : AdmissibleDenominator 0, primitiveTerm z v s 0 d.1)=(v:ℂ)^s := by
-  let d0 : AdmissibleDenominator 0 := ⟨1,isCoprime_one_right,by simp⟩
-  rw [tsum_eq_single d0]
-  · simp [primitiveTerm,d0,symbol_one]
-  · intro d hd
-    exfalso
-    apply hd
-    exact Subtype.ext (denominator_zero_unique d)
-
-def residueSeries (z : ℂ) (v : ℝ) (s : ℂ) (c : O) : ℂ :=
-  ∑' r : AdmissibleResidue c, ∑' n : O,
-    primitiveTerm (z+3*eisEmbedding n) v s c (denominatorRep c r.1)
-
-theorem upperEisenstein_eq_residue_series (z : ℂ) (v : ℝ) (hv : 0 < v)
-    (s : ℂ) (hs : 2 < s.re) :
-    upperEisenstein z v hv s =
-      ∑' c : LevelLower, if c.1=0 then (v:ℂ)^s else residueSeries z v s c.1 := by
-  rw [upperEisenstein_eq_by_lower z v hv s hs]
-  apply tsum_congr
-  rintro ⟨c,hlevel⟩
-  dsimp only
-  split_ifs with hc
-  · subst c
-    exact zero_lower_sum z v s
-  · have hsum : Summable (fun d : AdmissibleDenominator c => primitiveTerm z v s c d.1) :=
-      (primitive_terms_summable z v hv s hs).sigma_factor ⟨c, hlevel⟩
-    rw [denominator_sum_residues c hc (fun d : O => primitiveTerm z v s c d) hsum]
-    apply tsum_congr
-    intro r
-    apply tsum_congr
-    intro n
-    exact primitiveTerm_shift z v s c (denominatorRep c r.1) n hlevel r.2.2
-
-lemma residueSeries_finite (z : ℂ) (v : ℝ) (s : ℂ) (c : O) (hc : c ≠ 0) :
-    letI : Fintype (AdmissibleResidue c) := @Fintype.ofFinite _ (finite_admissibleResidue c hc)
-    residueSeries z v s c = ∑ r : AdmissibleResidue c, ∑' n : O,
-      primitiveTerm (z+3*eisEmbedding n) v s c (denominatorRep c r.1) := by
-  let : Fintype (AdmissibleResidue c) := @Fintype.ofFinite _ (finite_admissibleResidue c hc)
-  exact tsum_fintype _
-
 end CubicEisenstein
 
-open MeasureTheory Set Module
-open scoped BigOperators Classical ENNReal
+open Module
+open scoped ENNReal
 
 namespace CubicEisenstein
 open ActualEisensteinCubic ConcreteTraceCRT EisensteinEmbedding EisensteinSchwartzPoisson
@@ -696,20 +486,6 @@ lemma periodDomain_volume : volume periodDomain=ENNReal.ofReal (9*Real.sqrt 3/2)
     Complex.coe_basisOneI_repr,EisensteinEmbedding.omega3_im]
   rw [abs_of_nonneg (by positivity)]
   ring
-
-lemma periodization_lintegral_norm_ne_top (f : ℂ → ℂ) (hf : Integrable f) :
-    (∑' n : O,∫⁻ z in periodDomain,‖f (z+3*eisEmbedding n)‖ₑ) ≠ ⊤ := by
-  rw [← lintegral_eq_period_lintegrals (fun z => ‖f z‖ₑ)]
-  exact hf.hasFiniteIntegral.ne
-
-theorem integral_periodization (f : ℂ → ℂ) (hf : Integrable f) :
-    (∫ z in periodDomain,∑' n : O,f (z+3*eisEmbedding n))=∫ z : ℂ,f z := by
-  let : Countable O := latticeCoordEquiv.injective.countable
-  rw [integral_tsum]
-  · exact (integral_eq_period_integrals f hf).symm
-  · intro n
-    exact (hf.comp_add_right (3*eisEmbedding n)).aestronglyMeasurable.restrict
-  · exact periodization_lintegral_norm_ne_top f hf
 
 end CubicEisenstein
 

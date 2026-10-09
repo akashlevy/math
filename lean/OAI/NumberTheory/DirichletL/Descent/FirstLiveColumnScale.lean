@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstDyadicLiveRadius
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileScales
 import OAI.NumberTheory.DirichletL.Descent.FirstLiveCaps
-
 namespace OAI
 
 noncomputable section

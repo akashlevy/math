@@ -1,5 +1,5 @@
-import OAI.NumberTheory.DirichletL.Descent.SecondFreshTruncation
-
+import OAI.NumberTheory.DirichletL.Inversion.SecondPrincipalCaller
+import OAI.NumberTheory.DirichletL.Descent.SecondParentInput
 namespace OAI
 
 namespace SevenEighths.InverseMoment

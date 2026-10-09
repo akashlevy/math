@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.CommonProfile
-
 namespace OAI
 
 noncomputable section

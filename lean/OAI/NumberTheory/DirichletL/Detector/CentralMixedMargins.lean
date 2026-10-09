@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.CentralDyadicWeight
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.Decomposition
 import OAI.NumberTheory.DirichletL.Descent.Hybrid
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.MellinScaling
 import OAI.NumberTheory.DirichletL.Detector.SpectralWeights
-
 namespace OAI
 
 noncomputable section

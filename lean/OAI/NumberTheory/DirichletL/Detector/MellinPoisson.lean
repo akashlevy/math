@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.SpectralPoisson
-
 namespace OAI
 
 noncomputable section

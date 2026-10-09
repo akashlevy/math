@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.FirstGaussianCoefficients
 import OAI.NumberTheory.DirichletL.Energy.FirstHighFourCoefficients
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.Bands
 import OAI.NumberTheory.DirichletL.Moments.PrimeSlotShift
-
 namespace OAI
 
 noncomputable section

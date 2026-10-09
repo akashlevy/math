@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.MarkBounds
-
 namespace OAI
 
 noncomputable section
@@ -67,14 +66,6 @@ theorem principalFrequency_eq (hp : ∀ i, p i ≠ 0) (Ψ : Eis →* ℂ) (m r c
     Complex.ofReal_one, div_one, primeProductNorm, one_pow, mul_one,
     secondGaussTerm_empty (p := p) (hp := hp) (hg := hg) (hinj := hinj)]
 
-theorem principalFrequency_eq_secondFrequencyKernel_empty
-    (hp : ∀ i, p i ≠ 0) (Ψ : Eis →* ℂ) (m r c d e k : Eis)
-    (H₁ H₂ : Finset ι → ℂ) (W : 𝓢(ℝ, ℂ)) (Y : ℝ) :
-    principalFrequency p hg hinj hp Ψ m r c d e k H₁ H₂ W Y =
-      secondFrequencyKernel p hp hg hinj ∅ Ψ Ψ m r c d e k H₁ H₂ W Y := by
-  simp only [secondFrequencyKernel, Finset.powerset_empty, Finset.sum_singleton,
-    Finset.disjoint_empty_left, ite_true, principalFrequency]
-
 def restorationTerm (hp : ∀ i, p i ≠ 0) (Ψ : Eis →* ℂ) (m c d : Eis)
     (H : Finset ι → ℂ) (W : 𝓢(ℝ, ℂ)) (Y : ℝ)
     (G : Finset ι) (E : G.powerset) (k : Eis) : ℂ :=
@@ -83,17 +74,6 @@ def restorationTerm (hp : ∀ i, p i ≠ 0) (Ψ : Eis →* ℂ) (m c d : Eis)
       (secondMaskQuotient p E.val G (Finset.mem_powerset.mp E.property)) c d
       (primeSubsetGenerator (fun i => Ideal.span {p i}) E.val) k
       (fun U => H (G ∪ U)) (fun U => H (G ∪ U)) W Y
-
-theorem restorationTerm_eq_principal_kernel (hp : ∀ i, p i ≠ 0) (Ψ : Eis →* ℂ)
-    (m c d : Eis) (H : Finset ι → ℂ) (W : 𝓢(ℝ, ℂ)) (Y : ℝ)
-    (G : Finset ι) (E : G.powerset) (k : Eis) :
-    restorationTerm p hg hinj hp Ψ m c d H W Y G E k =
-      secondSourceCommonCoefficient p hg Ψ m c d G E.val *
-        secondFrequencyKernel p hp hg hinj ∅ Ψ Ψ m
-          (secondMaskQuotient p E.val G (Finset.mem_powerset.mp E.property)) c d
-          (primeSubsetGenerator (fun i => Ideal.span {p i}) E.val) k
-          (fun U => H (G ∪ U)) (fun U => H (G ∪ U)) W Y := by
-  rw [restorationTerm, principalFrequency_eq_secondFrequencyKernel_empty]
 
 theorem restorationTerm_eq (hp : ∀ i, p i ≠ 0) (Ψ : Eis →* ℂ) (m c d : Eis)
     (H : Finset ι → ℂ) (W : 𝓢(ℝ, ℂ)) (Y : ℝ)
@@ -339,29 +319,6 @@ theorem marked_radial_divisor_mass (ε : ℝ) (hε : 0 < ε) :
     (markedRadial_support p slots lists a A V X M hX hV) hpoint
   have h4 : ((2 : ℝ)^A.card)^2 = (4 : ℝ)^A.card := by rw [← pow_mul, mul_comm, pow_mul]; norm_num
   convert hb using 1 ; (rw [mul_pow, mul_pow, h4]; ring)
-
-lemma radial_support_of_annular (V : 𝓢(ℝ, ℂ)) (a M : ℝ)
-    (hV : tsupport V ⊆ Set.Icc a (Real.exp M)) :
-    ∀ t, V t ≠ 0 → t ≤ Real.exp M := by
-  intro t ht
-  exact (hV (subset_closure ht)).2
-
-def outsideCutoff {ι : Type*} [DecidableEq ι]
-    (K : Finset ι → Finset ι → Finset Eis) (G E : Finset ι) (k : Eis) : ℂ :=
-  if k ∈ K G E then 0 else 1
-
-lemma outsideCutoff_norm_le_one {ι : Type*} [DecidableEq ι]
-    (K : Finset ι → Finset ι → Finset Eis) (G E : Finset ι) (k : Eis) :
-    ‖outsideCutoff K G E k‖ ≤ 1 := by
-  unfold outsideCutoff
-  split_ifs <;> norm_num
-
-lemma outsideCutoff_mul_norm_le_one {ι : Type*} [DecidableEq ι]
-    (K : Finset ι → Finset ι → Finset Eis) (G E : Finset ι) (k : Eis)
-    (θ : ℂ) (hθ : ‖θ‖ ≤ 1) : ‖outsideCutoff K G E k * θ‖ ≤ 1 := by
-  rw [norm_mul]
-  simpa only [one_mul] using mul_le_mul (outsideCutoff_norm_le_one K G E k) hθ
-    (norm_nonneg _) zero_le_one
 
 theorem uniform_row_control :
     ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧ ∀ W : 𝓢(ℝ, ℂ),

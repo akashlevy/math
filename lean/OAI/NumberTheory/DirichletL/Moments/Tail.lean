@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.Smooth
-
 namespace OAI
 
 noncomputable section
@@ -9,41 +8,6 @@ namespace SevenEighths.CenteredMomentTail
 open ActualEisensteinCubic ConcreteTraceCRT CubicEisenstein EisensteinSchwartzPoisson
 open CenteredMomentCommonSupport CenteredMomentCorrelation CenteredMomentFourier
 open CenteredMomentSupportedCorrelation
-
-theorem residueGauss_norm_le (d : O) (hd : d ≠ 0)
-    (χ : MulChar (Residue d) ℂ) (h : Residue d) :
-    ‖residueGauss d hd χ h‖ ≤ (Ideal.absNorm (Ideal.span {d}) : ℝ) := by
-  let := finite_quotient_span hd
-  let : Fintype (Residue d) := Fintype.ofFinite _
-  rw [residueGauss, tsum_fintype]
-  calc
-    _ ≤ ∑ x : Residue d, ‖χ x * quotientTrace d hd (h * x)‖ := norm_sum_le _ _
-    _ ≤ ∑ _x : Residue d, (1 : ℝ) := Finset.sum_le_sum fun x _ => by
-      rw [norm_mul, (quotientTrace d hd).norm_apply, mul_one]
-      exact QuadraticInitialBound.norm_finite_character_le_one χ x
-    _ = _ := by simp [Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card]
-
-theorem normalizedResidueGauss_norm_le (d : O) (hd : d ≠ 0)
-    (χ : MulChar (Residue d) ℂ) (h : Residue d) :
-    ‖normalizedResidueGauss d hd χ h‖ ≤ Real.sqrt (Ideal.absNorm (Ideal.span {d}) : ℝ) := by
-  have hn : (0 : ℝ) < Ideal.absNorm (Ideal.span {d}) := by
-    exact_mod_cast (Nat.pos_of_ne_zero
-      (Ideal.absNorm_eq_zero_iff.not.mpr (Ideal.span_singleton_eq_bot.not.mpr hd)))
-  rw [normalizedResidueGauss, norm_div, Complex.norm_real, Real.norm_eq_abs,
-    abs_of_nonneg (Real.sqrt_nonneg _)]
-  apply (div_le_iff₀ (Real.sqrt_pos.mpr hn)).mpr
-  rw [Real.mul_self_sqrt hn.le]
-  exact residueGauss_norm_le d hd χ h
-
-theorem normalizedResidueGauss_div_root_norm_le_one (d : O) (hd : d ≠ 0)
-    (χ : MulChar (Residue d) ℂ) (h : Residue d) :
-    ‖normalizedResidueGauss d hd χ h /
-      (Real.sqrt (Ideal.absNorm (Ideal.span {d}) : ℝ) : ℂ)‖ ≤ 1 := by
-  have hn : (0 : ℝ) < Ideal.absNorm (Ideal.span {d}) := by
-    exact_mod_cast (Nat.pos_of_ne_zero
-      (Ideal.absNorm_eq_zero_iff.not.mpr (Ideal.span_singleton_eq_bot.not.mpr hd)))
-  rw [norm_div, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg (Real.sqrt_nonneg _)]
-  exact (div_le_one (Real.sqrt_pos.mpr hn)).mpr (normalizedResidueGauss_norm_le d hd χ h)
 
 theorem fullModulusCorrelation_norm_le (u v : O) (_hu : u ≠ 0) (_hv : v ≠ 0)
     [Fintype (Residue u)] [Fintype (Residue v)]
@@ -82,36 +46,6 @@ theorem actualCorrelation_norm_le (u v : O)
   unfold actualCorrelation
   exact fullModulusCorrelation_norm_le u v (supported_element_ne_zero u hu)
     (supported_element_ne_zero v hv) _ _ j
-
-theorem weighted_lattice_tail (A : ℕ) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-      ∀ (W : 𝓢(ℝ, ℂ)) (K T B : ℝ), 0 < K → 0 ≤ T → 0 ≤ B →
-      ∀ c : O → ℂ, (∀ h, ‖c h‖ ≤ B) →
-      ‖∑' h : {h : O // T ≤ K * ‖eisEmbedding h‖ ^ 2},
-        c h.val * paperRadialFourier W (K * ‖eisEmbedding h.val‖ ^ 2)‖ ≤
-        B * (C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W) /
-          ((min 1 K) ^ 2 * (1 + T) ^ A) := by
-  obtain ⟨s, C, hC, ht⟩ := paperRadialFourier_lattice_tail A
-  refine ⟨s, C, hC, ?_⟩
-  intro W K T B hK hT hB c hc
-  let S := {h : O // T ≤ K * ‖eisEmbedding h‖ ^ 2}
-  have hs : Summable (fun h : S => ‖paperRadialFourier W (K * ‖eisEmbedding h.val‖ ^ 2)‖) :=
-    (paperRadialFourier_lattice_summable_norm W K hK).subtype _
-  have hpoint (h : S) : ‖c h.val * paperRadialFourier W (K * ‖eisEmbedding h.val‖ ^ 2)‖ ≤
-      B * ‖paperRadialFourier W (K * ‖eisEmbedding h.val‖ ^ 2)‖ := by
-    rw [norm_mul]
-    exact mul_le_mul_of_nonneg_right (hc _) (norm_nonneg _)
-  have hsum : Summable (fun h : S =>
-      ‖c h.val * paperRadialFourier W (K * ‖eisEmbedding h.val‖ ^ 2)‖) :=
-    Summable.of_nonneg_of_le (fun _ => norm_nonneg _) hpoint (hs.mul_left B)
-  calc
-    _ ≤ ∑' h : S, ‖c h.val * paperRadialFourier W (K * ‖eisEmbedding h.val‖ ^ 2)‖ :=
-      norm_tsum_le_tsum_norm hsum
-    _ ≤ ∑' h : S, B * ‖paperRadialFourier W (K * ‖eisEmbedding h.val‖ ^ 2)‖ :=
-      hsum.tsum_le_tsum hpoint (hs.mul_left B)
-    _ = B * ∑' h : S, ‖paperRadialFourier W (K * ‖eisEmbedding h.val‖ ^ 2)‖ := tsum_mul_left
-    _ ≤ _ := by
-      simpa only [mul_div_assoc] using mul_le_mul_of_nonneg_left (ht W K T hK hT) hB
 
 theorem weighted_set_lattice_tail (A : ℕ) :
     ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
@@ -171,63 +105,6 @@ theorem uniform_sector_lattice_tail (A : ℕ) :
   apply div_le_div_of_nonneg_left (by positivity)
     (by have : 0 < min 1 K₀ := lt_min zero_lt_one hK₀; positivity)
   gcongr
-
-theorem actual_correlation_tail (A : ℕ) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-      ∀ (W : 𝓢(ℝ, ℂ)) (K T : ℝ), 0 < K → 0 ≤ T →
-      ∀ (u v : O) (hu : CanonicalQuadraticSieve.Supported (Ideal.span {u}))
-        (hv : CanonicalQuadraticSieve.Supported (Ideal.span {v})),
-      ‖∑' h : {h : O // T ≤ K * ‖eisEmbedding h‖ ^ 2},
-        actualCorrelation u v hu hv (-h.val) *
-          paperRadialFourier W (K * ‖eisEmbedding h.val‖ ^ 2)‖ ≤
-        ((Ideal.absNorm (Ideal.span {u}) : ℝ) * (Ideal.absNorm (Ideal.span {v}) : ℝ)) *
-          (C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W) /
-            ((min 1 K) ^ 2 * (1 + T) ^ A) := by
-  obtain ⟨s, C, hC, ht⟩ := weighted_lattice_tail A
-  refine ⟨s, C, hC, ?_⟩
-  intro W K T hK hT u v hu hv
-  exact ht W K T _ hK hT (by positivity) _
-    (fun h => actualCorrelation_norm_le u v hu hv (-h))
-
-theorem actual_first_gauss_tail (A : ℕ) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-      ∀ (W : 𝓢(ℝ, ℂ)) (K T : ℝ), 0 < K → 0 ≤ T →
-      ∀ {ι : Type*} (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-        (hinj : Function.Injective P) (hg : ∀ i, ConcretePrimeRowBridge.goodLambda ∉ P i)
-        (_hchar : ∀ i, ringChar (O ⧸ P i) ≠ 2)
-        (B : Finset ι) (c d : ι → ℕ)
-        (a b : O) (ha : a ≠ 0) (hb : b ≠ 0)
-        (χa : MulChar (Residue a) ℂ) (χb : MulChar (Residue b) ℂ),
-      let r := CenteredMomentInitial.activeModulus P B c d
-      let ξ := CenteredMomentInitial.commonCharacter P hinj hg B c d
-      ‖∑' h : {h : O // T ≤ K * ‖eisEmbedding h‖ ^ 2},
-        (normalizedResidueGauss r (CenteredMomentInitial.activeModulus_ne_zero P B c d) ξ
-            (Ideal.Quotient.mk _ h.val) *
-          (normalizedResidueGauss a ha χa (Ideal.Quotient.mk _ h.val) /
-            (Real.sqrt (Ideal.absNorm (Ideal.span {a}) : ℝ) : ℂ)) *
-          star (normalizedResidueGauss b hb χb (Ideal.Quotient.mk _ (-h.val)) /
-            (Real.sqrt (Ideal.absNorm (Ideal.span {b}) : ℝ) : ℂ))) *
-          paperRadialFourier W (K * ‖eisEmbedding h.val‖ ^ 2)‖ ≤
-          (C * s.sup (schwartzSeminormFamily ℝ ℝ ℂ) W) /
-            ((min 1 K) ^ 2 * (1 + T) ^ A) := by
-  obtain ⟨s, C, hC, ht⟩ := weighted_lattice_tail A
-  refine ⟨s, C, hC, ?_⟩
-  intro W K T hK hT ι P _ hinj hg hchar B c d a b ha hb χa χb
-  dsimp only
-  simpa only [one_mul] using ht W K T 1 hK hT zero_le_one
-    (fun h => normalizedResidueGauss _ (CenteredMomentInitial.activeModulus_ne_zero P B c d)
-      (CenteredMomentInitial.commonCharacter P hinj hg B c d) (Ideal.Quotient.mk _ h) *
-      (normalizedResidueGauss a ha χa (Ideal.Quotient.mk _ h) /
-        (Real.sqrt (Ideal.absNorm (Ideal.span {a}) : ℝ) : ℂ)) *
-      star (normalizedResidueGauss b hb χb (Ideal.Quotient.mk _ (-h)) /
-        (Real.sqrt (Ideal.absNorm (Ideal.span {b}) : ℝ) : ℂ))) (by
-      intro h
-      rw [norm_mul, norm_mul, norm_star]
-      exact (mul_le_of_le_one_left (norm_nonneg _)
-        ((mul_le_of_le_one_left (norm_nonneg _)
-          (CenteredMomentInitial.common_gauss_norm_le_one P hinj hg hchar B c d h)).trans
-          (normalizedResidueGauss_div_root_norm_le_one a ha χa _))).trans
-        (normalizedResidueGauss_div_root_norm_le_one b hb χb _))
 
 end SevenEighths.CenteredMomentTail
 end

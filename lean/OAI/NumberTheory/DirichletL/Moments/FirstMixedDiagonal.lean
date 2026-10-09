@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstMixedExceptionalCap
-
 namespace OAI
 
 noncomputable section

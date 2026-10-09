@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstTailAggregation
 import OAI.NumberTheory.DirichletL.Descent.FirstSourceTail
-
 namespace OAI
 
 noncomputable section

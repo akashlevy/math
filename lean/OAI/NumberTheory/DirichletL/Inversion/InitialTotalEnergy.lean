@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialFiniteEnergy
 import OAI.NumberTheory.DirichletL.Inversion.InitialPhysicalLimit
 import OAI.NumberTheory.DirichletL.Inversion.InitialZeroModeBudget
-
 namespace OAI
 
 noncomputable section

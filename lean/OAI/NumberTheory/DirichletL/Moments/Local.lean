@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.Unequal
-
 namespace OAI
 
 noncomputable section
@@ -9,12 +8,6 @@ open CenteredMomentCorrelation CenteredMomentCommonSupport CenteredMomentUnequal
 
 section Domain
 variable {A : Type*} [CommRing A] [IsDomain A]
-
-omit [IsDomain A] in
-theorem scaledResidue_one (q : A) (x : Residue q) :
-    scaledResidue q 1 q (mul_one q).symm x = x := by
-  obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective x
-  simp only [scaledResidue_mk, one_mul]
 
 theorem fullCorrelation_equal_divided (q k : A) (hq : q ≠ 0)
     [Fintype (Residue q)] (χ : MulChar (Residue q) ℂ) :

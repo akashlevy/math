@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.UniformMeasure
 import OAI.NumberTheory.DirichletL.Reflection.UniformTail
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedArithmeticHeight

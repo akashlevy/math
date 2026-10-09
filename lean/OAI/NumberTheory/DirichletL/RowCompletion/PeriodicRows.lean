@@ -1,79 +1,23 @@
 import OAI.NumberTheory.DirichletL.ChineseRemainder.FrequencyLifts
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
-
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CanonicalRowCompletion
 open ActualEisensteinCubic CompletedGauss CanonicalQuadraticSieve CanonicalUnitEuler
@@ -203,12 +147,6 @@ lemma completedReflectionPool_divides (I Q:Ideal Eis) (hI:I≠0) (hQ:Q≠0)
     (P:completedReflectionPool I Q) : P.val∣I*Q :=
   ((mem_completedReflectionPool I Q P.val hI hQ).mp P.property).2.1
 
-lemma completedReflectionPool_coprime (I Q:Ideal Eis) :
-    Pairwise (fun P R:completedReflectionPool I Q=>IsCoprime P.val R.val) := by
-  let (P:completedReflectionPool I Q):P.val.IsMaximal:=completedReflectionPool_maximal I Q P
-  intro P R hPR
-  exact Ideal.isCoprime_of_isMaximal (Subtype.val_injective.ne hPR)
-
 theorem completedReflectionPool_eq_on_fiber (I J Q:Ideal Eis)
     (hI:I≠0) (hJ:J≠0) (hQ:Q≠0)
     (hA:rowPowerfulPart I=rowPowerfulPart J)
@@ -233,17 +171,6 @@ lemma completedReflectionPool_exponent_eq (I J F Q:Ideal Eis)
   rcases (mem_completedReflectionPool I Q P.val hI hQ).mp P.property with
     ⟨hP,hdiv,_,_,hres⟩
   exact (nonresidual_prime_transport I J F Q P.val hI hJ hP hA hT hdiv hres).2.2
-
-theorem completedBranchScale_eq_on_fiber {ι:Type*} [Fintype ι]
-    (K X:ℝ) (I J F Q:Ideal Eis) (hI:I≠0) (hJ:J≠0) (hQ:Q≠0)
-    (hA:rowPowerfulPart I=rowPowerfulPart J)
-    (hT:rowMaskPart I Q=rowMaskPart J Q)
-    (P:ι→Ideal Eis) (hP:∀i,P i∈completedReflectionPool I Q) (e:ι→Fin 3) :
-    completedBranchScale K X I F Q P e=completedBranchScale K X J F Q P e := by
-  have hj:(fun i=>completedLocalExponent I F (P i))=(fun i=>completedLocalExponent J F (P i)):=by
-    funext i
-    exact completedReflectionPool_exponent_eq I J F Q hI hJ hQ hA hT ⟨P i,hP i⟩
-  simp only [completedBranchScale,completedResidualScale_eq_on_fiber K I J Q hA hT,hj]
 
 end
 
@@ -366,191 +293,10 @@ noncomputable local instance reflectionWeightField (P:Ideal Eis) [P.IsMaximal] :
 noncomputable local instance reflectionWeightFintype (P:Ideal Eis) [P.IsMaximal] : Fintype (Eis⧸P) :=
   Fintype.ofFinite _
 
-variable {ι:Type*} [Fintype ι] [DecidableEq ι]
-
-def reflectionStratumWeight (P:ι→Ideal Eis) [∀i,(P i).IsMaximal]
-    (hg:∀i,lambda∉P i) (j:ι→ℕ)
-    (ψ:Finset ι→∀i,AddChar (Eis⧸P i) ℂ)
-    (σ ε:Finset ι→∀i,(Eis⧸P i)ˣ) (A:Finset ι) : ℂ :=
-  (∏i∈A,(((actualSextic (P i) (hg i))⁻¹)^2) (σ A i)*
-    phase (actualSextic (P i) (hg i)) (ψ A i) (j i) (ε A i))*
-  (∏i∈(Finset.univ:Finset ι)\A,zeroFourierCoefficient (actualSextic (P i) (hg i)) (j i))
-
-lemma reflectionStratumWeight_norm_le_one (P:ι→Ideal Eis) [∀i,(P i).IsMaximal]
-    (hg:∀i,lambda∉P i) (hc:∀i,ringChar (Eis⧸P i)≠2) (j:ι→ℕ) (hj:∀i,j i<6)
-    (ψ:Finset ι→∀i,AddChar (Eis⧸P i) ℂ) (hψ:∀A i,(ψ A i).IsPrimitive)
-    (σ ε:Finset ι→∀i,(Eis⧸P i)ˣ) (A:Finset ι) :
-    ‖reflectionStratumWeight P hg j ψ σ ε A‖≤1 := by
-  have hactive (i:ι) : ‖(((actualSextic (P i) (hg i))⁻¹)^2) (σ A i)*
-      phase (actualSextic (P i) (hg i)) (ψ A i) (j i) (ε A i)‖=1 := by
-    rw [norm_mul,FiniteRayExpansion.norm_char_unit]
-    simpa only [one_mul,actualSextic] using canonical_phase_norm (P i) (hg i) (hc i)
-      (ψ A i) (hψ A i) (j i) (hj i) (ε A i)
-  have hinactive (i:ι) : ‖zeroFourierCoefficient (actualSextic (P i) (hg i)) (j i)‖≤1 := by
-    by_cases hi:j i=0
-    · rw [hi]
-      exact zeroFourierCoefficient_zero_norm_le_one _
-    · have he:=canonical_zeroFourierCoefficient (P i) (hg i) (hc i) (j i) (hj i)
-      have hz:zeroFourierCoefficient (actualSextic (P i) (hg i)) (j i)=0 := by
-        simpa only [actualSextic,ite_eq_right hi] using he
-      rw [hz]
-      simp
-  rw [reflectionStratumWeight,norm_mul,norm_prod,norm_prod]
-  simp only [hactive,Finset.prod_const_one,one_mul]
-  exact Finset.prod_le_one₀ (fun _ _=>norm_nonneg _) (fun i _=>hinactive i)
-
-def reflectionSixWeight (P:ι→Ideal Eis) [∀i,(P i).IsMaximal]
-    (hg:∀i,lambda∉P i) (j:ι→ℕ)
-    (ψ:Finset ι→∀i,AddChar (Eis⧸P i) ℂ)
-    (σ ε:Finset ι→∀i,(Eis⧸P i)ˣ) (e:ι→Fin 6) : ℂ :=
-  if reflectionSixValid e then reflectionStratumWeight P hg j ψ σ ε (reflectionSixSupport e) else 0
-
-lemma reflectionSixWeight_norm_le_one (P:ι→Ideal Eis) [∀i,(P i).IsMaximal]
-    (hg:∀i,lambda∉P i) (hc:∀i,ringChar (Eis⧸P i)≠2) (j:ι→ℕ) (hj:∀i,j i<6)
-    (ψ:Finset ι→∀i,AddChar (Eis⧸P i) ℂ) (hψ:∀A i,(ψ A i).IsPrimitive)
-    (σ ε:Finset ι→∀i,(Eis⧸P i)ˣ) (e:ι→Fin 6) :
-    ‖reflectionSixWeight P hg j ψ σ ε e‖≤1 := by
-  unfold reflectionSixWeight
-  split_ifs
-  · exact reflectionStratumWeight_norm_le_one P hg hc j hj ψ hψ σ ε _
-  · simp
-
-theorem sum_reflectionStratumWeight_eq_six (P:ι→Ideal Eis) [∀i,(P i).IsMaximal]
-    (hg:∀i,lambda∉P i) (j:ι→ℕ)
-    (ψ:Finset ι→∀i,AddChar (Eis⧸P i) ℂ)
-    (σ ε:Finset ι→∀i,(Eis⧸P i)ˣ)
-    (G:∀A:Finset ι,(A→Fin 3)→ℂ) :
-    (∑A:Finset ι,∑e:A→Fin 3,reflectionStratumWeight P hg j ψ σ ε A*G A e)=
-      ∑e:ι→Fin 6,reflectionSixWeight P hg j ψ σ ε e*
-        G (decodeReflectionSix e).1 (decodeReflectionSix e).2 := by
-  rw [sum_active_exceptional_eq_six]
-  apply Finset.sum_congr rfl
-  intro e _
-  by_cases he:reflectionSixValid e <;> simp [reflectionSixWeight,he,decodeReflectionSix]
-
-theorem stratum_weighted_brackets_eq_branches (P:ι→Ideal Eis) [∀i,(P i).IsMaximal]
-    (hg:∀i,lambda∉P i) (j:ι→ℕ)
-    (ψ:Finset ι→∀i,AddChar (Eis⧸P i) ℂ)
-    (σ ε:Finset ι→∀i,(Eis⧸P i)ˣ) (A:Finset ι) (n b:Eis) :
-    reflectionStratumWeight P hg j ψ σ ε A*
-      (∏i:A,bracket (actualSextic (P i.val) (hg i.val)) (j i.val)
-        (Ideal.Quotient.mk (P i.val) (n*b^3)))=
-    ∑e:A→Fin 3,reflectionStratumWeight P hg j ψ σ ε A*
-      reflectedBranch (fun i:A=>P i.val) (fun i=>hg i.val) (fun i=>j i.val) e n b := by
-  rw [prod_bracket_eq_full_branches,Finset.mul_sum]
-  apply Finset.sum_congr
-  · ext e
-    simp
-  · intro e _
-    rfl
-
-theorem sum_reflectionSixWeight_unpad (P:ι→Ideal Eis) [∀i,(P i).IsMaximal]
-    (hg:∀i,lambda∉P i) (j:ι→ℕ)
-    (ψ:Finset ι→∀i,AddChar (Eis⧸P i) ℂ)
-    (σ ε:Finset ι→∀i,(Eis⧸P i)ˣ) (G:(ι→Fin 6)→ℂ) :
-    (∑e:ι→Fin 6,reflectionSixWeight P hg j ψ σ ε e*G e)=
-      ∑A:Finset ι,∑e:A→Fin 3,reflectionStratumWeight P hg j ψ σ ε A*
-        G (encodeReflectionSix ⟨A,e⟩) := by
-  rw [sum_reflectionStratumWeight_eq_six]
-  apply Finset.sum_congr rfl
-  intro e _
-  by_cases he:reflectionSixValid e
-  · rw [encode_decodeReflectionSix e he]
-  · simp only [reflectionSixWeight,ite_eq_right he,zero_mul]
-
 end
 section
 
 open ActualEisensteinCubic CubicEisenstein CanonicalQuadraticSieve CompletedDyadic
-local notation "Eis" => ActualEisensteinCubic.O
-
-def reflectionChoiceValue (I Q:Ideal Eis) (e:completedReflectionPool I Q→Fin 6)
-    (P:Ideal Eis) : Fin 6 :=
-  if h:P∈completedReflectionPool I Q then e ⟨P,h⟩ else 0
-
-def reflectionActivePool (I Q:Ideal Eis) (e:completedReflectionPool I Q→Fin 6) : Finset (Ideal Eis) :=
-  (completedReflectionPool I Q).filter (fun P=>reflectionSixActive (reflectionChoiceValue I Q e P))
-
-lemma reflectionActivePool_subset (I Q:Ideal Eis) (e:completedReflectionPool I Q→Fin 6) :
-    reflectionActivePool I Q e⊆completedReflectionPool I Q := Finset.filter_subset _ _
-
-lemma mem_reflectionActivePool (I Q:Ideal Eis) (e:completedReflectionPool I Q→Fin 6)
-    (P:completedReflectionPool I Q) :
-    P.val∈reflectionActivePool I Q e ↔ reflectionSixActive (e P) := by
-  rw [reflectionActivePool, Finset.mem_filter]
-  simp only [P.property, true_and]
-  rw [reflectionChoiceValue, dite_eq_left P.property]
-
-lemma reflectionActivePool_encode (I Q:Ideal Eis)
-    (A:Finset (completedReflectionPool I Q)) (e:A→Fin 3) :
-    reflectionActivePool I Q (encodeReflectionSix ⟨A,e⟩)=A.image Subtype.val := by
-  ext P
-  constructor
-  · intro hP
-    let p:completedReflectionPool I Q:=⟨P,reflectionActivePool_subset I Q _ hP⟩
-    have hp:p∈A:=(reflectionSixActive_encode ⟨A,e⟩ p).mp
-      ((mem_reflectionActivePool I Q _ p).mp hP)
-    exact Finset.mem_image.mpr ⟨p,hp,rfl⟩
-  · intro hP
-    obtain ⟨p,hp,rfl⟩:=Finset.mem_image.mp hP
-    exact (mem_reflectionActivePool I Q _ p).mpr ((reflectionSixActive_encode ⟨A,e⟩ p).mpr hp)
-
-def reflectionActiveLabel (I Q:Ideal Eis) (e:completedReflectionPool I Q→Fin 6)
-    (P:reflectionActivePool I Q e) : Fin 3 :=
-  reflectionSixLabel (e ⟨P.val,reflectionActivePool_subset I Q e P.property⟩)
-
-def sixReflectedBranch (I F Q:Ideal Eis) (hI:I≠0) (hQ:Q≠0)
-    (K levelBound levelScale:ℝ) (hlevel:0<levelScale) (hbound:levelScale≤levelBound)
-    (e:completedReflectionPool I Q→Fin 6)
-    (amplitude:ℕ→Ideal Eis→Ideal Eis→ℂ) (hamp:∀m n b,‖amplitude m n b‖≤1)
-    (rowPhase:ℕ→idealRange (completedResidualScale K I Q)→ℂ) (hrow:∀m k,‖rowPhase m k‖≤1) :
-    ReflectedBranchData levelBound K I F Q where
-  levelScale:=levelScale
-  levelScale_pos:=hlevel
-  levelScale_le:=hbound
-  primes:=reflectionActivePool I Q e
-  maximal:=fun P=>completedReflectionPool_maximal I Q ⟨P.val,reflectionActivePool_subset I Q e P.property⟩
-  good:=fun P=>completedReflectionPool_good I Q ⟨P.val,reflectionActivePool_subset I Q e P.property⟩
-  coprime:=by
-    intro P R hPR
-    let : P.val.IsMaximal:=completedReflectionPool_maximal I Q ⟨P.val,reflectionActivePool_subset I Q e P.property⟩
-    let : R.val.IsMaximal:=completedReflectionPool_maximal I Q ⟨R.val,reflectionActivePool_subset I Q e R.property⟩
-    exact Ideal.isCoprime_of_isMaximal (Subtype.val_injective.ne hPR)
-  divides:=fun P=>completedReflectionPool_divides I Q hI hQ ⟨P.val,reflectionActivePool_subset I Q e P.property⟩
-  nonresidual:=fun P=>completedReflectionPool_nonresidual I Q ⟨P.val,reflectionActivePool_subset I Q e P.property⟩
-  label:=reflectionActiveLabel I Q e
-  nColumns:=fun i=>dualIdealDyad i.2.2
-  bColumns:=fun i=>dualIdealDyad i.2.1
-  nBounds:=fun i n hn=>dualIdealDyad_bounds i.2.2 n hn
-  bBounds:=fun i b hb=>dualIdealDyad_bounds i.2.1 b hb
-  amplitude:=fun i=>amplitude i.1
-  amplitude_bound:=fun i n _ b _=>hamp i.1 n b
-  rowPhase:=fun i=>rowPhase i.1
-  rowPhase_bound:=fun i k=>hrow i.1 k
-
-def sixFixedCuspBranch (I F Q:Ideal Eis) (hI:I≠0) (hQ:Q≠0)
-    (K levelBound levelScale:ℝ) (hlevel:0<levelScale) (hbound:levelScale≤levelBound)
-    (e:completedReflectionPool I Q→Fin 6) (cusp:Fin 3) (u:Eisˣ)
-    (rowPhase:ℕ→idealRange (completedResidualScale K I Q)→ℂ) (hrow:∀m k,‖rowPhase m k‖≤1) :
-    ReflectedBranchData levelBound K I F Q :=
-  (sixReflectedBranch I F Q hI hQ K levelBound levelScale hlevel hbound e
-    (fixedConjugateCuspArray cusp u) (fixedConjugateCuspArray_norm_le_one cusp u) rowPhase hrow).withExtractedFixedCuspArray cusp u rowPhase hrow
-
-lemma sixFixedCuspBranch_primes (I F Q:Ideal Eis) (hI:I≠0) (hQ:Q≠0)
-    (K levelBound levelScale:ℝ) (hlevel:0<levelScale) (hbound:levelScale≤levelBound)
-    (e:completedReflectionPool I Q→Fin 6) (cusp:Fin 3) (u:Eisˣ)
-    (rowPhase:ℕ→idealRange (completedResidualScale K I Q)→ℂ) (hrow:∀m k,‖rowPhase m k‖≤1) :
-    (sixFixedCuspBranch I F Q hI hQ K levelBound levelScale hlevel hbound e cusp u rowPhase hrow).primes=
-      reflectionActivePool I Q e := rfl
-
-lemma sixFixedCuspBranch_scale (I F Q:Ideal Eis) (hI:I≠0) (hQ:Q≠0)
-    (K X levelBound levelScale:ℝ) (hlevel:0<levelScale) (hbound:levelScale≤levelBound)
-    (e:completedReflectionPool I Q→Fin 6) (cusp:Fin 3) (u:Eisˣ)
-    (rowPhase:ℕ→idealRange (completedResidualScale K I Q)→ℂ) (hrow:∀m k,‖rowPhase m k‖≤1) :
-    let d:=sixFixedCuspBranch I F Q hI hQ K levelBound levelScale hlevel hbound e cusp u rowPhase hrow
-    completedBranchScale K (X/d.levelScale) I F Q (fun P:d.primes=>P.val) d.label=
-      completedBranchScale K (X/levelScale) I F Q
-        (fun P:reflectionActivePool I Q e=>P.val) (reflectionActiveLabel I Q e) := rfl
 
 end
 
@@ -562,109 +308,6 @@ noncomputable local instance poolField (I Q:Ideal Eis) (P:completedReflectionPoo
   Ideal.Quotient.field P.val
 noncomputable local instance poolFintype (I Q:Ideal Eis) (P:completedReflectionPool I Q) : Fintype (Eis⧸P.val) :=
   Fintype.ofFinite _
-
-def reflectionInactiveStratumWeight (I F Q:Ideal Eis) (A:Finset (completedReflectionPool I Q)) : ℂ :=
-  ∏P∈(Finset.univ:Finset (completedReflectionPool I Q))\A,
-    zeroFourierCoefficient (actualSextic P.val (completedReflectionPool_good I Q P))
-      (completedLocalExponent I F P.val)
-
-lemma reflectionInactiveStratumWeight_norm_le_one (I F Q:Ideal Eis)
-    (A:Finset (completedReflectionPool I Q)) : ‖reflectionInactiveStratumWeight I F Q A‖≤1 := by
-  rw [reflectionInactiveStratumWeight,norm_prod]
-  apply Finset.prod_le_one₀ (fun _ _=>norm_nonneg _)
-  intro P _
-  by_cases hj:completedLocalExponent I F P.val=0
-  · rw [hj]
-    exact zeroFourierCoefficient_zero_norm_le_one _
-  · have he:=canonical_zeroFourierCoefficient P.val (completedReflectionPool_good I Q P)
-      (completedReflectionPool_odd I Q P) (completedLocalExponent I F P.val)
-      (Nat.mod_lt _ (by decide : 0<6))
-    have hz:zeroFourierCoefficient (actualSextic P.val (completedReflectionPool_good I Q P))
-        (completedLocalExponent I F P.val)=0 := by
-      simpa only [actualSextic,ite_eq_right hj] using he
-    rw [hz]
-    simp
-
-def reflectionSixInactiveWeight (I F Q:Ideal Eis) (e:completedReflectionPool I Q→Fin 6) : ℂ :=
-  if reflectionSixValid e then reflectionInactiveStratumWeight I F Q (reflectionSixSupport e) else 0
-
-lemma reflectionSixInactiveWeight_norm_le_one (I F Q:Ideal Eis)
-    (e:completedReflectionPool I Q→Fin 6) : ‖reflectionSixInactiveWeight I F Q e‖≤1 := by
-  unfold reflectionSixInactiveWeight
-  split_ifs
-  · exact reflectionInactiveStratumWeight_norm_le_one I F Q _
-  · simp
-
-lemma sum_reflectionSixInactiveWeight_unpad (I F Q:Ideal Eis)
-    (G:(completedReflectionPool I Q→Fin 6)→ℂ) :
-    (∑e:completedReflectionPool I Q→Fin 6,reflectionSixInactiveWeight I F Q e*G e)=
-      ∑A:Finset (completedReflectionPool I Q),∑e:A→Fin 3,
-        reflectionInactiveStratumWeight I F Q A*G (encodeReflectionSix ⟨A,e⟩) := by
-  rw [sum_active_exceptional_eq_six]
-  apply Finset.sum_congr rfl
-  intro e _
-  by_cases he:reflectionSixValid e
-  · rw [ite_eq_left he,encode_decodeReflectionSix e he]
-    simp only [reflectionSixInactiveWeight,ite_eq_left he,decodeReflectionSix]
-  · simp only [ite_eq_right he,reflectionSixInactiveWeight,zero_mul]
-
-abbrev SixReflectionIndex (rays:ℕ) (I Q:Ideal Eis) :=
-  Fin rays×(completedReflectionPool I Q→Fin 6)
-
-def sixFixedCuspFiber (rays:ℕ) (I F Q:Ideal Eis) (hI:I≠0) (hQ:Q≠0)
-    (K levelBound:ℝ) (levelScale:SixReflectionIndex rays I Q→ℝ)
-    (hlevel:∀x,0<levelScale x) (hlevelBound:∀x,levelScale x≤levelBound)
-    (cusp:SixReflectionIndex rays I Q→Fin 3) (unit:SixReflectionIndex rays I Q→Eisˣ)
-    (rayWeight:SixReflectionIndex rays I Q→ℂ) (hray:∀x,‖rayWeight x‖≤1)
-    (rowPhase:SixReflectionIndex rays I Q→ℕ→idealRange (completedResidualScale K I Q)→ℂ)
-    (hrow:∀x m k,‖rowPhase x m k‖≤1) : ReflectedFiberData rays levelBound K I F Q where
-  pool:=completedReflectionPool I Q
-  maximal:=completedReflectionPool_maximal I Q
-  divides:=completedReflectionPool_divides I Q hI hQ
-  branch:=fun x=>sixFixedCuspBranch I F Q hI hQ K levelBound (levelScale x) (hlevel x) (hlevelBound x)
-    x.2 (cusp x) (unit x) (rowPhase x) (hrow x)
-  weight:=fun x=>rayWeight x*reflectionSixInactiveWeight I F Q x.2
-  weight_bound:=by
-    intro x
-    rw [norm_mul]
-    exact (mul_le_of_le_one_left (norm_nonneg _)
-      (hray x)).trans (reflectionSixInactiveWeight_norm_le_one I F Q x.2)
-
-theorem sixFixedCuspFiber_value (rays:ℕ) (I F Q:Ideal Eis) (hI:I≠0) (hQ:Q≠0)
-    (K levelBound:ℝ) (levelScale:SixReflectionIndex rays I Q→ℝ)
-    (hlevel:∀x,0<levelScale x) (hlevelBound:∀x,levelScale x≤levelBound)
-    (cusp:SixReflectionIndex rays I Q→Fin 3) (unit:SixReflectionIndex rays I Q→Eisˣ)
-    (rayWeight:SixReflectionIndex rays I Q→ℂ) (hray:∀x,‖rayWeight x‖≤1)
-    (rowPhase:SixReflectionIndex rays I Q→ℕ→idealRange (completedResidualScale K I Q)→ℂ)
-    (hrow:∀x m k,‖rowPhase x m k‖≤1)
-    (W:ℝ→ℂ) (X ρ q:ℝ) (k:idealRange (completedResidualScale K I Q)) :
-    let d:=sixFixedCuspFiber rays I F Q hI hQ K levelBound levelScale hlevel hlevelBound
-      cusp unit rayWeight hray rowPhase hrow
-    d.value W X ρ q k=
-      ∑t:Fin rays,∑A:Finset (completedReflectionPool I Q),∑e:A→Fin 3,
-        reflectionInactiveStratumWeight I F Q A*rayWeight (t,encodeReflectionSix ⟨A,e⟩)*
-          (d.branch (t,encodeReflectionSix ⟨A,e⟩)).value W X ρ q k := by
-  dsimp only
-  rw [ReflectedFiberData.value,Fintype.sum_prod_type]
-  apply Finset.sum_congr rfl
-  intro t _
-  calc
-    _=∑e:completedReflectionPool I Q→Fin 6,reflectionSixInactiveWeight I F Q e*
-      (rayWeight (t,e)*(sixFixedCuspBranch I F Q hI hQ K levelBound (levelScale (t,e))
-        (hlevel (t,e)) (hlevelBound (t,e)) e (cusp (t,e)) (unit (t,e))
-        (rowPhase (t,e)) (hrow (t,e))).value W X ρ q k) := by
-          apply Finset.sum_congr rfl
-          intro e _
-          dsimp only [sixFixedCuspFiber]
-          ring
-    _=_ := by
-      rw [sum_reflectionSixInactiveWeight_unpad]
-      apply Finset.sum_congr rfl
-      intro A _
-      apply Finset.sum_congr rfl
-      intro e _
-      dsimp only [sixFixedCuspFiber]
-      exact (mul_assoc _ _ _).symm
 
 end CompletedGauss
 

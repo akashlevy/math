@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.SpectralCoefficient
 import OAI.NumberTheory.DirichletL.Detector.PhysicalNorms
 import OAI.NumberTheory.DirichletL.Detector.RadialIdentity
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondParentRadial
-import OAI.NumberTheory.DirichletL.Descent.SecondCenterSector
-
+import OAI.NumberTheory.DirichletL.Descent.SecondVariableCutoff
 namespace OAI
 
 namespace SevenEighths.InverseMoment

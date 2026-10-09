@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.ZeroGrowthReflection
 import OAI.NumberTheory.DirichletL.Energy.ZeroReferenceError
-
 namespace OAI
 
 noncomputable section

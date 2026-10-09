@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.ArbitraryCuspPullback
 import OAI.NumberTheory.DirichletL.Reciprocity.CubeCorrespondence
-
 namespace OAI
 
 noncomputable section
@@ -9,133 +8,26 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open Filter MeasureTheory Asymptotics
-open scoped BigOperators Classical Topology MatrixGroups
-open Finset AddChar MulChar EisensteinEmbedding
-
-theorem cuspBarProfile_conjugate_reflection (G : CubicKubota.levelThree)
-    (g H : SL(2,ℂ)) (hfactor : g=complexMatrix G*H) (hc : g 1 0≠0)
-    (v : ℝ) (hv : 0<v) :
-    cuspBarProfile cubicSourceConjugateFunction (g 0 0/g 1 0) v=
-      reflectedCuspProfile (-star (CubicKubota.complexCharacter G)/(g 1 0)^2)
-        (‖g 1 0‖^2)
-        (cuspZProfile (fun w=>cubicSourceConjugateFunction (H•w)) (-g 1 1/g 1 0)) v := by
-  have hdual : 0<(‖g 1 0‖^2*v)⁻¹ := by positivity
-  rw [cuspBarProfile_positive _ _ _ hv,reflectedCuspProfile,cuspZProfile_positive _ _ _ hdual]
-  have he := cubicSourceConjugateFunction_cuspDerivative G g H hfactor hc v hv
-  have hpow : (v:ℂ)^(-2:ℂ)=((v:ℂ)^2)⁻¹ := by
-    rw [Complex.cpow_neg,Complex.cpow_ofNat]
-  rw [hpow]
-  simp only [one_div] at he
-  rw [he]
-  ring
-
-theorem conjugateSource_principal_cusp_mellin_entire (G : CubicKubota.levelThree)
-    (hc : complexMatrix G 1 0≠0) :
-    (∀s : ℂ,MellinConvergent
-      (cuspBarProfile cubicSourceConjugateFunction (complexMatrix G 0 0/complexMatrix G 1 0)) s) ∧
-    Differentiable ℂ
-      (mellin (cuspBarProfile cubicSourceConjugateFunction (complexMatrix G 0 0/complexMatrix G 1 0))) := by
-  let g := complexMatrix G
-  apply cusp_mellin_entire
-    (cuspBarProfile cubicSourceConjugateFunction (g 0 0/g 1 0))
-    (cuspZProfile cubicSourceConjugateFunction (-g 1 1/g 1 0))
-    (-star (CubicKubota.complexCharacter G)/(g 1 0)^2) (‖g 1 0‖^2)
-    residualCuspDecayRate residualCuspDecayRate
-  · change 0<‖complexMatrix G 1 0‖^2
-    positivity
-  · exact residualCuspDecayRate_pos
-  · exact residualCuspDecayRate_pos
-  · exact cuspBarProfile_conjugate_continuousOn _
-  · exact cuspZProfile_conjugate_continuousOn _
-  · exact cuspBarProfile_conjugate_isBigO _
-  · exact cuspZProfile_conjugate_isBigO _
-  · intro v hv
-    simpa only [one_smul] using cuspBarProfile_conjugate_reflection G g 1 (by simp [g]) hc v hv
-
-theorem conjugateSource_cusp_mellin_reflection (G : CubicKubota.levelThree)
-    (g H : SL(2,ℂ)) (hfactor : g=complexMatrix G*H) (hc : g 1 0≠0) (s : ℂ) :
-    mellin (cuspBarProfile cubicSourceConjugateFunction (g 0 0/g 1 0)) (2*s)=
-      (-star (CubicKubota.complexCharacter G)/(g 1 0)^2)*(‖g 1 0‖^2:ℝ)^(2-2*s:ℂ)*
-        mellin (cuspZProfile (fun w=>cubicSourceConjugateFunction (H•w)) (-g 1 1/g 1 0)) (2-2*s) := by
-  apply cusp_mellin_reflection_of_identity _ _ _ _ _ (by positivity)
-  intro v hv
-  exact cuspBarProfile_conjugate_reflection G g H hfactor hc v hv
+open scoped MatrixGroups
 
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
-open Finset AddChar MulChar EisensteinEmbedding
 
 local notation "O" => ActualEisensteinCubic.O
 
@@ -238,9 +130,7 @@ end SubexponentialBesselCoefficients
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups
-open Finset AddChar MulChar EisensteinEmbedding
+open scoped MatrixGroups
 
 def cuspSpatialInput (q : ℝ × ℂ) : SpatialCoordinates := ![q.2.re,q.2.im,q.1]
 def cuspSpatialOutput (p : SpatialCoordinates) : ℝ × ℂ := (p 2,spatialHorizontal p)
@@ -258,9 +148,6 @@ lemma cuspSpatialInput_contDiff : ContDiff ℝ 1 cuspSpatialInput := by
 
 lemma cuspSpatialOutput_contDiff : ContDiff ℝ 1 cuspSpatialOutput :=
   (contDiff_apply ℝ ℝ 2).prodMk (spatialHorizontal_contDiff.of_le (by simp))
-
-lemma cuspSpatialInput_horizontal (q : ℝ × ℂ) : spatialHorizontal (cuspSpatialInput q)=q.2 :=
-  Complex.re_add_im q.2
 
 lemma cuspSpatialAction_lift (g : SL(2,ℂ)) (q : ℝ × ℂ) (hq : 0<q.1) :
     cuspCoordinateLift (cuspSpatialOutput (mobiusSpatial g (cuspSpatialInput q)))=
@@ -333,42 +220,6 @@ lemma cubicSourceConjugateFunction_translate_split_contDiffAt_one (g : SL(2,ℂ)
   exact Complex.conjCLE.contDiff.contDiffAt.comp p
     (cubicSourceResidualFunction_translate_split_contDiffAt_one g p hp)
 
-lemma horizontalWirtingerBar_eq_fderiv (F : ℂ × ℝ→ℂ) (A : (ℂ × ℝ)→L[ℝ]ℂ)
-    (z : ℂ) (v : ℝ) (hF : HasFDerivAt F A (z,v)) :
-    horizontalWirtingerBar (fun w=>F (w,v)) z=
-      (1/2:ℂ)*(A (1,0)+Complex.I*A (Complex.I,0)) := by
-  have hline (direction : ℂ) :
-      HasDerivAt (fun t : ℝ=>F (z+(t:ℂ)*direction,v)) (A (direction,0)) 0 := by
-    have hz : HasDerivAt (fun t : ℝ=>z+(t:ℂ)*direction) direction 0 := by
-      simpa using (((hasDerivAt_id (0:ℝ)).ofReal_comp.mul_const direction).const_add z)
-    have hp := hz.prodMk (hasDerivAt_const (0:ℝ) v)
-    have hf : HasFDerivAt F A (z+(0:ℂ)*direction,v) := by simpa using hF
-    exact hf.comp_hasDerivAt 0 hp
-  have h1 := (hline 1).deriv
-  have hI := (hline Complex.I).deriv
-  simp only [mul_one] at h1
-  rw [horizontalWirtingerBar,h1,hI]
-
-lemma cuspBarProfile_continuousOn_of_contDiff (f : HyperbolicSpace→ℂ)
-    (hreg : ∀p : ℂ × ℝ,0<p.2 → ContDiffAt ℝ 1
-      (fun q : ℂ × ℝ=>f (cuspCoordinateLift (q.2,q.1))) p) (z : ℂ) :
-    ContinuousOn (cuspBarProfile f z) (Set.Ioi 0) := by
-  let F : ℂ × ℝ→ℂ := fun q=>f (cuspCoordinateLift (q.2,q.1))
-  intro v hv
-  have hd : ContinuousAt (fderiv ℝ F) (z,v) :=
-    (hreg (z,v) hv).continuousAt_fderiv (by norm_num)
-  have hc : ContinuousAt (fun y : ℝ=>(z,y)) v := continuousAt_const.prodMk continuousAt_id
-  have h1 := (hd.comp hc).clm_apply (continuousAt_const (y:=((1,0):ℂ × ℝ)))
-  have hI := (hd.comp hc).clm_apply (continuousAt_const (y:=((Complex.I,0):ℂ × ℝ)))
-  have hformula : ContinuousAt (fun y : ℝ=>(1/2:ℂ)*
-      ((fderiv ℝ F (z,y)) (1,0)+Complex.I*(fderiv ℝ F (z,y)) (Complex.I,0))) v :=
-    continuousAt_const.mul (h1.add (continuousAt_const.mul hI))
-  apply ContinuousAt.continuousWithinAt
-  apply hformula.congr_of_eventuallyEq
-  filter_upwards [Ioi_mem_nhds (show 0<v from hv)] with y hy
-  exact horizontalWirtingerBar_eq_fderiv F (fderiv ℝ F (z,y)) z y
-    ((hreg (z,y) hy).differentiableAt (by norm_num)).hasFDerivAt
-
 lemma cuspZProfile_continuousOn_of_contDiff (f : HyperbolicSpace→ℂ)
     (hreg : ∀p : ℂ × ℝ,0<p.2 → ContDiffAt ℝ 1
       (fun q : ℂ × ℝ=>f (cuspCoordinateLift (q.2,q.1))) p) (z : ℂ) :
@@ -389,21 +240,6 @@ lemma cuspZProfile_continuousOn_of_contDiff (f : HyperbolicSpace→ℂ)
   exact horizontalWirtingerZ_eq_fderiv F (fderiv ℝ F (z,y)) z y
     ((hreg (z,y) hy).differentiableAt (by norm_num)).hasFDerivAt
 
-lemma cuspBarProfile_source_translate_continuousOn (H : SL(2,ℂ)) (z : ℂ) :
-    ContinuousOn (cuspBarProfile (fun w=>cubicSourceResidualFunction (H•w)) z) (Set.Ioi 0) :=
-  cuspBarProfile_continuousOn_of_contDiff _
-    (cubicSourceResidualFunction_translate_split_contDiffAt_one H) z
-
-lemma cuspZProfile_source_translate_continuousOn (H : SL(2,ℂ)) (z : ℂ) :
-    ContinuousOn (cuspZProfile (fun w=>cubicSourceResidualFunction (H•w)) z) (Set.Ioi 0) :=
-  cuspZProfile_continuousOn_of_contDiff _
-    (cubicSourceResidualFunction_translate_split_contDiffAt_one H) z
-
-lemma cuspBarProfile_conjugate_translate_continuousOn (H : SL(2,ℂ)) (z : ℂ) :
-    ContinuousOn (cuspBarProfile (fun w=>cubicSourceConjugateFunction (H•w)) z) (Set.Ioi 0) :=
-  cuspBarProfile_continuousOn_of_contDiff _
-    (cubicSourceConjugateFunction_translate_split_contDiffAt_one H) z
-
 lemma cuspZProfile_conjugate_translate_continuousOn (H : SL(2,ℂ)) (z : ℂ) :
     ContinuousOn (cuspZProfile (fun w=>cubicSourceConjugateFunction (H•w)) z) (Set.Ioi 0) :=
   cuspZProfile_continuousOn_of_contDiff _
@@ -412,10 +248,8 @@ lemma cuspZProfile_conjugate_translate_continuousOn (H : SL(2,ℂ)) (z : ℂ) :
 end
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical
 
-open ActualEisensteinCubic ConcreteTraceCRT CubicRamified
+open CubicRamified
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma ninth_trace_character_period (c x : Eis) :
@@ -491,9 +325,9 @@ theorem ramifiedSource_zero_mode19 (v : ℝ) (hv : 0<v) :
 
 end
 
-open scoped BigOperators Classical MatrixGroups Matrix
+open scoped MatrixGroups Matrix
 
-open ActualEisensteinCubic CubicKubota ConcreteTraceCRT CubicJacobiGlobal
+open CubicKubota CubicJacobiGlobal
 local notation "Eis" => ActualEisensteinCubic.O
 
 abbrev UnitLowerData := Σa:PrimaryLower,{d:PrimaryLower//IsCoprime a.val d.val}
@@ -599,12 +433,6 @@ lemma unitLower_summand (u : Eisˣ) (z : ℂ) (v : ℝ) (hv : 0<v)
       (((heightDenominator z v r/v:ℝ):ℂ))⁻¹ := by
     simp only [Complex.ofReal_div,inv_div]
   rw [hi,Complex.inv_cpow_ofReal_nonneg (div_nonneg hp.le hv.le),Complex.cpow_neg]
-
-theorem unitLowerEisenstein_eq_rows (u : Eisˣ) (z : ℂ) (v : ℝ) (hv : 0<v) (s : ℂ) :
-    eisenstein (integralComplexMatrix (lowerCuspMatrix (u:Eis))*upperSection z v hv) s=
-      ∑'p:UnitLowerData,unitLowerTerm u z v s p.1.val p.2.val.val := by
-  rw [eisenstein,←primitiveRowEquiv.symm.tsum_eq,←(unitLowerEquiv u).tsum_eq]
-  exact tsum_congr (unitLower_summand u z v hv s)
 
 end CubicEisenstein
 

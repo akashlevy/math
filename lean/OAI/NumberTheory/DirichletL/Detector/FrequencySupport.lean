@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.CalibrationCRT
 import OAI.NumberTheory.DirichletL.Detector.PhysicalPoisson
-
 namespace OAI
 
 noncomputable section

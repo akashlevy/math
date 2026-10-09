@@ -1,5 +1,8 @@
-import OAI.NumberTheory.DirichletL.Descent.SecondPhysicalRecursive
-
+import OAI.NumberTheory.DirichletL.Descent.SecondModeIntegral
+import OAI.NumberTheory.DirichletL.Descent.SecondWholeMass
+import OAI.NumberTheory.DirichletL.Descent.SecondSectorAssembly
+import OAI.NumberTheory.DirichletL.Descent.SecondBalancedSource
+import OAI.NumberTheory.DirichletL.Descent.SecondNormalizedEnergy
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -47,13 +50,6 @@ theorem attachSecondExpansion_recover {Jo : ℕ} (x : MarkedSecondSource ι Jo 0
   funext i
   exact Fin.elim0 i
 
-def secondSourceParentEquiv {Jo : ℕ} :
-    SecondParentSource ι Jo × SecondExpansionData ι ≃ MarkedSecondSource ι Jo 0 where
-  toFun x := attachSecondExpansion x.1 x.2
-  invFun x := (secondParentOf x,x.second)
-  left_inv x := by cases x; rfl
-  right_inv := attachSecondExpansion_recover
-
 variable (p : ι → Eis) (hp : ∀ i,p i ≠ 0) [∀ i,(Ideal.span {p i}).IsMaximal]
   (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
   (hg : ∀ i,ConcretePrimeRowBridge.goodLambda ∉ Ideal.span {p i})
@@ -70,38 +66,6 @@ def secondParentPuncture {Jo : ℕ} (m : Eis) (parent : SecondParentSource ι Jo
   (m*ConcretePrimeRowBridge.idealGenerator parent.quotient)*
     b0Label p parent.cube.support (fun i => parent.cube.leftExponent i+parent.cube.rightExponent i)
       parent.cube.leftBit parent.cube.rightBit*secondParentDivisor p parent
-
-omit [∀ (i : ι), (Ideal.span {p i}).IsMaximal] in
-theorem attached_source_conditions {Jo : ℕ} (parent : SecondParentSource ι Jo)
-    (source : Finset (SecondExpansionData ι))
-    (ha : parent.cube.Admissible) (hC : Disjoint parent.firstCommon parent.cube.support)
-    (hD : parent.firstDivisor ⊆ parent.firstCommon∪parent.cube.support)
-    (hE : ∀ x∈source,x.divisor ⊆ x.sourceCommon)
-    (hold : ∀ i,(parent.oldAssigned i).val ∣
-      sourceIdeal p parent.cube.support*sourceIdeal p parent.firstCommon*parent.quotient)
-    (hq : parent.quotient ≠ 0) :
-    ActualSecondSourceConditions p (source.image (attachSecondExpansion parent)) := by
-  constructor
-  · intro x hx
-    obtain ⟨y,hy,rfl⟩ := Finset.mem_image.mp hx
-    exact ha
-  · intro x hx
-    obtain ⟨y,hy,rfl⟩ := Finset.mem_image.mp hx
-    exact hC
-  · intro x hx
-    obtain ⟨y,hy,rfl⟩ := Finset.mem_image.mp hx
-    exact hD
-  · intro x hx
-    obtain ⟨y,hy,rfl⟩ := Finset.mem_image.mp hx
-    exact hE y hy
-  · intro x hx
-    obtain ⟨y,hy,rfl⟩ := Finset.mem_image.mp hx
-    exact hold
-  · intro x hx i
-    exact Fin.elim0 i
-  · intro x hx
-    obtain ⟨y,hy,rfl⟩ := Finset.mem_image.mp hx
-    exact hq
 
 omit [∀ (i : ι), (Ideal.span {p i}).IsMaximal] in
 theorem attached_inherited_profile {Jo : ℕ} (parent : SecondParentSource ι Jo)

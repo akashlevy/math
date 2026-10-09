@@ -1,6 +1,6 @@
-import OAI.NumberTheory.DirichletL.TraceConductor
+import OAI.NumberTheory.DirichletL.TraceCharacter
+import OAI.NumberTheory.DirichletL.ConductorPresentation
 import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
-
 namespace OAI
 
 noncomputable section
@@ -242,11 +242,6 @@ theorem parameter_pos (t : ℝ) (ht : 0 < t) : 0 < parameter c t := by
     (mul_pos (Real.sqrt_pos.mpr (by norm_num))
       (norm_pos_iff.mpr (eisEmbedding_ne_zero (NeZero.ne c))))
 
-theorem theta_summable (χ : MulChar (O ⧸ Ideal.span {c}) ℂ) (t : ℝ) (ht : 0 < t) :
-    Summable (fun z : O => χ (Ideal.Quotient.mk (Ideal.span {c}) z) *
-      gaussian (parameter c t) (eisEmbedding z)) :=
-  weighted_gaussian_summable _ χ _ (parameter_pos c t ht)
-
 theorem parameter_dual (t : ℝ) (ht : 0 < t) :
     4 / (3 * (parameter c t * ‖eisEmbedding c‖ ^ 2)) = parameter c (1 / t) := by
   have hn : ‖eisEmbedding c‖ ≠ 0 := norm_ne_zero_iff.mpr (eisEmbedding_ne_zero (NeZero.ne c))
@@ -279,32 +274,6 @@ theorem theta_functional_equation (χ : MulChar (O ⧸ Ideal.span {c}) ℂ)
   push_cast
   ring
 
-def constantTerm (χ : MulChar (O ⧸ Ideal.span {c}) ℂ) : ℂ := χ 0
-
-omit [NeZero c] in
-theorem constantTerm_eq (χ : MulChar (O ⧸ Ideal.span {c}) ℂ) :
-    constantTerm c χ = if IsUnit c then 1 else 0 := by
-  unfold constantTerm
-  by_cases hu : IsUnit c
-  · rw [ite_eq_left hu]
-    have h10 : (1 : O ⧸ Ideal.span {c}) = 0 := by
-      apply Ideal.Quotient.eq_zero_iff_mem.mpr
-      rw [Ideal.span_singleton_eq_top.mpr hu]
-      trivial
-    rw [← h10, map_one]
-  · rw [ite_eq_right hu]
-    apply MulChar.map_nonunit
-    intro hz
-    have h10 := (isUnit_zero_iff.mp hz).symm
-    have h1 : (1 : O) ∈ Ideal.span {c} := Ideal.Quotient.eq_zero_iff_mem.mp h10
-    exact hu (Ideal.span_singleton_eq_top.mp ((Ideal.eq_top_iff_one _).mpr h1))
-
-omit [NeZero c] in
-theorem theta_zero_term (χ : MulChar (O ⧸ Ideal.span {c}) ℂ) (t : ℝ) :
-    χ (Ideal.Quotient.mk (Ideal.span {c}) (0 : O)) *
-      gaussian (parameter c t) (eisEmbedding 0) = constantTerm c χ := by
-  simp [gaussian, constantTerm]
-
 theorem theta_inversion (χ : MulChar (O ⧸ Ideal.span {c}) ℂ)
     (hχ : FiniteFourier.IsPrimitiveOnIdeals χ) (t : ℝ) (ht : 0 < t) :
     theta c χ (1 / t) = (TraceCharacter.normalizedGauss c χ * (t : ℂ)) * theta c χ⁻¹ t := by
@@ -317,42 +286,6 @@ theorem theta_root_nonzero (χ : MulChar (O ⧸ Ideal.span {c}) ℂ)
   intro hz
   rw [hz, norm_zero] at h
   exact zero_ne_one h
-
-theorem embedding_unit_norm (u : Oˣ) : ‖eisEmbedding (u : O)‖ = 1 := by
-  have h := eisEmbedding_norm_sq_eq_absNorm_span (u : O)
-  rw [Ideal.span_singleton_eq_top.mpr u.isUnit, Ideal.absNorm_top, Nat.cast_one] at h
-  nlinarith [norm_nonneg (eisEmbedding (u : O))]
-
-omit [NeZero c] in
-
-theorem theta_mul_global_unit (χ : MulChar (O ⧸ Ideal.span {c}) ℂ) (t : ℝ) (u : Oˣ) :
-    theta c χ t = χ (Ideal.Quotient.mk (Ideal.span {c}) (u : O)) * theta c χ t := by
-  have h := u.mulLeft.tsum_eq (fun z : O =>
-    χ (Ideal.Quotient.mk (Ideal.span {c}) z) * gaussian (parameter c t) (eisEmbedding z))
-  calc
-    theta c χ t = ∑' z : O,
-        χ (Ideal.Quotient.mk (Ideal.span {c}) ((u : O) * z)) *
-          gaussian (parameter c t) (eisEmbedding ((u : O) * z)) := h.symm
-    _ = χ (Ideal.Quotient.mk (Ideal.span {c}) (u : O)) * theta c χ t := by
-      rw [theta, ← tsum_mul_left]
-      apply tsum_congr
-      intro z
-      simp only [map_mul, gaussian, norm_mul, embedding_unit_norm, one_mul, mul_assoc]
-
-omit [NeZero c] in
-
-theorem theta_eq_zero_of_global_unit (χ : MulChar (O ⧸ Ideal.span {c}) ℂ) (t : ℝ)
-    (u : Oˣ) (hu : χ (Ideal.Quotient.mk (Ideal.span {c}) (u : O)) ≠ 1) :
-    theta c χ t = 0 :=
-  eq_zero_of_mul_eq_self_left hu (theta_mul_global_unit c χ t u).symm
-
-omit [NeZero c] in
-theorem global_unit_invariant_of_theta_ne_zero
-    (χ : MulChar (O ⧸ Ideal.span {c}) ℂ) (t : ℝ) (ht : theta c χ t ≠ 0) :
-    ∀ u : Oˣ, χ (Ideal.Quotient.mk (Ideal.span {c}) (u : O)) = 1 := by
-  intro u
-  by_contra hu
-  exact ht (theta_eq_zero_of_global_unit c χ t u hu)
 
 end SevenEighths.GaussianTheta
 

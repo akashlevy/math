@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GramCommonActual
-
 namespace OAI
 
 noncomputable section
@@ -50,18 +49,6 @@ theorem actual_common_lift (C n₁ n₂ k : O)
     _ = idealRowHom k (Ideal.span {n₁})*star (idealRowHom (-k) (Ideal.span {n₂}))*
         (idealRowHom n₁ (Ideal.span {n₂})*star (idealRowHom n₂ (Ideal.span {n₁})))*actualCommon C hC n₁ n₂ k := by ring
     _ = _ := by rw [hphase]
-
-theorem actual_common_norm (C n₁ n₂ k : O)
-    (hC : Supported (Ideal.span {C})) (h₁ : Supported (Ideal.span {n₁}))
-    (h₂ : Supported (Ideal.span {n₂})) (hn : IsCoprime n₁ n₂) :
-    ‖actualCorrelation (C*n₁) (C*n₂) (supported_mul_elements C n₁ hC h₁)
-      (supported_mul_elements C n₂ hC h₂) (C*k)‖≤(Ideal.absNorm (Ideal.span {C}):ℝ) := by
-  obtain ⟨a,b,hab⟩ := hn
-  rw [actual_common_lift_bezout C n₁ n₂ a b k hC h₁ h₂ hab,norm_mul,norm_mul,norm_star]
-  have hc := actualCommon_norm C hC n₁ n₂ k ⟨a,b,hab⟩
-  have hp : ‖idealRowHom (b*k) (Ideal.span {n₁})‖*‖idealRowHom (-a*k) (Ideal.span {n₂})‖≤1 :=
-    (mul_le_of_le_one_left (norm_nonneg _) (idealRowHom_norm _ _)).trans (idealRowHom_norm _ _)
-  exact (mul_le_mul_of_nonneg_right hp (norm_nonneg _)).trans (by simpa using hc)
 
 end SevenEighths.ProbeGramCommon
 end

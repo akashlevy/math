@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialHighFrequencyTailScale
-
 namespace OAI
 
 noncomputable section

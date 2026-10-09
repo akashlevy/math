@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.MellinBoundary
 import OAI.NumberTheory.DirichletL.Hecke.LogarithmicInput
 import OAI.NumberTheory.DirichletL.Hecke.DeletionBounds
-
 namespace OAI
 
 noncomputable section
@@ -71,16 +70,10 @@ theorem principal_poleRemoved_growth (χ : Character) (hχ : χ.residue=1)
 
 def wAmplitude (M : Ideal HeckeFamily.O) (cw : ℝ) : ℝ := 9*(cw+2)*principalConstant M
 
-def zAmplitude (M : Ideal HeckeFamily.O) : ℝ := 216*principalConstant M
-
 theorem wAmplitude_pos (M : Ideal HeckeFamily.O) [NeZero M] {cw : ℝ} (hcw : 1<cw) :
     0<wAmplitude M cw := by
   unfold wAmplitude
   exact mul_pos (mul_pos (by norm_num) (by linarith)) (principalConstant_pos M)
-
-theorem zAmplitude_pos (M : Ideal HeckeFamily.O) [NeZero M] : 0<zAmplitude M := by
-  unfold zAmplitude
-  exact mul_pos (by norm_num) (principalConstant_pos M)
 
 theorem fixed_principal_w_growth (M : Ideal HeckeFamily.O) [NeZero M]
     {cw : ℝ} (hcw : 1<cw) {x : ℝ} (hx : x∈Icc (19/20 : ℝ) cw) (t : ℝ) :
@@ -111,36 +104,6 @@ theorem fixed_principal_w_growth (M : Ideal HeckeFamily.O) [NeZero M]
       gcongr
     _ = _ := by unfold wAmplitude; ring
 
-theorem fixed_principal_z_growth (M : Ideal HeckeFamily.O) [NeZero M]
-    {e : ℝ} (he : 0<e) (he' : e≤2/3) {x : ℝ}
-    (hx : x∈Icc (33/200 : ℝ) (1/6+e)) (t : ℝ) :
-    ‖HeckeOrigin.poleRemoved (fixedPrincipal M) (6*((x:ℂ)+t*I))‖≤zAmplitude M*height t^3 := by
-  have hre : (6*((x:ℂ)+t*I) : ℂ).re=6*x := by simp
-  have him : (6*((x:ℂ)+t*I) : ℂ).im=6*t := by simp
-  have habs : |(6*((x:ℂ)+t*I) : ℂ).im|=6*|t| := by rw [him,abs_mul]; norm_num
-  have hb := principal_poleRemoved_growth (fixedPrincipal M) rfl
-    (show (19/20 : ℝ)≤(6*((x:ℂ)+t*I) : ℂ).re by rw [hre]; linarith [hx.1])
-  have hn : ‖(6*((x:ℂ)+t*I) : ℂ)+1‖≤6*height t := by
-    apply (Complex.norm_le_abs_re_add_abs_im _).trans
-    simp only [add_re,add_im,one_re,one_im,add_zero,hre,him]
-    rw [abs_of_pos (by linarith [hx.1] : 0<6*x+1),abs_mul]
-    rw [abs_of_pos (by norm_num : (0:ℝ)<6)]
-    unfold height
-    linarith [hx.2]
-  have hheight : (3+6*|t|)^2≤36*height t^2 := by
-    have hh : 3+6*|t|≤6*height t := by unfold height; linarith
-    have hp := pow_le_pow_left₀ (by positivity : 0≤3+6*|t|) hh 2
-    simpa only [mul_pow,show (6:ℝ)^2=36 by norm_num] using hp
-  have hC := (principalConstant_pos M).le
-  have ht0 := (height_pos t).le
-  change ‖HeckeOrigin.poleRemoved (fixedPrincipal M) (6*((x:ℂ)+t*I))‖≤
-    principalConstant M*‖(6*((x:ℂ)+t*I) : ℂ)+1‖*(3+|(6*((x:ℂ)+t*I) : ℂ).im|)^2 at hb
-  rw [habs] at hb
-  calc
-    _ ≤ principalConstant M*‖(6*((x:ℂ)+t*I) : ℂ)+1‖*(3+6*|t|)^2 := hb
-    _ ≤ principalConstant M*(6*height t)*(36*height t^2) := by gcongr
-    _ = _ := by unfold zAmplitude; ring
-
 theorem source_w_boundary (W0 W1 : SchwartzMap ℝ ℂ) (a1 b1 : ℝ)
     (ha1 : 0<a1) (hW1 : Function.support W1⊆Icc a1 b1)
     (M : Ideal HeckeFamily.O) [NeZero M] (X Y Z : ℝ) (hY : 0<Y)
@@ -155,22 +118,6 @@ theorem source_w_boundary (W0 W1 : SchwartzMap ℝ ℂ) (a1 b1 : ℝ)
     (AL:=wAmplitude M cw) hcw hAH (wAmplitude_pos M hcw).le JH 3 hHB hHBbd
   intro x hx t _
   exact fixed_principal_w_growth M hcw hx t
-
-theorem source_z_boundary (W0 W1 : SchwartzMap ℝ ℂ) (a0 b0 : ℝ)
-    (ha0 : 0<a0) (hW0 : Function.support W0⊆Icc a0 b0)
-    (M : Ideal HeckeFamily.O) [NeZero M] (X Y Z : ℝ) (hX : 0<X) (hZ : 0<Z)
-    (eta : Character) (s : ℂ) (hEta : LFunction eta s≠0) (H B : ℂ → ℂ → ℂ) {e AH : ℝ}
-    (he : 0<e) (he' : e≤2/3) (hAH : 0≤AH) (JH : ℕ)
-    (hHB : ContinuousOn (fun z => H 1 z*B 1 z)
-      {z : ℂ | (33/200:ℝ)≤z.re ∧ z.re≤1/6+e})
-    (hHBbd : ∀x∈Icc (33/200:ℝ) (1/6+e), ∀t : ℝ, (x=33/200 ∨ x=1/6+e ∨ 1≤|t|) →
-      ‖H 1 ((x:ℂ)+t*I) * B 1 ((x:ℂ)+t*I)‖≤AH*height t^JH) :
-    BoundaryControl (fun z => sourceMultiplier W0 W1 X Y Z eta s H B 1 z *
-      LFunction (fixedPrincipal M) (6*z)) (33/200) (1/6+e) := by
-  apply ProbeMellinBoundary.source_z_boundary W0 W1 a0 b0 ha0 hW0 M X Y Z hX hZ eta s hEta H B
-    (AL:=zAmplitude M) he hAH (zAmplitude_pos M).le JH 3 hHB hHBbd
-  intro x hx t _
-  exact fixed_principal_z_growth M he he' hx t
 
 end SevenEighths.PrincipalMellinGrowth
 

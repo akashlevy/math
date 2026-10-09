@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.HybridBound
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -68,60 +67,6 @@ theorem slotProductCoefficient_at_product
   · intro q hq hqp
     exact ite_eq_right (fun he => hqp (hinj hq hp he))
   · exact fun hn => (hn hp).elim
-
-omit [DecidableEq ι] in
-theorem active_slot_hybrid_reindex
-    (tuples : Finset (ι → Ideal Eis))
-    (hinj : Set.InjOn slotTupleProduct (↑tuples : Set (ι → Ideal Eis)))
-    (nset bset : Finset (Ideal Eis)) (a : (ι → Ideal Eis) → ℂ)
-    (beta : Ideal Eis → Ideal Eis → ℂ) (k : Ideal Eis) :
-    (∑ p ∈ tuples, a p / (Real.sqrt (Ideal.absNorm (slotTupleProduct p) : ℝ) : ℂ) *
-      (if IsCoprime k (slotTupleProduct p) then 1 else 0) *
-        hybridInner nset bset beta k (slotTupleProduct p)) =
-      hybridRow (tuples.image slotTupleProduct) nset bset (slotProductCoefficient tuples a) beta k := by
-  rw [hybridRow, Finset.sum_image hinj]
-  apply Finset.sum_congr rfl
-  intro p hp
-  rw [slotProductCoefficient_at_product tuples hinj a p hp]
-
-theorem active_slot_hybrid_energy (ε : ℝ) (hε : 0 < ε) :
-    ∃ C : ℝ, 0 < C ∧ ∀ K N B V : ℝ, 1 ≤ K → 1 ≤ N → 1 ≤ B →
-    ∀ (L : ι → Finset (Ideal Eis)),
-      Pairwise (fun i j => Disjoint (L i) (L j)) →
-      (∀ i, ∀ P ∈ L i, Prime P) → (∀ i, ∀ P ∈ L i, primaryGenerator P ≠ 0) →
-    ∀ (tuples : Finset (ι → Ideal Eis)), (∀ p ∈ tuples, ∀ i, p i ∈ L i) →
-      (∀ p ∈ tuples, V ≤ (Ideal.absNorm (slotTupleProduct p) : ℝ) ∧
-        (Ideal.absNorm (slotTupleProduct p) : ℝ) ≤ 2 * V) →
-    ∀ (rows nset bset : Finset (Ideal Eis)) (a : (ι → Ideal Eis) → ℂ)
-      (beta : Ideal Eis → Ideal Eis → ℂ),
-      (∀ k ∈ rows, Admissible k ∧ (Ideal.absNorm k : ℝ) ≤ K) →
-      (∀ n ∈ nset, CubicSieve.Admissible n ∧ (Ideal.absNorm n : ℝ) ≤ N) →
-      (∀ b ∈ bset, primaryGenerator b ≠ 0 ∧ (Ideal.absNorm b : ℝ) ≤ B) →
-      (∀ p ∈ tuples, ‖a p‖ ≤ 1) → (∀ n ∈ nset, ∀ b ∈ bset, ‖beta n b‖ ≤ 1) →
-      (∑ k ∈ rows, ‖∑ p ∈ tuples,
-        a p / (Real.sqrt (Ideal.absNorm (slotTupleProduct p) : ℝ) : ℂ) *
-        (if IsCoprime k (slotTupleProduct p) then 1 else 0) *
-          hybridInner nset bset beta k (slotTupleProduct p)‖ ^ 2) ≤
-      C * (K * N * B) ^ ε * (K + N * B) * B * CubicSieve.sieveNorm N (2 * V) := by
-  obtain ⟨C, hC, he⟩ := hybridRow_energy_sieve_norm ε hε
-  refine ⟨C, hC, ?_⟩
-  intro K N B V hK hN hB L hL hp hgen tuples htuples hnorm rows nset bset a beta
-    hrows hn hb ha hbeta
-  have hinj : Set.InjOn slotTupleProduct (↑tuples : Set (ι → Ideal Eis)) :=
-    (slotTupleProduct_injective_on L hL hp).mono htuples
-  have hP : ∀ P ∈ tuples.image slotTupleProduct,
-      CubicSieve.Admissible P ∧ V ≤ (Ideal.absNorm P : ℝ) ∧ (Ideal.absNorm P : ℝ) ≤ 2 * V := by
-    intro P hP
-    obtain ⟨p, hpT, rfl⟩ := Finset.mem_image.mp hP
-    exact ⟨slotTupleProduct_admissible L hL hp hgen p (htuples p hpT), hnorm p hpT⟩
-  have hcoeff : ∀ P ∈ tuples.image slotTupleProduct, ‖slotProductCoefficient tuples a P‖ ≤ 1 := by
-    intro P hP
-    obtain ⟨p, hpT, rfl⟩ := Finset.mem_image.mp hP
-    rw [slotProductCoefficient_at_product tuples hinj a p hpT]
-    exact ha p hpT
-  simp_rw [active_slot_hybrid_reindex tuples hinj nset bset a beta]
-  exact he K N B V hK hN hB rows nset bset (tuples.image slotTupleProduct)
-    (slotProductCoefficient tuples a) beta hrows hn hb hP hcoeff hbeta
 
 end
 end SevenEighths.InverseMoment

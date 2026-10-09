@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Foundation
 import OAI.NumberTheory.DirichletL.Moments.PrimePower
 import OAI.NumberTheory.DirichletL.Moments.CRT
-
 namespace OAI
 
 noncomputable section
@@ -27,45 +26,6 @@ theorem actualSextic_order_six (P : Ideal O) [P.IsMaximal]
 def primePowerRow (P : Ideal O) [P.IsMaximal] (hg : goodLambda ∉ P)
     {c : ℕ} (hc : 1 ≤ c) (x : O ⧸ P ^ c) : ℂ :=
   (actualSextic P hg ^ c) (primePowerReduction P hc x)
-
-theorem canonical_primePower_units (P : Ideal O) [P.IsMaximal]
-    (hg : goodLambda ∉ P) (hchar : ringChar (O ⧸ P) ≠ 2)
-    {c : ℕ} (hc : 1 ≤ c) [Fintype (O ⧸ P ^ c)] [Fintype (O ⧸ P)]
-    (u : (O ⧸ P ^ c)ˣ) (v k : O ⧸ P ^ c)
-    (hv : primePowerReduction P hc v ≠ 0) :
-    letI : Field (O ⧸ P) := Ideal.Quotient.field P
-    fullCorrelation (fun x => v * x) (fun y => (u : O ⧸ P ^ c) * y)
-      (primePowerRow P hg hc) (primePowerRow P hg hc) k =
-    (Ideal.absNorm P : ℂ) ^ (c - 1) *
-      actualSextic P hg (primePowerReduction P hc u / primePowerReduction P hc v) ^ c *
-      (if primePowerReduction P hc k = 0 then (Ideal.absNorm P : ℂ) - 1
-       else if 6 ∣ c then (Ideal.absNorm P : ℂ) - 2 else -1) :=
-  primePower_localCorrelation_units P hc (actualSextic P hg)
-    (actualSextic_order_six P hg hchar) u v k hv
-
-theorem canonical_primePower_second_zero (P : Ideal O) [P.IsMaximal]
-    (hg : goodLambda ∉ P) (hchar : ringChar (O ⧸ P) ≠ 2)
-    {c : ℕ} (hc : 1 ≤ c) [Fintype (O ⧸ P ^ c)] [Fintype (O ⧸ P)]
-    (u : (O ⧸ P ^ c)ˣ) (v k : O ⧸ P ^ c)
-    (hv : primePowerReduction P hc v = 0) :
-    fullCorrelation (fun x => v * x) (fun y => (u : O ⧸ P ^ c) * y)
-      (primePowerRow P hg hc) (primePowerRow P hg hc) k =
-    (Ideal.absNorm P : ℂ) ^ (c - 1) *
-      (if 6 ∣ c ∧ primePowerReduction P hc k ≠ 0 then (Ideal.absNorm P : ℂ) - 1 else 0) :=
-  primePower_localCorrelation_second_zero P hc (actualSextic P hg)
-    (actualSextic_order_six P hg hchar) u v k hv
-
-theorem canonical_primePower_first_zero (P : Ideal O) [P.IsMaximal]
-    (hg : goodLambda ∉ P) (hchar : ringChar (O ⧸ P) ≠ 2)
-    {c : ℕ} (hc : 1 ≤ c) [Fintype (O ⧸ P ^ c)] [Fintype (O ⧸ P)]
-    (u : O ⧸ P ^ c) (v : (O ⧸ P ^ c)ˣ) (k : O ⧸ P ^ c)
-    (hu : primePowerReduction P hc u = 0) :
-    fullCorrelation (fun x => (v : O ⧸ P ^ c) * x) (fun y => u * y)
-      (primePowerRow P hg hc) (primePowerRow P hg hc) k =
-    (Ideal.absNorm P : ℂ) ^ (c - 1) *
-      (if 6 ∣ c ∧ primePowerReduction P hc k ≠ 0 then (Ideal.absNorm P : ℂ) - 1 else 0) :=
-  primePower_localCorrelation_first_zero P hc (actualSextic P hg)
-    (actualSextic_order_six P hg hchar) u v k hu
 
 def canonicalPrimePowerCharacter (P : Ideal O) [P.IsMaximal]
     (hg : goodLambda ∉ P) {c : ℕ} (hc : 1 ≤ c) : MulChar (O ⧸ P ^ c) ℂ :=

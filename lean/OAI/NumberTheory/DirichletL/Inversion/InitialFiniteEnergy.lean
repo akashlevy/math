@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialRetainedSum
 import OAI.NumberTheory.DirichletL.Inversion.InitialDyadicTailBound
 import OAI.NumberTheory.DirichletL.Inversion.InitialProfileBounds
-
 namespace OAI
 
 noncomputable section

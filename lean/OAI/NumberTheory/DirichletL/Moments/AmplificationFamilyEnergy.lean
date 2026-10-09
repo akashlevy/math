@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.AmplificationFamily
 import OAI.NumberTheory.DirichletL.Moments.SourceSmoothedAllocation
 import OAI.NumberTheory.DirichletL.Moments.GaussNormalization
-
 namespace OAI
 
 noncomputable section
@@ -55,21 +54,6 @@ theorem amplification_family_energy (η : Character) (m p : O) (k : ℕ)
     nlinarith [hb χ,norm_nonneg (b χ)]
   · exact Finset.sum_nonneg (fun χ _ => mul_nonneg (sq_nonneg _) (hd χ))
   · norm_num
-
-theorem exists_amplification_energy_family (η : Character) (m p : O)
-    (hm : m≠0) (hp : p≠0) (hs : Supported (Ideal.span {p}))
-    (hpp : goodLambda^2 ∣ p-1) (hmLam : goodLambda∣m) (hm2 : (2:O)∣m) (k : ℕ) :
-    ∃ τ : RayCharacter → Character,
-      (∀ χ, (τ χ).modulus.absNorm≤rowConductorBound (childCharacter η χ) m 1 (p^(2*k))) ∧
-      ∀ (Q : Finset (Ideal O)) (C : Ideal O),C≠0 → ∀ (β : Ideal O → ℂ) (t : ℝ)
-        (W : 𝓢(ℝ,ℂ)) (K : ℝ),0<K →
-      (∀ z : O,0≤(W (‖ConcreteTraceCRT.eisEmbedding z‖^2/K)).re) →
-      (sourceGaussEnergy Q (fun I => β (C*I)*rowWeight η m 1 1 t (C*I))
-        (fun I => residualCharacter p k (primaryGenerator I)) W K).re≤
-        16*∑ χ : RayCharacter,
-          (sourceGaussEnergy Q (fun I => β (C*I)) (heightCoeff (τ χ) t) W K).re := by
-  obtain ⟨τ,hN,hτ⟩ := exists_amplification_family η m p hm hp hs hpp hmLam hm2 k
-  exact ⟨τ,hN,fun Q C hC β t W K hK hW => amplification_family_energy η m p k τ hτ Q C hC β t W K hK hW⟩
 
 end SevenEighths.CenteredMomentAmplificationFamilyEnergy
 

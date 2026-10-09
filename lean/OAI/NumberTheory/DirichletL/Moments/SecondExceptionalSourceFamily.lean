@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondExceptionalFamily
 import OAI.NumberTheory.DirichletL.Moments.SecondEnergySplit
 import OAI.NumberTheory.DirichletL.Moments.SecondExceptionalKernel
-
 namespace OAI
 
 noncomputable section

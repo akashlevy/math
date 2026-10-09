@@ -1,6 +1,5 @@
-import OAI.NumberTheory.DirichletL.Inversion.InitialExcludedGeometry
+import OAI.NumberTheory.DirichletL.Inversion.InitialExcludedPolynomial
 import OAI.NumberTheory.DirichletL.Hecke.RowClosure
-
 namespace OAI
 
 noncomputable section

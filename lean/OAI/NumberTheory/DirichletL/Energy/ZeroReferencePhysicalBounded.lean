@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Energy.ZeroReferencePhysical
 import OAI.NumberTheory.DirichletL.Energy.ZeroReferenceLiveBounded
 import OAI.NumberTheory.DirichletL.Energy.FixedRadialReduction
 import OAI.NumberTheory.DirichletL.Energy.PhysicalEntry
-
 namespace OAI
 
 noncomputable section

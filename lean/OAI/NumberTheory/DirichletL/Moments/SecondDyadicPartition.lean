@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondPhysicalWindow
 import OAI.NumberTheory.DirichletL.Moments.DyadicCount
-
 namespace OAI
 
 noncomputable section

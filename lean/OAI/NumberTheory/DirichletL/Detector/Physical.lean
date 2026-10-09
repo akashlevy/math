@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Foundation
 import OAI.NumberTheory.DirichletL.Detector.Row
 import OAI.NumberTheory.DirichletL.Detector.Compensation
-
 namespace OAI
 
 noncomputable section
@@ -66,10 +65,6 @@ def markedPhysicalProbe (η : HeckeFamily.Character) (C : CalibrationData)
             spectralRow C.excluded D (rowCoefficient η C.Xi a has m) t)
     else 0
 
-def physicalProbe (η : HeckeFamily.Character) (C : CalibrationData)
-    (W₀ W₁ : ℝ → ℂ) (X Y Z : ℝ) : ℂ :=
-  markedPhysicalProbe η C 1 W₀ W₁ X Y Z
-
 def slotProduct {K : ℕ} (p : Fin K → O) (J : Finset (Fin K)) : O := ∏ i ∈ J, p i
 
 def compensatedTuple {K : ℕ} (η : HeckeFamily.Character) (C : CalibrationData)
@@ -81,29 +76,6 @@ def compensatedTuple {K : ℕ} (η : HeckeFamily.Character) (C : CalibrationData
   simp [elementNorm]
 
 attribute [local irreducible] markedPhysicalProbe
-
-theorem compensatedTuple_zero (η : HeckeFamily.Character) (C : CalibrationData)
-    (W₀ W₁ : ℝ → ℂ) (p : Fin 0 → O) (X Y Z : ℝ) :
-    compensatedTuple η C W₀ W₁ p X Y Z = physicalProbe η C W₀ W₁ X Y Z := by
-  unfold compensatedTuple
-  rw [ProbeCompensation.tupleOperation_zero p elementNorm (HeckeFamily.elementCoeff η)
-    elementNorm_one (HeckeFamily.elementCoeff_one η)]
-  change markedPhysicalProbe η C (Ideal.span {(1 : O)}) W₀ W₁ X Y Z =
-    markedPhysicalProbe η C 1 W₀ W₁ X Y Z
-  rw [Ideal.span_singleton_one, Ideal.one_eq_top]
-
-theorem compensatedTuple_one (η : HeckeFamily.Character) (C : CalibrationData)
-    (W₀ W₁ : ℝ → ℂ) (p : Fin 1 → O) (X Y Z : ℝ) :
-    compensatedTuple η C W₀ W₁ p X Y Z =
-      star (HeckeFamily.elementCoeff η (p 0)) *
-        markedPhysicalProbe η C (Ideal.span {p 0}) W₀ W₁ X Y (Z * elementNorm (p 0)) -
-      (elementNorm (p 0) ^ (-(3 / 2 : ℝ)) : ℝ) *
-        physicalProbe η C W₀ W₁ (X / elementNorm (p 0)) (Y / elementNorm (p 0)) Z := by
-  unfold compensatedTuple
-  rw [ProbeCompensation.tupleOperation_one p elementNorm (HeckeFamily.elementCoeff η)
-    elementNorm_one (HeckeFamily.elementCoeff_one η)]
-  change _ = _ - _ * markedPhysicalProbe η C 1 W₀ W₁ _ _ Z
-  rw [Ideal.span_singleton_one, Ideal.one_eq_top]
 
 def compensatedPhysicalProbe {K : ℕ} (η : HeckeFamily.Character) (C : CalibrationData)
     (W₀ W₁ : ℝ → ℂ) (slotPrimes : Fin K → Finset O)

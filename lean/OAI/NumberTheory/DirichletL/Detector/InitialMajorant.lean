@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.MellinGuarded
 import OAI.NumberTheory.DirichletL.Detector.RowAnalytic
 import OAI.NumberTheory.DirichletL.Detector.MellinBoundary
-
 namespace OAI
 
 noncomputable section

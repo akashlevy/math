@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.RaySlots
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-
 namespace OAI
 
 noncomputable section

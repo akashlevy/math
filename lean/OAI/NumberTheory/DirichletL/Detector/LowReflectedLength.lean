@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowReflectedExponent
-
 namespace OAI
 
 namespace SevenEighths.ProbeLowReflected

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondSourceRemainder
 import OAI.NumberTheory.DirichletL.Moments.SecondFrozenLiveSource
-
 namespace OAI
 
 noncomputable section

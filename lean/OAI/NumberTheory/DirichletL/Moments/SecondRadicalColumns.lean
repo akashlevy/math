@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondRadicalFamily
-
 namespace OAI
 
 noncomputable section
@@ -34,25 +33,6 @@ theorem residual_sixth_coefficient_right (C D : Ideal O) (hC : Supported C) (hD 
       idealRowHom (reducedNumerator C D U) I := by
   rw [fixed_sixth_coefficient C D U I hI,ite_eq_left
     (hcop.symm.of_isCoprime_of_dvd_right (sixthFactor_span_dvd_right C D hC hD hCD U)),mul_one]
-
-theorem exists_actual_masked_radical_family (η : Character) (χ : RayCharacter)
-    (C D : Ideal O) (hC : Supported C) (hD : Supported D)
-    (hCD : primeSupport C=primeSupport D) (U : Finset (CommonIndex C D)) :
-    ∃τ : Character,
-      τ.modulus.absNorm≤(childCharacter η χ).modulus.absNorm*
-        (Ideal.span {fixedBadMask}).absNorm*(Ideal.span {(72:O)}).absNorm*
-          (∏P∈fixedActiveSet C D U,P.val).absNorm ∧
-      ∀I:Ideal O,Supported I → (IsCoprime C I ∨ IsCoprime D I) → ∀t:ℝ,
-        heightCoeff τ t I=heightCoeff η t I*
-          idealRowHom (commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U) I*
-          rayCharacter χ (primaryGenerator I) := by
-  obtain ⟨τ,hN,he,hτ⟩ := exists_second_radical_family η χ C D hC U
-  refine ⟨τ,hN,?_⟩
-  intro I hI hi t
-  rw [hτ I hI t]
-  rcases hi with hi|hi
-  · rw [residual_sixth_coefficient C D hC hCD U I hI hi]
-  · rw [residual_sixth_coefficient_right C D hC hD hCD U I hI hi]
 
 end SevenEighths.CenteredMomentSecondRadicalColumns
 

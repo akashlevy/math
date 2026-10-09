@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerState
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerRanges
 import OAI.NumberTheory.DirichletL.Descent.SecondNormalizedEnergy
-
 namespace OAI
 
 noncomputable section
@@ -14,7 +13,6 @@ open InverseInitialEnergyCallerState InverseInitialEnergyCallerWindows
 open InverseInitialEnergyCallerWindowGeometry InverseInitialEnergyCallerGeometry
 open InverseInitialEnergyCallerRanges CanonicalQuadraticSieve
 local notation "O"=>ActualEisensteinCubic.O
-local notation "λ₀"=>ConcretePrimeRowBridge.goodLambda
 
 def fullPunctureWidth (Z:ℝ)(t:Ideal O)(j:O):ℝ :=
   Real.logb Z (Ideal.absNorm (Ideal.span {j*primaryGenerator t}):ℝ)
@@ -77,12 +75,6 @@ theorem enlarged_initial_margins (m r z G B θ v H η τ Q c₁ c₂:ℝ)
   unfold CanonicalMargins at hh ⊢
   unfold initialF at hh
   constructor <;> linarith [hh.1,hh.2]
-
-theorem enlarged_label_exact (N V η:ℝ)(hV:0≤V+2*η):
-    max 0 (V+2*η)=V+2*η ∧
-      N+max 0 (V+2*η)-(N+V)=2*η := by
-  rw [max_eq_right hV]
-  exact ⟨rfl,by ring⟩
 
 theorem assigned_label_weight_le {σ:Type*}[DecidableEq σ]
     (slots J₁ J₂:Finset σ)(K:ℕ)(hK:slots.card≤K)

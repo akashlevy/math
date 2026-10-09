@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CentralSlots
 import OAI.NumberTheory.DirichletL.Detector.HighRowsCentralQuotient
-
 namespace OAI
 
 noncomputable section

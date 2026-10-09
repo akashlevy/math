@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.DetectorBatch
 import OAI.NumberTheory.DirichletL.PrimeRows.CubeSupportedWitness
-
 namespace OAI
 
 noncomputable section

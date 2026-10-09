@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.MarkedReflection
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

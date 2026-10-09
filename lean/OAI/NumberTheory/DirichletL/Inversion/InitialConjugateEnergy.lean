@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialRayAttachment
-
 namespace OAI
 
 noncomputable section
@@ -19,13 +18,6 @@ def conjugateIdealCharacter (η : Ideal O →* ℂ) : Ideal O →* ℂ where
 
 @[simp] theorem conjugateIdealCharacter_apply (η : Ideal O →* ℂ) (I : Ideal O) :
     conjugateIdealCharacter η I = star (η I) := rfl
-
-theorem reconstructedSelector_conjugate (S : Finset (Ideal O)) (P j : Ideal O)
-    (a : Ideal O → ℂ) (A : Finset (primePool (columns S P j))) :
-    reconstructedSelector S P j (fun I => star (a I)) A =
-      star (reconstructedSelector S P j a A) := by
-  unfold reconstructedSelector
-  split_ifs <;> simp
 
 theorem overlapResidualCoefficient_conjugate (P j : Ideal O) (η : Ideal O →* ℂ)
     (a : Ideal O → ℂ) (W : ℝ → ℂ) (Z r z G : ℝ) (c : Ideal O) :
@@ -173,20 +165,6 @@ theorem conjugatedResidual_energy_summable (S : Finset (Ideal O)) {P j : Ideal O
   simpa only [radialWeight,conjugatedResidual,Complex.mul_re,Complex.ofReal_re,
     Complex.ofReal_im,mul_zero,sub_zero] using (Complex.hasSum_re hs.hasSum).summable
 
-theorem original_smoothed_mask_identity (S : Finset (Ideal O)) {P j : Ideal O}
-    (hP : Squarefree P) (hj : j∣P) (η : Ideal O →* ℂ)
-    (a : Ideal O → ℂ) (W : ℝ → ℂ) {Z : ℝ} (hZ : 0<Z)
-    (r z G : ℝ) (Φ : 𝓢(ℝ,ℂ)) (Y : ℝ) :
-    smoothedEnergy Φ Y (originalFixedPolynomial S P j η a W Z r z) =
-      Z^(-2*G)*‖η j‖^4 * ∑' u,radialWeight Φ Y u*‖idealRowHom u j‖^4*
-        ‖conjugatedResidual S P j η a W Z r z G u‖^2 := by
-  unfold smoothedEnergy
-  rw [←tsum_mul_left]
-  apply tsum_congr
-  intro u
-  rw [originalFixedPolynomial_norm_sq_conjugatedResidual S hP hj η a W hZ r z G]
-  ring
-
 theorem original_smoothed_contraction (S : Finset (Ideal O)) {P j : Ideal O}
     (hP : Admissible P) (hj : j∣P) (hS : ∀ n∈S,Squarefree n → Supported n)
     (η : Ideal O →* ℂ) (a : Ideal O → ℂ) (W : ℝ → ℂ) {Z : ℝ} (hZ : 0<Z)
@@ -268,126 +246,6 @@ theorem real_smoothed_sum_eq (Φ : 𝓢(ℝ,ℂ))
     · rfl
     · simpa only [Complex.ofReal_im] using hΦ _ (div_nonneg (sq_nonneg _) hY.le)
   rw [he,Complex.ofReal_mul]
-
-theorem original_smoothed_overlap_bound (S : Finset (Ideal O)) {P : Ideal O}
-    (hP : Admissible P) (hS : ∀ n∈S,Squarefree n → Supported n)
-    (η : Ideal O →* ℂ) (a : Ideal O → ℂ) (W : ℝ → ℂ) {Z : ℝ} (hZ : 0<Z)
-    (r z : ℝ) (G : Ideal O → ℝ) (Φ : 𝓢(ℝ,ℂ))
-    (hΦ : ∀ x : ℝ,0≤x → 0≤(Φ x).re) {Y : ℝ} (hY : 0<Y) :
-    smoothedEnergy Φ Y (originalTotalPolynomial S P η a W Z r z) ≤
-      (∑ j∈idealDivisors P,Z^(-G j)*‖η j‖^2*
-        Real.sqrt (smoothedEnergy Φ Y (conjugatedResidual S P j η a W Z r z (G j))))^2 := by
-  have ht := (original_smoothed_overlap_triangle S hP hS η a W hZ r z G Φ hΦ hY).2
-  have hb := pow_le_pow_left₀ (Real.sqrt_nonneg _) ht 2
-  rwa [Real.sq_sqrt (smoothedEnergy_nonneg Φ hΦ hY _)] at hb
-
-def conjugatePhysicalSum (S : Finset (Ideal O)) {P j : Ideal O}
-    (hP : Admissible P) (hj : j∣P) (hS : ∀ n∈S,Squarefree n → Supported n)
-    (η : Ideal O →* ℂ) (a : Ideal O → ℂ) (W : ℝ → ℂ)
-    (Z r z G m : ℝ) (Φ : 𝓢(ℝ,ℂ)) : ℂ :=
-  let F := columns S P j
-  let hF : ∀ I∈F,Admissible I := fun I hI => columns_admissible S hP hj hS hI
-  letI : ∀ i : primePool F,(Ideal.span {poolPrimary F i}).IsMaximal :=
-    fun i => by rw [poolPrimary_span F hF i]; infer_instance
-  ∑ C ∈ (Finset.univ : Finset (primePool F)).powerset,
-    ∑ U ∈ (Finset.univ\C).powerset,∑ T ∈ (Finset.univ\C).powerset,
-      if Disjoint U T then ∑ E ∈ C.powerset,∑' h : O,
-        initialPhysicalMode (poolPrimary F) (poolPrimary_ne_zero F hF) (poolPrimary_coprime F hF)
-          (poolPrimary_good F hF) (elementCharacter (conjugateIdealCharacter η)) (primaryGenerator j)
-          (reconstructedSelector S P j (fun I => star (a I)))
-          (InverseInitialKernelBridge.residualOverlapWindow P j (fun x => star (W x)) Z z G)
-          Φ Z (r+z-2*G) m C U T E h else 0
-
-theorem conjugatedResidual_physical (S : Finset (Ideal O)) {P j : Ideal O}
-    (hP : Admissible P) (hj : j∣P) (hS : ∀ n∈S,Squarefree n → Supported n)
-    (η : Ideal O →* ℂ) (a : Ideal O → ℂ) (W : ℝ → ℂ)
-    {Z : ℝ} (hZ : 0<Z) (r z G m : ℝ) (Φ : 𝓢(ℝ,ℂ)) :
-    (∑' u : O,Φ (‖eisEmbedding u‖^2/Z^m)*
-      (‖conjugatedResidual S P j η a W Z r z G u‖^2 : ℝ)) =
-      conjugatePhysicalSum S hP hj hS η a W Z r z G m Φ := by
-  exact residual_initial_physical_rays S hP hj hS (conjugateIdealCharacter η)
-    (fun I => star (a I)) (fun x => star (W x)) hZ r z G m Φ
-
-theorem conjugatedResidual_energy_physical (S : Finset (Ideal O)) {P j : Ideal O}
-    (hP : Admissible P) (hj : j∣P) (hS : ∀ n∈S,Squarefree n → Supported n)
-    (η : Ideal O →* ℂ) (a : Ideal O → ℂ) (W : ℝ → ℂ)
-    {Z : ℝ} (hZ : 0<Z) (r z G m : ℝ) (Φ : 𝓢(ℝ,ℂ)) :
-    smoothedEnergy Φ (Z^m) (conjugatedResidual S P j η a W Z r z G) =
-      (conjugatePhysicalSum S hP hj hS η a W Z r z G m Φ).re := by
-  have hs := residual_normalized_smoothed_summable S hP hj hS (conjugateIdealCharacter η)
-    (fun I => star (a I)) (fun x => star (W x)) hZ r z G Φ (Z^m) (Real.rpow_pos_of_pos hZ m)
-  have he := congrArg Complex.re (conjugatedResidual_physical S hP hj hS η a W hZ r z G m Φ)
-  change Summable (fun u : O => Φ (‖eisEmbedding u‖^2/Z^m)*
-    (‖conjugatedResidual S P j η a W Z r z G u‖^2 : ℝ)) at hs
-  rw [Complex.re_tsum hs] at he
-  simpa only [smoothedEnergy,radialWeight,Complex.mul_re,Complex.ofReal_re,
-    Complex.ofReal_im,mul_zero,sub_zero] using he
-
-theorem original_fixed_physical_contraction (S : Finset (Ideal O)) {P j : Ideal O}
-    (hP : Admissible P) (hj : j∣P) (hS : ∀ n∈S,Squarefree n → Supported n)
-    (η : Ideal O →* ℂ) (a : Ideal O → ℂ) (W : ℝ → ℂ)
-    {Z : ℝ} (hZ : 0<Z) (r z G m : ℝ) (Φ : 𝓢(ℝ,ℂ))
-    (hΦ : ∀ x : ℝ,0≤x → 0≤(Φ x).re) :
-    smoothedEnergy Φ (Z^m) (originalFixedPolynomial S P j η a W Z r z) ≤
-      Z^(-2*G)*‖η j‖^4*(conjugatePhysicalSum S hP hj hS η a W Z r z G m Φ).re := by
-  rw [←conjugatedResidual_energy_physical S hP hj hS η a W hZ r z G m Φ]
-  exact original_smoothed_contraction S hP hj hS η a W hZ r z G Φ hΦ
-    (Real.rpow_pos_of_pos hZ m)
-
-theorem original_physical_overlap_triangle (S : Finset (Ideal O)) {P : Ideal O}
-    (hP : Admissible P) (hS : ∀ n∈S,Squarefree n → Supported n)
-    (η : Ideal O →* ℂ) (a : Ideal O → ℂ) (W : ℝ → ℂ)
-    {Z : ℝ} (hZ : 0<Z) (r z m : ℝ) (G : Ideal O → ℝ) (Φ : 𝓢(ℝ,ℂ))
-    (hΦ : ∀ x : ℝ,0≤x → 0≤(Φ x).re) :
-    Real.sqrt (smoothedEnergy Φ (Z^m) (originalTotalPolynomial S P η a W Z r z)) ≤
-      ∑ j : idealDivisors P,Z^(-G j)*‖η j‖^2*
-        Real.sqrt ((conjugatePhysicalSum S hP ((mem_idealDivisors hP.1).mp j.property)
-          hS η a W Z r z (G j) m Φ).re) := by
-  have ht := (original_smoothed_overlap_triangle S hP hS η a W hZ r z G Φ hΦ
-    (Real.rpow_pos_of_pos hZ m)).2
-  rw [←Finset.sum_coe_sort] at ht
-  convert ht using 1
-  apply Finset.sum_congr rfl
-  intro j _
-  rw [conjugatedResidual_energy_physical S hP ((mem_idealDivisors hP.1).mp j.property)
-    hS η a W hZ r z (G j) m Φ]
-
-theorem original_smoothed_overlap_cauchy (S : Finset (Ideal O)) {P : Ideal O}
-    (hP : Admissible P) (hS : ∀ n∈S,Squarefree n → Supported n)
-    (η : Ideal O →* ℂ) (a : Ideal O → ℂ) (W : ℝ → ℂ) {Z : ℝ} (hZ : 0<Z)
-    (r z : ℝ) (G : Ideal O → ℝ) (Φ : 𝓢(ℝ,ℂ))
-    (hΦ : ∀ x : ℝ,0≤x → 0≤(Φ x).re) {Y : ℝ} (hY : 0<Y) :
-    smoothedEnergy Φ Y (originalTotalPolynomial S P η a W Z r z) ≤
-      (∑ j∈idealDivisors P,Z^(-G j)*‖η j‖^2) *
-        ∑ j∈idealDivisors P,Z^(-G j)*‖η j‖^2*
-          smoothedEnergy Φ Y (conjugatedResidual S P j η a W Z r z (G j)) := by
-  refine (original_smoothed_overlap_bound S hP hS η a W hZ r z G Φ hΦ hY).trans ?_
-  apply Finset.sum_sq_le_sum_mul_sum_of_sq_le_mul
-  · intro j _
-    exact mul_nonneg (Real.rpow_nonneg hZ.le _) (sq_nonneg _)
-  · intro j _
-    exact mul_nonneg (mul_nonneg (Real.rpow_nonneg hZ.le _) (sq_nonneg _))
-      (smoothedEnergy_nonneg Φ hΦ hY _)
-  · intro j _
-    rw [mul_pow,Real.sq_sqrt (smoothedEnergy_nonneg Φ hΦ hY _)]
-    nlinarith
-
-theorem original_complex_physical_overlap_bound (S : Finset (Ideal O)) {P : Ideal O}
-    (hP : Admissible P) (hS : ∀ n∈S,Squarefree n → Supported n)
-    (η : Ideal O →* ℂ) (a : Ideal O → ℂ) (W : ℝ → ℂ)
-    {Z : ℝ} (hZ : 0<Z) (r z m : ℝ) (G : Ideal O → ℝ) (Φ : 𝓢(ℝ,ℂ))
-    (hΦ : ∀ x : ℝ,0≤x → 0≤(Φ x).re) (hΦreal : ∀ x : ℝ,0≤x → (Φ x).im=0) :
-    ‖∑' u : O,Φ (‖eisEmbedding u‖^2/Z^m)*
-      (‖originalTotalPolynomial S P η a W Z r z u‖^2 : ℝ)‖ ≤
-      (∑ j : idealDivisors P,Z^(-G j)*‖η j‖^2*
-        Real.sqrt ((conjugatePhysicalSum S hP ((mem_idealDivisors hP.1).mp j.property)
-          hS η a W Z r z (G j) m Φ).re))^2 := by
-  have hY := Real.rpow_pos_of_pos hZ m
-  rw [real_smoothed_sum_eq Φ hΦreal hY,Complex.norm_real,Real.norm_eq_abs,
-    abs_of_nonneg (smoothedEnergy_nonneg Φ hΦ hY _)]
-  have ht := original_physical_overlap_triangle S hP hS η a W hZ r z m G Φ hΦ
-  have hb := pow_le_pow_left₀ (Real.sqrt_nonneg _) ht 2
-  rwa [Real.sq_sqrt (smoothedEnergy_nonneg Φ hΦ hY _)] at hb
 
 end SevenEighths.InverseInitialConjugateEnergy
 

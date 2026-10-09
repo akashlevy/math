@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstRetainedFamily
 import OAI.NumberTheory.DirichletL.Descent.FirstPriorityEnergy
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -22,26 +21,6 @@ def firstCanonicalSecondEnergy (hinj : Function.Injective (fun i=>Ideal.span {p 
       (firstFreshSecondPoisson p hp hg hinj F D b.support (fun i=>b.leftExponent i+b.rightExponent i)
         b.leftBit b.rightBit negative (if negative then r.1 else r.2) Ψ m
         (fun U=>H (((if negative then b.rightDivisor else b.leftDivisor)∪C)∪U)) ω X (∏i∈C,p i) d core t Y).re
-
-theorem firstCanonicalSecondEnergy_nonneg (hinj : Function.Injective (fun i=>Ideal.span {p i}))
-    (hc : ∀ i,ringChar (O⧸Ideal.span {p i})≠2)
-    (F : Finset ι) (b : CubeCoordinates ι) (C : Finset ι) (negative : Bool)
-    (Ψ : O→*ℂ) (m d : O) (H selector : Finset ι→ℂ) (ω : ℝ→ℂ) (X t Y : ℝ) (hY : 0<Y) :
-    0≤firstCanonicalSecondEnergy p hp hg hinj F b C negative Ψ m d H selector ω X t Y := by
-  unfold firstCanonicalSecondEnergy
-  apply mul_nonneg (by norm_num)
-  apply Finset.sum_nonneg
-  intro r hr
-  apply Finset.sum_nonneg
-  intro D hD
-  apply mul_nonneg (by positivity)
-  apply Finset.sum_nonneg
-  intro core hcore
-  apply mul_nonneg (norm_nonneg _)
-  rw [first_fresh_real_energy p hp hg hinj hc F D b.support
-    (fun i=>b.leftExponent i+b.rightExponent i) b.leftBit b.rightBit negative
-    (if negative then r.1 else r.2) Ψ m _ ω X (∏i∈C,p i) d core t Y hY]
-  exact Finset.sum_nonneg (fun z hz=>mul_nonneg (rowMajorant_nonneg _) (sq_nonneg _))
 
 theorem first_retained_actual_second_energy (ε : ℝ) (hε : 0<ε) :
     ∃ K : ℝ,0<K ∧ ∀ {ι : Type*} [DecidableEq ι]

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.DetectorDictionary
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRelativePrime
-
 namespace OAI
 
 noncomputable section
@@ -14,11 +13,6 @@ local notation "O" => HeckeFamily.O
 
 def physicalSlotCoefficient (η : Character) (W : ℝ→ℂ) (D : ℝ) (z : ℂ) (P : Ideal O) : ℂ :=
   idealCoeff η.inverse P*conj (W ((P.absNorm:ℝ)/D)*(((P.absNorm:ℝ)/D:ℝ):ℂ)^(z-1))
-
-lemma physicalSlotCoefficient_norm (η : Character) (W : ℝ→ℂ) (D : ℝ) (z : ℂ) (P : Ideal O) :
-    ‖physicalSlotCoefficient η W D z P‖≤‖W ((P.absNorm:ℝ)/D)*(((P.absNorm:ℝ)/D:ℝ):ℂ)^(z-1)‖ := by
-  rw [physicalSlotCoefficient,norm_mul,RCLike.norm_conj]
-  exact mul_le_of_le_one_left (norm_nonneg _) (idealCoeff_norm_le_one η.inverse P)
 
 lemma physicalSlotCoefficient_annular (η : Character) (W : ℝ→ℂ) (D : ℝ) (z : ℂ)
     (P : Ideal O) (hP : P≠0) (hD : 0<D) :

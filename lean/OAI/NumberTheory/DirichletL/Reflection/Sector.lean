@@ -1,5 +1,4 @@
-import OAI.NumberTheory.DirichletL.Reflection.Split
-
+import OAI.NumberTheory.DirichletL.Reflection.Cofactor
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -24,17 +23,6 @@ theorem separateSector_product (M f r r₀ P P₀ : Eis)
   apply separate_product_congruence
   · exact Ideal.mem_span_singleton.mp (Ideal.Quotient.eq.mp (congrArg Prod.fst h))
   · exact Ideal.mem_span_singleton.mp (Ideal.Quotient.eq.mp (congrArg Prod.snd h))
-
-theorem separate_numerator_congruence {ι κ : Type*} [Fintype ι] [Fintype κ]
-    (M a c l f r r₀ P P₀ : Eis) (p h : ι → Eis) (p₀ h₀ : κ → Eis)
-    (hc : c ∣ M) (hh : ∀ i, M^2 ∣ h i) (hh₀ : ∀ i, M^2 ∣ h₀ i)
-    (hp : (∏ i, p i) = f*r*P) (hp₀ : (∏ i, p₀ i) = f*r₀*P₀)
-    (hs : separateSector M r P = separateSector M r₀ P₀) :
-    M*c ∣ ShortDraftCRT.finiteCrossNumerator a c l p h -
-      ShortDraftCRT.finiteCrossNumerator a c l p₀ h₀ := by
-  apply ShortDraftCRT.finiteCrossNumerator_fixed_sector M a c l p h p₀ h₀ hc hh hh₀
-  rw [hp,hp₀]
-  exact separateSector_product M f r r₀ P P₀ hs
 
 theorem controlled_bad_phase_eq {ι κ : Type*} [Fintype ι] [Fintype κ]
     {p : ι → Eis} {p₀ : κ → Eis} {N a c : Eis} {mode : Bool}

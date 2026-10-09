@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Dictionary.InverseRawInitialGates
 import OAI.NumberTheory.DirichletL.Inversion.InitialProfileBounds
-
 namespace OAI
 
 noncomputable section
@@ -53,17 +52,6 @@ theorem childLogTest_conjugate (W:ℝ→ℂ)(θ:ℝ):
   funext x
   simp only [childLogTest,star_mul,SecondPassIntegration.logPhase_conjugate]
   ring
-
-theorem childLogTest_conjugate_norm (W:ℝ→ℂ)(θ x:ℝ):
-    ‖childLogTest (fun x=>star (W x)) (-θ) x‖=‖W x‖:=by
-  rw [InverseInitialProfileBounds.childLogTest_norm,norm_star]
-
-theorem childLogTest_physical_profiles (W:ℝ→ℂ)(θ:ℝ):
-    (fun x=>star (childLogTest W θ x))=clippedSource (fun x=>star (W x)) 1 (-θ) ∧
-    childLogTest W θ=clippedSource W 1 θ:=by
-  rw [childLogTest_conjugate]
-  exact ⟨InverseInitialProfileBounds.childLogTest_eq_clipped _ _,
-    InverseInitialProfileBounds.childLogTest_eq_clipped _ _⟩
 
 end SevenEighths.DetectorDictionaryInverseRawConjugateGates
 

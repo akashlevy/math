@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstDyadicLiveRadius
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLiveAggregate
 import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLiveEnergy
-
 namespace OAI
 
 noncomputable section

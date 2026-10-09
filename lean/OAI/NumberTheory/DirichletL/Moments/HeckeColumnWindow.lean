@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstIdealFamily
 import OAI.NumberTheory.DirichletL.Moments.Smooth
-
 namespace OAI
 
 noncomputable section

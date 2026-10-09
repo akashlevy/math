@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondSourceFrequency
-
 namespace OAI
 
 noncomputable section

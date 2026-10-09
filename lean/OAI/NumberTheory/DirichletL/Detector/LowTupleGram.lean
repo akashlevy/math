@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LowGramIntegrated
 import OAI.NumberTheory.DirichletL.Detector.LowInverseEnergy
-
 namespace OAI
 
 noncomputable section
@@ -19,11 +18,6 @@ def lowInverseMass (C : CalibrationData) (a b : ℝ) (ha : 0<a) (hb : 0<b)
     (X Y : ℝ) (hX : 0<X) (hY : 0<Y) (B : RayRing→O→ℂ) : ℝ :=
   ∑σ : RayRing,Real.sqrt (∑m∈lowNumeratorRows a b ha hb (lowPhysicalScale C X Y)
     (lowPhysicalScale_pos C X Y hX hY),‖B σ m‖^2)
-
-lemma lowInverseMass_nonneg (C : CalibrationData) (a b : ℝ) (ha : 0<a) (hb : 0<b)
-    (X Y : ℝ) (hX : 0<X) (hY : 0<Y) (B : RayRing→O→ℂ) :
-    0≤lowInverseMass C a b ha hb X Y hX hY B :=
-  Finset.sum_nonneg (fun _ _=>Real.sqrt_nonneg _)
 
 lemma low_mellin_normalizer_norm (Q : ℝ) (_hQ : 0<Q) :
     ‖(Real.sqrt Q:ℂ)⁻¹*(1/(2*Real.pi):ℂ)‖=(Real.sqrt Q)⁻¹/(2*Real.pi) := by

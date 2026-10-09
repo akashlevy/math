@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstMixedAllowance
 import OAI.NumberTheory.DirichletL.Moments.FirstExceptionalPrefactorActual
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalSourceFixedFamily
-
 namespace OAI
 
 noncomputable section
@@ -123,7 +122,6 @@ theorem actual_fixed_reference_pair (C D:Ideal O)(hC:Supported C)(hD:Supported D
 
 open CenteredMomentFirstPhysicalSourceSupport CenteredMomentCommonRadialData
 open CenteredMomentOriginalCommonHarmonic CenteredMomentExceptionalAmplitudePair
-open HeckeFamily CenteredMomentSupportedCorrelation
 
 theorem original_fixed_reference_pair {ι:Type*}[Fintype ι][DecidableEq ι]
     (s:Input ι)(R seed:Ideal O)(a₁ a₂:ℝ)(ha₁:0<a₁)(ha₂:0<a₂)

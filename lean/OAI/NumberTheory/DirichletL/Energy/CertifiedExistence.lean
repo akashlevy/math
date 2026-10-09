@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.CappedAnalyticSuccessor
 import OAI.NumberTheory.DirichletL.Energy.CappedRadialTransport
-
 namespace OAI
 
 noncomputable section

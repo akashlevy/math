@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstDyadicCell
 import OAI.NumberTheory.DirichletL.Descent.GlobalRetainedGatesBudget
 import OAI.NumberTheory.DirichletL.Descent.GlobalRetainedGatesRank
-
 namespace OAI
 
 noncomputable section

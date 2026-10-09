@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.SourceRectangleMask
 import OAI.NumberTheory.DirichletL.Moments.SecondHeightFamily
 import OAI.NumberTheory.DirichletL.Moments.RestrictedSource
-
 namespace OAI
 
 noncomputable section

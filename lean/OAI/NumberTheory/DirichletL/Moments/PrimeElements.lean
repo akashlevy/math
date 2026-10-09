@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.PrimePool
-
 namespace OAI
 
 noncomputable section
@@ -60,17 +59,6 @@ theorem elementPool_data (P : Finset (Ideal O))
   obtain ⟨hpr,hspan,hprim,hs,hg,hc⟩ := primaryPrime_data Q (hp Q hQ) (hbad Q hQ)
   exact ⟨hpr,hspan.symm ▸ hQ,hprim,hs,hg,hc⟩
 
-theorem eligible_not_dvd (P : Finset (Ideal O))
-    (hp : ∀ Q ∈ P, Prime Q) (hbad : ∀ Q ∈ P, Q ∉ fixedBadPrimes)
-    (R : Ideal O) (h : O) (hh : Ideal.span {h} ∣ R)
-    (p : O) (hpm : p ∈ elementPool (eligiblePool P R)) : ¬p ∣ h := by
-  have hd := elementPool_data (eligiblePool P R)
-    (fun Q hQ => hp Q (Finset.mem_filter.mp hQ).1)
-    (fun Q hQ => hbad Q (Finset.mem_filter.mp hQ).1) p hpm
-  intro hph
-  apply (Finset.mem_filter.mp hd.2.1).2
-  exact (Ideal.dvd_iff_le.mpr (Ideal.span_singleton_le_span_singleton.mpr hph)).trans hh
-
 theorem primePool_data (M : Ideal O) [NeZero M] (H : Subgroup (O ⧸ M)ˣ)
     (S : Finset (Ideal O)) (hS : fixedBadPrimes ⊆ S) (a b x : ℝ)
     (Q : Ideal O) (hQ : Q ∈ primePool M H S a b x) :
@@ -104,27 +92,6 @@ theorem eligible_element_card_half (P : Finset (Ideal O))
     (fun Q hQ => hp Q (Finset.mem_filter.mp hQ).1)
     (fun Q hQ => hbad Q (Finset.mem_filter.mp hQ).1)]
   exact eligiblePool_half P hp R hR Z ell B hZ hell hlower hupper hsize
-
-theorem ideal_pool_polynomial_bound {α : Type*} (S : Finset α) (a : α → O)
-    (ha : ∀ i, Supported (Ideal.span {a i})) (c : α → ℂ)
-    (P : Finset (Ideal O)) (hne : P.Nonempty)
-    (hp : ∀ Q ∈ P, Prime Q) (hbad : ∀ Q ∈ P, Q ∉ fixedBadPrimes)
-    (h : O) (hh : ∀ Q ∈ P, ¬Q ∣ Ideal.span {h}) :
-    ‖CenteredMomentGaussEnergy.gaussPolynomial S a ha c h‖^2 ≤ (4/(P.card : ℝ))*
-      ∑ p ∈ elementPool P,
-        (‖CenteredMomentGaussEnergy.gaussPolynomial S a ha c (p^6*h)‖^2 +
-        ‖amplificationError S a ha c (fun i => multiplicity p (a i)) p 1 h‖^2 +
-        ‖amplificationError S a ha c (fun i => multiplicity p (a i)) p 6 h‖^2 +
-        ‖amplificationError S a ha c (fun i => multiplicity p (a i)) p 7 h‖^2) := by
-  have he := polynomial_pool_bound S a ha c (elementPool P) (Finset.Nonempty.image hne _)
-    (fun p hpm => (elementPool_data P hp hbad p hpm).1)
-    (fun p hpm => (elementPool_data P hp hbad p hpm).2.2.2.1)
-    (fun p hpm => (elementPool_data P hp hbad p hpm).2.2.2.2.1)
-    (fun p hpm => (elementPool_data P hp hbad p hpm).2.2.2.2.2) h (by
-      intro p hpm hph
-      apply hh (Ideal.span {p}) (elementPool_data P hp hbad p hpm).2.1
-      exact Ideal.dvd_iff_le.mpr (Ideal.span_singleton_le_span_singleton.mpr hph))
-  simpa only [elementPool_card P hp hbad] using he
 
 end SevenEighths.CenteredMomentPrimeElements
 

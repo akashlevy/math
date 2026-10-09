@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.ReferenceLowBranchGeometry
-
 namespace OAI
 
 noncomputable section

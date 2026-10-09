@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GaussValuation
 import OAI.NumberTheory.DirichletL.Moments.Canonical
-
 namespace OAI
 
 noncomputable section

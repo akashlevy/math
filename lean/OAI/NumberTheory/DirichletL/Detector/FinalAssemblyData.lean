@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.ParametersFixedSource
 import OAI.NumberTheory.DirichletL.Detector.FinalAssemblySource
 import OAI.NumberTheory.DirichletL.Detector.FinalAssemblyCountParameters
-
 namespace OAI
 
 noncomputable section

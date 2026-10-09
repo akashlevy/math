@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.HeckeVolume
 import OAI.NumberTheory.DirichletL.Hecke.ModulusRefinement
-
 namespace OAI
 
 noncomputable section

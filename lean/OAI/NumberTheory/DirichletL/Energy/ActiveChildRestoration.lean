@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.AmplifiedRayDictionary
 import OAI.NumberTheory.DirichletL.Moments.RadialEligibleEnergy
-
 namespace OAI
 
 noncomputable section

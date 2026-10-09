@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.OriginalHighReflectionDeleted
 import OAI.NumberTheory.DirichletL.Energy.ReferenceDeletionEnergy
-
 namespace OAI
 
 noncomputable section

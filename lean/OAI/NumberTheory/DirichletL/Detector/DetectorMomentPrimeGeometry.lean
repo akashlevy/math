@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.DetectorMomentFiberGates
 import OAI.NumberTheory.DirichletL.Inversion.InitialPhysicalSlots
 import OAI.NumberTheory.DirichletL.Detector.RayPoolDisjoint
-
 namespace OAI
 
 noncomputable section
@@ -68,12 +67,6 @@ theorem sourceMoment_primeProfile_norm {Δ : ℝ} {D : Parameters.HighData Δ}
       (show (ζ-1).re≤0 by simp only [Complex.sub_re,Complex.one_re];linarith)).trans_eq
         (Real.rpow_zero _)
   simpa only [one_mul] using mul_le_mul hnorm hr (Real.rpow_nonneg hp.le _) (by norm_num : (0:ℝ)≤1)
-
-theorem sourceMoment_tuple_quotient {ι : Type*} [Fintype ι]
-    (data : RowData) (A : ι→ℂ) (p : ι→Ideal O) :
-    star (∏s,A s)/fixedBase data.η data.m data.f (∏s,p s)=
-      ∏s,star (A s)/fixedBase data.η data.m data.f (p s) := by
-  rw [map_prod,star_prod,Finset.prod_div_distrib]
 
 section Live
 variable (M : Ideal O) (H : Subgroup (O ⧸ M)ˣ)

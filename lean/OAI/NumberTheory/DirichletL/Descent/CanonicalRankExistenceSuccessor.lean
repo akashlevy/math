@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalRankExistenceData
 import OAI.NumberTheory.DirichletL.Descent.CanonicalRankFamilyGates
-
 namespace OAI
 
 noncomputable section

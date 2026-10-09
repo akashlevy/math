@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.LowCentralGeometry
-
 namespace OAI
 
 noncomputable section

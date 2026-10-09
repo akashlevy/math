@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.Boundary
 import OAI.NumberTheory.DirichletL.Hecke.Euler
 import OAI.NumberTheory.DirichletL.Hecke.Operations
-
 namespace OAI
 
 noncomputable section

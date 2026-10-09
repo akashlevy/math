@@ -1,7 +1,5 @@
-import OAI.NumberTheory.DirichletL.Descent.SecondBlockEnergyWindowOrder
-import OAI.NumberTheory.DirichletL.Descent.SecondDeletedMovingMassUniform
 import OAI.NumberTheory.DirichletL.Inversion.SecondChildWindows
-
+import OAI.NumberTheory.DirichletL.Descent.SecondDeletedMovingMassUniform
 namespace OAI
 
 noncomputable section

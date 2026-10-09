@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.SpectralCompensation
-
 namespace OAI
 
 noncomputable section

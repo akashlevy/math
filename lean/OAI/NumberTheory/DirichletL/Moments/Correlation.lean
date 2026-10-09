@@ -4,7 +4,6 @@ import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.LinearCombination
 import Mathlib.GroupTheory.Index
-
 namespace OAI
 
 open scoped BigOperators Classical
@@ -156,55 +155,6 @@ theorem localCorrelation_units (χ : MulChar F ℂ) {n₁ n₂ : F}
   · by_cases hχ : χ = 1
     · simp [hk, hχ, shiftCorrelation_principal (div_ne_zero hk h₁)]
     · simp [hk, hχ, shiftCorrelation_nonprincipal χ hχ (div_ne_zero hk h₁)]
-
-lemma character_sum (χ : MulChar F ℂ) :
-    (∑ x : F, χ x) = if χ = 1 then (Fintype.card F : ℂ) - 1 else 0 := by
-  classical
-  by_cases hχ : χ = 1
-  · subst χ
-    rw [MulChar.sum_one_eq_card_units, Fintype.card_eq_card_units_add_one (α := F)]
-    simp
-  · simp [hχ, MulChar.sum_eq_zero_of_ne_one hχ]
-
-theorem localCorrelation_first_zero (χ : MulChar F ℂ) {n₂ : F} (h₂ : n₂ ≠ 0) (k : F) :
-    localCorrelation χ 0 n₂ k =
-      if χ = 1 ∧ k ≠ 0 then (Fintype.card F : ℂ) - 1 else 0 := by
-  classical
-  have hsolve (x : F) : n₂ * x = k ↔ x = k / n₂ := by
-    rw [eq_div_iff h₂, mul_comm]
-  have hsum : localCorrelation χ 0 n₂ k = χ (k / n₂) * star (∑ y : F, χ y) := by
-    unfold localCorrelation fullCorrelation
-    simp only [zero_mul, sub_zero, hsolve]
-    rw [Finset.sum_comm]
-    simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true, ← Finset.mul_sum, ← star_sum]
-  rw [hsum, character_sum]
-  by_cases hχ : χ = 1
-  · subst χ
-    by_cases hk : k = 0
-    · simp [hk, MulChar.map_zero]
-    · rw [MulChar.one_apply (isUnit_iff_ne_zero.mpr (div_ne_zero hk h₂))]
-      simp [hk]
-  · simp [hχ]
-
-theorem localCorrelation_second_zero (χ : MulChar F ℂ) {n₁ : F} (h₁ : n₁ ≠ 0) (k : F) :
-    localCorrelation χ n₁ 0 k =
-      if χ = 1 ∧ k ≠ 0 then (Fintype.card F : ℂ) - 1 else 0 := by
-  classical
-  have hsolve (y : F) : -(n₁ * y) = k ↔ y = -k / n₁ := by
-    rw [eq_div_iff h₁]
-    constructor <;> intro h <;> linear_combination -h
-  have hsum : localCorrelation χ n₁ 0 k = (∑ x : F, χ x) * star (χ (-k / n₁)) := by
-    unfold localCorrelation fullCorrelation
-    simp only [zero_mul, zero_sub, hsolve, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
-      ← Finset.sum_mul]
-  rw [hsum, character_sum]
-  by_cases hχ : χ = 1
-  · subst χ
-    by_cases hk : k = 0
-    · simp [hk, MulChar.map_zero]
-    · rw [MulChar.one_apply (isUnit_iff_ne_zero.mpr (div_ne_zero (neg_ne_zero.mpr hk) h₁))]
-      simp [hk]
-  · simp [hχ]
 
 end FiniteField
 

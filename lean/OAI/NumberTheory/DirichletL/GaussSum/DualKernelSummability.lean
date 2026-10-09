@@ -1,77 +1,23 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.SourceMellinInversion
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CompletedGauss
 open scoped BigOperators Classical ContDiff
@@ -349,45 +295,6 @@ theorem withCanonicalCuspArray_value {levelBound K : ℝ} {I F Q : Ideal Eis}
     (completedBranchScale K (X/d.levelScale) I F Q (fun p : d.primes=>p.val) d.label)
     ρ q hK hy hρ hq η σ hη hσ k hk
 
-def restrictRows {levelBound K : ℝ} {I F Q : Ideal Eis}
-    (d : ReflectedBranchData levelBound K I F Q)
-    (sector : idealRange (completedResidualScale K I Q)→Prop) :
-    ReflectedBranchData levelBound K I F Q :=
-  { d with
-    rowPhase := fun i k=>if sector k then d.rowPhase i k else 0
-    rowPhase_bound := by
-      intro i k
-      split_ifs
-      · exact d.rowPhase_bound i k
-      · simp }
-
-theorem restrictRows_value {levelBound K : ℝ} {I F Q : Ideal Eis}
-    (d : ReflectedBranchData levelBound K I F Q)
-    (sector : idealRange (completedResidualScale K I Q)→Prop)
-    (W : ℝ→ℂ) (X ρ q : ℝ) (k : idealRange (completedResidualScale K I Q)) :
-    (d.restrictRows sector).value W X ρ q k =
-      if sector k then d.value W X ρ q k else 0 := by
-  by_cases hk:sector k
-  · simp only [value,restrictRows,reflectedBranchBlock,ite_eq_left hk]
-    rfl
-  · simp only [value,restrictRows,reflectedBranchBlock,ite_eq_right hk,zero_mul,tsum_zero]
-
-theorem sum_restrictRows_selected {ι : Type*} [Fintype ι] [DecidableEq ι]
-    {levelBound K : ℝ} {I F Q : Ideal Eis}
-    (d : ι→ReflectedBranchData levelBound K I F Q)
-    (sector : idealRange (completedResidualScale K I Q)→ι)
-    (W : ℝ→ℂ) (X ρ q : ℝ) (k : idealRange (completedResidualScale K I Q)) :
-    (∑s : ι,((d s).restrictRows (fun k=>sector k=s)).value W X ρ q k)=
-      (d (sector k)).value W X ρ q k := by
-  calc
-    _ = ((d (sector k)).restrictRows (fun k'=>sector k'=sector k)).value W X ρ q k := by
-      apply Finset.sum_eq_single (sector k)
-      · intro s _ hs
-        rw [restrictRows_value,ite_eq_right (Ne.symm hs)]
-      · intro h
-        exact (h (Finset.mem_univ _)).elim
-    _ = _ := by rw [restrictRows_value,ite_eq_left rfl]
-
 end ReflectedBranchData
 
 end CompletedGauss
@@ -549,14 +456,6 @@ theorem infinityCoefficientScalar_ne_zero : infinityCoefficientScalar≠0 := by
   intro hC
   obtain ⟨h,h3,hn⟩:=exists_source_coefficient_not_three
   exact hn (sourceFourier_supported_three_of_base_zero hC h h3)
-
-lemma sourceResidualFourierCoefficient_one_ne_zero : sourceResidualFourierCoefficient 1≠0 := by
-  intro h
-  exact infinityCoefficientScalar_ne_zero (by simp only [infinityCoefficientScalar,h,star_zero])
-
-lemma sourceArithmeticResidue_one_ne_zero : sourceArithmeticResidue 1≠0 := by
-  intro h
-  exact sourceResidualFourierCoefficient_one_ne_zero (by rw [sourceResidualFourierCoefficient,h,mul_zero])
 
 theorem normalized_infinityCoefficient_squarefree_cube (I J:Ideal Eis)
     (hI:primaryGenerator I≠0) (hJ:primaryGenerator J≠0) (hsq:Squarefree I) :

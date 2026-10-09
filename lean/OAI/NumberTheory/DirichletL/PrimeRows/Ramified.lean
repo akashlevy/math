@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.Ideal
 import OAI.NumberTheory.DirichletL.Detector.HighRowsRamified
 import OAI.NumberTheory.DirichletL.Hecke.DeletionBounds
-
 namespace OAI
 
 noncomputable section
@@ -21,24 +20,6 @@ def ramifiedCorrection (η : Character) (u : FreeRow) (P : PrimeIdeal) (hs : Sup
   ramifiedClosed p hp hg (targetMonoid η p) (actualACube η p)
     (actualSextic (Ideal.span {p}) hg (Ideal.Quotient.mk _ (unitPart u p hp)))
     x w z (multiplicity p u.val)
-
-theorem ramifiedCorrection_bound (η : Character) (u : FreeRow) (P : PrimeIdeal)
-    (hs : Supported P.val) (hQ : (4 : ℝ)≤P.val.absNorm) (x w z : ℂ)
-    (hx : (7/8 : ℝ)≤x.re) (hw : (19/20 : ℝ)≤w.re) (hz : (33/200 : ℝ)≤z.re) :
-    ‖ramifiedCorrection η u P hs x w z‖≤193 := by
-  let p := primaryGenerator P.val
-  have hp : Prime p := supported_primeGenerator_prime P hs
-  have hspan : Ideal.span {p}=P.val := span_primaryGenerator_of_supported P.val hs
-  let : (Ideal.span {p}:Ideal O).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hp.irreducible
-  have hsp : Supported (Ideal.span {p}) := hspan.symm ▸ hs
-  have hg := supported_prime_data p hp hsp
-  have ha : ‖actualACube η p‖≤1 := by
-    have h := actualAPhase_norm_le_one η p
-    rw [←actualACube_sq,norm_pow] at h
-    nlinarith [norm_nonneg (actualACube η p)]
-  exact ramifiedClosed_bound p hp hg.1 hg.2 _ _ _ x w z
-    (hspan.symm ▸ hQ) (targetMonoid_norm_le_one η p) ha
-    (actualSextic_unit_six p (unitPart u p hp) hg.1 hg.2 (unitPart_coprime u p hp)) hx hw hz _
 
 theorem localCorrection_eq_ramified (η : Character) (u : FreeRow) (P : PrimeIdeal)
     (hs : Supported P.val) (hPu : P.val∣Ideal.span {u.val})
@@ -80,31 +61,6 @@ theorem localCorrection_eq_ramified (η : Character) (u : FreeRow) (P : PrimeIde
 
 def ramifiedPrimes (S : Finset (Ideal O)) (u : FreeRow) : Finset PrimeIdeal :=
   (SmoothMobiusCorrection.primeSet (Ideal.span {u.val})).filter (fun P => P.val∉S)
-
-theorem ramified_product_subpower (ε : ℝ) (hε : 0<ε) :
-    ∃ C : ℝ,0<C ∧ ∀ (S : Finset (Ideal O)) (hS : SourceExclusions S)
-      (η : Character) (u : FreeRow) (x w z : ℂ),
-      (7/8 : ℝ)≤x.re → (19/20 : ℝ)≤w.re → (33/200 : ℝ)≤z.re →
-      ‖∏ P∈(ramifiedPrimes S u).attach,
-        ramifiedCorrection η u P.val
-          (outside_prime_supported S hS.bad P.val (Finset.mem_filter.mp P.property).2) x w z‖≤
-        C*((Ideal.span {u.val}:Ideal O).absNorm : ℝ)^ε := by
-  obtain ⟨C,hC,hbound⟩ := HeckeDeletionBounds.constant_pow_primeSupport_bound 193 ε (by norm_num) hε
-  refine ⟨C,hC,?_⟩
-  intro S hS η u x w z hx hw hz
-  rw [norm_prod]
-  calc
-    _ ≤ ∏ P∈(ramifiedPrimes S u).attach,(193 : ℝ) := by
-      apply Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _)
-      intro P hP
-      exact ramifiedCorrection_bound η u P.val _
-        (by exact_mod_cast hS.tail.norm_four P.val (Finset.mem_filter.mp P.property).2) x w z hx hw hz
-    _ = (193 : ℝ)^(ramifiedPrimes S u).card := by simp
-    _ ≤ (193 : ℝ)^(IdealMobiusDivisorSum.primeSupport (Ideal.span {u.val})).card := by
-      apply pow_le_pow_right₀ (by norm_num)
-      rw [←HeckeDeletionBounds.primeSet_card]
-      exact Finset.card_filter_le _ _
-    _ ≤ _ := hbound _ (Ideal.span_singleton_eq_bot.not.mpr u.property.1)
 
 end SevenEighths.ProbeHighRowFamily
 

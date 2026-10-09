@@ -1,74 +1,23 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.CrossSeparation
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
 namespace IdealMobiusDivisorSum
 abbrev O := ActualEisensteinCubic.O
@@ -192,8 +141,6 @@ theorem sum_moebius_divisors (I : Ideal O) (hI : I ≠ ⊥) :
       (Finset.mem_powerset.mp hT) hST
 
 end IdealMobiusDivisorSum
-
-open scoped BigOperators Classical
 
 namespace CompletedGauss
 
@@ -321,8 +268,6 @@ theorem primaryGenerator_span (n : O) (hn : n ≠ 0)
 theorem primaryGenerator_norm_sq (I : Ideal O) (h : primaryGenerator I ≠ 0) :
     ‖ConcreteTraceCRT.eisEmbedding (primaryGenerator I)‖ ^ 2 = (Ideal.absNorm I : ℝ) := by
   rw [eisEmbedding_norm_sq_eq_absNorm_span, (primaryGenerator_spec I h).1]
-
-open ActualEisensteinCubic
 
 theorem compact_window_bound (W : ℝ → ℂ) (hW : HasCompactSupport W) :
     ∃ B : ℝ, 0 < B ∧ ∀ y, W y ≠ 0 → y ≤ B := by
@@ -487,43 +432,15 @@ theorem cubicRow_mk (I : Ideal O) (hI : primaryGenerator I ≠ 0) (a : O) :
         (Ideal.Quotient.mk P.val a) := by
   simp only [cubicRow, Ideal.Quotient.factor_mk]
 
-theorem cubicRow_zero_iff (I : Ideal O) (hI : primaryGenerator I ≠ 0) (a : O) :
-    cubicRow I hI (Ideal.Quotient.mk I a) = 0 ↔
-      ∃ P ∈ primeSupport I, a ∈ P := by
-  rw [cubicRow_mk, Finset.prod_eq_zero_iff]
-  have hlocal (P : PrimeIndex I) :
-      (canonicalSextic P.val (primeIndex_good I hI P) ^ 2) (Ideal.Quotient.mk P.val a) = 0 ↔ a ∈ P.val := by
-    let : Field (O ⧸ P.val) := Ideal.Quotient.field P.val
-    rw [MulChar.apply_eq_zero_iff]
-    simp only [isUnit_iff_ne_zero, not_not, Ideal.Quotient.eq_zero_iff_mem]
-  constructor
-  · rintro ⟨P, _, hP⟩
-    exact ⟨P.val, P.property, (hlocal P).mp hP⟩
-  · rintro ⟨P, hP, ha⟩
-    exact ⟨⟨P, hP⟩, Finset.mem_univ _, (hlocal ⟨P, hP⟩).mpr ha⟩
-
 theorem primaryGenerator_norm (I : Ideal O) (hI : primaryGenerator I ≠ 0) :
     ‖eisEmbedding (primaryGenerator I)‖ = Real.sqrt (Ideal.absNorm I : ℝ) := by
   rw [← primaryGenerator_norm_sq I hI, Real.sqrt_sq_eq_abs, abs_of_nonneg (norm_nonneg _)]
-
-theorem cubeWeight_span (Ψ : O →* ℂ) (n : O) (hn : n ≠ 0)
-    (hp : lambda ^ 2 ∣ n - 1) :
-    cubeWeight Ψ (Ideal.span {n}) =
-      star (FiniteGaussPhase.angularFactor n) ^ 3 * Ψ n ^ 3 /
-        (ShortDraftLatticeCount.qNat n : ℂ) := by
-  change star (FiniteGaussPhase.angularFactor (primaryGenerator (Ideal.span {n}))) ^ 3 *
-    Ψ (primaryGenerator (Ideal.span {n})) ^ 3 / (Ideal.absNorm (Ideal.span {n}) : ℂ) = _
-  rw [primaryGenerator_span n hn hp, qNat_eq_absNorm_span]
 
 theorem columnWeight_eq (Ψ : O →* ℂ) (I : Ideal O) (hs : Squarefree I)
     (hI : primaryGenerator I ≠ 0) :
     columnWeight Ψ I = star (FiniteGaussPhase.angularFactor (primaryGenerator I)) *
       gaussTwo I hI * Ψ (primaryGenerator I) := by
   rw [columnWeight, squarefreeGaussCoefficient_eq I hs hI]
-
-theorem columnWeight_zero_of_mask (Ψ : O →* ℂ) (I : Ideal O)
-    (h : Ψ (primaryGenerator I) = 0) : columnWeight Ψ I = 0 := by
-  simp only [columnWeight, h, mul_zero]
 
 theorem cubeWeight_zero_of_mask (Ψ : O →* ℂ) (I : Ideal O)
     (h : Ψ (primaryGenerator I) = 0) : cubeWeight Ψ I = 0 := by

@@ -1,6 +1,13 @@
 import OAI.NumberTheory.DirichletL.Descent.ActualDepthBudget
-import OAI.NumberTheory.DirichletL.Descent.FirstTwoPassLowerRank
-
+import OAI.NumberTheory.DirichletL.Descent.CanonicalChildSupport
+import OAI.NumberTheory.DirichletL.Descent.FirstLabelCellStep
+import OAI.NumberTheory.DirichletL.Descent.FirstTwoPassParentEnergy
+import OAI.NumberTheory.DirichletL.Descent.FirstDyadicFullEnergy
+import OAI.NumberTheory.DirichletL.Descent.FirstDyadicOriginalBranches
+import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLiveParents
+import OAI.NumberTheory.DirichletL.Descent.FirstLiveCountBudget
+import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLiveAggregate
+import OAI.NumberTheory.DirichletL.Descent.FirstOriginalProfileLiveEnergy
 namespace OAI
 
 noncomputable section
@@ -30,15 +37,6 @@ theorem actual_step_parameters (F eta r ell epsChild:ℝ)
   · have hcap:2*F+15*eta+eta+1≤10*F+32:=by linarith
     have hh:=mul_le_mul_of_nonneg_left hcap he.le
     nlinarith
-
-theorem actual_long_rank_slack (cutoff eta ell V:ℝ)(hd:0<cutoff)(_he:0≤eta)
-    (hsmall:eta≤cutoff/32)(hprogress:cutoff-eta≤ell+V):
-    0<cutoff/2 ∧ cutoff/2≤ell+V ∧ eta≤(cutoff/2)/16 ∧ 17*eta≤cutoff :=by
-  constructor
-  · positivity
-  constructor
-  · linarith
-  constructor <;> linarith
 
 theorem actual_recursion_parameters (Mcap Fcap c eps:ℝ)(_hM:0≤Mcap)(_hF:0≤Fcap)(hc:0<c)(heps:0<eps):
     ∃cutoff eta:ℝ,0<cutoff ∧ 0<eta ∧ eta≤1 ∧ eta≤cutoff/32 ∧

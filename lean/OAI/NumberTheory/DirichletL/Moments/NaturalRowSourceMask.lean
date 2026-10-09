@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FixedRowMask
 import OAI.NumberTheory.DirichletL.Hecke.ModulusRefinement
-
 namespace OAI
 
 noncomputable section

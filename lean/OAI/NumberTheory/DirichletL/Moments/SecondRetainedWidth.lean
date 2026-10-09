@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondRadicalBudget
 import OAI.NumberTheory.DirichletL.Moments.SectorLocalization
-
 namespace OAI
 
 noncomputable section
@@ -100,52 +99,6 @@ theorem exists_retained_width_family (η : Character) (χ : RayCharacter)
   obtain ⟨hR,_,_,hne,h1,hrow,_⟩:=retained_geometry R _ _ z hz
   exact ⟨hR,hne,h1,hrow,retained_log_budget η τ _ _ z _ hU hb R Z hZ hz,
     retained_row_log_budget η τ _ _ z _ hU hb R Z hZ hz⟩
-
-theorem fixed_width_cost_eventually (ε : ℝ) (hε : 0<ε) :
-    ∀ᶠZ:ℝ in Filter.atTop,1<Z ∧ Real.logb Z (4*(fixedFactor:ℝ))≤ε := by
-  have he:=(Filter.tendsto_atTop.1 (tendsto_rpow_atTop hε)) (4*(fixedFactor:ℝ))
-  filter_upwards [he,Filter.eventually_gt_atTop (1:ℝ)] with Z hF hZ
-  refine ⟨hZ,?_⟩
-  have hp : (0:ℝ)<fixedFactor:=by exact_mod_cast fixedFactor_pos
-  have hh:=Real.logb_le_logb_of_le hZ (by positivity : 0<4*(fixedFactor:ℝ)) hF
-  simpa only [Real.logb_rpow (zero_lt_one.trans hZ) (ne_of_gt hZ)] using hh
-
-theorem exists_uniform_retained_width_family (ε : ℝ) (hε : 0<ε) :
-    ∃Z₀:ℝ,1<Z₀ ∧ ∀(η:Character)(χ:RayCharacter)(C D:Ideal O)
-      (hC:Supported C)(U:Finset (CommonIndex C D)),
-    ∃τ:Character,
-      (∀n:O,elementCoeff τ n=rowTwist (HeckeRowClosure.elementHom (childCharacter η χ))
-        fixedBadMask 1 (CenteredMomentSecondSixthReduction.reducedNumerator C D U) n) ∧
-      (∀I:Ideal O,Supported I → ∀t:ℝ,heightCoeff τ t I=heightCoeff η t I*
-        idealRowHom (CenteredMomentSecondSixthReduction.reducedNumerator C D U) I*
-        rayCharacter χ (primaryGenerator I)) ∧
-      ∀hD : Supported D,CompletedGauss.primeSupport C=CompletedGauss.primeSupport D →
-      ∀w:O,idealCorrelation C D hC hD (commonFrequencyGenerator C D*w)≠0 →
-      τ.modulus.absNorm≤η.modulus.absNorm*fixedFactor*(∏P∈U,P.val).absNorm*
-        (Ideal.span {nonunitFrequencyGenerator C D U}).absNorm ∧
-      ∀Z R:ℝ,Z₀≤Z → ∀z:O,
-        retainedWeight R (normValue ((commonFrequencyGenerator C D*nonunitFrequencyGenerator C D U)*z))≠0 →
-        0<R ∧ z≠0 ∧ 1≤normValue z ∧
-        normValue z≤4*R/(normValue (commonFrequencyGenerator C D)*normValue (nonunitFrequencyGenerator C D U)) ∧
-        Real.logb Z (max 1 (4*R/(normValue (commonFrequencyGenerator C D)*
-          normValue (nonunitFrequencyGenerator C D U))))+Real.logb Z (τ.modulus.absNorm:ℝ)≤
-          Real.logb Z R+Real.logb Z (η.modulus.absNorm:ℝ)-Real.logb Z (normValue (commonFrequencyGenerator C D))+
-            Real.logb Z ((∏P∈U,P.val).absNorm:ℝ)+ε ∧
-        Real.logb Z (normValue z)+Real.logb Z (τ.modulus.absNorm:ℝ)≤
-          Real.logb Z R+Real.logb Z (η.modulus.absNorm:ℝ)-Real.logb Z (normValue (commonFrequencyGenerator C D))+
-            Real.logb Z ((∏P∈U,P.val).absNorm:ℝ)+ε := by
-  obtain ⟨Z₀,hZ₀⟩:=Filter.eventually_atTop.mp (fixed_width_cost_eventually ε hε)
-  refine ⟨Z₀,(hZ₀ Z₀ le_rfl).1,?_⟩
-  intro η χ C D hC U
-  obtain ⟨τ,he,ht,hb⟩:=exists_retained_width_family η χ C D hC U
-  refine ⟨τ,he,ht,?_⟩
-  intro hD hCD w hw
-  obtain ⟨hN,hrow⟩:=hb hD hCD w hw
-  refine ⟨hN,?_⟩
-  intro Z R hZ z hz
-  obtain ⟨hZ1,hcost⟩:=hZ₀ Z hZ
-  obtain ⟨hR,hn,h1,hup,hmax,hlog⟩:=hrow Z R hZ1 z hz
-  exact ⟨hR,hn,h1,hup,by linarith,by linarith⟩
 
 end SevenEighths.CenteredMomentSecondRetainedWidth
 

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalLongKeys
 import OAI.NumberTheory.DirichletL.Descent.CanonicalLongIntegral
-
 namespace OAI
 
 noncomputable section

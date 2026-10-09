@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.FiniteConductor
-
 namespace OAI
 
 namespace SevenEighths.CharacterTransport
@@ -58,13 +57,6 @@ theorem primitive_pullback (e : R ≃+* S) (χ : MulChar S ℂ)
     change e.symm ((u : S) - 1) ∈ I at hu
     simpa only [map_sub, map_one] using hu
   · simpa [v, pullback] using hχu
-
-theorem primitive_pullback_iff (e : R ≃+* S) (χ : MulChar S ℂ) :
-    IsPrimitiveOnIdeals (pullback e χ) ↔ IsPrimitiveOnIdeals χ := by
-  constructor
-  · intro h
-    simpa using primitive_pullback e.symm (pullback e χ) h
-  · exact primitive_pullback e χ
 
 end
 

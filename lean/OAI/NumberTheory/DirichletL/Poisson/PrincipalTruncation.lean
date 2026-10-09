@@ -1,75 +1,24 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.PrimitiveRows
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical SchwartzMap
 namespace TruncatedPrincipalPoisson
 
 section
@@ -526,64 +475,8 @@ lemma density_weight_identity (J : ℕ) (t : ℝ) :
   simp only [firstLogDensity, zero_add, pow_add, mul_inv_rev]
   field_simp
 
-lemma triple_product_integral_bound (f₁ f₂ f₃ g₁ g₂ g₃ : ℝ → ℝ)
-    (hf₁ : Integrable f₁) (hf₂ : Integrable f₂) (hf₃ : Integrable f₃)
-    (hg₁ : Integrable g₁) (hg₂ : Integrable g₂) (hg₃ : Integrable g₃)
-    (S C : ℝ) (hpoint : ∀ x y z, S * f₁ x * f₂ y * f₃ z ≤ C * g₁ x * g₂ y * g₃ z) :
-    S * (∫ x, f₁ x) * (∫ y, f₂ y) * (∫ z, f₃ z) ≤
-      C * (∫ x, g₁ x) * (∫ y, g₂ y) * (∫ z, g₃ z) := by
-  have hi₃ (x y : ℝ) := integral_mono (hf₃.const_mul (S * f₁ x * f₂ y))
-    (hg₃.const_mul (C * g₁ x * g₂ y)) (hpoint x y)
-  simp only [integral_const_mul] at hi₃
-  have hi₂ (x : ℝ) := integral_mono
-    ((hf₂.const_mul (S * f₁ x)).mul_const (∫ z, f₃ z))
-    ((hg₂.const_mul (C * g₁ x)).mul_const (∫ z, g₃ z)) (hi₃ x)
-  simp only [integral_const_mul, integral_mul_const] at hi₂
-  have hi₁ := integral_mono
-    (((hf₁.const_mul S).mul_const (∫ y, f₂ y)).mul_const (∫ z, f₃ z))
-    (((hg₁.const_mul C).mul_const (∫ y, g₂ y)).mul_const (∫ z, g₃ z)) hi₂
-  simpa only [integral_const_mul, integral_mul_const] using hi₁
-
-theorem triple_coefficient_moment_bound (b₁ b₂ b₃ : 𝓢(ℝ, ℂ)) (J : ℕ) (S C : ℝ)
-    (hpoint : ∀ t₁ t₂ t₃ : ℝ, S * ‖b₁ t₁ * b₂ t₂ * b₃ t₃‖ ≤
-      C * firstLogDensity J t₁ * firstLogDensity J t₂ * firstLogDensity J t₃) :
-    S * (∫ t₁ : ℝ, ∫ t₂ : ℝ, ∫ t₃ : ℝ,
-      (1 + ‖t₁‖) ^ J * (1 + ‖t₂‖) ^ J * (1 + ‖t₃‖) ^ J *
-        ‖b₁ t₁ * b₂ t₂ * b₃ t₃‖) ≤ C * (∫ t : ℝ, firstLogDensity 0 t) ^ 3 := by
-  let f₁ : ℝ → ℝ := fun t => (1 + ‖t‖) ^ J * ‖b₁ t‖
-  let f₂ : ℝ → ℝ := fun t => (1 + ‖t‖) ^ J * ‖b₂ t‖
-  let f₃ : ℝ → ℝ := fun t => (1 + ‖t‖) ^ J * ‖b₃ t‖
-  have hprod : ∀ t₁ t₂ t₃ : ℝ,
-      (1 + ‖t₁‖) ^ J * (1 + ‖t₂‖) ^ J * (1 + ‖t₃‖) ^ J *
-        ‖b₁ t₁ * b₂ t₂ * b₃ t₃‖ = f₁ t₁ * (f₂ t₂ * f₃ t₃) := by
-    intro t₁ t₂ t₃
-    simp only [norm_mul, f₁, f₂, f₃]
-    ring
-  have hb : ∀ t₁ t₂ t₃ : ℝ, S * f₁ t₁ * f₂ t₂ * f₃ t₃ ≤
-      C * firstLogDensity 0 t₁ * firstLogDensity 0 t₂ * firstLogDensity 0 t₃ := by
-    intro t₁ t₂ t₃
-    have h := mul_le_mul_of_nonneg_left (hpoint t₁ t₂ t₃)
-      (show 0 ≤ (1 + ‖t₁‖)^J * (1 + ‖t₂‖)^J * (1 + ‖t₃‖)^J by positivity)
-    have hd₁ := density_weight_identity J t₁
-    have hd₂ := density_weight_identity J t₂
-    have hd₃ := density_weight_identity J t₃
-    simp only [norm_mul] at h
-    rw [← hd₁, ← hd₂, ← hd₃]
-    dsimp [f₁, f₂, f₃]
-    simpa only [Real.norm_eq_abs, mul_assoc, mul_comm, mul_left_comm] using h
-  have hbound := triple_product_integral_bound f₁ f₂ f₃
-    (firstLogDensity 0) (firstLogDensity 0) (firstLogDensity 0)
-    (weighted_schwartz_integrable b₁ J) (weighted_schwartz_integrable b₂ J)
-    (weighted_schwartz_integrable b₃ J)
-    (firstLogDensity_integrable 0) (firstLogDensity_integrable 0) (firstLogDensity_integrable 0)
-    S C hb
-  simp_rw [hprod, integral_const_mul]
-  simp_rw [integral_mul_const]
-  convert hbound using 1 <;> ring
-
 end JointLogSeparation
 
-open scoped BigOperators
 namespace FiniteOverlapDecomposition
 variable {ι : Type*} [DecidableEq ι]
 

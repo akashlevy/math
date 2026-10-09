@@ -1,6 +1,5 @@
-import OAI.NumberTheory.DirichletL.Moments.CommonPrimeSlots
+import OAI.NumberTheory.DirichletL.Moments.CommonAllocationSum
 import OAI.NumberTheory.DirichletL.Moments.SourceProfileMass
-
 namespace OAI
 
 noncomputable section
@@ -8,7 +7,7 @@ open scoped BigOperators Classical
 
 namespace SevenEighths.CenteredMomentCommonProfile
 open ActualEisensteinCubic CenteredMomentSourceProfileMass CenteredMomentAddedZeroUniform
-open CenteredMomentCommonPrimeSlots CenteredMomentCommonAllocationBox
+open CenteredMomentCommonAllocationBox
 local notation "O" => ActualEisensteinCubic.O
 variable {ι : Type*} [Fintype ι]
 
@@ -79,18 +78,6 @@ theorem profile_common_allocation (B u : Tuple ι) (C R s : Ideal O)
     by_cases hu : IsCoprime (finiteTupleProduct (remainingTuple B u)) R <;>
     simp_all only [true_and,false_and,ite_true,ite_false,mul_zero,zero_mul,mul_one]
   ring
-
-theorem actual_frozen_slots (S : (ι ⊕ Fin 2) → Finset (Ideal O))
-    (hS : ∀ i,∀ I∈S i,I≠0) (C : Ideal O) (hC : C≠0)
-    (B : Tuple ι) (hB : ∀ i,B i≠0)
-    (hBs : ∀ i,IdealMobiusDivisorSum.primeSupport (B i)⊆IdealMobiusDivisorSum.primeSupport C)
-    (u : Tuple ι) (hu : u∈residualBoxes S C B hB)
-    (hp : ∀ i,∀ I∈S (Sum.inl i),Prime I) :
-    ∀ i,B (Sum.inl i)≠1 → u (Sum.inl i)=1 := by
-  intro i hi
-  rcases prime_coordinate_cases S hS C hC B hB hBs u hu (Sum.inl i) (hp i) with h|h
-  · exact False.elim (hi h.1)
-  · exact h.1
 
 end SevenEighths.CenteredMomentCommonProfile
 

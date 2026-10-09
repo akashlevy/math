@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsWeights
 import OAI.NumberTheory.DirichletL.Detector.HighRowsRecurrence
 import OAI.NumberTheory.DirichletL.Detector.LocalSeries
-
 namespace OAI
 
 noncomputable section

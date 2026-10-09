@@ -1,9 +1,9 @@
 import OAI.NumberTheory.DirichletL.Moments.PlainPositiveEnergy
 import OAI.NumberTheory.DirichletL.Moments.CommonMaskRadialEnergy
-import OAI.NumberTheory.DirichletL.Moments.NaturalCoreFloor
+import OAI.NumberTheory.DirichletL.Moments.PlainGlobalEnergy
+import OAI.NumberTheory.DirichletL.Moments.NaturalRowSourceFamily
 import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalControl
 import OAI.NumberTheory.DirichletL.Moments.AllocatedNaturalSource
-
 namespace OAI
 
 noncomputable section

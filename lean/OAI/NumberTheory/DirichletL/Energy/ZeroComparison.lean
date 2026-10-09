@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.OriginalSource
 import OAI.NumberTheory.DirichletL.Moments.RetainedProfile
-
 namespace OAI
 
 noncomputable section
@@ -70,45 +69,6 @@ lemma comparison_energy_zero (s:Input ι)(hz₁:s.W₁ 0=0)(hz₂:s.W₂ 0=0)
   unfold CenteredMomentInductionEnergy.energy
   simp only [comparison_row_zero s hz₁ hz₂ R, norm_zero, zero_pow (by decide : (2:ℕ)≠0),
     zero_mul, ite_self, tsum_zero]
-
-theorem actual_zero_comparison_entry (s:Input ι)(hz₁:s.W₁ 0=0)(hz₂:s.W₂ 0=0)
-    (R:Ideal O)(r:Radial):
-    CenteredMomentInductionEnergy.energy s.η (fixedBadMask*idealGenerator R) 1 s.t s.W₁ s.W₂ s.slots
-      s.toData.coefficient s.P s.X₁ s.X₂ r.keep r.profile r.scale≤
-    2*‖finiteHeckeEnergy s.η fixedBadMask 1 s.t
-      (finiteColumns (Fintype.piFinset (zeroInput s hz₁ hz₂).pools))
-      (coefficient (zeroInput s hz₁ hz₂) R 1) r.profile r.scale‖/volume s:=by
-  have hh:=positive_energy_comparison (zeroInput s hz₁ hz₂) R r
-  change _≤_+2*CenteredMomentInductionEnergy.energy s.η (fixedBadMask*idealGenerator R) 1 s.t s.W₁ s.W₂ s.slots
-    s.toData.coefficient s.P (zeroInput s hz₁ hz₂).Y₁ (zeroInput s hz₁ hz₂).Y₂
-    r.keep r.profile r.scale at hh
-  rw [comparison_energy_zero s hz₁ hz₂ R r,mul_zero,add_zero] at hh
-  exact hh
-
-omit [DecidableEq ι] in
-theorem zero_comparison_scale_caps (b L ε:ℝ)(hL:0≤L)(hε:0<ε):
-    ∀ᶠ Z:ℝ in atTop,1<Z ∧ ∀s:Input ι,∀hz₁:s.W₁ 0=0,∀hz₂:s.W₂ 0=0,
-      s.b₁≤b → s.X₁≤Z^L → s.X₂≤Z^L →
-      (zeroInput s hz₁ hz₂).Y₁≤Z^(2*L+ε) ∧
-      (zeroInput s hz₁ hz₂).Y₂≤Z^(2*L+ε):=by
-  filter_upwards [(Filter.tendsto_atTop.1 (tendsto_rpow_atTop hε)) (2*max 1 b),
-    eventually_gt_atTop (1:ℝ)] with Z hc hZ
-  refine ⟨hZ,?_⟩
-  intro s hz₁ hz₂ hb hX₁ hX₂
-  have hZ0:0<Z:=zero_lt_one.trans hZ
-  refine ⟨(smallScale_le_one _).trans (Real.one_le_rpow hZ.le (by positivity)),?_⟩
-  change s.X₁*s.X₂/smallScale s.b₁≤_
-  have hp:s.X₁*s.X₂≤Z^(2*L):=by
-    have hh:=mul_le_mul hX₁ hX₂ s.X₂_pos.le (Real.rpow_pos_of_pos hZ0 L).le
-    rw [←Real.rpow_add hZ0] at hh
-    simpa only [two_mul] using hh
-  have hconst:2*max 1 s.b₁≤Z^ε:=(mul_le_mul_of_nonneg_left (max_le_max_left 1 hb) (by norm_num)).trans hc
-  unfold smallScale
-  rw [div_div_eq_mul_div,div_one]
-  calc
-    s.X₁*s.X₂*(2*max 1 s.b₁)≤Z^(2*L)*Z^ε:=
-      mul_le_mul hp hconst (by positivity) (Real.rpow_pos_of_pos hZ0 _).le
-    _=Z^(2*L+ε):=(Real.rpow_add hZ0 _ _).symm
 
 end SevenEighths.CenteredMomentEnergyZeroComparison
 

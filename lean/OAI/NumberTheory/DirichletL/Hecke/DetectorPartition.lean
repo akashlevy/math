@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorWitnessArithmetic
-
 namespace OAI
 
 noncomputable section

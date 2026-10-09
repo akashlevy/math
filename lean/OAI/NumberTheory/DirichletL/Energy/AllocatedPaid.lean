@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.PaidRemoval
 import OAI.NumberTheory.DirichletL.Moments.AllocatedRayDictionary
-
 namespace OAI
 
 noncomputable section

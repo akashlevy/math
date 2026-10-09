@@ -1,80 +1,26 @@
 import OAI.NumberTheory.DirichletL.RowCompletion.FixedCuspBranches
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open scoped BigOperators Classical MatrixGroups
+open scoped MatrixGroups
 
 namespace ShortDraftCusp
 open ActualEisensteinCubic CubicEisenstein ConcreteTraceCRT
@@ -130,8 +76,6 @@ lemma fixedCuspArrayWithPhase_reflectionStaticPhase (c0:Eis) (hc0:c0≠0)
 end FixedCuspShape
 end CubicEisenstein
 end
-
-open scoped Classical BigOperators
 
 namespace CanonicalRowCompletion
 open ActualEisensteinCubic CanonicalQuadraticSieve CanonicalCoefficientClass
@@ -198,20 +142,11 @@ lemma reflectionConductor_coprime_of_not_excluded (q:ℕ) (hq:q≠0)
     (Ideal.prime_of_isPrime (NeZero.ne P) inferInstance)
     (Ideal.dvd_iff_le.mpr (le_sup_left.trans he.symm.le)))
 
-lemma reflectionConductor_coprime_primary (q:ℕ) (hq:q≠0)
-    (p:Eis) [(Ideal.span {p}).IsMaximal]
-    (hp:Ideal.span {p}∉reflectionExcludedPrimes q) :
-    IsCoprime (reflectionConductor q) p :=
-  (Ideal.isCoprime_span_singleton_iff _ _).mp
-    (reflectionConductor_coprime_of_not_excluded q hq _ hp)
-
 lemma reflectionLevelBound_ge_one (q:ℕ) (hq:q≠0) :
     1≤CubicEisenstein.fixedCuspLevelBound (reflectionConductor q) :=
   CubicEisenstein.fixedCuspLevelBound_ge_one _ (reflectionConductor_ne_zero q hq)
 
 end CanonicalRowCompletion
-
-open scoped BigOperators Classical
 
 namespace CompletedGauss
 open ActualEisensteinCubic UniqueFactorizationMonoid
@@ -226,54 +161,14 @@ lemma prime_dvd_rowResidualPart_iff (I Q P:Ideal Eis) (hP:Prime P) :
   rw [←hm]
   simp only [normalizedFactors_squarefreeResidualPart,Multiset.mem_filter]
 
-lemma rowResidualPart_prime_fixed_mask (I Q Q0 P:Ideal Eis)
-    (hP:Prime P) (hfree:¬Q0≤P) :
-    P∣rowResidualPart I (Q0*Q) ↔ P∣rowResidualPart I Q := by
-  have hnd:¬P∣Q0:=by simpa only [Ideal.dvd_iff_le] using hfree
-  rw [prime_dvd_rowResidualPart_iff I (Q0*Q) P hP,
-    prime_dvd_rowResidualPart_iff I Q P hP,hP.dvd_mul]
-  simp only [hnd,false_or]
-
-theorem completedReflectionPool_fixed_mask_filter (I Q Q0:Ideal Eis)
-    (hI:I≠0) (hQ:Q≠0) (hQ0:Q0≠0) :
-    (completedReflectionPool I (Q0*Q)).filter (fun P=>¬Q0≤P)=
-      (completedReflectionPool I Q).filter (fun P=>¬Q0≤P) := by
-  ext P
-  simp only [Finset.mem_filter,mem_completedReflectionPool I (Q0*Q) P hI (mul_ne_zero hQ0 hQ),
-    mem_completedReflectionPool I Q P hI hQ]
-  by_cases hP:Prime P
-  · by_cases hfree:¬Q0≤P
-    · have hnd:¬P∣Q0:=by simpa only [Ideal.dvd_iff_le] using hfree
-      have hdiv:P∣I*(Q0*Q) ↔ P∣I*Q:=by
-        rw [hP.dvd_mul,hP.dvd_mul,hP.dvd_mul]
-        simp only [hnd,false_or]
-      rw [hdiv,rowResidualPart_prime_fixed_mask I Q Q0 P hP hfree]
-    · simp only [hfree,and_false]
-  · simp only [hP,false_and]
-
 end CompletedGauss
 
 namespace CanonicalRowCompletion
 open ActualEisensteinCubic CompletedGauss CanonicalQuadraticSieve
-local notation "Eis" => ActualEisensteinCubic.O
-
-theorem goodMaskNonresidualPool_full_mask (I F Q0:Ideal Eis)
-    (hI:I≠0) (hF:F≠0) (hQ0:Q0≠0)
-    (m f z:Eis) (hm0:m≠0) (hf:Ideal.span {f}=F) (hz:Ideal.span {z}=I)
-    (um:Eisˣ) (am bm:ℕ) (g:Eis) (hg:Supported (Ideal.span {g}))
-    (hm:m=um.val*lambda^am*(2:Eis)^bm*g)
-    (u:Eisˣ) (a b:ℕ) (r:Eis) (hr:Supported (Ideal.span {r}))
-    (hx:f^4*z=u.val*lambda^a*(2:Eis)^b*r) :
-    (goodMaskNonresidualPool I F m g r).filter (fun P=>¬Q0≤P)=
-      (completedReflectionPool I (Q0*(Ideal.span {m}*F))).filter (fun P=>¬Q0≤P) := by
-  rw [completedReflectionPool_fixed_mask_filter I (Ideal.span {m}*F) Q0 hI
-    (mul_ne_zero (Ideal.span_singleton_eq_bot.not.mpr hm0) hF) hQ0]
-  exact goodMaskNonresidualPool_free_eq I F Q0 hI hF m f z hm0 hf hz
-    um am bm g hg hm u a b r hr hx
 
 end CanonicalRowCompletion
 
-open scoped BigOperators Classical MatrixGroups Matrix
+open scoped MatrixGroups Matrix
 
 namespace ShortDraftCusp
 

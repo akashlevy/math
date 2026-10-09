@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.PlainPositiveScale
 import OAI.NumberTheory.DirichletL.Moments.OriginalRadialComparison
-
 namespace OAI
 
 noncomputable section

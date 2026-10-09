@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.MarkedNormalization
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LowPeriodFilter
 import OAI.NumberTheory.DirichletL.Reflection.PunctureAbsorption
-
 namespace OAI
 
 noncomputable section
@@ -68,14 +67,6 @@ theorem physical_row_absorb_true_period (η : HeckeFamily.Character) (S : Finset
   exact InverseReflectedPhase.rowTwist_absorb_puncture _ _ _ f z
     (calibration_generator_bad S hS hbad).1 (calibration_generator_bad S hS hbad).2
     (physicalRayPeriodicBase_zero_true_puncture η S hS hbad σ χ)
-
-lemma physical_true_period_residual_coprime (η : HeckeFamily.Character) (S : Finset Id)
-    (hS : ∀P∈S,P.IsMaximal) (I F : Id) :
-    IsCoprime (lowPeriodIdeal η S hS)
-      (rowResidualPart I
-        (Ideal.span {(calibrationForSet S hS).generator*lowTruePeriodGenerator η S hS}*F)) := by
-  apply InverseReflectedPhase.rowResidualPart_coprime_enlarged_period
-  rw [lowTruePeriodGenerator_span]
 
 def lowReflectionPeriod (η : HeckeFamily.Character) (S : Finset Id)
     (hS : ∀P∈S,P.IsMaximal) : Id :=

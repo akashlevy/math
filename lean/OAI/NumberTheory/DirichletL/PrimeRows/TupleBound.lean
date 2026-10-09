@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.TupleSums
 import OAI.NumberTheory.DirichletL.PrimeRows.TupleFactor
-
 namespace OAI
 
 noncomputable section

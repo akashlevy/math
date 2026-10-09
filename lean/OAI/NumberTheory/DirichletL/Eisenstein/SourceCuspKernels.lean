@@ -1,77 +1,23 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.RamifiedValuation
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CubicEisenstein
 
@@ -130,10 +76,6 @@ theorem sourceCuspZFamily_series (j : Fin 3) (z : ℂ) (v : ℝ) (hv : 0<v) :
   exact (sourceCuspCoefficients j).scaledConjugate_wirtingerZ (sourceCuspBesselConstant j)
     (sourceCuspScale j) (sourceCuspScale_pos j) v hv z
 
-theorem sourceCuspZTerm_summable (j : Fin 3) (z : ℂ) (v : ℝ) (hv : 0<v) :
-    Summable (sourceCuspZTerm j z v) :=
-  (sourceCuspCoefficients j).scaledConjugateZTerm_summable (sourceCuspScale j) (sourceCuspScale_pos j) v hv z
-
 lemma sourceCuspZTerm_zero (j : Fin 3) (z : ℂ) (v : ℝ) : sourceCuspZTerm j z v 0=0 :=
   (sourceCuspCoefficients j).scaledConjugateZTerm_zero _ _ _
 
@@ -145,43 +87,6 @@ lemma sourceCuspZTerm_bessel (j : Fin 3) (z : ℂ) (v : ℝ) (hv : 0<v)
         schlafliBesselK (1/3) (4*Real.pi*‖cuspFrequency h‖*(v/sourceCuspScale j))*
           ShortDraftTrace.breveE (-cuspFrequency h*(z/(sourceCuspScale j:ℂ))) :=
   (sourceCuspCoefficients j).scaledConjugateZTerm_bessel _ (sourceCuspScale_pos j) v hv z h hh
-
-theorem thetaTwistedCuspProfile_reflected_series (Ψ : Eis→*ℂ) (c : Eis) (hc : c≠0)
-    [Fintype (Eis⧸Ideal.span {c})] (d : (Eis⧸Ideal.span {c})→SourceCuspDatum)
-    (hd : ∀h,(d h).point=thetaFourierTranslation c h) (v : ℝ) (hv : 0<v) :
-    thetaTwistedCuspProfile Ψ c hc v=
-      ∑h:Eis⧸Ideal.span {c},
-        finiteAdditiveFourierCoeff (quotientTrace c hc) (fixedThetaQuotient Ψ c) h*
-        ((d h).multiplier/(v:ℂ)^2*
-          ∑'n:Eis,sourceCuspZTerm (d h).index (d h).dualPoint (((d h).heightScale*v)⁻¹) n) := by
-  rw [thetaTwistedCuspProfile_reflection_of_data Ψ c hc d hd v hv]
-  apply Finset.sum_congr rfl
-  intro h hh
-  rw [sourceCuspZFamily_series _ _ _ (inv_pos.mpr (mul_pos (d h).heightScale_pos hv))]
-
-def finiteReflectedSourceTerm (Ψ : Eis→*ℂ) (c : Eis) (hc : c≠0)
-    [Fintype (Eis⧸Ideal.span {c})] (d : (Eis⧸Ideal.span {c})→SourceCuspDatum)
-    (v : ℝ) (h : Eis⧸Ideal.span {c}) (n : Eis) : ℂ :=
-  finiteAdditiveFourierCoeff (quotientTrace c hc) (fixedThetaQuotient Ψ c) h*
-    ((d h).multiplier/(v:ℂ)^2*
-      sourceCuspZTerm (d h).index (d h).dualPoint (((d h).heightScale*v)⁻¹) n)
-
-theorem finiteReflectedSourceTerm_summable (Ψ : Eis→*ℂ) (c : Eis) (hc : c≠0)
-    [Fintype (Eis⧸Ideal.span {c})] (d : (Eis⧸Ideal.span {c})→SourceCuspDatum)
-    (v : ℝ) (hv : 0<v) (h : Eis⧸Ideal.span {c}) :
-    Summable (finiteReflectedSourceTerm Ψ c hc d v h) :=
-  ((sourceCuspZTerm_summable _ _ _ (inv_pos.mpr (mul_pos (d h).heightScale_pos hv))).mul_left _).mul_left _
-
-theorem thetaTwistedCuspProfile_reflected_single_series (Ψ : Eis→*ℂ) (c : Eis) (hc : c≠0)
-    [Fintype (Eis⧸Ideal.span {c})] (d : (Eis⧸Ideal.span {c})→SourceCuspDatum)
-    (hd : ∀h,(d h).point=thetaFourierTranslation c h) (v : ℝ) (hv : 0<v) :
-    thetaTwistedCuspProfile Ψ c hc v=
-      ∑'n:Eis,∑h:Eis⧸Ideal.span {c},finiteReflectedSourceTerm Ψ c hc d v h n := by
-  rw [thetaTwistedCuspProfile_reflected_series Ψ c hc d hd v hv,
-    Summable.tsum_finsetSum (fun h hh=>finiteReflectedSourceTerm_summable Ψ c hc d v hv h)]
-  apply Finset.sum_congr rfl
-  intro h hh
-  simp only [finiteReflectedSourceTerm,tsum_mul_left]
 
 end
 
@@ -252,25 +157,7 @@ theorem sourceCuspZFamily_eq_radialBesselProfile (j : Fin 3) (z : ℂ) (v : ℝ)
   rw [sourceCuspZFamily_series j z v hv]
   exact tsum_congr (sourceCuspZTerm_eq_radial j z v hv)
 
-theorem thetaTwistedCuspProfile_reflected_radial (Ψ : Eis→*ℂ) (c : Eis) (hc : c≠0)
-    [Fintype (Eis⧸Ideal.span {c})] (d : (Eis⧸Ideal.span {c})→SourceCuspDatum)
-    (hd : ∀h,(d h).point=thetaFourierTranslation c h) (v : ℝ) (hv : 0<v) :
-    thetaTwistedCuspProfile Ψ c hc v=
-      ∑h:Eis⧸Ideal.span {c},
-        finiteAdditiveFourierCoeff (quotientTrace c hc) (fixedThetaQuotient Ψ c) h*
-        ((d h).multiplier/(v:ℂ)^2*
-          radialBesselProfile sourceCuspRadialLength
-            (sourceCuspRadialCoefficient (d h).index (d h).dualPoint)
-            (sourceCuspRadialScale (d h).index) (((d h).heightScale*v)⁻¹)) := by
-  rw [thetaTwistedCuspProfile_reflection_of_data Ψ c hc d hd v hv]
-  apply Finset.sum_congr rfl
-  intro h hh
-  rw [sourceCuspZFamily_eq_radialBesselProfile _ _ _ (inv_pos.mpr (mul_pos (d h).heightScale_pos hv))]
-
 end CubicEisenstein
-
-open Filter MeasureTheory
-open scoped Classical BigOperators Topology
 
 namespace CompletedGauss
 
@@ -339,9 +226,6 @@ theorem bessel_reflection_scale (q d Q X r:ℝ)
 
 end CompletedGauss
 
-open Filter MeasureTheory
-open scoped Classical BigOperators Topology ContDiff
-
 namespace CubicReflectionKernel
 
 lemma paperKernel_three_halves (V:ℝ→ℂ) (v0 v1:ℝ) (hv0:0<v0)
@@ -386,25 +270,6 @@ namespace CompletedGauss
 
 section
 open CubicReflectionKernel
-
-lemma paperKernel_weighted_summable {α:Type*}
-    (r:α→ℝ) (hr:∀i,0<r i) (a:α→ℂ)
-    (has:Summable (fun i=>‖a i‖*(r i)^(-(3/2:ℝ))))
-    (V:ℝ→ℂ) (v0 v1:ℝ) (hv0:0<v0)
-    (hVs:Function.support V⊆Set.Icc v0 v1) (hV:ContDiff ℝ ∞ V)
-    (c:ℝ) (hc:0<c) : Summable (fun i=>a i*paperKernel V (c*r i)) := by
-  obtain ⟨C,hC,hb⟩:=paperKernel_three_halves_bound V v0 v1 hv0 hVs hV
-  apply Summable.of_norm
-  apply (has.mul_left (C*(paperScale*c)^(-(3/2:ℝ)))).of_nonneg_of_le (fun i=>norm_nonneg _)
-  intro i
-  rw [norm_mul]
-  calc
-    _≤‖a i‖*(C*(paperScale*(c*r i))^(-(3/2:ℝ))):=
-      mul_le_mul_of_nonneg_left (hb _ (mul_pos hc (hr i))) (norm_nonneg _)
-    _=(C*(paperScale*c)^(-(3/2:ℝ)))*(‖a i‖*(r i)^(-(3/2:ℝ))):=by
-      rw [show paperScale*(c*r i)=(paperScale*c)*r i by ring,
-        Real.mul_rpow (mul_pos paperScale_pos hc).le (hr i).le]
-      ring
 
 theorem paperKernel_weighted_mellin {α:Type*} [Countable α]
     (r:α→ℝ) (hr:∀i,0<r i) (a:α→ℂ)
@@ -476,87 +341,7 @@ lemma besselSmoothingIntegrand_reflected_kernel_line {α:Type*} [Countable α]
       ((Q:ℂ)^(2-2*s)*besselReflectionFactor q d s*(X:ℂ)^(-w)):=by ring
     _=_:=by rw [hp];ring
 
-theorem completedT_smoothed_reflection {α:Type*} [Countable α]
-    (Ψ:ActualEisensteinCubic.O→*ℂ) (hΨ:∀x,‖Ψ x‖≤1)
-    (r:α→ℝ) (hr:∀i,0<r i) (a:α→ℂ)
-    (q d Q:ℝ) (hq:0<q) (hd:0<d) (hQ:0<Q) (A:ℂ)
-    (hF:∀s:ℂ,MellinConvergent (completedBesselProfile Ψ q) s)
-    (hFe:Differentiable ℂ (mellin (completedBesselProfile Ψ q)))
-    (hreflect:∀v:ℝ,0<v→completedBesselProfile Ψ q v=
-      A*((v:ℂ)^(-2:ℂ)*radialBesselProfile r a d ((Q*v)⁻¹)))
-    (has:Summable (fun i=>‖a i‖*(r i)^(-(3/2:ℝ))))
-    (W:ℝ→ℂ) (v0 v1:ℝ) (hv0:0<v0)
-    (hWs:Function.support W⊆Set.Icc v0 v1) (hW:ContDiff ℝ ∞ W)
-    (X:ℝ) (hX:0<X) :
-    completedT Ψ W X=
-      (A*(Q:ℂ)*((q/d:ℝ):ℂ)^2)*
-        ∑'i,a i*paperKernel (Vstar W) (27*q^2*d^2*X*r i/Q^2) := by
-  have hVs:=Vstar_support W v0 v1 hWs
-  have hV:=Vstar_contDiff W v0 v1 hv0 hWs hW
-  have hl:=besselSmoothingIntegrand_reflected_integrable (completedBesselProfile Ψ q)
-    r hr a q d Q hq hd hQ A hreflect has (Vstar W) v0 v1 hv0 hVs hV X hX
-  have hlreal : Integrable (fun t:ℝ=>
-      besselSmoothingIntegrand (completedBesselProfile Ψ q) q (Vstar W) X
-        (((-1:ℝ):ℂ)+t*Complex.I)) := by
-    simpa only [Complex.ofReal_neg,Complex.ofReal_one] using hl
-  have hshift:=completedT_mellin_shift Ψ hΨ q hq hF hFe W v0 v1 hv0 hWs hW X hX
-    (-1) (by norm_num) hlreal
-  let c:ℝ:=27*q^2*d^2*X/Q^2
-  have hc:0<c:=by dsimp [c];positivity
-  let M:ℝ→ℂ:=fun t=>(∑'i,a i*(r i:ℂ)^(-((3/2:ℂ)+t*Complex.I)))*
-    (((paperScale*c:ℝ):ℂ)^(-((3/2:ℂ)+t*Complex.I))*
-      mellinEulerData (Vstar W) 0 ((3/2:ℂ)+t*Complex.I))
-  have hk:=paperKernel_weighted_mellin r hr a has (Vstar W) v0 v1 hv0 hVs hV c hc
-  have hpoint (t:ℝ) :
-      besselSmoothingIntegrand (completedBesselProfile Ψ q) q (Vstar W) X ((-1:ℂ)+(-t)*Complex.I)=
-        (A*((Q*(q/d)^2:ℝ):ℂ))*M t :=
-    besselSmoothingIntegrand_reflected_kernel_line (completedBesselProfile Ψ q)
-      r hr a q d Q hq hd hQ A hreflect has (Vstar W) X hX t
-  calc
-    completedT Ψ W X=(1/(2*Real.pi):ℂ)*∫t:ℝ,
-        besselSmoothingIntegrand (completedBesselProfile Ψ q) q (Vstar W) X ((-1:ℂ)+t*Complex.I):=by
-      simpa only [Complex.ofReal_neg,Complex.ofReal_one] using hshift
-    _=(1/(2*Real.pi):ℂ)*∫t:ℝ,
-        besselSmoothingIntegrand (completedBesselProfile Ψ q) q (Vstar W) X ((-1:ℂ)+(-t)*Complex.I):=by
-      congr 1
-      simpa only [Complex.ofReal_neg] using
-        (integral_neg_eq_self (fun t:ℝ=>
-          besselSmoothingIntegrand (completedBesselProfile Ψ q) q (Vstar W) X
-            ((-1:ℂ)+t*Complex.I)) volume).symm
-    _=(A*((Q*(q/d)^2:ℝ):ℂ))*((1/(2*Real.pi):ℂ)*∫t:ℝ,M t):=by
-      simp_rw [hpoint]
-      rw [integral_const_mul]
-      ring
-    _=(A*((Q*(q/d)^2:ℝ):ℂ))*(∑'i,a i*paperKernel (Vstar W) (c*r i)):=by rw [hk]
-    _=_:=by
-      push_cast
-      congr 1
-      · ring
-      · apply tsum_congr
-        intro i
-        congr 2
-        dsimp [c]
-        ring
-
-theorem reflected_paperKernel_summable {α:Type*}
-    (r:α→ℝ) (hr:∀i,0<r i) (a:α→ℂ)
-    (has:Summable (fun i=>‖a i‖*(r i)^(-(3/2:ℝ))))
-    (q d Q X:ℝ) (hq:0<q) (hd:0<d) (hQ:0<Q) (hX:0<X)
-    (W:ℝ→ℂ) (v0 v1:ℝ) (hv0:0<v0)
-    (hWs:Function.support W⊆Set.Icc v0 v1) (hW:ContDiff ℝ ∞ W) :
-    Summable (fun i=>a i*paperKernel (Vstar W) (27*q^2*d^2*X*r i/Q^2)) := by
-  have h:=paperKernel_weighted_summable r hr a has (Vstar W) v0 v1 hv0
-    (Vstar_support W v0 v1 hWs) (Vstar_contDiff W v0 v1 hv0 hWs hW)
-    (27*q^2*d^2*X/Q^2) (by positivity)
-  apply h.congr
-  intro i
-  congr 2
-  ring
-
 end CompletedGauss
-
-open Filter MeasureTheory
-open scoped Classical BigOperators Topology ContDiff
 
 namespace CompletedGauss
 open CubicEisenstein CubicReflectionKernel

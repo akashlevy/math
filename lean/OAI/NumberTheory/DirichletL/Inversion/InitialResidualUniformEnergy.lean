@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialResidualTupleEnergy
 import OAI.NumberTheory.DirichletL.Inversion.InitialUniformFresh
 import OAI.NumberTheory.DirichletL.Inversion.InitialResidualPool
-
 namespace OAI
 
 noncomputable section

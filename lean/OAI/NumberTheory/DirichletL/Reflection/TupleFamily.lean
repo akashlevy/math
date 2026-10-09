@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.Canonical
 import OAI.NumberTheory.DirichletL.Descent.SlotProducts
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -62,13 +61,6 @@ lemma tuplePrimeFamily_at_product (tuples : Finset (σ→Ideal Eis)) (hne : tupl
     (p : σ→Ideal Eis) (hp : p∈tuples) :
     (tuplePrimeFamily tuples hne hmax hgood (slotTupleProduct p)).ideal=p :=
   tupleRepresentative_at_product tuples hne hinj p hp
-
-lemma tuple_product_injective (L : σ→Finset (Ideal Eis))
-    (hL : Pairwise (fun i j => Disjoint (L i) (L j)))
-    (hp : ∀ i, ∀ P∈L i, Prime P) (tuples : Finset (σ→Ideal Eis))
-    (hT : ∀ p∈tuples, ∀ i, p i∈L i) :
-    Set.InjOn slotTupleProduct (↑tuples : Set (σ→Ideal Eis)) :=
-  (slotTupleProduct_injective_on L hL hp).mono hT
 
 end
 end SevenEighths.InverseReflectedPhase

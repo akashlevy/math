@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.MarkedOverlap
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

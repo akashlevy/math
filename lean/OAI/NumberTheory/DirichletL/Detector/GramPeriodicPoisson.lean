@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Foundation
 import OAI.NumberTheory.DirichletL.Detector.GramLatticeDecay
 import OAI.NumberTheory.DirichletL.Detector.GramAnnularLattice
-
 namespace OAI
 
 noncomputable section
@@ -161,23 +160,6 @@ theorem partialFourierSchwartz_apply (W : 𝓢(Joint, ℂ)) (η x : ℂ) :
 theorem fourier_partialFourierSchwartz (W : 𝓢(Joint, ℂ)) (ξ η : ℂ) :
     𝓕 (partialFourierSchwartz W η) ξ = (𝓕 W) (point ξ η) := by
   simp [partialFourierSchwartz]
-
-theorem jointCLM_finite_seminorm_control
-    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    (T : 𝓢(Joint, ℂ) →L[ℝ] 𝓢(E, ℂ)) (S : Finset (ℕ × ℕ)) :
-    ∃ (s : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧ ∀ W : 𝓢(Joint, ℂ),
-      S.sup (schwartzSeminormFamily ℝ E ℂ) (T W) ≤
-        C * s.sup (schwartzSeminormFamily ℝ Joint ℂ) W := by
-  let q : Seminorm ℝ 𝓢(Joint, ℂ) :=
-    (S.sup (schwartzSeminormFamily ℝ E ℂ)).comp T.toLinearMap
-  have hq : Continuous q :=
-    (((schwartz_withSeminorms ℝ E ℂ).finset_sups).continuous_seminorm S).comp T.continuous
-  obtain ⟨s, C, hC, hbound⟩ :=
-    Seminorm.bound_of_continuous (schwartz_withSeminorms ℝ Joint ℂ) q hq
-  refine ⟨s, C, ?_, ?_⟩
-  · exact_mod_cast (pos_iff_ne_zero.mpr hC : 0 < C)
-  · intro W
-    exact Seminorm.le_def.mp hbound W
 
 def productDecayConstant (W : 𝓢(Joint, ℂ)) : ℝ :=
   2 ^ (8:ℕ) * (Finset.Iic (8,0)).sup (schwartzSeminormFamily ℝ Joint ℂ) W
@@ -944,88 +926,8 @@ theorem principal_high_bound (A : ℕ) (hA : 2 < A) :
       gcongr
     _ = _ := by ring
 
-theorem norm_physical_weighted_le (W : 𝓢(Joint, ℂ)) (N : ℝ) (hN : 0 < N)
-    (d : O × O → ℂ) (B : ℝ) (hB : ∀ m, ‖d m‖ ≤ B) :
-    ‖∑' m : O × O, d m * W (ProbeGramLatticeDecay.physicalPoint N m)‖ ≤
-      B * ∑' m : O × O, ‖W (ProbeGramLatticeDecay.physicalPoint N m)‖ := by
-  have hbound (m : O × O) : ‖d m * W (ProbeGramLatticeDecay.physicalPoint N m)‖ ≤
-      B * ‖W (ProbeGramLatticeDecay.physicalPoint N m)‖ := by
-    rw [norm_mul]
-    exact mul_le_mul_of_nonneg_right (hB m) (norm_nonneg _)
-  have hs := ProbeGramLatticeDecay.physical_summable W N hN
-  have hsD := Summable.of_nonneg_of_le (fun m => norm_nonneg _) hbound (hs.mul_left B)
-  apply (norm_tsum_le_tsum_norm hsD).trans
-  have h := Summable.tsum_le_tsum hbound hsD (hs.mul_left B)
-  simpa only [tsum_mul_left] using h
-
-theorem principal_periodic_bound (A : ℕ) (hA : 2 < A) :
-    ∃ (S : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-      ∀ (W : 𝓢(Joint, ℂ)) (c : O), c ≠ 0 →
-        ∀ (a : Residue c × Residue c → ℂ) (B : ℝ), 0 ≤ B →
-        (∀ r, ‖a r‖ ≤ B) → (∑' r, a r) = 0 → ∀ (N : ℝ), 1 ≤ N →
-        Summable (fun m : O × O =>
-          a (quotientPair c m) * W (ProbeGramLatticeDecay.physicalPoint N m)) ∧
-        ‖∑' m : O × O, a (quotientPair c m) * W (ProbeGramLatticeDecay.physicalPoint N m)‖ ≤
-          C * ProbeGramLatticeDecay.sourceControl S W * B * N^2 *
-            min 1 (((Ideal.absNorm (Ideal.span {c}) : ℝ)/N)^A) := by
-  obtain ⟨Sl,Cl,hCl,hl⟩ := ProbeGramLatticeDecay.physical_lattice_bound
-  obtain ⟨Sh,Ch,hCh,hh⟩ := principal_high_bound A hA
-  refine ⟨Sl∪Sh,Cl+Ch,add_pos hCl hCh,?_⟩
-  intro W c hc a B hB0 hB hm N hN
-  have hNp : 0 < N := lt_of_lt_of_le zero_lt_one hN
-  refine ⟨physical_weighted_summable W N hNp _ B (fun m => hB _),?_⟩
-  have hSl : Cl*ProbeGramLatticeDecay.sourceControl Sl W ≤
-      (Cl+Ch)*ProbeGramLatticeDecay.sourceControl (Sl∪Sh) W :=
-    mul_le_mul (le_add_of_nonneg_right hCh.le)
-      (ProbeGramLatticeDecay.sourceControl_mono Finset.subset_union_left W)
-      (ProbeGramLatticeDecay.sourceControl_nonneg _ _) (by positivity)
-  have hSh : Ch*ProbeGramLatticeDecay.sourceControl Sh W ≤
-      (Cl+Ch)*ProbeGramLatticeDecay.sourceControl (Sl∪Sh) W :=
-    mul_le_mul (le_add_of_nonneg_left hCl.le)
-      (ProbeGramLatticeDecay.sourceControl_mono Finset.subset_union_right W)
-      (ProbeGramLatticeDecay.sourceControl_nonneg _ _) (by positivity)
-  have hratio : 0 ≤ (Ideal.absNorm (Ideal.span {c}) : ℝ)/N := div_nonneg (by positivity) hNp.le
-  by_cases hscale : (Ideal.absNorm (Ideal.span {c}) : ℝ) ≤ N
-  · have hp : ((Ideal.absNorm (Ideal.span {c}) : ℝ)/N)^A ≤ 1 :=
-      pow_le_one₀ hratio ((div_le_one hNp).mpr hscale)
-    rw [min_eq_right hp]
-    exact (hh W c hc a B hB0 hB hm N hNp hscale).trans
-      (mul_le_mul_of_nonneg_right
-        (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hSh hB0) (sq_nonneg _))
-        (pow_nonneg hratio _))
-  · have hp : 1 ≤ ((Ideal.absNorm (Ideal.span {c}) : ℝ)/N)^A :=
-      one_le_pow₀ ((le_div_iff₀ hNp).mpr (by linarith))
-    rw [min_eq_left hp, mul_one]
-    calc
-      _ ≤ B * ∑' m : O × O, ‖W (ProbeGramLatticeDecay.physicalPoint N m)‖ :=
-        norm_physical_weighted_le W N hNp _ B (fun m => hB _)
-      _ ≤ B * (Cl*ProbeGramLatticeDecay.sourceControl Sl W*N^2) :=
-        mul_le_mul_of_nonneg_left (hl W N hN) hB0
-      _ = Cl*ProbeGramLatticeDecay.sourceControl Sl W*B*N^2 := by ring
-      _ ≤ _ := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hSl hB0) (sq_nonneg _)
-
 def idealQuotientPair (r : Ideal O) (m : O × O) : (O ⧸ r) × (O ⧸ r) :=
   (Ideal.Quotient.mk r m.1, Ideal.Quotient.mk r m.2)
-
-theorem ideal_periodic_bound (A : ℕ) (hA : 2 < A) :
-    ∃ (S : Finset (ℕ × ℕ)) (C : ℝ), 0 < C ∧
-      ∀ (W : 𝓢(Joint, ℂ)) (r : Ideal O), r ≠ 0 →
-        ∀ (a : (O ⧸ r) × (O ⧸ r) → ℂ) (B : ℝ), 0 ≤ B →
-        (∀ v, ‖a v‖ ≤ B) → (∑' v, a v) = 0 → ∀ (N : ℝ), 1 ≤ N →
-        Summable (fun m : O × O =>
-          a (idealQuotientPair r m) * W (ProbeGramLatticeDecay.physicalPoint N m)) ∧
-        ‖∑' m : O × O, a (idealQuotientPair r m) * W (ProbeGramLatticeDecay.physicalPoint N m)‖ ≤
-          C * ProbeGramLatticeDecay.sourceControl S W * B * N^2 *
-            min 1 (((Ideal.absNorm r : ℝ)/N)^A) := by
-  obtain ⟨S,C,hC,h⟩ := principal_periodic_bound A hA
-  refine ⟨S,C,hC,?_⟩
-  intro W r hr
-  obtain ⟨c,hc,heq⟩ : ∃ c : O, c ≠ 0 ∧ Ideal.span {c} = r :=
-    ⟨ConcretePrimeRowBridge.idealGenerator r,
-      ConcretePrimeRowBridge.idealGenerator_ne_zero r hr,
-      ConcretePrimeRowBridge.span_idealGenerator r⟩
-  subst r
-  exact h W c hc
 
 theorem principal_annular_periodic_bound (A : ℕ) (hA : 2 < A)
     (a b : ℝ) (ha : 0 < a) (hab : a < b) :

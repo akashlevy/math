@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.NaturalPrimitive
 import OAI.NumberTheory.DirichletL.Moments.ReflectionDeletion
 import OAI.NumberTheory.DirichletL.Hecke.Conjugation
-
 namespace OAI
 
 noncomputable section

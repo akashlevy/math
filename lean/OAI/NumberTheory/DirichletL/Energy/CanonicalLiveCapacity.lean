@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Energy.CanonicalLiveBound
 import OAI.NumberTheory.DirichletL.Energy.DeletedChildCapacity
-
 namespace OAI
 
 noncomputable section

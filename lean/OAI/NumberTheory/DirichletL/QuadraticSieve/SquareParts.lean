@@ -1,77 +1,25 @@
 import OAI.NumberTheory.DirichletL.QuadraticSieve.AnnularRecursion
 import OAI.NumberTheory.DirichletL.Eisenstein.ConstantTermSupport
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace CanonicalQuadraticSieve
 
 section
@@ -126,19 +74,6 @@ def supportedSquarefreeEquiv : {lengthScale : Ideal O // Supported lengthScale} 
     · exact Subtype.ext (squarePart_mul_squarefree p.1.property.1 p.2.property.2.1).1
     · exact Subtype.ext (squarePart_mul_squarefree p.1.property.1 p.2.property.2.1).2
 
-theorem supported_tsum_squarefree_decomposition (f : Ideal O → ℂ) :
-    (∑' lengthScale : Ideal O, if Supported lengthScale then f lengthScale else 0) =
-      ∑' p : ({A : Ideal O // Supported A} × {B : Ideal O // Admissible B}), f (p.1.val ^ 2 * p.2.val) := by
-  calc
-    _ = ∑' lengthScale : {lengthScale : Ideal O // Supported lengthScale}, f lengthScale.val := by
-      calc
-        _ = ∑' lengthScale : Ideal O, ({lengthScale : Ideal O | Supported lengthScale} : Set (Ideal O)).indicator f lengthScale := by
-          apply tsum_congr
-          intro lengthScale
-          rfl
-        _ = _ := (tsum_subtype ({lengthScale : Ideal O | Supported lengthScale} : Set (Ideal O)) f).symm
-    _ = _ := (supportedSquarefreeEquiv.symm.tsum_eq (fun lengthScale => f lengthScale.val)).symm
-
 theorem canonical_quadraticRow_argument_mul (D : Ideal O) (hD : Admissible D) (a b : O) :
     quadraticRow D (a * b) = quadraticRow D a * quadraticRow D b := by
   let F : Finset (Ideal O) := {D}
@@ -160,39 +95,6 @@ theorem canonical_quadraticRow_primary_squarefree (D : Ideal O) (hD : Admissible
   rw [primaryGenerator_mul]
   have hpow : primaryGenerator (A ^ 2) = primaryGenerator A ^ 2 := map_pow primaryGeneratorHom A 2
   rw [hpow, canonical_quadraticRow_argument_mul D hD, canonical_quadraticRow_square_argument D hD]
-
-theorem canonical_high_pair_squarefree_decomposition
-    (I J : Ideal O) (hI : Admissible I) (hJ : Admissible J)
-    (W : ℝ → ℂ) (M K : ℝ) :
-    (∑' lengthScale : Ideal O, if Supported lengthScale ∧ K < (Ideal.absNorm (squarefreePart lengthScale) : ℝ) then
-      (quadraticRow I (primaryGenerator lengthScale) * quadraticRow J (primaryGenerator lengthScale)) *
-        W ((Ideal.absNorm lengthScale : ℝ) / M) else 0) =
-    ∑' p : ({A : Ideal O // Supported A} × {B : Ideal O // Admissible B}),
-      if K < (Ideal.absNorm p.2.val : ℝ) then
-        (idealZeroMask I (primaryGenerator p.1.val) * idealZeroMask J (primaryGenerator p.1.val)) *
-        (quadraticRow I (primaryGenerator p.2.val) * quadraticRow J (primaryGenerator p.2.val)) *
-        W (((Ideal.absNorm p.1.val : ℝ) ^ 2 * (Ideal.absNorm p.2.val : ℝ)) / M) else 0 := by
-  let f : Ideal O → ℂ := fun lengthScale => if K < (Ideal.absNorm (squarefreePart lengthScale) : ℝ) then
-    (quadraticRow I (primaryGenerator lengthScale) * quadraticRow J (primaryGenerator lengthScale)) *
-      W ((Ideal.absNorm lengthScale : ℝ) / M) else 0
-  have he : (∑' lengthScale : Ideal O, if Supported lengthScale ∧ K < (Ideal.absNorm (squarefreePart lengthScale) : ℝ) then
-      (quadraticRow I (primaryGenerator lengthScale) * quadraticRow J (primaryGenerator lengthScale)) *
-        W ((Ideal.absNorm lengthScale : ℝ) / M) else 0) =
-      ∑' lengthScale : Ideal O, if Supported lengthScale then f lengthScale else 0 := by
-    apply tsum_congr
-    intro lengthScale
-    by_cases hL : Supported lengthScale <;> simp [hL, f]
-  rw [he, supported_tsum_squarefree_decomposition]
-  apply tsum_congr
-  intro p
-  dsimp only [f]
-  rw [(squarePart_mul_squarefree p.1.property.1 p.2.property.2.1).2]
-  by_cases hK : K < (Ideal.absNorm p.2.val : ℝ)
-  · rw [ite_eq_left hK, ite_eq_left hK, canonical_quadraticRow_primary_squarefree I hI,
-      canonical_quadraticRow_primary_squarefree J hJ]
-    simp only [map_mul, map_pow, Nat.cast_mul, Nat.cast_pow]
-    ring
-  · simp only [ite_eq_right hK]
 
 end
 
@@ -372,14 +274,6 @@ theorem residual_pair_nontrivial (D I J : Ideal O) (hDI : D ∣ I) (hDJ : D ∣ 
     _ = D * idealQuotient D J := by rw [hn.2, mul_one]
     _ = J := idealQuotient_mul hDJ
 
-theorem original_pair_dual_remove_zero (D I J : Ideal O) (hI : Admissible I) (hJ : Admissible J)
-    (hDI : D ∣ I) (hDJ : D ∣ J) (hIJ : I ≠ J) (f : O → ℂ) :
-    (∑' z : O, quadraticRow (idealQuotient D I) z * quadraticRow (idealQuotient D J) z * f z) =
-      ∑' z : O, if z = 0 then 0 else
-        quadraticRow (idealQuotient D I) z * quadraticRow (idealQuotient D J) z * f z :=
-  quadratic_pair_tsum_remove_zero _ _ (admissible_idealQuotient hI hDI)
-    (admissible_idealQuotient hJ hDJ) (residual_pair_nontrivial D I J hDI hDJ hIJ) f
-
 end
 
 section
@@ -438,20 +332,6 @@ theorem annularRayGcdBlock_eq_pair_high
       intro J _
       exact tsum_mul_left
 
-theorem annularRayGcdBlock_eq_source_sub_low
-    (M N K : ℝ) (hM : 0 < M) (D : Ideal O) (c : EisensteinEPrimaryPhase.Coord)
-    (a : idealRange N → ℂ) :
-    annularRayGcdBlock M N K D c a =
-      ∑ I : idealRange N, ∑ J : idealRange N, rayPairCoefficient N D c a I J *
-        ((∑' lengthScale : Ideal O, originalPairSource I.val J.val QuadraticInitialBound.annularSieveCutoff M lengthScale) -
-          ∑' lengthScale : Ideal O, originalPairLow I.val J.val QuadraticInitialBound.annularSieveCutoff M K lengthScale) := by
-  rw [annularRayGcdBlock_eq_pair_high M N K hM D c a]
-  apply Finset.sum_congr rfl
-  intro I _
-  apply Finset.sum_congr rfl
-  intro J _
-  rw [originalPairHigh_eq_source_sub_low I.val J.val _ M K hM]
-
 end
 
 open ActualEisensteinCubic ConcreteTraceCRT CompletedGauss
@@ -477,27 +357,8 @@ theorem originalPairSource_poisson (D I J : Ideal O) (hI : Admissible I) (hJ : A
     (∑' lengthScale : Ideal O, originalPairSource I J W M lengthScale) = originalPairDualKernel D I J W M :=
   canonical_original_pair_poisson D I J hI hJ hgcd hray W M hM
 
-theorem annularRayGcdBlock_poisson
-    (M N K : ℝ) (hM : 0 < M) (D : Ideal O) (c : EisensteinEPrimaryPhase.Coord)
-    (a : idealRange N → ℂ) :
-    annularRayGcdBlock M N K D c a =
-      ∑ I : idealRange N, ∑ J : idealRange N, rayPairCoefficient N D c a I J *
-        (originalPairDualKernel D I.val J.val QuadraticInitialBound.annularSieveCutoff M -
-          ∑' lengthScale : Ideal O, originalPairLow I.val J.val QuadraticInitialBound.annularSieveCutoff M K lengthScale) := by
-  rw [annularRayGcdBlock_eq_source_sub_low M N K hM D c a]
-  apply Finset.sum_congr rfl
-  intro I _
-  apply Finset.sum_congr rfl
-  intro J _
-  by_cases hc : gcd I.val J.val = D ∧ columnRay I.val = c ∧ columnRay J.val = c
-  · have hray : columnRay I.val = columnRay J.val := hc.2.1.trans hc.2.2.symm
-    rw [originalPairSource_poisson D I.val J.val (mem_idealRange.mp I.property).1
-      (mem_idealRange.mp J.property).1 hc.1 hray _ M hM]
-  · simp only [rayPairCoefficient, ite_eq_right hc, zero_mul]
-
 end CanonicalQuadraticSieve
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace SecondPassIntegration
 open ActualEisensteinCubic FirstPassCubeLabels JointLogSeparation
 
@@ -510,19 +371,6 @@ theorem columnLog_extract_common {ι : Type*} [DecidableEq ι]
   rw [primeProductNorm_union p G N hd]
   congr 1
   field_simp
-
-theorem normalizedColumn_extract_fixed_profile {ι : Type*} [DecidableEq ι]
-    (p : ι → O) (hp : ∀ i, p i ≠ 0) (G N : Finset ι) (hd : Disjoint G N)
-    (X : ℝ) (hX : 0 < X) (U : ℝ → ℂ) (hUc : HasCompactSupport U)
-    (hUs : ContDiff ℝ ∞ U) (g : 𝓢(ℝ, ℂ)) (hU : ∀ s, g s ≠ 0 → U s = 1) :
-    normalizedColumn p (fun S => g (columnLog p X S)) (G∪N) =
-      halfNormalizationCLM U g (columnLog p (X / primeProductNorm p G) N) /
-        (Real.sqrt X : ℂ) := by
-  have hG := primeProductNorm_pos p hp G
-  rw [normalizedColumn_union_test p hp G N hd X (X / primeProductNorm p G)
-    hX (div_pos hX hG) U hUc hUs g hU]
-  have he : primeProductNorm p G * (X / primeProductNorm p G) / X = 1 := by field_simp
-  rw [he, Real.log_one, zero_add]
 
 theorem normalizedColumn_pair_extract_fixed_profiles {ι : Type*} [DecidableEq ι]
     (p : ι → O) (hp : ∀ i, p i ≠ 0) (G N M : Finset ι)
@@ -543,120 +391,11 @@ theorem normalizedColumn_pair_extract_fixed_profiles {ι : Type*} [DecidableEq �
 
 end SecondPassIntegration
 
-open MeasureTheory
-open scoped BigOperators Classical SchwartzMap FourierTransform
 namespace SecondPassArithmetic
 open ActualEisensteinCubic
-open SecondPassIntegration (tupleSourceSum tupleSource_uniform_transfer childGeometricMean)
+open SecondPassIntegration (tupleSourceSum childGeometricMean)
 open JointLogSeparation
 open FirstPassCubeLabels (b0Label)
-
-variable {ι : Type*} [DecidableEq ι]
-  (p : ι → O) (hp : ∀ i, p i ≠ 0) [∀ i, (Ideal.span {p i}).IsMaximal]
-  (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-  (hg : ∀ i, lambda ∉ Ideal.span {p i})
-
-def actualSecondVariableSectorSource
-    (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-    (s : Finset (SecondSupportData ι)) (w : SecondSupportData ι → ℂ)
-    (F : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m : O)
-    (A₁ A₂ W : 𝓢(ℝ, ℂ)) (windows : Fin 7 → ℝ → ℂ)
-    (D₀ E₀ V₀ : ℝ) (X : SecondSupportData ι → ℝ) (X₀ K Y : ℝ) : ℂ :=
-  ∑ x ∈ s, w x * postCommonSmoothPair p hp hcop hg F Ψ₁ Ψ₂ m
-    (secondSupportLabel p B v₁ v₂ ε₁ ε₂ x) (secondSupportRow p x) (-secondSupportRow p x)
-    A₁ A₂ W windows (secondSectorZ p (X x) X₀ x) (secondSectorUd p D₀ x)
-    (secondSectorUe p E₀ x) (secondSectorUv p V₀ x) (secondSectorKap p K x)
-    X₀ X₀ (Y*K/(D₀*E₀^2*V₀^2*X₀^2))
-
-theorem actual_second_variable_sector_uniform_transfer
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (ε : ℝ) (hε : 0 < ε) (A₁ A₂ W : 𝓢(ℝ, ℂ))
-    (windows : Fin 7 → ℝ → ℂ) (M : Fin 7 → ℝ)
-    (hM : ∀ j, 0 ≤ M j) (hwindows : ∀ j x, windows j x ≠ 0 → |x| ≤ M j) (A J : ℕ) :
-    ∃ Cₐ : ℝ, 0 < Cₐ ∧ ∃ Cₛ : ℝ, 0 ≤ Cₛ ∧
-      ∀ D₀ E₀ V₀ X₀ K Y : ℝ,
-      0 < D₀ → 0 < E₀ → 0 < V₀ → 0 < X₀ → 0 < K → 0 < Y →
-      ∃ b : 𝓢(ℝ, ℂ),
-      (∀ t₁ t₂ t₃ : ℝ,
-        (1 + Y*K/(D₀*E₀^2*V₀^2*X₀^2))^A * ‖(𝓕 A₁) t₁ * (𝓕 A₂) t₂ * b t₃‖ ≤
-          Cₛ * FirstPassCubeLabels.firstLogDensity J t₁ *
-            FirstPassCubeLabels.firstLogDensity J t₂ * FirstPassCubeLabels.firstLogDensity J t₃) ∧
-      ∀ (B : Finset ι) (v₁ v₂ : ι → ℕ) (ε₁ ε₂ : ι → Bool)
-        (s : Finset (SecondSupportData ι)) (T : Finset (Ideal O × O))
-        (w : SecondSupportData ι → ℂ) (Bnd lengthScale : ℝ)
-        (F : Finset ι) (Ψ₁ Ψ₂ : O →* ℂ) (m : O) (X : SecondSupportData ι → ℝ),
-        (∀ i ∈ B, 0 < v₁ i + v₂ i) →
-        (∀ x ∈ s, Disjoint x.common B) →
-        (∀ x ∈ s, x.firstDivisor ⊆ x.common ∪ B) →
-        0 ≤ Bnd → 0 ≤ lengthScale →
-        (∀ x ∈ s, (secondSupportNewLabel p B v₁ v₂ ε₁ ε₂ x, secondSupportRow p x) ∈ T) →
-        (∀ z ∈ T, z.1 ≠ ⊥) → (∀ z ∈ T, (Ideal.absNorm z.1 : ℝ) ≤ lengthScale) →
-        (∀ x ∈ s, ‖w x‖ * ‖outerWindow windows
-          (secondSectorZ p (X x) X₀ x) (secondSectorUd p D₀ x) (secondSectorUe p E₀ x)
-          (secondSectorUv p V₀ x) (secondSectorKap p K x)‖ ≤ Bnd) →
-        ‖actualSecondVariableSectorSource p hp hcop hg B v₁ v₂ ε₁ ε₂ s w F Ψ₁ Ψ₂ m
-          A₁ A₂ W windows D₀ E₀ V₀ X X₀ K Y‖ ≤
-        (Bnd * Cₐ * (lengthScale * Ideal.absNorm (Ideal.span {b0Label p B (fun i => v₁ i + v₂ i) ε₁ ε₂}))^ε) *
-        (∫ t₁ : ℝ, ∫ t₂ : ℝ, ∫ t₃ : ℝ,
-          ‖tripleCoefficient (𝓕 A₁) (𝓕 A₂) b (t₁,t₂,t₃)‖ *
-            childGeometricMean p hp hcop hg F Ψ₁ Ψ₂ m T (windows 5) (windows 6) X₀ X₀ (t₁,t₂,t₃)) := by
-  obtain ⟨Cₐ, hCₐ, Cₛ, hCₛ, htrans⟩ :=
-    tupleSource_uniform_transfer p hp hcop hg ε hε A₁ A₂ W windows M hM hwindows A J
-  refine ⟨Cₐ, hCₐ, Cₛ, hCₛ, ?_⟩
-  intro D₀ E₀ V₀ X₀ K Y hD₀ hE₀ hV₀ hX₀ hK hY
-  have hR : 0 < Y*K/(D₀*E₀^2*V₀^2*X₀^2) := by positivity
-  obtain ⟨b, hb, hbound⟩ := htrans _ hR
-  refine ⟨b, hb, ?_⟩
-  intro B v₁ v₂ ε₁ ε₂ s T w Bnd lengthScale F Ψ₁ Ψ₂ m X hv hCB hD hBnd hL hmap hT0 hnorm hw
-  let encode := secondSupportTuple p B v₁ v₂ ε₁ ε₂
-  have hi : Function.Injective encode := secondSupportTuple_injective p hinj B v₁ v₂ ε₁ ε₂
-  let decode := Function.invFun encode
-  have hdec (x : SecondSupportData ι) : decode (encode x) = x := Function.leftInverse_invFun hi x
-  let s' := s.image encode
-  let w' := fun x => w (decode x)
-  let label' := fun x => secondSupportLabel p B v₁ v₂ ε₁ ε₂ (decode x)
-  let z' := fun x => secondSectorZ p (X (decode x)) X₀ (decode x)
-  let ud' := fun x => secondSectorUd p D₀ (decode x)
-  let ue' := fun x => secondSectorUe p E₀ (decode x)
-  let uv' := fun x => secondSectorUv p V₀ (decode x)
-  let kap' := fun x => secondSectorKap p K (decode x)
-  have hsvalid : ∀ x ∈ s', SecondPassFiber.Valid x (SecondPassFiber.newLabel x)
-      (Ideal.span {b0Label p B (fun i => v₁ i + v₂ i) ε₁ ε₂}) (SecondPassFiber.newRow x) := by
-    intro x hx
-    obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hx
-    exact secondSupportTuple_valid p B v₁ v₂ ε₁ ε₂ hv a (hCB a ha) (hD a ha)
-  have hsmap : ∀ x ∈ s', (SecondPassFiber.newLabel x, SecondPassFiber.newRow x) ∈ T := by
-    intro x hx
-    obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hx
-    exact hmap a ha
-  have hsw : ∀ x ∈ s', ‖w' x‖ * ‖outerWindow windows (z' x) (ud' x) (ue' x) (uv' x) (kap' x)‖ ≤ Bnd := by
-    intro x hx
-    obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hx
-    dsimp only [w', z', ud', ue', uv', kap']
-    rw [hdec]
-    exact hw a ha
-  have hslabel : ∀ x ∈ s', Ideal.span {label' x} = SecondPassFiber.newLabel x := by
-    intro x hx
-    obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hx
-    dsimp only [label']
-    rw [hdec]
-    exact secondSupportLabel_span p B v₁ v₂ ε₁ ε₂ a
-  have hout := hbound s' T (Ideal.span {b0Label p B (fun i => v₁ i + v₂ i) ε₁ ε₂})
-    w' Bnd lengthScale label' F Ψ₁ Ψ₂ m z' ud' ue' uv' kap' X₀ X₀
-    (sector_b0_ne_bot p hp B v₁ v₂ ε₁ ε₂) hBnd hL hsvalid hsmap hT0 hnorm hsw hslabel
-  have hsource : tupleSourceSum p hp hcop hg s' w' label' F Ψ₁ Ψ₂ m
-      A₁ A₂ W windows z' ud' ue' uv' kap' X₀ X₀ (Y*K/(D₀*E₀^2*V₀^2*X₀^2)) =
-      actualSecondVariableSectorSource p hp hcop hg B v₁ v₂ ε₁ ε₂ s w F Ψ₁ Ψ₂ m
-        A₁ A₂ W windows D₀ E₀ V₀ X X₀ K Y := by
-    unfold tupleSourceSum actualSecondVariableSectorSource
-    rw [Finset.sum_image (fun a ha c hc h => hi h)]
-    apply Finset.sum_congr rfl
-    intro a ha
-    dsimp only [w', label', z', ud', ue', uv', kap']
-    rw [hdec]
-    rfl
-  rw [hsource] at hout
-  exact hout
 
 end SecondPassArithmetic
 

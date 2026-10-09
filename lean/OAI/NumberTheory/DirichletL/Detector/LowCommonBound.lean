@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LowGaussianSum
 import OAI.NumberTheory.DirichletL.Detector.RayPoolDisjoint
-
 namespace OAI
 
 noncomputable section

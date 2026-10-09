@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LiftedFourier
 import OAI.NumberTheory.DirichletL.Detector.Physical
-
 namespace OAI
 
 noncomputable section

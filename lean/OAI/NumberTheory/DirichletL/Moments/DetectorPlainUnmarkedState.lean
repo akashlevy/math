@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.DetectorPlainStateDictionary
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRawBranches
 import OAI.NumberTheory.DirichletL.Energy.Bands
-
 namespace OAI
 
 noncomputable section
@@ -40,33 +39,6 @@ def state (F:Fiber M H Label Slot U a ε tstar T heightAllowance i)
     (hp:∀x,0≤(Φ x).re)(hη:(η.modulus.absNorm:ℝ)≤U^δ):NaturalState U 0 bΦ:=
   initialState η Q Φ bΦ U (allowance δ F.m) hU (allowance_nonneg _ _ hδ) hs hp
     (padded_modulus η U δ F.m hU hη)
-
-omit [NeZero M] in
-theorem actual_scale_gates (F:Fiber M H Label Slot U a ε tstar T heightAllowance i)
-    (η:Character)(Q:Ideal O)(Φ:𝓢(ℝ,ℂ))(bΦ δ εcap:ℝ)
-    (hU:1<U)(hδ:0≤δ)(hε:ε≤εcap)(hs:Function.support (Φ:ℝ→ℂ)⊆Set.Iic bΦ)
-    (hp:∀x,0≤(Φ x).re)(hη:(η.modulus.absNorm:ℝ)≤U^δ):
-    let s:=state F η Q Φ bΦ δ hU.le hδ hs hp hη;
-    s.character=η ∧ s.fixedModulus=Q ∧ s.puncture=1 ∧
-    s.radial.profile=Φ ∧ s.radial.scale=U ∧ s.radial.keep=initialKeep η Q ∧
-    s.width=max 1 (2*F.m)+δ ∧
-    s.width≤max 1 (1+150*εcap)+δ ∧
-    1≤U^F.m ∧ length U (U^F.m)=F.m ∧
-    2*length U (U^F.m)≤s.width ∧ U^F.m≤U^(1/2+75*εcap):=by
-  dsimp only
-  have hm:=F.lengths hU
-  have hmcap:F.m≤1/2+75*εcap:=by linarith [hm.2.2.1]
-  have hscale:1≤U^F.m:=Real.one_le_rpow hU.le hm.2.2.2.2
-  have hlen:length U (U^F.m)=F.m:=by
-    rw [length,max_eq_right hscale]
-    exact Real.logb_rpow (zero_lt_one.trans hU) hU.ne'
-  have hw:(state F η Q Φ bΦ δ hU.le hδ hs hp hη).width=max 1 (2*F.m)+δ:=padded_width δ F.m
-  refine ⟨rfl,rfl,rfl,rfl,rfl,rfl,hw,?_,hscale,hlen,?_,?_⟩
-  · rw [hw]
-    exact add_le_add (max_le_max le_rfl (by linarith)) le_rfl
-  · rw [hw,hlen]
-    exact (le_max_right 1 (2*F.m)).trans (le_add_of_nonneg_right hδ)
-  · exact Real.rpow_le_rpow_of_exponent_le hU.le hmcap
 
 omit [NeZero M] in
 theorem actual_source_eq (F:Fiber M H Label Slot U a ε tstar T heightAllowance i)

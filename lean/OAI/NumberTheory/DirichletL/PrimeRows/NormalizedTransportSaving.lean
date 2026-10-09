@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.NormalizedTransport
-
 namespace OAI
 
 noncomputable section

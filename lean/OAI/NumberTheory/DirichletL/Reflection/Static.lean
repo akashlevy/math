@@ -1,5 +1,4 @@
-import OAI.NumberTheory.DirichletL.Reflection.Matrices
-
+import OAI.NumberTheory.DirichletL.Reflection.Sector
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LocalSummation
 import OAI.NumberTheory.DirichletL.Detector.EulerCoordinates
-
 namespace OAI
 
 noncomputable section

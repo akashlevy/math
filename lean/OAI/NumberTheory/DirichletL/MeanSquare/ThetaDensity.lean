@@ -1,77 +1,23 @@
 import OAI.NumberTheory.DirichletL.RowCompletion.InitialDensity
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace InitialMeanSquare
 
@@ -266,24 +212,6 @@ open CanonicalQuadraticSieve hiding O
 open SecondPassArithmetic hiding O
 open CanonicalRowCompletion
 
-theorem outside_mean_square_of_theta_models {q₀ : ℕ}
-    (χ : DirichletCharacter ℂ q₀)
-    (S : Finset (Ideal ActualEisensteinCubic.O)) (hbad : fixedBadPrimes⊆S) (hSp : ∀P∈S,Prime P)
-    (ρ q levelBound : ℝ) (hρ : 0<ρ) (hq : 1<q) (hlevel : 1≤levelBound)
-    (hmodels : HasCanonicalThetaModels S (conjugateMonoid (normCharacter χ)) ρ q levelBound)
-    (W : ℝ→ℂ) (a b : ℝ) (ha : 0<a)
-    (hs : Function.support W⊆Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    (σ ε : ℝ) (hσ : (1:ℝ)/20<σ) (hε : 0<ε) :
-    ∃C : ℝ,0<C ∧ ∀(D : ℕ) (Z : ℝ),1≤Z → b*Z≤D →
-      ∀T : Finset ActualEisensteinCubic.O,
-      (∀z∈T,(Ideal.absNorm (Ideal.span {z}):ℝ)≤Z^(1+σ)) →
-      (∀z∈T,z≠0) →
-      (∑z∈T,‖idealRowSum (outsideIdealsUpTo S D) (outsideIdealsUpTo_ne_bot S D)
-        (outside_good S D hbad) χ (fun n=>W (n/Z)) z‖^2)≤C*Z*(Z^(1+σ))*Z^ε :=
-  outside_mean_square_of_canonical_density_at_radius χ S hbad hSp
-    (hasInitialCanonicalDensityAtRadius_of_theta χ S hSp hbad ρ q levelBound hρ hq hlevel hmodels)
-    W a b ha hs hW σ ε hσ hε
-
 end InitialMeanSquare
 
 namespace CubicEisenstein
@@ -464,33 +392,8 @@ lemma kernelExhaustionCutoff_scaled_fderiv_bound :
       ring
     _ ≤ D*B := mul_le_mul_of_nonneg_left (hprofile n (phi p)) hD
 
-lemma kernelExhaustionCutoff_fderiv_eventually_zero (p : EuclideanSpatial) (hp : 0<p 2) :
-    ∀ᶠn : ℕ in atTop,
-      fderiv ℝ (fun q => (kernelExhaustionCutoff n (kernelEuclideanProjection q):ℂ)) p=0 := by
-  have hc : ContinuousAt kernelEuclideanProjection p :=
-    (continuous_integralOrbitProjection globalKubotaKernel).continuousAt.comp
-      (euclideanToHyperbolic_contMDiffAt p hp).continuousAt
-  filter_upwards [kernelExhaustionCutoff_eventually_one_near (kernelEuclideanProjection p)] with n hn
-  have he := hn.comp_tendsto hc
-  have heC : (fun q => (kernelExhaustionCutoff n (kernelEuclideanProjection q):ℂ)) =ᶠ[𝓝 p]
-      (fun _ => (1:ℂ)) := he.mono (fun q hq => congrArg (fun v : ℝ => (v:ℂ)) hq)
-  rw [heC.fderiv_eq]
-  simp
-
-lemma kernelExhaustionCutoff_energy_density_bound :
-    ∃C : ℝ,0≤C ∧ ∀n : ℕ,∀p : EuclideanSpatial,0<p 2→
-      (∑j : Fin 3,‖(p 2:ℂ)*fderiv ℝ (fun q => (kernelExhaustionCutoff n (kernelEuclideanProjection q):ℂ)) p
-        (euclideanCoordinateVector j)‖^2)≤C := by
-  obtain ⟨D,hD,hbound⟩ := kernelExhaustionCutoff_scaled_fderiv_bound
-  refine ⟨3*D^2,by positivity,fun n p hp => ?_⟩
-  calc
-    _ ≤ ∑j : Fin 3,D^2 := Finset.sum_le_sum (fun j hj =>
-      (sq_le_sq₀ (norm_nonneg _) hD).mpr (hbound n p hp j))
-    _ = 3*D^2 := by simp
-
 end CubicEisenstein
 
-open scoped BigOperators Classical SchwartzMap
 namespace SixthPowerAverage
 open ActualEisensteinCubic
 open ConcretePrimeRowBridge hiding O

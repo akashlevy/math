@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.PrincipalMask
 import OAI.NumberTheory.DirichletL.PrimeRows.SelectedFirst
 import OAI.NumberTheory.DirichletL.Detector.CompensatedRows
-
 namespace OAI
 
 noncomputable section
@@ -87,40 +86,6 @@ theorem continuedPhysicalRowKernel_differentiableAt_w {K : ℕ}
     DifferentiableAt ℂ (fun w=>continuedPhysicalRowKernel S hS hmax P hPS η u W0 W1 X Y Z x w z) w := by
   exact (((sourceMellinWeight_differentiable_w W0 W1 a b ha hW X Y Z hY x z) w).mul_const _ |>.mul_const _).mul
     (calibrated_physicalRow_first_w eps heps S hS hfirst hmax _ (contourTupleOutside S P hPS) η u hu x w z hx hw hz hxw)
-
-theorem nonprincipal_w_rectangle {K : ℕ}
-    (eps : ℝ) (heps : 0<eps) (S : Finset (Ideal O)) (hS : SourceExclusions S)
-    (hfirst : FirstTail (eps/2) S) (hmax : ∀P∈S,P.IsMaximal)
-    (P : Fin K→PrimeIdeal) (hPS : ∀i,(P i).val∉S) (η : Character) (u : FreeRow) (hu : u.val≠1)
-    (W0 W1 : SchwartzMap ℝ ℂ) (a b : ℝ) (ha : 0<a) (hW : Function.support W1⊆Icc a b)
-    (X Y Z : ℝ) (hY : 0<Y) (x z : ℂ) (l r T : ℝ)
-    (hx : (51/100:ℝ)≤x.re) (hl : -(1/100:ℝ)≤l) (hr : -(1/100:ℝ)≤r)
-    (hz : (17/50:ℝ)≤z.re) (hxl : 1+eps≤x.re+l) (hxr : 1+eps≤x.re+r) :
-    let F := fun w=>continuedPhysicalRowKernel S hS hmax P hPS η u W0 W1 X Y Z x w z
-    (∫t : ℝ in -T..T,F ((r:ℂ)+t*I))=
-      (∫t : ℝ in -T..T,F ((l:ℂ)+t*I))+
-        I*((∫v : ℝ in l..r,F ((v:ℂ)+(-T)*I))-(∫v : ℝ in l..r,F ((v:ℂ)+T*I))) := by
-  dsimp only
-  let F := fun w=>continuedPhysicalRowKernel S hS hmax P hPS η u W0 W1 X Y Z x w z
-  have hh : DifferentiableOn ℂ F (uIcc l r ×ℂ uIcc (-T) T) := by
-    intro w hw
-    have hwlo : min l r≤w.re := hw.1.1
-    have hw' : -(1/100:ℝ)≤w.re := (le_min hl hr).trans hwlo
-    have hxw : 1+eps≤x.re+w.re := by
-      have := (le_min (by linarith : 1+eps-x.re≤l) (by linarith : 1+eps-x.re≤r)).trans hwlo
-      linarith
-    exact (continuedPhysicalRowKernel_differentiableAt_w eps heps S hS hfirst hmax P hPS η u hu
-      W0 W1 a b ha hW X Y Z hY x w z hx hw' hz hxw).differentiableWithinAt
-  have hb := Complex.integral_boundary_rect_eq_zero_of_differentiableOn F
-    ((l:ℂ)+(-T)*I) ((r:ℂ)+T*I) (by simpa using hh)
-  have hc : (∫v : ℝ in l..r,F ((v:ℂ)+(-T)*I))-(∫v : ℝ in l..r,F ((v:ℂ)+T*I))+
-      I*(∫t : ℝ in -T..T,F ((r:ℂ)+t*I))-I*(∫t : ℝ in -T..T,F ((l:ℂ)+t*I))=0 := by
-    simpa [smul_eq_mul] using hb
-  have hd := congrArg (fun z : ℂ=>-I*z) hc
-  change (∫t : ℝ in -T..T,F ((r:ℂ)+t*I))=_
-  ring_nf at hd ⊢
-  simp only [I_sq] at hd
-  linear_combination hd
 
 end SevenEighths.ProbeHighRowFamily
 

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstMixedNormalization
 import OAI.NumberTheory.DirichletL.Moments.FirstMixedRoot
-
 namespace OAI
 
 noncomputable section

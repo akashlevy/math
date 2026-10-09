@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.HighRowsFirstTerms
 import OAI.NumberTheory.DirichletL.Detector.HighRowsRamified
-
 namespace OAI
 
 noncomputable section

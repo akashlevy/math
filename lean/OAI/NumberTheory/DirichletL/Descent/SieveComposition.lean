@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.Fibers
 import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -88,47 +87,6 @@ theorem column_fiber_sieve {K X Y : Type*} [DecidableEq X] [DecidableEq Y]
     calc
       _ ≤ Q * (D * ∑ x ∈ source, ‖a x‖ ^ 2) := mul_le_mul_of_nonneg_left hf' hQ
       _ = _ := by ring)
-
-theorem quadratic_cubic_composition
-    {K M H C P : Type*} [Fintype K] [Fintype M] [Fintype H] [Fintype C] [Fintype P]
-    (q : K → M → H → ℂ) (χ : M → C → P → ℂ)
-    (a : H → P → ℂ) (beta : C → M → H → ℂ) (Q S : ℝ) (hQ : 0 ≤ Q)
-    (hbeta : ∀ c m h, ‖beta c m h‖ ≤ 1)
-    (hquadratic : ∀ f : M → H → ℂ,
-      (∑ k, ‖∑ m, ∑ h, q k m h * f m h‖ ^ 2) ≤ Q * ∑ m, ∑ h, ‖f m h‖ ^ 2)
-    (hcubic : ∀ u : P → ℂ,
-      (∑ m, ∑ c, ‖∑ p, u p * χ m c p‖ ^ 2) ≤ S * ∑ p, ‖u p‖ ^ 2) :
-    (∑ k, ‖∑ m, ∑ h, q k m h *
-      (∑ c, beta c m h * (∑ p, a h p * χ m c p))‖ ^ 2) ≤
-      Q * (Fintype.card C : ℝ) * S * ∑ h, ∑ p, ‖a h p‖ ^ 2 := by
-  classical
-  apply (hquadratic (fun m h => ∑ c, beta c m h * (∑ p, a h p * χ m c p))).trans
-  have hcauchy :
-      (∑ m, ∑ h, ‖∑ c, beta c m h * (∑ p, a h p * χ m c p)‖ ^ 2) ≤
-      (Fintype.card C : ℝ) * ∑ h, ∑ m, ∑ c, ‖∑ p, a h p * χ m c p‖ ^ 2 := by
-    calc
-      _ ≤ ∑ m, ∑ h, (Fintype.card C : ℝ) *
-          ∑ c, ‖∑ p, a h p * χ m c p‖ ^ 2 := by
-        apply Finset.sum_le_sum
-        intro m _
-        apply Finset.sum_le_sum
-        intro h _
-        exact bounded_coefficient_sum_sq _ _ (fun c => hbeta c m h)
-      _ = _ := by
-        simp only [← Finset.mul_sum]
-        congr 1
-        exact Finset.sum_comm
-  have hcs : (∑ h, ∑ m, ∑ c, ‖∑ p, a h p * χ m c p‖ ^ 2) ≤
-      S * ∑ h, ∑ p, ‖a h p‖ ^ 2 := by
-    rw [Finset.mul_sum]
-    exact Finset.sum_le_sum fun h _ => hcubic (a h)
-  calc
-    _ ≤ Q * ((Fintype.card C : ℝ) *
-        ∑ h, ∑ m, ∑ c, ‖∑ p, a h p * χ m c p‖ ^ 2) :=
-      mul_le_mul_of_nonneg_left hcauchy hQ
-    _ ≤ Q * ((Fintype.card C : ℝ) * (S * ∑ h, ∑ p, ‖a h p‖ ^ 2)) :=
-      mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hcs (Nat.cast_nonneg _)) hQ
-    _ = _ := by ring
 
 end
 end SevenEighths.InverseMoment

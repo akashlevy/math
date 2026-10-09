@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondExceptionalFamilyUniform
-
 namespace OAI
 
 noncomputable section

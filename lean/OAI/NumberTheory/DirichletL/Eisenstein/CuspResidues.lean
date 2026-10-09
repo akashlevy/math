@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.SeedHeight
-
 namespace OAI
 
 noncomputable section
@@ -8,76 +7,22 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology InnerProductSpace MatrixGroups Matrix
+open scoped InnerProductSpace MatrixGroups Matrix
 
 lemma levelThree_integral_eq_translation (M : CubicKubota.levelThree)
     (hc : (M : SL(2,ActualEisensteinCubic.O)) 1 0=0) :
@@ -103,10 +48,6 @@ lemma periodDomain_unique_translate (z w t : ℂ) (hz : z∈periodDomain) (hw : 
 
 def cuspPeriodRegion : Set HyperbolicSpace :=
   {w | hyperbolicHorizontal w∈periodDomain ∧ 1<hyperbolicHeight w}
-
-lemma cuspPeriodRegion_measurable : MeasurableSet cuspPeriodRegion :=
-  (periodDomain_measurable.preimage hyperbolicHorizontal_continuous.measurable).inter
-    (measurableSet_Ioi.preimage hyperbolicHeight_continuous.measurable)
 
 lemma kernelProjection_cuspPeriodRegion_injective :
     Set.InjOn (integralOrbitProjection globalKubotaKernel) cuspPeriodRegion := by
@@ -162,8 +103,7 @@ lemma kernelProjection_cuspPeriodStrip_measurePreserving (a b : ℝ) (ha : 1<a) 
 
 end
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology InnerProductSpace MatrixGroups
+open scoped InnerProductSpace MatrixGroups
 
 def kernelCuspStripSet : Set KernelQuotient :=
   integralOrbitProjection globalKubotaKernel '' cuspPeriodStrip 5 6
@@ -224,11 +164,6 @@ def kernelCuspAverageFamily (a b : ℝ) (ha : 0<a) (hab : a<b) (s : ℂ) : ℂ :
   kernelCuspStripAverage
     (kernelLocalCorrectedSeed kernelCuspAverageCompact kernelCuspAverageCompact_isCompact a b ha hab s)
 
-lemma kernelCuspAverageFamily_meromorphicAt (a b : ℝ) (ha : 0<a) (hab : a<b) :
-    MeromorphicAt (kernelCuspAverageFamily a b ha hab) (4/3:ℂ) :=
-  meromorphicAt_clm kernelCuspStripAverage
-    (kernelLocalCorrectedSeed_meromorphicAt kernelCuspAverageCompact kernelCuspAverageCompact_isCompact a b ha hab)
-
 lemma kernelCuspAverageFamily_residue_limit (a b : ℝ) (ha : 0<a) (hab : a<b) :
     Tendsto (fun s : ℂ => (s-4/3)*kernelCuspAverageFamily a b ha hab s)
       (𝓝[≠] (4/3:ℂ)) (𝓝 (kernelCuspStripAverage (kernelEisensteinResidueVector a b ha hab))) := by
@@ -249,8 +184,7 @@ lemma kernelCuspAverageFamily_actual_integral (a b : ℝ) (ha : 0<a) (hab : a<b)
   exact hw.trans (Set.indicator_of_mem (kernelCuspStripSet_subset_compact ⟨w,hwm,rfl⟩) _)
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology InnerProductSpace MatrixGroups Matrix
+open scoped Matrix
 
 def spatialComplexSplit : EuclideanSpatial ≃ᵐ ℝ × ℂ :=
   spatialHeightSplit.trans ((MeasurableEquiv.refl ℝ).prodCongr Complex.measurableEquivPi.symm)
@@ -410,9 +344,6 @@ lemma hyperbolicEisenstein_cusp_average (s : ℂ) (hs : 2<s.re) :
 
 end
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
-
 def cuspMainHeightFactor (s : ℂ) : ℂ :=
   ((6:ℂ)^(s-2)-(5:ℂ)^(s-2))/(s-2)
 
@@ -552,9 +483,6 @@ lemma cuspConstantAverage_oneSidedResidue :
     ring
   · simp only [zero_mul,zero_add,cuspConstantAverageResidue]
     ring_nf
-
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
 
 lemma kernelSpectralResolvent_analyticAt_of_isUnit (z : ℂ)
     (hz : IsUnit (kernelSpectralFormOperator z)) :

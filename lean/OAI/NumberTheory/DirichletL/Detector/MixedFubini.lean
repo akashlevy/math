@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.RawPhysicalIntegral
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstChildWindowsActual
 import OAI.NumberTheory.DirichletL.Inversion.SecondSourceBlocks
-
 namespace OAI
 
 noncomputable section
@@ -17,12 +16,8 @@ def sourceNorms {κ : Type*} (A₁ A₂ C R : κ→ℝ) (d h : κ→O) (x : κ) 
   ![A₁ x,A₂ x,C x,‖eisEmbedding (d x)‖^2,R x,‖eisEmbedding (h x)‖^2]
 
 def sourceIndex {κ : Type*} (q : κ→Fin 6→ℝ) (x : κ) : SourceIndex := fun i=>dyadIndex (q x i)
-def sourceKeys {κ : Type*} [DecidableEq κ] (q : κ→Fin 6→ℝ) (S : Finset κ) := S.image (sourceIndex q)
 def sourceCell {κ : Type*} [DecidableEq κ] (q : κ→Fin 6→ℝ) (S : Finset κ) (k : SourceIndex) :=
   S.filter (fun x=>sourceIndex q x=k)
-
-def commonKeys {ι : Type*} [DecidableEq ι] (p : ι→O) (F : Finset ι) : Finset ℕ :=
-  F.powerset.image (fun D=>dyadIndex (primeProductNorm p D))
 
 def commonSelector {ι : Type*} [DecidableEq ι] (p : ι→O) (selector : Finset ι→ℂ) (l : ℕ) (D : Finset ι) : ℂ :=
   if dyadIndex (primeProductNorm p D)=l then selector D else 0
@@ -85,44 +80,6 @@ theorem actual_original_cell_ratios {ι κ : Type*} [DecidableEq ι] [DecidableE
   · exact sourceCell_ratios _ S hq k x hx 4
   · exact hD
   · exact sourceCell_ratios _ S hq k x hx 5
-
-lemma sum_source_cells {κ β : Type*} [DecidableEq κ] [AddCommMonoid β]
-    (q : κ→Fin 6→ℝ) (S : Finset κ) (f : κ→β) :
-    (∑x∈S,f x)=∑k∈sourceKeys q S,∑x∈sourceCell q S k,f x := by
-  exact (Finset.sum_fiberwise_of_maps_to (fun x hx=>Finset.mem_image_of_mem (sourceIndex q) hx) f).symm
-
-lemma common_key_of_index {ι : Type*} [DecidableEq ι] (p : ι→O) (F : Finset ι)
-    (j : FirstCommonIndex ι) (hj : j∈firstCommonIndices F) :
-    dyadIndex (primeProductNorm p j.2.1)∈commonKeys p F := by
-  apply Finset.mem_image_of_mem
-  exact (Finset.mem_sigma.mp (Finset.mem_product.mp hj).2).1
-
-lemma sum_common_cells {ι : Type*} [DecidableEq ι] (p : ι→O) (F : Finset ι)
-    (selector : Finset ι→ℂ) (G : FirstCommonIndex ι→ℂ) :
-    (∑j∈firstCommonIndices F,selector j.2.1*G j)=
-      ∑l∈commonKeys p F,∑j∈firstCommonIndices F,commonSelector p selector l j.2.1*G j := by
-  rw [Finset.sum_comm]
-  apply Finset.sum_congr rfl
-  intro j hj
-  have hkey := common_key_of_index p F j hj
-  simp [commonSelector,ite_mul,hkey]
-
-theorem original_signed_partition {ι κ : Type*} [DecidableEq ι] [DecidableEq κ]
-    (p : ι→O) (F : Finset ι) (S : Finset κ) (q : κ→Fin 6→ℝ)
-    (selector : κ→Finset ι→ℂ) (G : κ→FirstCommonIndex ι→ℂ) :
-    (∑x∈S,∑j∈firstCommonIndices F,selector x j.2.1*G x j)=
-      ∑k∈sourceKeys q S,∑l∈commonKeys p F,∑x∈sourceCell q S k,
-        ∑j∈firstCommonIndices F,commonSelector p (selector x) l j.2.1*G x j := by
-  rw [sum_source_cells q S]
-  apply Finset.sum_congr rfl
-  intro k hk
-  calc
-    _ = ∑x∈sourceCell q S k,∑l∈commonKeys p F,
-        ∑j∈firstCommonIndices F,commonSelector p (selector x) l j.2.1*G x j := by
-      apply Finset.sum_congr rfl
-      intro x hx
-      exact sum_common_cells p F (selector x) (G x)
-    _ = _ := Finset.sum_comm
 
 end SevenEighths.InverseMomentFirstChildWindows
 end

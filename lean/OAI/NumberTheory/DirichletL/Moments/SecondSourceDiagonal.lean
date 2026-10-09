@@ -2,7 +2,6 @@ import OAI.NumberTheory.DirichletL.Moments.SourceSecondZeroEnergy
 import OAI.NumberTheory.DirichletL.Moments.CommonRadialData
 import OAI.NumberTheory.DirichletL.Moments.OriginalCommonHarmonic
 import OAI.NumberTheory.DirichletL.Moments.FiniteProfileExceptionalPair
-
 namespace OAI
 
 noncomputable section

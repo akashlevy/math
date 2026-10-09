@@ -1,7 +1,7 @@
 import OAI.NumberTheory.DirichletL.Hecke.DetectorHighCount
-import OAI.NumberTheory.DirichletL.Hecke.DetectorBatchCount
+import OAI.NumberTheory.DirichletL.Hecke.DetectorBatch
+import OAI.NumberTheory.DirichletL.Hecke.DetectorCountFromMoments
 import OAI.NumberTheory.DirichletL.Hecke.DetectorRowCountEndpoint
-
 namespace OAI
 
 noncomputable section

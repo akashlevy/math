@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalOriginalMask
-
 namespace OAI
 
 noncomputable section
@@ -52,13 +51,6 @@ theorem physicalMass_zero (s : Input ι) (R seed : Ideal O)
     physicalMass s R seed m A W K Z ξ=0 := by
   unfold physicalMass
   simp only [sectorMass_zero s R seed h₁ h₂ hH,Finset.sum_const_zero]
-
-omit [DecidableEq ι] in
-theorem sourceGaussEnergy_zero (s : Input ι) (R seed : Ideal O)
-    (h₁ : s.W₁ 0=0) (h₂ : s.W₂ 0=0) (hH : sourceRadius s≤0)
-    (S : Finset (Ideal O)) (f : Ideal O→ℂ) (W : 𝓢(ℝ,ℂ)) (K : ℝ) :
-    sourceGaussEnergy S (CenteredMomentOriginalCommonHarmonic.coefficient s R seed) f W K=0 := by
-  simp [sourceGaussEnergy,gaussEnergy,gaussPolynomial,coefficient_zero s R seed h₁ h₂ hH]
 
 end SevenEighths.CenteredMomentFirstPhysicalZeroRadius
 

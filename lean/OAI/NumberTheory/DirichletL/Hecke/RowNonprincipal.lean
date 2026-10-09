@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Hecke.RowClosure
 import OAI.NumberTheory.DirichletL.Hecke.LocalRamification
 import OAI.NumberTheory.DirichletL.Hecke.ExceptionalRows
-
 namespace OAI
 
 noncomputable section

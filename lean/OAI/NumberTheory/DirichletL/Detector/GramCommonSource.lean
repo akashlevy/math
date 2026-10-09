@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GramWindowMobius
 import OAI.NumberTheory.DirichletL.Detector.GramPhysicalScale
-
 namespace OAI
 
 noncomputable section

@@ -5,7 +5,6 @@ import OAI.NumberTheory.DirichletL.PrimeRows.Conductor
 import OAI.NumberTheory.DirichletL.PrimeRows.RowPartition
 import OAI.NumberTheory.DirichletL.Hecke.PrimeScale
 import OAI.NumberTheory.DirichletL.Hecke.PrimeNonprincipal
-
 namespace OAI
 
 noncomputable section

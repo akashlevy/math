@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.PrimePhase
-
 namespace OAI
 
 noncomputable section

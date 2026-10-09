@@ -4,7 +4,6 @@ import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Positivity
-
 namespace OAI
 
 namespace SevenEighths.Endpoint
@@ -98,13 +97,6 @@ theorem balanced_endpoint_margin {δ y : ℝ}
     nlinarith only [hcancel, hp]
   have hup := mul_le_mul_of_nonneg_right hJhi (le_of_lt hEpos)
   nlinarith only [hcancel, hup]
-
-theorem balanced_endpoint_strict {δ y : ℝ}
-    (hδ0 : 0 ≤ δ) (hδ1 : δ ≤ 5 / 6) (hy0 : 0 ≤ y) (hy1 : y ≤ 1 / 2) :
-    balancedExponent δ y < -(1 / 10000 : ℝ) := by
-  have h := balanced_endpoint_margin hδ0 hδ1 hy0 hy1
-  norm_num at *
-  linarith
 
 end
 

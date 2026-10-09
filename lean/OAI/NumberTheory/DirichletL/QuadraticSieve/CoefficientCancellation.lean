@@ -1,75 +1,23 @@
 import OAI.NumberTheory.DirichletL.GaussSum.RayCharacters
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace MixedCrossSeparation
 open ActualEisensteinCubic ConcreteTraceCRT FiniteGaussPhase MixedGaussConversion
@@ -272,7 +220,6 @@ theorem columnCoefficient_cancel_true {ι : Type*} [DecidableEq ι]
 
 end MixedCrossSeparation
 
-open scoped BigOperators Classical SchwartzMap ContDiff
 namespace FirstCauchyArithmetic
 open ActualEisensteinCubic ConcreteTraceCRT FiniteGaussPhase MixedGaussConversion
 open MixedCrossSeparation GaussGeneratorTransport ConcretePrimeRowBridge EisensteinSchwartzPoisson
@@ -289,83 +236,6 @@ def firstPassColumnPlus {ι : Type*} [DecidableEq ι]
     (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
     (hg : ∀ i, lambda ∉ Ideal.span {p i}) (C : Finset ι → ℂ) (d : O) (S : Finset ι) : ℂ :=
   columnG p hp hcop hg S * finiteSquarefreeRow (fun i => Ideal.span {p i}) hg S d * C S
-
-theorem norm_columnG
-    {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1) (S : Finset ι) :
-    ‖columnG p hp hcop hg S‖ = 1 :=
-  norm_canonicalProductG (fun i : S => p i.val) (fun i => hp i.val)
-    (columnPrimeCoprime p hcop S) (fun i => hg i.val) (fun i => hc i.val) (fun i => hpr i.val)
-
-theorem norm_firstPassColumnMinus_le
-    {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1) (C : Finset ι → ℂ) (d : O) (S : Finset ι) :
-    ‖firstPassColumnMinus p hp hcop hg C d S‖ ≤ ‖C S‖ := by
-  simp only [firstPassColumnMinus, norm_mul, norm_star, norm_columnG p hp hcop hg hc hpr]
-  calc
-    _ ≤ 1 * 1 * 1 * ‖C S‖ := by
-      gcongr
-      · exact finiteSquarefreeRow_norm_le_one (fun i => Ideal.span {p i}) hg S (-1)
-      · exact finiteSquarefreeRow_norm_le_one (fun i => Ideal.span {p i}) hg S d
-    _ = _ := by ring
-
-theorem norm_firstPassColumnPlus_le
-    {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1) (C : Finset ι → ℂ) (d : O) (S : Finset ι) :
-    ‖firstPassColumnPlus p hp hcop hg C d S‖ ≤ ‖C S‖ := by
-  simp only [firstPassColumnPlus, norm_mul, norm_columnG p hp hcop hg hc hpr, one_mul]
-  exact mul_le_of_le_one_left (norm_nonneg _)
-    (finiteSquarefreeRow_norm_le_one (fun i => Ideal.span {p i}) hg S d)
-
-theorem a_weighted_converted_pair
-    {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1)
-    (S T : Finset ι) (hd : Disjoint S T) (C₁ C₂ : Finset ι → ℂ) (d h : O) :
-    let P : ι → Ideal O := fun i => Ideal.span {p i}
-    let row := finiteSexticRow (activePrimes P S T) (fun i => hg i.val) (activeExponent S T)
-    star (columnCoefficient p hp hcop hg S * C₁ S) *
-      (columnCoefficient p hp hcop hg T * C₂ T) *
-      (supportMobius P S * supportMobius P T * activeConvertedGauss p hp hg S T) *
-        (row d * star (row h)) =
-    quadraticCrossPhase p hg S T *
-      star (supportMobius P S * firstPassColumnMinus p hp hcop hg C₁ d S *
-        star (finiteSquarefreeRow P hg S h)) *
-      (supportMobius P T * firstPassColumnPlus p hp hcop hg C₂ d T *
-        star (finiteSquarefreeRow P hg T h)) := by
-  dsimp only
-  rw [activeConvertedGauss_eq_columnBlocks p hp hg hpr S T,
-    active_dual_row_factorization (fun i => Ideal.span {p i}) hg S T d h,
-    Finset.sdiff_eq_self_of_disjoint hd, Finset.sdiff_eq_self_of_disjoint hd.symm]
-  have hminus := columnCoefficient_cancel_true p hp hcop hg hc hpr S
-  have hplus := columnCoefficient_cancel_false p hp hcop hg hc hpr T
-  simp only [firstPassColumnMinus, firstPassColumnPlus, star_mul, star_star,
-    star_supportMobius]
-  calc
-    _ = (star (columnCoefficient p hp hcop hg S) * convertedColumnBlock p hp hg S true) *
-      (columnCoefficient p hp hcop hg T * convertedColumnBlock p hp hg T false) *
-      (star (C₁ S) * C₂ T * supportMobius (fun i => Ideal.span {p i}) S *
-        supportMobius (fun i => Ideal.span {p i}) T * quadraticCrossPhase p hg S T *
-        (finiteSquarefreeRow (fun i => Ideal.span {p i}) hg S h *
-          star (finiteSquarefreeRow (fun i => Ideal.span {p i}) hg S d)) *
-        (finiteSquarefreeRow (fun i => Ideal.span {p i}) hg T d *
-          star (finiteSquarefreeRow (fun i => Ideal.span {p i}) hg T h))) := by ring
-    _ = _ := by rw [hminus, hplus]; ring
 
 theorem active_productGauss_eq_mobius_converted
     {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
@@ -420,126 +290,8 @@ def activeGaussRowFactor
     (activePrimes_pairwise_isCoprime P hinj S T) (fun i => hg i.val) (activeExponent S T) *
       (row d * star (row h))
 
-theorem disjoint_pair_poisson_arithmetic
-    {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (S T : Finset ι) (hd : Disjoint S T)
-    (W : 𝓢(ℝ, ℂ)) (scale : ℝ) (hscale : 0 < scale) :
-    let P : ι → Ideal O := fun i => Ideal.span {p i}
-    let n := ∏ i : activeSupport S T, p i.val
-    (∑' z : O, (star (finiteSquarefreeRow P hg S z) * finiteSquarefreeRow P hg T z) *
-      W (‖eisEmbedding z‖ ^ 2 / scale)) =
-    ((scale : ℂ) / (‖eisEmbedding n‖ : ℂ)) *
-      ∑' h : O, paperRadialFourier W (scale * ‖eisEmbedding h‖ ^ 2 / ‖eisEmbedding n‖ ^ 2) *
-        activeGaussRowFactor p hp hinj hg S T 1 h := by
-  dsimp only
-  let P : ι → Ideal O := fun i => Ideal.span {p i}
-  let q : activeSupport S T → O := fun i => p i.val
-  let hq := activePrimes_pairwise_isCoprime P hinj S T
-  let row := finiteSexticRow (activePrimes P S T) (fun i => hg i.val) (activeExponent S T)
-  let G := canonicalProductGauss q (fun i => hp i.val) hq (fun i => hg i.val) (activeExponent S T)
-  have hpz (z : O) : star (finiteSquarefreeRow P hg S z) * finiteSquarefreeRow P hg T z = row z := by
-    rw [finiteSquarefreeRow_pair_activeSupport]
-    simp [Finset.disjoint_iff_inter_eq_empty.mp hd, rowCoprimeMask, row]
-  have hrow1 : row 1 = 1 := by simp [row, finiteSexticRow]
-  have ht := canonical_radial_poisson_product q (fun i => hp i.val) hq (fun i => hg i.val)
-    (fun i => hc i.val) (activeExponent S T) (activeExponent_ne_zero S T)
-    (activeExponent_lt_six S T) W scale hscale
-  have hseries : (∑' h : O,
-      paperRadialFourier W (scale * ‖eisEmbedding h‖ ^ 2 / ‖eisEmbedding (∏ i, q i)‖ ^ 2) *
-        activeGaussRowFactor p hp hinj hg S T 1 h) =
-      G * ∑' h : O, star (row h) *
-        paperRadialFourier W (scale * ‖eisEmbedding h‖ ^ 2 / ‖eisEmbedding (∏ i, q i)‖ ^ 2) := by
-    calc
-      _ = ∑' h : O, G * (star (row h) *
-          paperRadialFourier W (scale * ‖eisEmbedding h‖ ^ 2 / ‖eisEmbedding (∏ i, q i)‖ ^ 2)) := by
-        apply tsum_congr
-        intro h
-        change _ * (G * (row 1 * star (row h))) = _
-        rw [hrow1]
-        ring
-      _ = _ := tsum_mul_left
-  rw [hseries]
-  calc
-    _ = ∑' z : O, row z * W (‖eisEmbedding z‖ ^ 2 / scale) := by
-      apply tsum_congr
-      intro z
-      rw [hpz]
-    _ = ((scale : ℂ) * G / (‖eisEmbedding (∏ i, q i)‖ : ℂ)) *
-        ∑' h : O, star (row h) *
-          paperRadialFourier W (scale * ‖eisEmbedding h‖ ^ 2 / ‖eisEmbedding (∏ i, q i)‖ ^ 2) := ht
-    _ = _ := by ring
-
-theorem a_weighted_activeGaussRowFactor
-    {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1)
-    (S T : Finset ι) (hd : Disjoint S T) (C₁ C₂ : Finset ι → ℂ) (d h : O) :
-    let P : ι → Ideal O := fun i => Ideal.span {p i}
-    star (columnCoefficient p hp hcop hg S * C₁ S) *
-      (columnCoefficient p hp hcop hg T * C₂ T) * activeGaussRowFactor p hp hinj hg S T d h =
-    quadraticCrossPhase p hg S T *
-      star (supportMobius P S * firstPassColumnMinus p hp hcop hg C₁ d S *
-        star (finiteSquarefreeRow P hg S h)) *
-      (supportMobius P T * firstPassColumnPlus p hp hcop hg C₂ d T *
-        star (finiteSquarefreeRow P hg T h)) := by
-  dsimp only
-  unfold activeGaussRowFactor
-  dsimp only
-  rw [active_productGauss_eq_mobius_converted p hp hinj hg hc hpr S T]
-  simpa only [mul_assoc] using a_weighted_converted_pair p hp hcop hg hc hpr S T hd C₁ C₂ d h
-
-theorem a_weighted_pair_sum_to_second_poisson_rows
-    {ι : Type*} [DecidableEq ι] (p : ι → O) (hp : ∀ i, p i ≠ 0)
-    [∀ i, (Ideal.span {p i}).IsMaximal]
-    (hinj : Function.Injective (fun i => Ideal.span {p i}))
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hg : ∀ i, lambda ∉ Ideal.span {p i})
-    (hc : ∀ i, ringChar (O ⧸ Ideal.span {p i}) ≠ 2)
-    (hpr : ∀ i, lambda ^ 2 ∣ p i - 1)
-    (B : Finset ι) (C₁ C₂ : Finset ι → ℂ) (d h : O) :
-    let P : ι → Ideal O := fun i => Ideal.span {p i}
-    let D₁ := firstPassColumnMinus p hp hcop hg C₁ d
-    let D₂ := firstPassColumnPlus p hp hcop hg C₂ d
-    (∑ S ∈ B.powerset, ∑ T ∈ B.powerset,
-      if Disjoint S T then
-        star (columnCoefficient p hp hcop hg S * C₁ S) *
-          (columnCoefficient p hp hcop hg T * C₂ T) *
-            activeGaussRowFactor p hp hinj hg S T d h else 0) =
-    ∑ r : RayFourExpansion.RayCharacter × RayFourExpansion.RayCharacter,
-      RayFourExpansion.crossCoeff r.1 r.2 *
-      ∑ D ∈ B.powerset,
-        (supportMobius P D * rowCoprimeMask P D h * supportRay p r.1 D * supportRay p r.2 D) *
-        star (conjugateIdealRowSum (supportIdealFamily P (B \ D))
-          (supportIdealFamily_pos P (B \ D)) (supportIdealFamily_good P hg (B \ D))
-          (fun I => star (supportRay p r.1 (recoveredSupport P (B \ D) I)) *
-            D₁ (D ∪ recoveredSupport P (B \ D) I)) h) *
-        conjugateIdealRowSum (supportIdealFamily P (B \ D))
-          (supportIdealFamily_pos P (B \ D)) (supportIdealFamily_good P hg (B \ D))
-          (fun I => supportRay p r.2 (recoveredSupport P (B \ D) I) *
-            D₂ (D ∪ recoveredSupport P (B \ D) I)) h := by
-  dsimp only
-  rw [← quadratic_phase_reindex_to_ideal_rows p hp hinj hg hc B
-    (firstPassColumnMinus p hp hcop hg C₁ d) (firstPassColumnPlus p hp hcop hg C₂ d) h]
-  apply Finset.sum_congr rfl
-  intro S hS
-  apply Finset.sum_congr rfl
-  intro T hT
-  by_cases hd : Disjoint S T
-  · rw [ite_eq_left hd, ite_eq_left hd]
-    exact a_weighted_activeGaussRowFactor p hp hinj hcop hg hc hpr S T hd C₁ C₂ d h
-  · rw [ite_eq_right hd, ite_eq_right hd]
-
 end FirstCauchyArithmetic
 
-open scoped BigOperators Classical SchwartzMap
 namespace QuadraticInitialBound
 abbrev O := ActualEisensteinCubic.O
 open ActualEisensteinCubic ConcreteTraceCRT EisensteinSchwartzPoisson

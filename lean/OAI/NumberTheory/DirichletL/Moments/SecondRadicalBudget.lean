@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondRadicalFamily
-
 namespace OAI
 
 noncomputable section
@@ -113,39 +112,6 @@ theorem conductor_log_bound (η τ : Character) (A B : Ideal O) (hA : A≠0) (hB
       (η.modulus.absNorm:ℝ)*fixedFactor*A.absNorm*B.absNorm by exact_mod_cast hN)
   rwa [Real.logb_mul (mul_ne_zero (mul_ne_zero hη hK) ha) hb,
     Real.logb_mul (mul_ne_zero hη hK) ha,Real.logb_mul hη hK] at hh
-
-theorem exists_second_log_budgeted_family (η : Character) (χ : RayCharacter)
-    (C D : Ideal O) (hC : Supported C) (U : Finset (CommonIndex C D)) :
-    ∃τ : Character,
-      (∀n:O,elementCoeff τ n=rowTwist (HeckeRowClosure.elementHom (childCharacter η χ))
-        fixedBadMask 1 (CenteredMomentSecondSixthReduction.reducedNumerator C D U) n) ∧
-      (∀I:Ideal O,Supported I → ∀t:ℝ,heightCoeff τ t I=heightCoeff η t I*
-        idealRowHom (CenteredMomentSecondSixthReduction.reducedNumerator C D U) I*
-        rayCharacter χ (primaryGenerator I)) ∧
-      ∀(hD : Supported D),CompletedGauss.primeSupport C=CompletedGauss.primeSupport D →
-      ∀w:O,idealCorrelation C D hC hD (commonFrequencyGenerator C D*w)≠0 →
-      ∀Z:ℝ,1<Z → Real.logb Z (τ.modulus.absNorm:ℝ)≤
-        Real.logb Z (η.modulus.absNorm:ℝ)+Real.logb Z (fixedFactor:ℝ)+
-        Real.logb Z ((∏P∈U,P.val).absNorm:ℝ)+
-        Real.logb Z ((Ideal.span {nonunitFrequencyGenerator C D U}).absNorm:ℝ) := by
-  obtain ⟨τ,he,ht,hN⟩ := exists_second_budgeted_family η χ C D hC U
-  refine ⟨τ,he,ht,?_⟩
-  intro hD hCD w hne Z hZ
-  have hp (S : Finset (CommonIndex C D)) : (∏P∈S,P.val)≠0 :=
-    Finset.prod_ne_zero_iff.mpr (fun P _=>(commonPrime_supported_ideal C D hC P).1)
-  have hv : Ideal.span {nonunitFrequencyGenerator C D U}≠0 := by
-    rw [nonunitFrequencyGenerator_span]
-    simpa only [unitIdeal,commonPrime_span C D hC] using hp (nonunitPartitionSet C D U)
-  exact conductor_log_bound η τ _ _ (hp U) hv (hN hD hCD w hne) Z hZ
-
-theorem fixed_log_cost_eventually (ε : ℝ) (hε : 0<ε) :
-    ∀ᶠZ:ℝ in Filter.atTop,1<Z ∧ Real.logb Z (fixedFactor:ℝ)≤ε := by
-  have he := (Filter.tendsto_atTop.1 (tendsto_rpow_atTop hε)) (fixedFactor:ℝ)
-  filter_upwards [he,Filter.eventually_gt_atTop (1:ℝ)] with Z hK hZ
-  refine ⟨hZ,?_⟩
-  have hp : (0:ℝ)<fixedFactor := by exact_mod_cast fixedFactor_pos
-  have hh := Real.logb_le_logb_of_le hZ hp hK
-  simpa only [Real.logb_rpow (zero_lt_one.trans hZ) (ne_of_gt hZ)] using hh
 
 end SevenEighths.CenteredMomentSecondRadicalBudget
 

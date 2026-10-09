@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstToSecond
 import OAI.NumberTheory.DirichletL.Descent.FirstPass
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

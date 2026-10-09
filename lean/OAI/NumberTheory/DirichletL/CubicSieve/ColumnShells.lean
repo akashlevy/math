@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.QuotientColumns
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

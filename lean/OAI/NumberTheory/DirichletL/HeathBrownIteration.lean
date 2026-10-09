@@ -4,7 +4,6 @@ import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
-
 namespace OAI
 
 namespace SevenEighths.HeathBrownIteration

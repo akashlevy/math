@@ -1,5 +1,5 @@
-import OAI.NumberTheory.DirichletL.Hecke.DetectorSimultaneous
-
+import OAI.NumberTheory.DirichletL.Hecke.DetectorDyadicGeometry
+import OAI.NumberTheory.DirichletL.Hecke.DetectorDyadicLengths
 namespace OAI
 
 noncomputable section
@@ -60,28 +60,6 @@ theorem Witness.right_exponent {ι : Type*} {χ : ι→Character} {U a ε tstar 
     (w : Witness χ U a ε tstar T allowance i) (hU : 1<U) :
     w.m=Real.logb U ((2 : ℝ)^w.right.val) := by
   rw [←w.right_scale,Real.logb_rpow (zero_lt_one.trans hU) hU.ne']
-
-theorem exists_from_maximum (dmin dmax τ ε e κ η : ℝ) (I : ℕ)
-    (hdmin : 0<dmin) (hdmax : dmin≤dmax) (hτ : 0<τ)
-    (hτzero : τ<dmin/2) (hτheight : 4*τ<dmin*η)
-    (hε : 0<ε) (he : 0<e) (he' : e<1/1000) (hκ : 0<κ) (hκ' : κ≤1) (hη : 0≤η)
-    (hbudget : 12*e*((22 : ℝ)+2)+8*κ+2*η≤ε/2) :
-    ∃ Z₀ : ℝ, ∀ Z : ℝ, Z₀≤Z → ∀ d : ℝ, dmin≤d → d≤dmax →
-      ∀ {ι : Type*} [Fintype ι] (χ : ι→Character) (hχ : ∀ j,(χ j).residue≠1)
-        (a : ℝ) (i : ℕ), i≤I → 51/100<a → a≤1 →
-        HeckeDetectorZeros.zeroMaximum χ hχ (3*(i+1 : ℕ)*Z^τ)<a+2*e →
-        a≤HeckeDetectorZeros.zeroMaximum χ hχ ((3*i : ℕ)*Z^τ) →
-        (∀ j,(χ j).modulus.absNorm≤Z^d) →
-        ∀ tstar : ℝ, 1≤tstar → tstar≤3/2 →
-          Nonempty (Witness χ (Z^d) a ε tstar (Z^τ) ((Z^d)^(τ/(2*dmax))) i) := by
-  obtain ⟨Z₀,hZ₀⟩ := HeckeDetectorSimultaneous.from_actual_maximum dmin dmax τ ε e κ η I
-    hdmin hdmax hτ hτzero hτheight hε he he' hκ hκ' hη hbudget
-  refine ⟨Z₀,?_⟩
-  intro Z hZ d hd hd' ι _ χ hχ a i hi ha ha' hnext hcurrent hQ tstar ht ht'
-  obtain ⟨j,ρ,hzero,hρ,hheight,J,hJ,K,hK,nu,r,m,hnu,hleft,hright,hr,hr',hm,hm',hM,hS⟩ :=
-    hZ₀ Z hZ d hd hd' χ hχ a i hi ha ha' hnext hcurrent hQ tstar ht ht'
-  exact ⟨⟨j,ρ,hzero,hρ,hheight,⟨J,Finset.mem_range.mp hJ⟩,⟨K,Finset.mem_range.mp hK⟩,
-    nu,r,m,hnu,hleft,hright,hr,hr',hm,hm',hM,hS⟩⟩
 
 end SevenEighths.HeckeDetectorWitnessRows
 

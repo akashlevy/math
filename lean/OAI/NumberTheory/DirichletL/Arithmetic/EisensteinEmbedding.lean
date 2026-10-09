@@ -1,20 +1,17 @@
 import OAI.NumberTheory.DirichletL.ChineseRemainder.AdditiveCharacters
 import OAI.NumberTheory.DirichletL.GaussSum.FiniteFourier
 import OAI.NumberTheory.DirichletL.GaussSum.ChineseRemainder
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
-open scoped Classical
 open scoped Classical
 
 namespace EisensteinEmbedding
@@ -25,7 +22,6 @@ abbrev O := NumberField.RingOfIntegers K
 private instance : IsCyclotomicExtension {3} ℚ K :=
   CyclotomicField.isCyclotomicExtension 3 ℚ
 
-noncomputable def ζ : K := IsCyclotomicExtension.zeta 3 ℚ K
 noncomputable def pb : PowerBasis ℤ O :=
   (IsCyclotomicExtension.zeta_spec 3 ℚ K).integralPowerBasis
 
@@ -189,10 +185,6 @@ def coordinateSubring : Subring ℂ where
     push_cast
     linear_combination (b : ℂ) * (d : ℂ) * omega3_sq
 
-theorem coordinateSubring_eq_traceSubring :
-    coordinateSubring = ShortDraftTrace.eisensteinSubring := by
-  rfl
-
 noncomputable def toCoordinateSubring : O →+* coordinateSubring :=
   eisEmbedding.codRestrict coordinateSubring (by
     intro x
@@ -202,11 +194,6 @@ noncomputable def toCoordinateSubring : O →+* coordinateSubring :=
     rw [embedding_apply_ab]
     exact ⟨a, b, rfl⟩)
 
-theorem toCoordinateSubring_injective : Function.Injective toCoordinateSubring := by
-  intro x y h
-  apply eisEmbedding_injective
-  exact congrArg Subtype.val h
-
 theorem toCoordinateSubring_surjective : Function.Surjective toCoordinateSubring := by
   rintro ⟨z, a, b, hz⟩
   refine ⟨(a + b * pb.gen : O), ?_⟩
@@ -215,10 +202,6 @@ theorem toCoordinateSubring_surjective : Function.Surjective toCoordinateSubring
   change embedding omega3 omega3_sq (a + b * pb.gen : O) = z
   rw [embedding_apply_ab]
   exact hz.symm
-
-noncomputable def ringOfIntegersEquivCoordinateSubring : O ≃+* coordinateSubring :=
-  RingEquiv.ofBijective toCoordinateSubring
-    ⟨toCoordinateSubring_injective, toCoordinateSubring_surjective⟩
 
 noncomputable def eisTraceModChar
     (ψ : AddChar ℂ ℂ)
@@ -294,38 +277,6 @@ theorem breveE_period_coordinates :
       (1 + 2 * ShortDraftTrace.ω₃)) = 1
   exact ShortDraftTrace.breveE_period_lam c d
 
-theorem coordinateSubring_eq : coordinateSubring =
-    ShortDraftTrace.eisensteinSubring := by
-  rfl
-
-noncomputable def ringOfIntegersEquivShortDraftE :
-    O ≃+* ShortDraftTrace.eisensteinSubring :=
-  coordinateSubring_eq ▸ ringOfIntegersEquivCoordinateSubring
-
-theorem gauss_sum_breveE_actual_O
-    (a b : O) (ha : a ≠ 0) (hb : b ≠ 0)
-    (hcop : IsCoprime (Ideal.span {a}) (Ideal.span {b}))
-    [Fintype (O ⧸ (Ideal.span {a}) * (Ideal.span {b}))]
-    [Fintype (O ⧸ Ideal.span {a})]
-    [Fintype (O ⧸ Ideal.span {b})]
-    (χa : MulChar (O ⧸ Ideal.span {a}) ℂ)
-    (χb : MulChar (O ⧸ Ideal.span {b}) ℂ) :
-    (∑ x : O ⧸ (Ideal.span {a}) * (Ideal.span {b}),
-      χa (Ideal.Quotient.factor
-        (Ideal.mul_le_left : (Ideal.span {a}) * (Ideal.span {b}) ≤ Ideal.span {a}) x) *
-      χb (Ideal.Quotient.factor
-        (Ideal.mul_le_right : (Ideal.span {a}) * (Ideal.span {b}) ≤ Ideal.span {b}) x) *
-      eisTraceProdChar ShortDraftTrace.breveE breveE_period_coordinates
-        a b ha hb x) =
-      χa (Ideal.Quotient.mk (Ideal.span {a}) b) *
-      χb (Ideal.Quotient.mk (Ideal.span {b}) a) *
-      gaussSum χa (eisTraceModChar ShortDraftTrace.breveE
-        breveE_period_coordinates a ha) *
-      gaussSum χb (eisTraceModChar ShortDraftTrace.breveE
-        breveE_period_coordinates b hb) := by
-  exact gauss_sum_actual_O ShortDraftTrace.breveE
-    breveE_period_coordinates a b ha hb hcop χa χb
-
 end ConcreteBreveE
 
 namespace ActualEisensteinCubic
@@ -389,75 +340,6 @@ theorem cubicGauss_normalized_cube_eis (P : Ideal O) [P.IsMaximal]
 
 open AddChar MulChar
 
-private theorem sextic_complex_pow_ne_one (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (hchar : ringChar (O ⧸ P) ≠ 2)
-    {j : ℕ} (hj0 : j ≠ 0) (hj6 : j < 6) :
-    ((sexticChar P hgood).ringHomComp ringComplex) ^ j ≠ 1 := by
-  rw [MulChar.ringHomComp_pow]
-  apply (MulChar.ringHomComp_ne_one_iff ringComplex_injective).2
-  apply pow_ne_one_of_lt_orderOf hj0
-  rwa [sexticChar_order P hgood hchar]
-
-theorem sextic_local_fourier_nonzero (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (hchar : ringChar (O ⧸ P) ≠ 2)
-    (ψ : AddChar (O ⧸ P) ℂ) (j : ℕ) (hj0 : j ≠ 0) (hj6 : j < 6)
-    (h : O ⧸ P) (hh : h ≠ 0) :
-    (∑ y : O ⧸ P,
-      (((sexticChar P hgood).ringHomComp ringComplex) ^ j) y * ψ (-h * y)) =
-    ((((sexticChar P hgood).ringHomComp ringComplex) ^ j) h)⁻¹ *
-      gaussSum (((sexticChar P hgood).ringHomComp ringComplex) ^ j)
-        (ψ.mulShift (-1)) := by
-  let : Field (O ⧸ P) := Ideal.Quotient.field P
-  let : Fintype (O ⧸ P) := Fintype.ofFinite _
-  let χ : MulChar (O ⧸ P) ℂ := ((sexticChar P hgood).ringHomComp ringComplex) ^ j
-  have hχ : χ ≠ 1 := sextic_complex_pow_ne_one P hgood hchar hj0 hj6
-  have ht := ShortDraftFiniteGaussFourier.gauss_transform χ (ψ.mulShift (-1)) hχ h
-  rw [ite_eq_right hh] at ht
-  simpa only [χ, AddChar.mulShift_apply, neg_one_mul, mul_assoc,
-    neg_mul, one_mul] using ht
-
-theorem sextic_local_fourier_zero (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (hchar : ringChar (O ⧸ P) ≠ 2)
-    (ψ : AddChar (O ⧸ P) ℂ) (j : ℕ) (hj0 : j ≠ 0) (hj6 : j < 6) :
-    (∑ y : O ⧸ P,
-      (((sexticChar P hgood).ringHomComp ringComplex) ^ j) y * ψ (-(0 : O ⧸ P) * y)) =
-    0 := by
-  let : Field (O ⧸ P) := Ideal.Quotient.field P
-  let : Fintype (O ⧸ P) := Fintype.ofFinite _
-  let χ : MulChar (O ⧸ P) ℂ := ((sexticChar P hgood).ringHomComp ringComplex) ^ j
-  have hχ : χ ≠ 1 := sextic_complex_pow_ne_one P hgood hchar hj0 hj6
-  simpa only [χ, neg_zero, zero_mul, map_zero_eq_one, mul_one] using
-    MulChar.sum_eq_zero_of_ne_one hχ
-
-theorem sextic_local_fourier_jzero_nonzero (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (ψ : AddChar (O ⧸ P) ℂ)
-    (hψ : ψ.IsPrimitive) (h : O ⧸ P) (hh : h ≠ 0) :
-    (∑ y : O ⧸ P,
-      (((sexticChar P hgood).ringHomComp ringComplex) ^ 0) y * ψ (-h * y)) =
-      -1 := by
-  let : Field (O ⧸ P) := Ideal.Quotient.field P
-  let : Fintype (O ⧸ P) := Fintype.ofFinite _
-  have hneg : -h ≠ 0 := neg_ne_zero.mpr hh
-  have hnon : ψ.mulShift (-h) ≠ 1 := hψ hneg
-  have ht := gaussSum_one_left hnon
-  simpa only [pow_zero, gaussSum, AddChar.mulShift_apply] using ht
-
-theorem sextic_local_fourier_jzero_zero (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (ψ : AddChar (O ⧸ P) ℂ) :
-    (∑ y : O ⧸ P,
-      (((sexticChar P hgood).ringHomComp ringComplex) ^ 0) y *
-        ψ (-(0 : O ⧸ P) * y)) = (Nat.card (O ⧸ P) : ℂ) - 1 := by
-  let : Field (O ⧸ P) := Ideal.Quotient.field P
-  let : Fintype (O ⧸ P) := Fintype.ofFinite _
-  have hsum := MulChar.sum_one_eq_card_units (R := O ⧸ P) (R' := ℂ)
-  have hcard : (Fintype.card (O ⧸ P) : ℂ) =
-      (Fintype.card (O ⧸ P)ˣ : ℂ) + 1 := by
-    exact_mod_cast (Fintype.card_eq_card_units_add_one (α := O ⧸ P))
-  simpa only [pow_zero, neg_zero, zero_mul, map_zero_eq_one, mul_one,
-    Nat.card_eq_fintype_card, hcard, add_sub_cancel_right] using hsum
-
-open AddChar MulChar
-
 noncomputable def canonicalSextic (P : Ideal O) [P.IsMaximal]
     (hgood : lambda ∉ P) : MulChar (O ⧸ P) ℂ :=
   (sexticChar P hgood).ringHomComp ConcreteTraceCRT.eisEmbedding
@@ -478,28 +360,6 @@ theorem canonicalSextic_pow_ne_one (P : Ideal O) [P.IsMaximal]
     ConcreteTraceCRT.eisEmbedding_injective).2
   apply pow_ne_one_of_lt_orderOf hj0
   rwa [sexticChar_order P hgood hchar]
-
-theorem canonical_A5_jone (P : Ideal O) [P.IsMaximal]
-    (hgood : lambda ∉ P) (hchar : ringChar (O ⧸ P) ≠ 2)
-    (ψ : AddChar (O ⧸ P) ℂ) (σ : (O ⧸ P)ˣ) (ε x : O ⧸ P) :
-    let χ := canonicalSextic P hgood
-    (Nat.card (O ⧸ P) : ℂ)⁻¹ *
-      (∑ h : (O ⧸ P)ˣ,
-        (∑ t : O ⧸ P, χ t * ψ (-(h * t))) *
-        (((χ⁻¹) ^ 2) (σ * h)) *
-        ψ ((ε * x) * ((h⁻¹ : (O ⧸ P)ˣ) : O ⧸ P))) =
-      ((χ⁻¹) ^ 2) σ *
-      ((Nat.card (O ⧸ P) : ℂ)⁻¹ *
-        gaussSum χ (ψ.mulShift (-1)) * gaussSum (χ ^ 3) ψ * (χ ^ 3) ε) *
-      (χ ^ 3) x := by
-  let : Field (O ⧸ P) := Ideal.Quotient.field P
-  let : Fintype (O ⧸ P) := Fintype.ofFinite _
-  dsimp
-  rw [Nat.card_eq_fintype_card]
-  exact ShortDraftLocal.sextic_fourier_theta_row
-    (canonicalSextic P hgood) ψ (canonicalSextic_pow_six P hgood)
-    (canonicalSextic_pow_ne_one P hgood hchar (by decide : (3:ℕ) ≠ 0)
-      (by decide : (3:ℕ) < 6)) σ ε x
 
 theorem canonical_A5_jfour (P : Ideal O) [P.IsMaximal]
     (hgood : lambda ∉ P) (hchar : ringChar (O ⧸ P) ≠ 2)

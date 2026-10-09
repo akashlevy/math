@@ -1,5 +1,4 @@
-import OAI.NumberTheory.DirichletL.Reflection.ActualExtractedEnergy
-
+import OAI.NumberTheory.DirichletL.Reflection.ExtractedEnergy
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -59,22 +58,6 @@ theorem exists_source_pair_templates (F : PrimeFamily φ)
     (∏ i, F.ideal i) (fun x => x.val.1.val) (fun x => x.val.2.val)
   intro x
   rw [PrimeFamily.reflected_product,hprod _ x.val.2.property]
-
-theorem source_templates_equal_to_representative {α : Type*} {ι : α → Type*}
-    [∀ x, Fintype (ι x)] (G : ∀ x, PrimeFamily (ι x))
-    {N a c : Eis} {mode : Bool}
-    (E : ∀ x, ControlledStratumArithmetic (G x).generator N a c mode)
-    (s : FixedCuspShape (ControlledStratumArithmetic.fixedCusp a c mode)) (hc : c ≠ 0)
-    {Q : Type*} (q : α → Q) (κ : Q → ℂ) (A : Q → Eisˣ → ℕ → Ideal Eis → Ideal Eis → ℂ)
-    (hκ : ∀ x, (E x).fixedFactor = κ (q x))
-    (hA : ∀ x u m n b, actualCuspColumn (E x) s hc u m n b = A (q x) u m n b)
-    (x0 x : α) (hq : q x = q x0) :
-    (E x).fixedFactor = (E x0).fixedFactor ∧
-      ∀ u m n b, actualCuspColumn (E x) s hc u m n b = actualCuspColumn (E x0) s hc u m n b := by
-  constructor
-  · rw [hκ x,hκ x0,hq]
-  · intro u m n b
-    rw [hA x u m n b,hA x0 u m n b,hq]
 
 end
 end SevenEighths.InverseReflectedPhase

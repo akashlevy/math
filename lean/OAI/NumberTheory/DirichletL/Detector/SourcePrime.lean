@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.SourceCoefficient
 import OAI.NumberTheory.DirichletL.Detector.PhysicalLocalEuler
-
 namespace OAI
 
 noncomputable section

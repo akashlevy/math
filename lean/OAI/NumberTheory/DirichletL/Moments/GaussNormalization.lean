@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.OriginalChildEnergy
 import OAI.NumberTheory.DirichletL.Moments.DivisorRawEnergy
-
 namespace OAI
 
 noncomputable section
@@ -30,15 +29,6 @@ theorem gaussEnergy_central {α : Type*} (S : Finset α) (a : α → O)
   rw [gaussEnergy_const_mul,norm_inv,Complex.norm_real,Real.norm_eq_abs,
     abs_of_nonneg (Real.sqrt_nonneg _),inv_pow,Real.sq_sqrt hT.le]
   simp only [Complex.mul_re,Complex.ofReal_re,Complex.ofReal_im,zero_mul,sub_zero,div_eq_mul_inv,mul_comm]
-
-theorem sourceGaussEnergy_central (Q : Finset (Ideal O)) (c f : Ideal O → ℂ)
-    (T : ℝ) (hT : 0<T) (W : 𝓢(ℝ,ℂ)) (K : ℝ) :
-    (sourceGaussEnergy Q (fun I => (Real.sqrt T:ℂ)⁻¹*c I) f W K).re=
-      (sourceGaussEnergy Q c f W K).re/T := by
-  unfold sourceGaussEnergy
-  simp only [mul_assoc]
-  exact gaussEnergy_central Finset.univ (sourceGenerator Q) (sourceGenerator_supported Q)
-    (fun I : supportedColumns Q => c I*f I) T hT W K
 
 theorem sourceGaussEnergy_nonneg (Q : Finset (Ideal O)) (c f : Ideal O → ℂ)
     (W : 𝓢(ℝ,ℂ)) (K : ℝ) (hK : 0<K)

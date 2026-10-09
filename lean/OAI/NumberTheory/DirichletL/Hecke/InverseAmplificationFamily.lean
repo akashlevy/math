@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.InverseAmplificationEnergy
-
 namespace OAI
 
 noncomputable section
@@ -42,17 +41,6 @@ theorem RowData.amplified_prime_mask (data : RowData) (u : NonzeroElement)
     (ConcretePrimeRowBridge.span_idealGenerator P.val)
     (data.character_spec u) (data.character_spec (amplifiedElement u ⟨P.val,P.property.ne_zero⟩))
     data.lambda_dvd data.two_dvd
-
-theorem RowData.prime_column (data : RowData) (u : NonzeroElement)
-    (P : SmoothMobiusCorrection.PrimeIdeal) (W : ℝ→ℂ) (a b : ℝ)
-    (ha : 0<a) (hWs : Function.support W⊆Set.Icc a b) (hW : ContDiff ℝ ∞ W)
-    (D σ freq : ℝ) (hD : 0<D) :
-    polynomial (data.character u) true W D σ freq=
-      polynomial (data.character (amplifiedElement u ⟨P.val,P.property.ne_zero⟩)) true W D σ freq-
-      idealCoeff (data.character u) P.val*(P.val.absNorm : ℂ)^(-(1/2 : ℂ))*
-        polynomial (data.character (amplifiedElement u ⟨P.val,P.property.ne_zero⟩)) true W
-          (D/(P.val.absNorm : ℝ)) σ freq :=
-  prime_column_identity _ _ P (data.amplified_prime_mask u P) W a b ha hWs hW D σ freq hD
 
 theorem RowData.prime_energy (data : RowData) (u : NonzeroElement)
     (P : SmoothMobiusCorrection.PrimeIdeal) (W : ℝ→ℂ) (a b : ℝ)

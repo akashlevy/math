@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.AmplificationLiveMask
-
 namespace OAI
 
 noncomputable section
@@ -74,13 +73,6 @@ theorem actual_amplification_allocations_card (S : (ι ⊕ Fin 2) → Finset (Id
   have hh := Fintype.card_le_of_injective f hf
   simp only [Fintype.card_coe] at hh
   exact hh.trans (idealDivisors_prime_power_card P hP k)
-
- theorem actual_error_allocations_card (S : (ι ⊕ Fin 2) → Finset (Ideal O))
-    (P : Ideal O) (hP : Prime P) (k : ℕ) (hk : k=1 ∨ k=6 ∨ k=7)
-    (hslot : ∀ i,∀ I∈S (Sum.inl i),I≠0 ∧ IsCoprime P I) :
-    (actualAllocations S (P^k)).card≤8 := by
-  have hh := actual_amplification_allocations_card S P hP k hslot
-  rcases hk with rfl|rfl|rfl <;> omega
 
 end SevenEighths.CenteredMomentAmplificationAllocationCost
 

@@ -1,76 +1,24 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.ConstantDirichletSeries
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
+open scoped ContDiff
+open Set
 
-open scoped BigOperators Classical
 namespace CanonicalQuadraticSieve
 
 def columnDyadicLength (N : ℝ) : ℕ := ⌈Real.log N / Real.log 2⌉₊
@@ -95,21 +43,6 @@ theorem columnDyadicLength_small_power (ε : ℝ) (hε : 0 < ε) (N : ℝ) (hN :
     _ ≤ 2 + Real.log N / Real.log 2 := hL
     _ ≤ 2 * N ^ ε + (N ^ ε / ε) / Real.log 2 := add_le_add (by linarith) hb
     _ = _ := by field_simp
-
-theorem annularHighEnergy_column_shells_small_power
-    (ε : ℝ) (hε : 0 < ε) (M N K : ℝ) (hN : 1 ≤ N) (a : idealRange N → ℂ) :
-    annularHighEnergy M N K a ≤ ((2 + 1 / (ε * Real.log 2)) * N ^ ε) *
-      ∑ j : Fin (columnDyadicLength N + 1),
-        annularHighEnergy M ((2 : ℝ) ^ j.val) K
-          (coefficientAtScale N ((2 : ℝ) ^ j.val)
-            (dyadicColumnCoefficient N (columnDyadicLength N) (columnDyadicLength_cover N) j a)) := by
-  apply (annularHighEnergy_column_shells_at_scale M N K (columnDyadicLength N)
-    (columnDyadicLength_cover N) a).trans
-  apply mul_le_mul_of_nonneg_right (columnDyadicLength_small_power ε hε N hN)
-  apply Finset.sum_nonneg
-  intro j _
-  unfold annularHighEnergy
-  exact Finset.sum_nonneg (fun I _ => mul_nonneg QuadraticInitialBound.annularSieveBump.nonneg (sq_nonneg _))
 
 open ActualEisensteinCubic ConcreteTraceCRT ConcretePrimeRowBridge CompletedGauss
 open EisensteinSchwartzPoisson UnrestrictedIdealReindex QuadraticSquarefreeKernel
@@ -178,8 +111,6 @@ theorem dualSquarefreeTail_bound (A : ℕ) :
 
 end CanonicalQuadraticSieve
 
-open scoped BigOperators Classical
-
 namespace CubicEisenstein
 
 section
@@ -188,9 +119,6 @@ open PrimaryIdealUnitReindex (GoodIdeal)
 
 def fullIdealWeight (s : ℂ) (I : Ideal O) : ℂ :=
   if I=0 then 0 else (Ideal.absNorm I:ℂ)^(-s)
-
-lemma fullIdealWeight_good (s : ℂ) (I : GoodIdeal) : fullIdealWeight s I.1=unramifiedNormWeight s I.1 := by
-  rw [fullIdealWeight,ite_eq_right (primaryGenerator_ne_zero_ideal _ I.2),unramifiedNormWeight_of_good _ _ I.2]
 
 lemma norm_fullIdealWeight (s : ℂ) (I : NonzeroIdeal) :
     ‖fullIdealWeight s I.1‖=‖eisEmbedding (ConcretePrimeRowBridge.idealGenerator I.1)‖^(-2*s.re) := by
@@ -482,73 +410,10 @@ theorem scatteringCoefficient_zero_oneSidedResidue :
 
 end CubicEisenstein
 
-open scoped BigOperators Classical
 namespace CanonicalQuadraticSieve
 
 section
 open ActualEisensteinCubic ConcreteTraceCRT CompletedGauss
-
-theorem idealQuotient_in_shell (I D : Ideal O) (hI : Admissible I) (hDI : D ∣ I)
-    (N : ℝ) (hlo : N / 2 < (Ideal.absNorm I : ℝ)) (hhi : (Ideal.absNorm I : ℝ) ≤ N) :
-    (N / (Ideal.absNorm D : ℝ)) / 2 < (Ideal.absNorm (idealQuotient D I) : ℝ) ∧
-      (Ideal.absNorm (idealQuotient D I) : ℝ) ≤ N / (Ideal.absNorm D : ℝ) := by
-  have hD : D ≠ 0 := ne_zero_of_dvd_ne_zero hI.1 hDI
-  have hDN : 0 < (Ideal.absNorm D : ℝ) := by
-    exact_mod_cast Nat.pos_iff_ne_zero.mpr (fun h => hD (Ideal.absNorm_eq_zero_iff.mp h))
-  have he : (Ideal.absNorm (idealQuotient D I) : ℝ) * (Ideal.absNorm D : ℝ) = (Ideal.absNorm I : ℝ) := by
-    rw [mul_comm, ← Nat.cast_mul, ← map_mul, idealQuotient_mul hDI]
-  refine ⟨?_, idealQuotient_norm_le hD hDI N hhi⟩
-  have hh : (N / 2) / (Ideal.absNorm D : ℝ) < (Ideal.absNorm (idealQuotient D I) : ℝ) := by
-    apply (div_lt_iff₀ hDN).mpr
-    simpa only [he] using hlo
-  convert hh using 1 ; ring
-
-theorem residual_modulus_norm_shell (I J D : Ideal O) (hI : Admissible I) (hJ : Admissible J)
-    (hDI : D ∣ I) (hDJ : D ∣ J) (N : ℝ) (hN : 0 < N)
-    (hIs : N / 2 < (Ideal.absNorm I : ℝ) ∧ (Ideal.absNorm I : ℝ) ≤ N)
-    (hJs : N / 2 < (Ideal.absNorm J : ℝ) ∧ (Ideal.absNorm J : ℝ) ≤ N) :
-    (N / (Ideal.absNorm D : ℝ)) / 2 <
-      ‖eisEmbedding (primaryGenerator (idealQuotient D I) * primaryGenerator (idealQuotient D J))‖ ∧
-    ‖eisEmbedding (primaryGenerator (idealQuotient D I) * primaryGenerator (idealQuotient D J))‖ ≤
-      N / (Ideal.absNorm D : ℝ) := by
-  have hD : D ≠ 0 := ne_zero_of_dvd_ne_zero hI.1 hDI
-  have hDN : 0 < (Ideal.absNorm D : ℝ) := by
-    exact_mod_cast Nat.pos_iff_ne_zero.mpr (fun h => hD (Ideal.absNorm_eq_zero_iff.mp h))
-  have hQ := admissible_idealQuotient hI hDI
-  have hT := admissible_idealQuotient hJ hDJ
-  have hqi := idealQuotient_in_shell I D hI hDI N hIs.1 hIs.2
-  have hqj := idealQuotient_in_shell J D hJ hDJ N hJs.1 hJs.2
-  let X := N / (Ideal.absNorm D : ℝ)
-  have hX : 0 < X := div_pos hN hDN
-  have hn : ‖eisEmbedding (primaryGenerator (idealQuotient D I) * primaryGenerator (idealQuotient D J))‖ ^ 2 =
-      (Ideal.absNorm (idealQuotient D I) : ℝ) * (Ideal.absNorm (idealQuotient D J) : ℝ) := by
-    rw [map_mul, norm_mul, mul_pow,
-      primaryGenerator_norm_sq _ (primaryGenerator_admissible _ hQ),
-      primaryGenerator_norm_sq _ (primaryGenerator_admissible _ hT)]
-  have hlo : (X / 2) * (X / 2) <
-      (Ideal.absNorm (idealQuotient D I) : ℝ) * (Ideal.absNorm (idealQuotient D J) : ℝ) :=
-    mul_lt_mul hqi.1 hqj.1.le (by positivity) (by positivity)
-  have hhi : (Ideal.absNorm (idealQuotient D I) : ℝ) * (Ideal.absNorm (idealQuotient D J) : ℝ) ≤ X * X :=
-    mul_le_mul hqi.2 hqj.2 (Nat.cast_nonneg _) hX.le
-  have hnorm := norm_nonneg (eisEmbedding (primaryGenerator (idealQuotient D I) * primaryGenerator (idealQuotient D J)))
-  constructor
-  · nlinarith
-  · nlinarith
-
-theorem residual_poisson_prefactor_le (I J D : Ideal O) (hI : Admissible I) (hJ : Admissible J)
-    (hDI : D ∣ I) (hDJ : D ∣ J) (M N : ℝ) (hM : 0 ≤ M) (hN : 0 < N)
-    (hIs : N / 2 < (Ideal.absNorm I : ℝ) ∧ (Ideal.absNorm I : ℝ) ≤ N)
-    (hJs : N / 2 < (Ideal.absNorm J : ℝ) ∧ (Ideal.absNorm J : ℝ) ≤ N) :
-    M / ‖eisEmbedding (primaryGenerator (idealQuotient D I) * primaryGenerator (idealQuotient D J))‖ ≤
-      2 * M * (Ideal.absNorm D : ℝ) / N := by
-  have hs := residual_modulus_norm_shell I J D hI hJ hDI hDJ N hN hIs hJs
-  have hD : D ≠ 0 := ne_zero_of_dvd_ne_zero hI.1 hDI
-  have hDN : 0 < (Ideal.absNorm D : ℝ) := by
-    exact_mod_cast Nat.pos_iff_ne_zero.mpr (fun h => hD (Ideal.absNorm_eq_zero_iff.mp h))
-  have hp : 0 < (N / (Ideal.absNorm D : ℝ)) / 2 := by positivity
-  calc
-    _ ≤ M / ((N / (Ideal.absNorm D : ℝ)) / 2) := div_le_div_of_nonneg_left hM hp hs.1.le
-    _ = _ := by field_simp
 
 end
 

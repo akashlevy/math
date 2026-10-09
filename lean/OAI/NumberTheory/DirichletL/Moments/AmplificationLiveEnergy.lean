@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.AmplificationLiveMask
-
 namespace OAI
 
 noncomputable section

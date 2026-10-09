@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.PowerfulBudget
 import OAI.NumberTheory.DirichletL.Reflection.RowReindex
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

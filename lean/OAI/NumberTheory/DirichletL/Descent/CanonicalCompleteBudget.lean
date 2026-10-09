@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.CanonicalLongCosts
 import OAI.NumberTheory.DirichletL.Descent.RecursionParameters
-
 namespace OAI
 
 noncomputable section

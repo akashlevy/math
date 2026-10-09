@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.Active
 import OAI.NumberTheory.DirichletL.Moments.SecondLedger
-
 namespace OAI
 
 noncomputable section

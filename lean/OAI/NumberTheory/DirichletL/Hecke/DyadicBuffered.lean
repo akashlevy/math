@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Hecke.DyadicControl
 import OAI.NumberTheory.DirichletL.Hecke.DyadicJoins
-
 namespace OAI
 
 noncomputable section

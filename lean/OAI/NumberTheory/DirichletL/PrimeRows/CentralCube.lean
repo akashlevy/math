@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.CentralRectangle
 import OAI.NumberTheory.DirichletL.PrimeRows.CentralZTail
-
 namespace OAI
 
 noncomputable section

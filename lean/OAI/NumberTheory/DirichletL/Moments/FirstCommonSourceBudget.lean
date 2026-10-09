@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalSourceAllocatedInput
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalSourceAllocationControl
-
 namespace OAI
 
 noncomputable section

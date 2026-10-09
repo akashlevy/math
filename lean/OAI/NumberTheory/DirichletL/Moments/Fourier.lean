@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.Support
 import OAI.NumberTheory.DirichletL.Detector.Physical
-
 namespace OAI
 
 noncomputable section
@@ -67,54 +66,6 @@ theorem actual_gauss_correlation (u v : O) (hu : u ≠ 0) (hv : v ≠ 0)
 def normalizedResidueGauss (d : O) (hd : d ≠ 0) (χ : MulChar (Residue d) ℂ)
     (h : Residue d) : ℂ :=
   residueGauss d hd χ h / (Real.sqrt (Ideal.absNorm (Ideal.span {d}) : ℝ) : ℂ)
-
-theorem normalized_gauss_correlation (u v : O) (hu : u ≠ 0) (hv : v ≠ 0)
-    [Fintype (Residue u)] [Fintype (Residue v)] [Fintype (Residue (u * v))]
-    (χu : MulChar (Residue u) ℂ) (χv : MulChar (Residue v) ℂ) (j : O) :
-    fullModulusCorrelation u v χu χv j =
-      ((Real.sqrt (Ideal.absNorm (Ideal.span {u}) : ℝ) : ℂ) *
-        (Real.sqrt (Ideal.absNorm (Ideal.span {v}) : ℝ) : ℂ))⁻¹ *
-      ∑ h : Residue (u * v),
-        normalizedResidueGauss u hu χu (frequencyReduction u (u * v) (dvd_mul_right u v) h) *
-          star (normalizedResidueGauss v hv χv
-            (frequencyReduction v (u * v) (dvd_mul_left v u) h)) *
-          quotientTrace (u * v) (mul_ne_zero hu hv) (-(h * Ideal.Quotient.mk _ j)) := by
-  let ru : ℂ := Real.sqrt (Ideal.absNorm (Ideal.span {u}) : ℝ)
-  let rv : ℂ := Real.sqrt (Ideal.absNorm (Ideal.span {v}) : ℝ)
-  have hqu : (0 : ℝ) < Ideal.absNorm (Ideal.span {u}) := by
-    exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr
-      (Ideal.span_singleton_eq_bot.not.mpr hu))
-  have hqv : (0 : ℝ) < Ideal.absNorm (Ideal.span {v}) := by
-    exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.mpr
-      (Ideal.span_singleton_eq_bot.not.mpr hv))
-  have hru : ru ≠ 0 := Complex.ofReal_ne_zero.mpr (Real.sqrt_pos.mpr hqu).ne'
-  have hrv : rv ≠ 0 := Complex.ofReal_ne_zero.mpr (Real.sqrt_pos.mpr hqv).ne'
-  have hsqu : ru ^ 2 = (Ideal.absNorm (Ideal.span {u}) : ℂ) := by
-    dsimp only [ru]
-    exact_mod_cast Real.sq_sqrt hqu.le
-  have hsqv : rv ^ 2 = (Ideal.absNorm (Ideal.span {v}) : ℂ) := by
-    dsimp only [rv]
-    exact_mod_cast Real.sq_sqrt hqv.le
-  have hcard : (Fintype.card (Residue (u * v)) : ℂ) = (ru * rv) ^ 2 := by
-    have hc : Fintype.card (Residue (u * v)) = Ideal.absNorm (Ideal.span {u * v}) := by
-      rw [Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card]
-    rw [hc, ← Ideal.span_singleton_mul_span_singleton, map_mul, Nat.cast_mul,
-      ← hsqu, ← hsqv, mul_pow]
-  have hterm (h : Residue (u * v)) :
-      normalizedResidueGauss u hu χu (frequencyReduction u (u * v) (dvd_mul_right u v) h) *
-        star (normalizedResidueGauss v hv χv
-          (frequencyReduction v (u * v) (dvd_mul_left v u) h)) *
-        quotientTrace (u * v) (mul_ne_zero hu hv) (-(h * Ideal.Quotient.mk _ j)) =
-      (residueGauss u hu χu (frequencyReduction u (u * v) (dvd_mul_right u v) h) *
-        star (residueGauss v hv χv (frequencyReduction v (u * v) (dvd_mul_left v u) h)) *
-        quotientTrace (u * v) (mul_ne_zero hu hv) (-(h * Ideal.Quotient.mk _ j))) / (ru * rv) := by
-    simp only [normalizedResidueGauss, star_div₀, Complex.star_def, Complex.conj_ofReal]
-    dsimp only [ru, rv]
-    ring
-  simp_rw [hterm]
-  rw [← Finset.sum_div, actual_gauss_correlation u v hu hv χu χv j, hcard]
-  change _ = (ru * rv)⁻¹ * ((ru * rv) ^ 2 * _ / (ru * rv))
-  field_simp
 
 end SevenEighths.CenteredMomentFourier
 end

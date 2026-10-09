@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.PrimePowerGaussSums
-
 namespace OAI
 
 noncomputable section
@@ -8,77 +7,21 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
-open Finset AddChar MulChar EisensteinEmbedding
 
 def cubicBesselDensityDeriv (x t : ℝ) : ℝ := -(x/(2*t))*cubicBesselDensity x t
 
@@ -281,8 +224,7 @@ end
 
 section
 
-open scoped BigOperators Classical
-open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal CompletedGauss
+open CubicJacobiGlobal CompletedGauss
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma primeCubicGauss_add_three (p:Eis) (hp:Prime p) (hprimary:lambda^2∣p-1)
@@ -395,28 +337,11 @@ theorem unramifiedCubicGaussSeries_cube_step (p:Eis) (hp:Prime p)
   rw [htail,←harg] at he
   exact he.trans (by ring)
 
-theorem unramifiedCubicGaussSeries_cube_recurrence (p:Eis) (hp:Prime p)
-    (hprimary:lambda^2∣p-1) (s:ℂ) (hs:2<s.re) (h:Eis) (hph:¬p∣h) (a:ℕ):
-    unramifiedCubicGaussSeries s (h*p^(a+6))=
-      (1+(Ideal.absNorm (Ideal.span {p}):ℂ)^3*((Ideal.absNorm (Ideal.span {p}):ℂ)^(-s))^3)*
-        unramifiedCubicGaussSeries s (h*p^(a+3))-
-      (Ideal.absNorm (Ideal.span {p}):ℂ)^3*((Ideal.absNorm (Ideal.span {p}):ℂ)^(-s))^3*
-        unramifiedCubicGaussSeries s (h*p^a):=by
-  have hfirst:=unramifiedCubicGaussSeries_cube_step p hp hprimary s hs h hph a
-  have hsecond:=unramifiedCubicGaussSeries_cube_step p hp hprimary s hs h hph (a+3)
-  have hv:unramifiedPrimeDeletedSeries p s (h*p^(a+3))=
-      unramifiedPrimeDeletedSeries p s (h*p^a):=by
-    rw [pow_add,←mul_assoc,unramifiedPrimeDeletedSeries_cube_shift p hp]
-  rw [hv,show a+3+3=a+6 by omega] at hsecond
-  linear_combination hsecond-hfirst
-
 end
 
 section
 
-open scoped BigOperators Classical Topology
-open Filter Set
-open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal
+open CubicJacobiGlobal
 local notation "Eis" => ActualEisensteinCubic.O
 
 theorem unramifiedGaussResidue_of_initial_relation (h0 h1 h2:Eis) (A B:ℂ→ℂ)
@@ -527,66 +452,11 @@ end
 
 section
 
-open scoped BigOperators Classical Topology
-open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal
-local notation "Eis" => ActualEisensteinCubic.O
-
-theorem unramifiedGaussResidue_cube_recurrence (p:Eis) (hp:Prime p)
-    (hprimary:lambda^2∣p-1) (h:Eis) (hph:¬p∣h) (a:ℕ):
-    unramifiedGaussResidue (h*p^(a+6))=
-      (1+(Ideal.absNorm (Ideal.span {p}):ℂ)⁻¹)*unramifiedGaussResidue (h*p^(a+3))-
-      (Ideal.absNorm (Ideal.span {p}):ℂ)⁻¹*unramifiedGaussResidue (h*p^a):=by
-  let q:ℂ→ℂ:=fun s=>(Ideal.absNorm (Ideal.span {p}):ℂ)^3*
-    ((Ideal.absNorm (Ideal.span {p}):ℂ)^(-s))^3
-  have hq (s:ℂ):AnalyticAt ℂ q s:=analyticAt_const.mul ((gaussPrimeWeight_analytic p hp s).pow 3)
-  have he:=unramifiedGaussResidue_of_initial_relation (h*p^(a+6)) (h*p^(a+3)) (h*p^a)
-    (fun s=>1+q s) (fun s=>-q s)
-    (fun s _=>analyticAt_const.add (hq s)) (fun s _=>(hq s).neg)
-    (continuousAt_const.add (hq _).continuousAt) (hq _).continuousAt.neg
-    (fun s hs _=>by
-      have hh:=unramifiedCubicGaussSeries_cube_recurrence p hp hprimary s (by linarith) h hph a
-      simpa only [q,neg_mul,sub_eq_add_neg] using hh)
-  dsimp only [q] at he
-  rw [gaussPrimeWeight_center p hp] at he
-  simpa only [neg_mul,sub_eq_add_neg] using he
-
-private lemma recurrence_roots_closed (r:ℕ→ℂ) (q:ℂ)
-    (hr:∀k,r (k+2)=(1+q)*r (k+1)-q*r k) (k:ℕ):
-    (1-q)*r k=(r 1-q*r 0)+(r 0-r 1)*q^k:=by
-  have hpair:∀k:ℕ,
-      ((1-q)*r k=(r 1-q*r 0)+(r 0-r 1)*q^k) ∧
-      ((1-q)*r (k+1)=(r 1-q*r 0)+(r 0-r 1)*q^(k+1)):=by
-    intro k
-    induction k with
-    | zero=>constructor <;>norm_num <;>ring
-    | succ k ih=>
-      refine ⟨ih.2,?_⟩
-      have hk:=hr k
-      rw [show k+1+1=k+2 by omega]
-      simp only [pow_succ] at *
-      linear_combination (1-q)*hk+(1+q)*ih.2-q*ih.1
-  exact (hpair k).1
-
-theorem unramifiedGaussResidue_cube_closed (p:Eis) (hp:Prime p)
-    (hprimary:lambda^2∣p-1) (h:Eis) (hph:¬p∣h) (k:ℕ):
-    (1-(Ideal.absNorm (Ideal.span {p}):ℂ)⁻¹)*unramifiedGaussResidue (h*p^(3*k))=
-      (unramifiedGaussResidue (h*p^3)-(Ideal.absNorm (Ideal.span {p}):ℂ)⁻¹*unramifiedGaussResidue h)+
-      (unramifiedGaussResidue h-unramifiedGaussResidue (h*p^3))*
-        ((Ideal.absNorm (Ideal.span {p}):ℂ)⁻¹)^k:=by
-  let r:ℕ→ℂ:=fun j=>unramifiedGaussResidue (h*p^(3*j))
-  have hr:∀j,r (j+2)=(1+(Ideal.absNorm (Ideal.span {p}):ℂ)⁻¹)*r (j+1)-
-      (Ideal.absNorm (Ideal.span {p}):ℂ)⁻¹*r j:=by
-    intro j
-    have he:=unramifiedGaussResidue_cube_recurrence p hp hprimary h hph (3*j)
-    rw [show 3*j+6=3*(j+2) by omega,show 3*j+3=3*(j+1) by omega] at he
-    exact he
-  have he:=recurrence_roots_closed r (Ideal.absNorm (Ideal.span {p}):ℂ)⁻¹ hr k
-  simpa only [r,Nat.mul_zero,Nat.mul_one,pow_zero,mul_one] using he
+open CubicJacobiGlobal
 
 end
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology ComplexConjugate
+open scoped ComplexConjugate
 
 def inverseCuspPath (c d : ℂ) (v : ℝ) (direction : ℂ) (t : ℝ) : ℂ×ℝ :=
   (-d/c-(t:ℂ)*star direction/(c^2*((v^2+t^2*‖direction‖^2:ℝ):ℂ)),

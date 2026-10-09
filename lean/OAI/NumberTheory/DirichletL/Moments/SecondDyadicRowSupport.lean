@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.SecondLiveBlock
-
 namespace OAI
 
 noncomputable section
@@ -52,13 +51,6 @@ local notation "O"=>HeckeFamily.O
   · simp only [hd,ne_eq,not_true_eq_false,mul_zero,zero_mul,
       Complex.ofReal_zero,Finset.sum_const_zero,ite_self]
   · simp only [hd,ne_eq,not_false_eq_true,ite_true]
-
- theorem dyadicRows_liveRows (C D:Ideal O)(U:Finset (CommonIndex C D))(R:ℝ)
-    (rows:Finset O)(n:Fin 4→ℤ):
-    dyadicRows (liveRows C D U R rows) n=liveRows C D U R (dyadicRows rows n):=by
-  ext z
-  simp only [dyadicRows,liveRows,Finset.mem_filter]
-  tauto
 
  theorem physicalBlock_live_dyadic_rows (η:Character)(t:ℝ)(S:Finset (Ideal O))(β:Ideal O→ℂ)
     (C D:Ideal O)(hC:Supported C)(hD:Supported D)(U:Finset (CommonIndex C D))

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.CubicSieve.Smoothed
 import OAI.NumberTheory.DirichletL.CubicSieve.DescentEnergy
-
 namespace OAI
 
 namespace SevenEighths.CubicSieve

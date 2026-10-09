@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Energy.ZeroGrowthBounds
-
 namespace OAI
 
 noncomputable section

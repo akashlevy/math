@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.SelectedBounds
 import OAI.NumberTheory.DirichletL.Detector.SelectedPrimeIndexed
-
 namespace OAI
 
 noncomputable section

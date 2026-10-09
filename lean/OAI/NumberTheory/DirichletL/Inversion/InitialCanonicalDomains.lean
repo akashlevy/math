@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Inversion.InitialEnergyCallerWindowGeometry
-
 namespace OAI
 
 noncomputable section
@@ -53,13 +52,6 @@ theorem actual_window_domains
     exact (window_power_bounds p S ψ lo hi hψ Z D B v θ H η hZ hhi (Finset.mem_filter.mp hx).1).2.1
   · intro x hx
     exact (window_power_bounds p S ψ lo hi hψ Z D B v θ H η hZ hhi (Finset.mem_filter.mp hx).1).2.2
-
-omit [∀ (i : ι), (Ideal.span {p i}).IsMaximal] in
-theorem retained_quotient_subset
-    (S:Finset (Source (ι:=ι) 0))(ψ:Fin 4→ℝ→ℂ)(Z D B v θ H:ℝ):
-    quotientSet p (coprimeSource p (windowSource p S ψ Z D B v θ H))⊆
-      quotientSet p (windowSource p S ψ Z D B v θ H) :=
-  Finset.image_subset_image (Finset.filter_subset _ _)
 
 end SevenEighths.InverseInitialCanonicalDomains
 

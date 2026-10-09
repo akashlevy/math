@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Hecke.PrimeDyadicEuler
-
 namespace OAI
 
 noncomputable section

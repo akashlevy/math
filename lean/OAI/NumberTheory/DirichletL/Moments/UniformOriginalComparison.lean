@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.UniformNaturalRetained
 import OAI.NumberTheory.DirichletL.Moments.UniformOriginalEnergy
-
 namespace OAI
 
 noncomputable section

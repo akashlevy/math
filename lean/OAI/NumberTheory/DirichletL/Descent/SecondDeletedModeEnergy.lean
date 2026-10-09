@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondModeParentLists
 import OAI.NumberTheory.DirichletL.Descent.SecondVaryingSupported
 import OAI.NumberTheory.DirichletL.Descent.SecondPhysicalRows
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment

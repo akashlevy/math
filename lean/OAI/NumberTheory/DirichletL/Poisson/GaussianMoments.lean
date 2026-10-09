@@ -1,20 +1,16 @@
 import OAI.NumberTheory.DirichletL.GaussSum.GaussianFiberMass
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 
 namespace GaussianMoment
 
@@ -53,59 +49,6 @@ section
 
 open ShortDraftLatticeCount
 
-theorem rational_sixth_row_approx_two_factors
-    {ι : Type*} (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hgood : ∀ i, lambda ∉ P i)
-    (columns : Finset O) (support : O → Finset ι)
-    (weight : O → ℂ) (r a b : O) (ha : a ≠ 0) (hb : b ≠ 0)
-    (D : ℕ)
-    (hfactor : ∀ n ∈ columns,
-      (∃ i ∈ support n, r ∈ P i) → a ∣ n ∨ b ∣ n)
-    (hcolnorm : ∀ n ∈ columns, qNat n ≤ D)
-    (hweight : ∀ n ∈ columns, ‖weight n‖ ≤ 1) :
-    ‖(∑ n ∈ columns, weight n) -
-      (∑ n ∈ columns,
-        weight n * finiteSquarefreeRow P hgood (support n) (r ^ 6))‖ ≤
-      (64 * (D / qNat a + 1) + 64 * (D / qNat b + 1) : ℕ) := by
-  classical
-  let Bad := columns.filter (fun n => ∃ i ∈ support n, r ∈ P i)
-  let Sa := columns.filter (fun n => a ∣ n)
-  let Sb := columns.filter (fun n => b ∣ n)
-  have hsub : Bad ⊆ Sa ∪ Sb := by
-    intro n hn
-    obtain ⟨hcol, hbad⟩ := Finset.mem_filter.mp hn
-    rcases hfactor n hcol hbad with hna | hnb
-    · exact Finset.mem_union_left _ (Finset.mem_filter.mpr ⟨hcol, hna⟩)
-    · exact Finset.mem_union_right _ (Finset.mem_filter.mpr ⟨hcol, hnb⟩)
-  have hSa : Sa.card ≤ 64 * (D / qNat a + 1) :=
-    finite_divisible_count a ha Sa D
-      (by intro n hn; exact (Finset.mem_filter.mp hn).2)
-      (by intro n hn; exact hcolnorm n (Finset.mem_filter.mp hn).1)
-  have hSb : Sb.card ≤ 64 * (D / qNat b + 1) :=
-    finite_divisible_count b hb Sb D
-      (by intro n hn; exact (Finset.mem_filter.mp hn).2)
-      (by intro n hn; exact hcolnorm n (Finset.mem_filter.mp hn).1)
-  have hcard : Bad.card ≤
-      64 * (D / qNat a + 1) + 64 * (D / qNat b + 1) := by
-    calc
-      Bad.card ≤ (Sa ∪ Sb).card := Finset.card_le_card hsub
-      _ ≤ Sa.card + Sb.card := Finset.card_union_le Sa Sb
-      _ ≤ 64 * (D / qNat a + 1) + 64 * (D / qNat b + 1) :=
-        Nat.add_le_add hSa hSb
-  calc
-    ‖(∑ n ∈ columns, weight n) -
-      (∑ n ∈ columns,
-        weight n * finiteSquarefreeRow P hgood (support n) (r ^ 6))‖ ≤
-        ∑ n ∈ Bad, ‖weight n‖ :=
-      finiteSquarefreeRow_difference_norm P hgood columns support weight r
-    _ ≤ ∑ n ∈ Bad, (1 : ℝ) := by
-      apply Finset.sum_le_sum
-      intro n hn
-      exact hweight n (Finset.mem_filter.mp hn).1
-    _ = (Bad.card : ℝ) := by simp
-    _ ≤ (64 * (D / qNat a + 1) + 64 * (D / qNat b + 1) : ℕ) := by
-      exact_mod_cast hcard
-
 theorem rational_qNat (r : ℕ) (hr : r ≠ 0) :
     qNat (r : O) = r ^ 2 := by
   calc
@@ -114,35 +57,6 @@ theorem rational_qNat (r : ℕ) (hr : r ≠ 0) :
     _ = Nat.card (O ⧸ Ideal.span {(r : O)}) := by
       rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
     _ = r ^ 2 := rational_modulus_card r hr
-
-theorem rational_qNat_pow (r k : ℕ) (hr : r ≠ 0) :
-    qNat ((r : O) ^ k) = (r ^ 2) ^ k := by
-  induction k with
-  | zero =>
-      simpa using rational_qNat 1 (by decide)
-  | succ k ih =>
-      calc
-        qNat ((r : O) ^ (k + 1)) =
-            qNat ((r : O) ^ k) * qNat (r : O) := by
-          rw [pow_succ, qNat_mul]
-        _ = (r ^ 2) ^ k * (r ^ 2) := by rw [ih, rational_qNat r hr]
-        _ = (r ^ 2) ^ (k + 1) := (pow_succ (r ^ 2) k).symm
-
-theorem rational_sixth_injective :
-    Function.Injective (fun r : ℕ => (r : O) ^ 6) := by
-  intro r s hrs
-  have hcast : ((r ^ 6 : ℕ) : O) = ((s ^ 6 : ℕ) : O) := by
-    simpa only [Nat.cast_pow] using hrs
-  exact Nat.pow_left_injective (by decide : 6 ≠ 0) (Nat.cast_injective hcast)
-
-theorem rational_sixth_norm_interval
-    (L r R : ℕ) (hr : r.Prime) (hL : L ≤ r) (hR : r ≤ R) :
-    L ^ 12 ≤ qNat ((r : O) ^ 6) ∧
-      qNat ((r : O) ^ 6) ≤ R ^ 12 := by
-  rw [rational_qNat_pow r 6 hr.ne_zero]
-  have hpow : (r ^ 2) ^ 6 = r ^ 12 := by ring
-  rw [hpow]
-  exact ⟨Nat.pow_le_pow_left hL 12, Nat.pow_le_pow_left hR 12⟩
 
 theorem rational_qNat_eq_one_iff (x : O) : qNat x = 1 ↔ IsUnit x := by
   rw [qNat_eq_absNorm_span, Ideal.absNorm_eq_one_iff,
@@ -227,75 +141,11 @@ theorem rational_prime_ideal_cover (r : ℕ) (hr : r.Prime) :
 
 end
 
-theorem rational_prime_sixth_row_approx
-    {ι : Type*} (P : ι → Ideal O) [∀ i, (P i).IsMaximal]
-    (hgood : ∀ i, lambda ∉ P i)
-    (columns : Finset O) (support : O → Finset ι)
-    (weight : O → ℂ) (r : ℕ) (hr : r.Prime) (D : ℕ)
-    (hsupport : ∀ n ∈ columns, ∀ i ∈ support n, n ∈ P i)
-    (hcolnorm : ∀ n ∈ columns, ShortDraftLatticeCount.qNat n ≤ D)
-    (hweight : ∀ n ∈ columns, ‖weight n‖ ≤ 1) :
-    ‖(∑ n ∈ columns, weight n) -
-      (∑ n ∈ columns,
-        weight n * finiteSquarefreeRow P hgood (support n) ((r : O) ^ 6))‖ ≤
-      (128 * (D / r + 1) : ℕ) := by
-  obtain ⟨a, b, ha0, hb0, hra, hrb, hcover⟩ :=
-    rational_prime_ideal_cover r hr
-  have hfactor : ∀ n ∈ columns,
-      (∃ i ∈ support n, (r : O) ∈ P i) → a ∣ n ∨ b ∣ n := by
-    intro n hn ⟨i, hi, hri⟩
-    rcases hcover (P i) (inferInstance) hri with hPa | hPb
-    · have hmem : n ∈ (Ideal.span {a} : Ideal O) := by
-        rw [← hPa]
-        exact hsupport n hn i hi
-      exact Or.inl (Ideal.mem_span_singleton.mp hmem)
-    · have hmem : n ∈ (Ideal.span {b} : Ideal O) := by
-        rw [← hPb]
-        exact hsupport n hn i hi
-      exact Or.inr (Ideal.mem_span_singleton.mp hmem)
-  have hrow := rational_sixth_row_approx_two_factors
-    P hgood columns support weight (r : O) a b ha0 hb0 D
-    hfactor hcolnorm hweight
-  have hAdiv : D / ShortDraftLatticeCount.qNat a ≤ D / r :=
-    Nat.div_le_div_left hra hr.pos
-  have hBdiv : D / ShortDraftLatticeCount.qNat b ≤ D / r :=
-    Nat.div_le_div_left hrb hr.pos
-  have hnat :
-      64 * (D / ShortDraftLatticeCount.qNat a + 1) +
-      64 * (D / ShortDraftLatticeCount.qNat b + 1) ≤
-      128 * (D / r + 1) := by omega
-  exact hrow.trans (by exact_mod_cast hnat)
-
 end ActualEisensteinCubic
 
 open ActualEisensteinCubic
 
 namespace RationalPrimeExtraction
-
-noncomputable def selected (Y : ℝ) : Finset ℕ :=
-  (Finset.Ioc ⌊Y / 3⌋₊ ⌊Y⌋₊).filter Nat.Prime
-
-theorem lower_count_and_extract
-    [DecidableEq O] (A : O → ℂ) (rows : Finset O) (E B : ℝ) (hE : 0 ≤ E) :
-    ∃ Y₀ : ℝ, ∀ Y : ℝ, Y₀ ≤ Y →
-      (selected Y).image (fun r : ℕ => (r : O) ^ 6) ⊆ rows →
-      (∀ r ∈ selected Y, ‖A 1 - A ((r : O) ^ 6)‖ ≤ E) →
-      (∑ u ∈ rows, ‖A u‖ ^ 2) ≤ B →
-      (Real.log 2 / 20) * (Y / Real.log Y) * ‖A 1‖ ^ 2 ≤
-        2 * B + 2 * ((selected Y).card : ℝ) * E ^ 2 := by
-  obtain ⟨Y₀, hcount⟩ := rational_prime_three_interval_count
-  refine ⟨Y₀, ?_⟩
-  intro Y hY hrows happrox hmean
-  have hcard : (Real.log 2 / 20) * (Y / Real.log Y) ≤
-      ((selected Y).card : ℝ) := hcount Y hY
-  have hinj : Set.InjOn (fun r : ℕ => (r : O) ^ 6)
-      ((selected Y : Finset ℕ) : Set ℕ) := by
-    intro r _ s _ hrs
-    exact rational_sixth_injective hrs
-  have hmain := ShortDraft.complex_row_extraction rows (selected Y)
-    (fun r : ℕ => (r : O) ^ 6) A 1 E B hE hrows hinj happrox hmean
-  have hsquared : 0 ≤ ‖A 1‖ ^ 2 := sq_nonneg _
-  exact (mul_le_mul_of_nonneg_right hcard hsquared).trans hmain
 
 end RationalPrimeExtraction
 

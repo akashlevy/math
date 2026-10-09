@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.ActualChildState
-
 namespace OAI
 
 noncomputable section
@@ -43,20 +42,6 @@ theorem actual_cell_squarefree_labels (hp : ∀i,p i≠0) {Jo Jn : ℕ}
   intro I hI
   have hi := Finset.mem_filter.mp hI
   exact ⟨hi.2,hi.2.ne_zero,actual_cell_labels_bound p hp source hk d Z B j eta hZ hbin hC hJ I hi.1⟩
-
-theorem actual_cell_nonzero_weight_label (hp : ∀i,p i≠0)
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i=>Ideal.span {p i})))
-    (hg : ∀i,ConcretePrimeRowBridge.goodLambda∉Ideal.span {p i})
-    {Jo Jn : ℕ} (source : Finset (MarkedSecondSource ι Jo Jn))
-    (hs : ActualSecondSourceConditions p source) (d : BlockIndex)
-    (x : MarkedSecondSource ι Jo Jn) (hx : x∈cell p source d)
-    (Ψ : O→*ℂ) (m : O) (ray : SecondRayIndex)
-    (hw : actualSecondSignedWeight p hp hcop hg Ψ m ray x≠0) :
-    (actualSecondChild p 1 1 x).2.1∈(actualCellLabels p source d).filter Squarefree := by
-  have hxs := cell_subset p source d hx
-  exact Finset.mem_filter.mpr ⟨actual_cell_labels_cover p source d x hx,
-    actual_second_nonzero_weight_squarefree p hp hcop hg Ψ m ray x
-      (hs.common_disjoint x hxs) (hs.second_divisor x hxs) hw 1 1⟩
 
 end SevenEighths.InverseMoment
 end

@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Moments.RadialEligibleEnergy
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.RankinLabels
 import OAI.NumberTheory.DirichletL.Moments.WholeDivisorShell
-
 namespace OAI
 
 noncomputable section

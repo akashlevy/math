@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Reflection.BoundedTemplates
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase
@@ -62,20 +61,6 @@ lemma frozenCore_norm [∀ i, (Ideal.span {p i}).IsMaximal]
   intro i hi
   rw [norm_mul,frozenPrimeScalar_norm D hp hg hchar hcop i (j i) (hj i hi),one_mul]
   exact frozenCofactorCharacter_product_norm hg hcop i (F.erase i) (by simp) (j i)
-
-lemma sourceFrozenPhase_norm [∀ i, (Ideal.span {p i}).IsMaximal]
-    (D : ControlledStratumArithmetic p N a c mode)
-    (s : FixedCuspShape (ControlledStratumArithmetic.fixedCusp a c mode))
-    (hp : ∀ i, p i ≠ 0) (hg : ∀ i, λ₀ ∉ Ideal.span {p i})
-    (hchar : ∀ i, ringChar (Eis ⧸ Ideal.span {p i}) ≠ 2)
-    (hcop : Pairwise (Function.onFun IsCoprime (fun i => Ideal.span {p i})))
-    (hN : (9:Eis)*c ∣ N) (hr : λ₀^2 ∣ (∏ i, p i)-1)
-    (hbase : if mode then λ₀^2 ∣ a-1 else λ₀^2 ∣ c-1)
-    (j : ι → ℕ) (F : Finset ι) (hj : ∀ i ∈ F, j i < 6) (u : Eisˣ) (m : ℕ) :
-    ‖sourceFrozenPhase D s hp hg j F u m‖ = 1 := by
-  rw [sourceFrozenPhase,norm_mul,norm_mul,norm_star,D.fixedFactor_norm hN hr hbase,
-    frozenCore_norm D hp hg hchar hcop j F hj,ramifiedBlock_norm]
-  norm_num
 
 end
 end SevenEighths.InverseReflectedPhase

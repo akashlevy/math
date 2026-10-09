@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.TargetPrincipal
-
 namespace OAI
 
 noncomputable section
@@ -54,17 +53,6 @@ theorem source_ray_nonprincipal_eventually (S : Finset (Ideal O)) (hS : SourceEx
     | false => exact htarget u hnorm hs S hS.prime
     | true => exact calibrated_row_nonprincipal S hS.prime hmax hS.bad u (mem_rowBand.mp hu).1 hc
   | inr θ => exact hray u hnorm hs H hH θ
-
-theorem source_ray_maximum_eventually (S : Finset (Ideal O)) (hS : SourceExclusions S)
-    (hmax : ∀P∈S,P.IsMaximal) (η : Character) (d : ℝ) (hd : 0<d) :
-    ∀ᶠ Z : ℝ in atTop,∀U : ℝ,∀u∈rowBand (Z^d) U,
-      (calibrationForSet S hmax).residueMonoid u.val≠0 →
-      ∃hnp : ∀j,(sourceDetectorFamily S hS.prime η u (rayCubeFamily M H hH u) j).residue≠1,
-      ∀T : ℝ,detectorMaximum (sourceDetectorFamily S hS.prime η u (rayCubeFamily M H hH u)) T=
-        HeckeDetectorZeros.zeroMaximum (sourceDetectorFamily S hS.prime η u (rayCubeFamily M H hH u)) hnp T := by
-  filter_upwards [source_ray_nonprincipal_eventually M H hH S hS hmax η d hd] with Z hZ
-  intro U u hu hc
-  exact ⟨hZ U u hu hc,fun T=>detectorMaximum_eq_nonprincipal _ _ T⟩
 
 theorem source_ray_conductor_eventually (S : Finset (Ideal O)) (hS : ∀P∈S,Prime P)
     (η : Character) (ν : ℝ) (hν : 0<ν) :

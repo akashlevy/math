@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.PhysicalRawIntegral
 import OAI.NumberTheory.DirichletL.Detector.RawArithmetic
-
 namespace OAI
 
 noncomputable section

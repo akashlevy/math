@@ -1,8 +1,6 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondCellParameters
 import OAI.NumberTheory.DirichletL.Descent.SecondSharpPuncture
 import OAI.NumberTheory.DirichletL.Descent.PrioritySourceBudget
-import OAI.NumberTheory.DirichletL.Descent.SourceDepth
-
 namespace OAI
 
 noncomputable section

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.InitialMajorant
 import OAI.NumberTheory.DirichletL.Detector.MellinScaling
-
 namespace OAI
 
 noncomputable section

@@ -1,77 +1,23 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.ReflectedCuspMellin
-
 namespace OAI
 
 noncomputable section
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 namespace CubicKubota
 
@@ -404,11 +350,6 @@ lemma cubeKernelLeftGlobal_le (p : Eis) :
   rintro M ⟨x,rfl⟩
   exact ⟨(cubeKernelLeft p x).1,(cubeKernelLeft p x).property,rfl⟩
 
-lemma cubeKernelRightGlobal_le (p : Eis) (hp : p ≠ 0) :
-    (cubeKernelRightGlobal p hp).range ≤ globalKubotaKernel := by
-  rintro M ⟨x,rfl⟩
-  exact ⟨(cubeKernelRight p hp x).1,(cubeKernelRight p hp x).property,rfl⟩
-
 private lemma finiteIndex_subtype_image {G : Type*} [Group G] (H : Subgroup G)
     [H.FiniteIndex] (J : Subgroup H) [J.FiniteIndex] : (J.map H.subtype).FiniteIndex := by
   constructor
@@ -433,68 +374,11 @@ lemma cubeKernelGlobal_finite_covers (p : Eis) (hp : p ≠ 0) :
   · rw [cubeKernelRightGlobal,MonoidHom.range_comp,MonoidHom.range_comp]
     exact finiteIndex_subtype_image _ _
 
-lemma cubeKernelGlobal_intertwining (p : Eis) (hp : p ≠ 0) (x : cubeKernelCorrespondence p) :
-    cubeDiagonal p * (cubeKernelLeftGlobal p x).val =
-      (cubeKernelRightGlobal p hp x).val * cubeDiagonal p := x.1.property
-
 end
 
 open ActualEisensteinCubic ConcreteTraceCRT CubicEisenstein
-local notation "Eis" => ActualEisensteinCubic.O
-
-lemma cubeArchimedean_correspondence (p : Eis) (hp : p ≠ 0) :
-    ∃ g : SL(2,ℂ), g 0 1=0 ∧ g 1 0=0 ∧ g 0 0/g 1 1=eisEmbedding p^3 ∧
-      ∀ x : cubeKernelCorrespondence p,
-        g*integralComplexMatrix (cubeKernelLeftGlobal p x)=
-          integralComplexMatrix (cubeKernelRightGlobal p hp x)*g := by
-  obtain ⟨z,hz⟩ := IsAlgClosed.exists_pow_nat_eq (eisEmbedding p^3) (by decide : 0<2)
-  have hz0 : z≠0 := by
-    intro he
-    rw [he,zero_pow (by decide)] at hz
-    exact pow_ne_zero 3 (eisEmbedding_ne_zero hp) hz.symm
-  let g : SL(2,ℂ) := ⟨!![z,0;0,z⁻¹],by simp [Matrix.det_fin_two_of,hz0]⟩
-  refine ⟨g,rfl,rfl,?_,?_⟩
-  · change z/z⁻¹=eisEmbedding p^3
-    rw [div_inv_eq_mul,←pow_two,hz]
-  · intro x
-    have he := cubeCorrespondence_entries p x.1
-    have ha : (((x.1).1.1 : levelThree) : SL(2,Eis)) 0 0 =
-        (((x.1).1.2 : levelThree) : SL(2,Eis)) 0 0 :=
-      mul_left_cancel₀ (pow_ne_zero 3 hp) (he.1.trans (mul_comm _ _))
-    have he00 := congrArg eisEmbedding ha
-    have he01 := congrArg eisEmbedding he.2.1
-    have he10 := congrArg eisEmbedding he.2.2.1
-    have he11 := congrArg eisEmbedding he.2.2.2
-    simp only [map_mul,map_pow] at he01 he10
-    apply Matrix.SpecialLinearGroup.ext
-    intro i j
-    fin_cases i <;> fin_cases j <;>
-      simp only [Matrix.SpecialLinearGroup.coe_mul,Matrix.mul_apply,Fin.sum_univ_two,
-        integralComplexMatrix_apply]
-    · change z*eisEmbedding ((((x.1).1.1 : levelThree) : SL(2,Eis)) 0 0)+0*eisEmbedding ((((x.1).1.1 : levelThree) : SL(2,Eis)) 1 0) =
-        eisEmbedding ((((x.1).1.2 : levelThree) : SL(2,Eis)) 0 0)*z+eisEmbedding ((((x.1).1.2 : levelThree) : SL(2,Eis)) 0 1)*0
-      rw [he00]
-      ring
-    · change z*eisEmbedding ((((x.1).1.1 : levelThree) : SL(2,Eis)) 0 1)+0*eisEmbedding ((((x.1).1.1 : levelThree) : SL(2,Eis)) 1 1) =
-        eisEmbedding ((((x.1).1.2 : levelThree) : SL(2,Eis)) 0 0)*0+eisEmbedding ((((x.1).1.2 : levelThree) : SL(2,Eis)) 0 1)*z⁻¹
-      rw [←he01,←hz]
-      field_simp
-      ring
-    · change 0*eisEmbedding ((((x.1).1.1 : levelThree) : SL(2,Eis)) 0 0)+z⁻¹*eisEmbedding ((((x.1).1.1 : levelThree) : SL(2,Eis)) 1 0) =
-        eisEmbedding ((((x.1).1.2 : levelThree) : SL(2,Eis)) 1 0)*z+eisEmbedding ((((x.1).1.2 : levelThree) : SL(2,Eis)) 1 1)*0
-      rw [he10,←hz]
-      field_simp
-      ring
-    · change 0*eisEmbedding ((((x.1).1.1 : levelThree) : SL(2,Eis)) 0 1)+z⁻¹*eisEmbedding ((((x.1).1.1 : levelThree) : SL(2,Eis)) 1 1) =
-        eisEmbedding ((((x.1).1.2 : levelThree) : SL(2,Eis)) 1 0)*0+eisEmbedding ((((x.1).1.2 : levelThree) : SL(2,Eis)) 1 1)*z⁻¹
-      rw [he11]
-      ring
 
 end CubicKubota
-
-open Filter MeasureTheory Asymptotics
-open scoped BigOperators Classical Topology
-open Finset AddChar MulChar EisensteinEmbedding
 
 namespace CubicEisenstein
 local notation "O" => ActualEisensteinCubic.O
@@ -547,16 +431,6 @@ lemma directionalSeries_continuousOn (direction : ℂ) :
       (by change 0<p.1 at hp;linarith))
   exact (hclosed.continuousAt hnb).continuousWithinAt
 
-lemma cuspBarProfile_full_eq (constant z : ℂ) (v : ℝ) (hv : 0<v) :
-    cuspBarProfile (coeff.fullFunction constant) z v=
-      (1/2:ℂ)*(coeff.directionalSeries 1 (v,z)+Complex.I*coeff.directionalSeries Complex.I (v,z)) := by
-  rw [cuspBarProfile_positive _ _ _ hv,horizontalWirtingerBar]
-  have h1 := (coeff.fullFunction_horizontal_hasDerivAt constant v hv z 1 0).deriv
-  have hI := (coeff.fullFunction_horizontal_hasDerivAt constant v hv z Complex.I 0).deriv
-  simp only [mul_one,Complex.ofReal_zero,zero_mul,add_zero] at h1 hI
-  rw [h1,hI]
-  rfl
-
 lemma cuspZProfile_full_eq (constant z : ℂ) (v : ℝ) (hv : 0<v) :
     cuspZProfile (coeff.fullFunction constant) z v=
       (1/2:ℂ)*(coeff.directionalSeries 1 (v,z)-Complex.I*coeff.directionalSeries Complex.I (v,z)) := by
@@ -566,15 +440,6 @@ lemma cuspZProfile_full_eq (constant z : ℂ) (v : ℝ) (hv : 0<v) :
   simp only [mul_one,Complex.ofReal_zero,zero_mul,add_zero] at h1 hI
   rw [h1,hI]
   rfl
-
-lemma cuspBarProfile_continuousOn (constant z : ℂ) :
-    ContinuousOn (cuspBarProfile (coeff.fullFunction constant) z) (Set.Ioi 0) := by
-  have hd (direction : ℂ) : ContinuousOn (fun v : ℝ=>coeff.directionalSeries direction (v,z)) (Set.Ioi 0) :=
-    (coeff.directionalSeries_continuousOn direction).comp
-      (continuousOn_id.prodMk continuousOn_const) (fun v hv=>hv)
-  apply (continuousOn_const.mul ((hd 1).add (continuousOn_const.mul (hd Complex.I)))).congr
-  intro v hv
-  exact coeff.cuspBarProfile_full_eq constant z v hv
 
 lemma cuspZProfile_continuousOn (constant z : ℂ) :
     ContinuousOn (cuspZProfile (coeff.fullFunction constant) z) (Set.Ioi 0) := by
@@ -586,11 +451,6 @@ lemma cuspZProfile_continuousOn (constant z : ℂ) :
   exact coeff.cuspZProfile_full_eq constant z v hv
 
 end SubexponentialBesselCoefficients
-
-lemma cuspBarProfile_source_continuousOn (z : ℂ) :
-    ContinuousOn (cuspBarProfile cubicSourceResidualFunction z) (Set.Ioi 0) := by
-  rw [cubicSourceResidualFunction_eq_bessel]
-  exact sourceBesselCoefficients.cuspBarProfile_continuousOn _ z
 
 lemma cuspZProfile_source_continuousOn (z : ℂ) :
     ContinuousOn (cuspZProfile cubicSourceResidualFunction z) (Set.Ioi 0) := by
@@ -611,11 +471,6 @@ lemma cuspBarProfile_conjugate_continuousOn (z : ℂ) :
     ContinuousOn (cuspBarProfile cubicSourceConjugateFunction z) (Set.Ioi 0) := by
   rw [cuspBarProfile_conjugate_eq]
   exact (cuspZProfile_source_continuousOn z).star
-
-lemma cuspZProfile_conjugate_continuousOn (z : ℂ) :
-    ContinuousOn (cuspZProfile cubicSourceConjugateFunction z) (Set.Ioi 0) := by
-  rw [cuspZProfile_conjugate_eq]
-  exact (cuspBarProfile_source_continuousOn z).star
 
 lemma cuspBarProfile_source_isBigO (z : ℂ) :
     cuspBarProfile cubicSourceResidualFunction z =O[atTop]

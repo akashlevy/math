@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Eisenstein.ResidualFourierExpansion
-
 namespace OAI
 
 noncomputable section
@@ -8,77 +7,24 @@ namespace CubicEisenstein
 
 open scoped BigOperators
 open MulChar AddChar
-open scoped BigOperators
 open Filter Asymptotics MeasureTheory
 open scoped Topology
-open MeasureTheory Real
+open Real
 open scoped FourierTransform SchwartzMap
 open Finset Complex
 open scoped Classical
-open scoped Classical
-open Filter Real Asymptotics
 open ActualEisensteinCubic
-open Filter
-open ActualEisensteinCubic RationalPrimeExtraction ShortDraftLatticeCount
-open ActualEisensteinCubic ShortDraftLatticeCount
-open Filter
-open scoped Topology
-open EisensteinEmbedding ConcreteTraceCRT ActualEisensteinCubic
-open MulChar AddChar
-open Filter Asymptotics
+open RationalPrimeExtraction ShortDraftLatticeCount
+open EisensteinEmbedding ConcreteTraceCRT
 open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter
-open MulChar AddChar
-open MulChar AddChar
-open scoped LSeries.notation ArithmeticFunction.Moebius
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics
 open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Ideal NumberField RingOfIntegers UniqueFactorizationMonoid
-open Filter Asymptotics
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics Ideal NumberField
-open Filter
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open Filter Asymptotics MeasureTheory
-open scoped Topology
-open MeasureTheory Real
-open scoped ContDiff FourierTransform SchwartzMap
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical SchwartzMap ContDiff
-open scoped BigOperators Classical
-open scoped BigOperators Classical SchwartzMap ContDiff
-open MeasureTheory Set
-open scoped BigOperators
-open scoped BigOperators Classical
-open scoped BigOperators Classical
-open ActualEisensteinCubic UniqueFactorizationMonoid
-open scoped BigOperators
-open scoped BigOperators
-open scoped BigOperators Classical SchwartzMap
-open scoped BigOperators Classical
+open scoped ContDiff
+open Set
 
 section
-open scoped BigOperators Classical MatrixGroups
+open scoped MatrixGroups
 
-open CubicKubota ActualEisensteinCubic ConcreteTraceCRT
+open CubicKubota
 local notation "O" => ActualEisensteinCubic.O
 
 def rationalComplex : SL(2,ℤ) →* SL(2,ℂ) := integralComplexMatrix.comp rationalEmbedding
@@ -152,8 +98,7 @@ end
 
 section
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology InnerProductSpace MatrixGroups
+open scoped InnerProductSpace MatrixGroups
 open CubicKubota
 local notation "Eis" => ActualEisensteinCubic.O
 
@@ -198,12 +143,6 @@ lemma translatedCuspFourier_restrict (h:Eis) (M:levelTwo) (F:KernelQuotientL2):
 def translatedCuspFamily (h:Eis) (M:levelTwo) (a b:ℝ) (ha:0<a) (hab:a<b) (s:ℂ):ℂ:=
   translatedCuspFourier h M
     (kernelLocalCorrectedSeed (translatedCuspCompact M) (translatedCuspCompact_isCompact M) a b ha hab s)
-
-lemma translatedCuspFamily_meromorphicAt (h:Eis) (M:levelTwo)
-    (a b:ℝ) (ha:0<a) (hab:a<b):
-    MeromorphicAt (translatedCuspFamily h M a b ha hab) (4/3:ℂ):=
-  meromorphicAt_clm (translatedCuspFourier h M)
-    (kernelLocalCorrectedSeed_meromorphicAt _ (translatedCuspCompact_isCompact M) a b ha hab)
 
 lemma translatedCuspFamily_analyticAt_nonreal (h:Eis) (M:levelTwo)
     (a b:ℝ) (ha:0<a) (hab:a<b) (s:ℂ) (hs:s.re≠1) (hi:s.im≠0):
@@ -264,9 +203,8 @@ end
 
 section
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology MatrixGroups Matrix
-open CubicKubota ConcreteTraceCRT
+open scoped MatrixGroups Matrix
+open CubicKubota
 local notation "Eis" => ActualEisensteinCubic.O
 
 def oppositeSource:levelTwo:=rationalLift ModularGroup.S
@@ -328,72 +266,15 @@ lemma translatedCuspFamily_opposite_initial (h:Eis) (s:ℂ)
     opposite_cusp_fourier_average s (by linarith),
     show (9:Eis)*(3*h)=27*h by ring,unramifiedCubicGaussSeries_twentySeven]
 
-def continuedUnramifiedGauss (h:Eis) (s:ℂ):ℂ:=
-  translatedCuspFamily (3*h) oppositeSource 2 3 (by norm_num) (by norm_num) s/
-    cuspWhittakerHeightFactor s (3*h)
-
 def unramifiedGaussResidue (h:Eis):ℂ:=
   translatedCuspFourier (3*h) oppositeSource cubicEisensteinResidue/
     cuspWhittakerHeightFactor (4/3:ℂ) (3*h)
-
-theorem continuedUnramifiedGauss_meromorphicAt_center (h:Eis):
-    MeromorphicAt (continuedUnramifiedGauss h) (4/3:ℂ):=by
-  exact (translatedCuspFamily_meromorphicAt (3*h) oppositeSource 2 3
-    (by norm_num) (by norm_num)).div
-      (cuspWhittakerHeightFactor_analyticAt (3*h) (4/3) (by norm_num)).meromorphicAt
-
-theorem continuedUnramifiedGauss_meromorphicOn_upper (h:Eis):
-    MeromorphicOn (continuedUnramifiedGauss h) {s:ℂ|1<s.re ∧ 0<s.im}:=by
-  intro s hs
-  exact (translatedCuspFamily_analyticAt_nonreal (3*h) oppositeSource 2 3
-    (by norm_num) (by norm_num) s (ne_of_gt hs.1) (ne_of_gt hs.2)).meromorphicAt.div
-      (cuspWhittakerHeightFactor_analyticAt (3*h) s hs.1).meromorphicAt
-
-theorem continuedUnramifiedGauss_residue_limit (h:Eis):
-    Tendsto (fun s:ℂ=>(s-4/3)*continuedUnramifiedGauss h s)
-      (𝓝[≠] (4/3:ℂ)) (𝓝 (unramifiedGaussResidue h)):=by
-  have hd:Tendsto (fun s:ℂ=>cuspWhittakerHeightFactor s (3*h))
-      (𝓝[≠] (4/3:ℂ)) (𝓝 (cuspWhittakerHeightFactor (4/3:ℂ) (3*h))):=
-    (cuspWhittakerHeightFactor_analyticAt (3*h) (4/3) (by norm_num)).continuousAt.tendsto.mono_left
-      nhdsWithin_le_nhds
-  have hh:=(translatedCuspFamily_residue_limit (3*h) oppositeSource 2 3
-    (by norm_num) (by norm_num)).div hd (cuspWhittakerHeightFactor_center_ne_zero (3*h))
-  convert hh using 1
-  · funext s
-    simp only [continuedUnramifiedGauss,Pi.div_apply]
-    ring
-  · rfl
-
-theorem continuedUnramifiedGauss_initial (h:Eis) (s:ℂ)
-    (hs:4<s.re) (hi:0<s.im) (hH:cuspWhittakerHeightFactor s (3*h)≠0):
-    continuedUnramifiedGauss h s=unramifiedCubicGaussSeries s h:=by
-  rw [continuedUnramifiedGauss,translatedCuspFamily_opposite_initial h s hs hi,
-    mul_div_cancel_right₀ _ hH]
-
-theorem continuedUnramifiedGauss_initial_open (h:Eis):
-    ∃U:Set ℂ,IsOpen U ∧ U.Nonempty ∧ U⊆{s:ℂ|4<s.re ∧ 0<s.im} ∧
-      Set.EqOn (continuedUnramifiedGauss h) (fun s=>unramifiedCubicGaussSeries s h) U:=by
-  obtain ⟨ε,hε,hball⟩:=Metric.eventually_nhds_iff.mp (cuspWhittakerHeightFactor_ne_zero_near_five (3*h))
-  let z:ℂ:=5+(ε/2:ℝ)*Complex.I
-  have hz:dist z (5:ℂ)<ε:=by
-    have he:dist z (5:ℂ)=ε/2:=by simp [z,dist_eq_norm,hε.le]
-    rw [he]
-    linarith
-  have hzim:0<z.im:=by simpa [z] using half_pos hε
-  refine ⟨Metric.ball (5:ℂ) ε ∩ {s:ℂ|0<s.im},
-    Metric.isOpen_ball.inter (isOpen_lt continuous_const Complex.continuous_im),
-    ⟨z,hz,hzim⟩,?_,?_⟩
-  · intro s hs
-    exact ⟨(hball hs.1).1,hs.2⟩
-  · intro s hs
-    exact continuedUnramifiedGauss_initial h s (hball hs.1).1 hs.2 (hball hs.1).2
 
 end
 
 section
 
-open scoped BigOperators Classical
-open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal
+open CubicJacobiGlobal
 local notation "Eis" => ActualEisensteinCubic.O
 
 lemma gaussRep_mk_congr (c d : Eis) :
@@ -561,10 +442,7 @@ theorem cubicUnitGaussSum_coprime_product (h a b:Eis) (ha:a≠0) (hb:b≠0)
 
 end
 
-open Filter MeasureTheory
-open scoped BigOperators Classical Topology
-
-open ActualEisensteinCubic ConcreteTraceCRT CubicJacobiGlobal CompletedGauss
+open CubicJacobiGlobal CompletedGauss
 open PrimaryIdealUnitReindex (GoodIdeal)
 local notation "Eis" => ActualEisensteinCubic.O
 

@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Descent.CubeSource
 import OAI.NumberTheory.DirichletL.Descent.FirstWholeMarkedColumns
-
 namespace OAI
 
 noncomputable section

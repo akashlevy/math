@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Moments.AmplificationEnergy
 import OAI.NumberTheory.DirichletL.Moments.Extraction
-
 namespace OAI
 
 noncomputable section
@@ -38,13 +37,6 @@ theorem gauss_primary_power_product (p u : O) (k : ℕ)
         sexticGauss u (supportedElement_ne_zero u hu) h := by
   rw [sexticGauss_coprime_product (p^k) u (supported_power p hp k) hu hcop.pow_left,
     crossFactor_primary p u k hp hu hpp hup]
-
-theorem residualCharacter_six (p u : O) (hp : Supported (Ideal.span {p})) :
-    residualCharacter p 6 u = sexticReciprocityPhase p u ^ 6 *
-      coprimalityMask u p := by
-  unfold residualCharacter
-  norm_num only
-  rw [twelfth_power_mask p hp u]
 
 def primeRoot (p : O) (k : ℕ) : ℂ :=
   (Real.sqrt ((Ideal.absNorm (Ideal.span {p}) : ℝ)^k) : ℂ)
@@ -145,38 +137,6 @@ theorem errorScalar_norms (p : O) (hp : Prime p) [(Ideal.span {p}).IsMaximal]
   exact ⟨centralLocal_one_norm_sq p hp hs hg hc h hph,
     centralLocal_six_norm_sq p hp hs hg hc h hph,
     centralLocal_seven_norm_sq p hp hs hg hc h hph⟩
-
-theorem error_polynomial_shortening {α : Type*} (S : Finset α)
-    (p : O) (hp : Prime p) (hs : Supported (Ideal.span {p}))
-    (hpp : goodLambda^2 ∣ p-1) (n : ℕ) (u : α → O)
-    (hu : ∀ i, Supported (Ideal.span {u i})) (hup : ∀ i, goodLambda^2 ∣ u i-1)
-    (hcop : ∀ i, IsCoprime p (u i)) (c : α → ℂ) (h : O) :
-    amplificationError S (fun i => p^(n+1)*u i)
-      (fun i => supported_mul_elements _ _ (supported_power p hs (n+1)) (hu i))
-      (fun i => c i / primeRoot p (n+1)) (fun i => multiplicity p (p^(n+1)*u i)) p (n+1) h =
-      errorScalar p hp.ne_zero n h *
-        gaussPolynomial S u hu (fun i => c i * residualCharacter p (n+1) (u i)) h := by
-  unfold amplificationError gaussPolynomial
-  rw [Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro i hi
-  have hv : multiplicity p (p^(n+1)*u i) = n+1 := by
-    rw [multiplicity_mul hp (FiniteMultiplicity.of_prime_left hp
-      (mul_ne_zero (pow_ne_zero _ hp.ne_zero) (supportedElement_ne_zero _ (hu i)))),
-      multiplicity_pow_self_of_prime hp,
-      multiplicity_eq_zero_of_not_dvd (hp.irreducible.coprime_iff_not_dvd.mp (hcop i)),add_zero]
-  dsimp only
-  simp only [ite_eq_left hv]
-  have he := central_error_shortening p (u i) n hs (hu i) hpp (hup i) (hcop i) h
-  change _ = errorScalar p hp.ne_zero n h *
-    (c i * residualCharacter p (n+1) (u i) * gaussRow (u i) (hu i) h)
-  calc
-    _ = c i * ((gaussRow (p^(n+1)*u i)
-        (supported_mul_elements _ _ (supported_power p hs (n+1)) (hu i)) h -
-      gaussRow (p^(n+1)*u i)
-        (supported_mul_elements _ _ (supported_power p hs (n+1)) (hu i)) (p^6*h)) /
-        primeRoot p (n+1)) := by ring
-    _ = _ := by rw [he]; unfold errorScalar; ring
 
 end SevenEighths.CenteredMomentAmplificationShortening
 

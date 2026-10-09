@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.GramJointSource
 import OAI.NumberTheory.DirichletL.Detector.GramMeanLift
-
 namespace OAI
 
 noncomputable section

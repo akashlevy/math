@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.PrimeRows.RowPartition
-
 namespace OAI
 
 noncomputable section
@@ -29,15 +28,6 @@ def smallDyadicRows (L : ℝ) (n : ℕ) : Finset FreeRow := (dyadicRows 1 n).fil
 lemma smallDyadicRows_disjoint (L : ℝ) : Pairwise (fun m n=>Disjoint (smallDyadicRows L m) (smallDyadicRows L n)) := by
   intro m n hmn
   exact (dyadicRows_disjoint 1 (by norm_num) hmn).mono (Finset.filter_subset _ _) (Finset.filter_subset _ _)
-
-lemma smallDyadicRows_eq_empty {L : ℝ} {n : ℕ} (hn : n∉smallDyadicIndices L) : smallDyadicRows L n=∅ := by
-  apply Finset.eq_empty_iff_forall_notMem.mpr
-  intro u hu
-  have h := mem_smallDyadicRows.mp hu
-  have hlo := (mem_dyadicRows.mp h.1).2.1
-  apply hn
-  rw [mem_smallDyadicIndices]
-  simpa only [one_mul] using hlo.trans h.2.le
 
 lemma small_rows_biUnion (L : ℝ) :
     (smallDyadicIndices L).biUnion (smallDyadicRows L)=rowBand 1 L := by

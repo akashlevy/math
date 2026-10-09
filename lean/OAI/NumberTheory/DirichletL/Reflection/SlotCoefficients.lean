@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.SupportedChoices
 import OAI.NumberTheory.DirichletL.Reflection.TupleFamily
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

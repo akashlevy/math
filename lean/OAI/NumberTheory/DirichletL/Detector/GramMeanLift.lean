@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Detector.GramMean
-
 namespace OAI
 
 noncomputable section

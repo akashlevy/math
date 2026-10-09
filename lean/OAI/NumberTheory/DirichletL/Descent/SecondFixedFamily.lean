@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.SecondSourceEncoding
-
 namespace OAI
 
 namespace SevenEighths.InverseMoment
@@ -37,20 +36,6 @@ theorem finiteCanonicalMarkedRow_drop_puncture (F : Finset ι) (Ψ : Eis →* �
     finiteCanonicalMarkedRow p hp hcop hg F Ψ (m*d) f k slots lists a W X =
       finiteCanonicalMarkedRow p hp hcop hg F Ψ m f k slots lists a W X := by
   simp only [finiteCanonicalMarkedRow,fixedChildRow,secondChildColumn_drop_puncture p hp hcop hg Ψ m d f k hd]
-
-theorem canonicalMarkedSplit_original_lists (F V A : Finset ι) (Ψ : Eis →* ℂ)
-    (m r c d e k : Eis) (slots : Finset σ) (lists : σ → Finset ι) (a : σ → ι → ℂ)
-    (W : ℝ → ℂ) (X : ℝ)
-    (hA : ∀ i ∈ A, (m*r)*(c*e*∏ j ∈ V,p j) ∈ Ideal.span {p i}) :
-    canonicalMarkedSplit p hp hcop hg F V A Ψ m r c d e k slots lists a W X =
-      ∑ J ∈ slots.powerset, primeMark J lists a (A∪V) *
-        finiteCanonicalMarkedRow p hp hcop hg F Ψ (m*r)
-          (c*e*∏ j ∈ V,p j) (d*e*k) (slots\J) lists a W (X/primeProductNorm p V) := by
-  unfold canonicalMarkedSplit
-  apply Finset.sum_congr rfl
-  intro J hJ
-  rw [finiteCanonicalMarkedRow_restore_lists p hp hcop hg F A Ψ (m*r)
-    (c*e*∏ j ∈ V,p j) (d*e*k) (slots\J) lists a W (X/primeProductNorm p V) hA]
 
 omit [∀ (i : ι), (Ideal.span {p i}).IsMaximal] in
 theorem actual_first_divisor_dvd_child

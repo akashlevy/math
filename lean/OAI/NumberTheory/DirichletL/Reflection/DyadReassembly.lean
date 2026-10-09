@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Reflection.DyadSelection
 import OAI.NumberTheory.DirichletL.Reflection.InactiveRows
-
 namespace OAI
 
 namespace SevenEighths.InverseReflectedPhase

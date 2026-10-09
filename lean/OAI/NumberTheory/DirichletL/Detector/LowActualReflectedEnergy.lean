@@ -1,6 +1,5 @@
 import OAI.NumberTheory.DirichletL.Detector.LowActualIdealLists
 import OAI.NumberTheory.DirichletL.Detector.LowElementRows
-
 namespace OAI
 
 noncomputable section

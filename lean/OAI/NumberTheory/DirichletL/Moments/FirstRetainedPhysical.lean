@@ -1,7 +1,6 @@
 import OAI.NumberTheory.DirichletL.Moments.FirstRetainedSector
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalDyadicAssembly
 import OAI.NumberTheory.DirichletL.Moments.FirstPhysicalSourcePool
-
 namespace OAI
 
 noncomputable section

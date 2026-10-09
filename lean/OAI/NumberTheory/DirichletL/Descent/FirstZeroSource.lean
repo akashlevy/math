@@ -1,5 +1,4 @@
 import OAI.NumberTheory.DirichletL.Descent.FirstWholeMarkedColumns
-
 namespace OAI
 
 noncomputable section
