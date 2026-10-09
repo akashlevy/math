@@ -779,6 +779,11 @@ sources:
     id: ../preprints/The-Quasi-Riemann-Hypothesis-September-30-2026/paper.pdf
     type: article
 
+  - title: "The Quasi-Riemann Hypothesis: the zero-free half-plane Re s > 23/24 for zeta(s)"
+    authors: ["OpenAI"]
+    id: ../preprints/The-Quasi-Riemann-Hypothesis-October-5-2026/paper2.pdf
+    type: article
+
   - title: "The second Kahn–Kalai conjecture"
     authors: ["OpenAI"]
     id: ../preprints/The-second-Kahn-Kalai-conjecture-September-24-2026/paper.pdf
@@ -1521,6 +1526,10 @@ status:
     - comparator_config: ComparatorChallenges/QuasiRiemannHypothesis.json
       declaration: OAI.riemannZeta_ne_zero_of_seven_eighths_lt_re
       file: OAI/NumberTheory/DirichletL/Nonvanishing.lean
+
+    - comparator_config: ComparatorChallenges/QuasiRiemannTwentyThreeTwentyFourths.json
+      declaration: OAI.riemannZeta_ne_zero_of_twenty_three_twenty_fourths_lt_re
+      file: OAI/NumberTheory/DirichletL/QRH.lean
 
     - comparator_config: ComparatorChallenges/QuinticLienard.json
       declaration: OAI.QuinticLienard.main
